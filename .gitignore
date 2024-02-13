@@ -1,0 +1,22 @@
+.DS_Store
+
+terraform-provider-chronosphere
+
+/bin/
+/dist/
+.idea
+/.run/
+
+# Local .terraform directories and lock files
+**/.terraform/*
+**/.terraform.lock.hcl
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+tmp/
+
+/vendor/
+
+# test output from CI targets
+test.log

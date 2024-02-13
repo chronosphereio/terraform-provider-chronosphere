@@ -1,0 +1,291 @@
+package tfschema
+
+import (
+	"github.com/hashicorp/go-cty/cty"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/prettyenum"
+)
+
+var TraceMetricsRule = map[string]*schema.Schema{
+	"name": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"slug": {
+		Type:     schema.TypeString,
+		Optional: true,
+		Computed: true,
+		ForceNew: true,
+	},
+	"metric_name": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"metric_labels": {
+		Type:     schema.TypeMap,
+		Elem:     &schema.Schema{Type: schema.TypeString},
+		Optional: true,
+	},
+	"histogram_buckets_seconds": {
+		Type: schema.TypeList,
+		Elem: &schema.Schema{
+			Type: schema.TypeFloat,
+		},
+		Optional: true,
+	},
+	"trace_filter": {
+		Type:     schema.TypeList,
+		MinItems: 1,
+		MaxItems: 1,
+		Required: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"trace": traceFilterSchema,
+				"span": {
+					Type:     schema.TypeList,
+					Optional: true,
+					Elem:     spanFilterSchema,
+				},
+			},
+		},
+	},
+	"group_by": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"key": {
+					Type:     schema.TypeList,
+					MinItems: 1,
+					MaxItems: 1,
+					Required: true,
+					Elem:     traceMetricsRuleGroupByKeySchema,
+				},
+				"label": {
+					Type:     schema.TypeString,
+					Required: true,
+				},
+			},
+		},
+	},
+}
+
+var traceMetricsRuleGroupByKeySchema = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"type": Enum{
+			Value:    enum.TraceMetricsRuleGroupByType.ToStrings(),
+			Required: true,
+		}.Schema(),
+		"named_key": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+	},
+}
+
+var traceFilterSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	MinItems: 0,
+	MaxItems: 1,
+	Optional: true,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"duration": TraceMetricsDurationFilterSchema,
+			"error":    TraceMetricsBoolFilterSchema,
+		},
+	},
+}
+
+var spanFilterSchema = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"match_type": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			Default:          prettyenum.SpanFilterMatchTypeInclude,
+			ValidateDiagFunc: validateSpanFilterMatchType,
+			DiffSuppressFunc: diffSuppressSpanFilterMatchType,
+		},
+		"service":          TraceMetricsStringFilterSchema,
+		"operation":        TraceMetricsStringFilterSchema,
+		"parent_service":   TraceMetricsStringFilterSchema,
+		"parent_operation": TraceMetricsStringFilterSchema,
+		"duration":         TraceMetricsDurationFilterSchema,
+		"error":            TraceMetricsBoolFilterSchema,
+		"tag": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem:     tagFilterSchema,
+		},
+		"span_count": countFilterSchema,
+	},
+}
+
+var tagFilterSchema = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"key": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"value":         TraceMetricsStringFilterSchema,
+		"numeric_value": TraceMetricsNumericFilterSchema,
+	},
+}
+
+var TraceMetricsDurationFilterSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Optional: true,
+	MinItems: 0,
+	MaxItems: 1,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"min_seconds": {
+				Type:     schema.TypeFloat,
+				Optional: true,
+				Default:  0.0,
+			},
+			"max_seconds": {
+				Type:     schema.TypeFloat,
+				Optional: true,
+				Default:  0.0,
+			},
+		},
+	},
+}
+
+var TraceMetricsBoolFilterSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Optional: true,
+	MinItems: 0,
+	MaxItems: 1,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"value": {
+				Type:     schema.TypeBool,
+				Required: true,
+			},
+		},
+	},
+}
+
+var TraceMetricsStringFilterSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Optional: true,
+	MinItems: 0,
+	MaxItems: 1,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"match": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				Default:          prettyenum.StringFilterMatchTypeExact,
+				ValidateDiagFunc: validateStringFilterMatchType,
+				DiffSuppressFunc: diffSuppressStringFilterMatchType,
+			},
+			"value": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+		},
+	},
+}
+
+var TraceMetricsNumericFilterSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Optional: true,
+	MinItems: 0,
+	MaxItems: 1,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"comparison": Enum{
+				Value:    enum.NumericFilterComparisonType.ToStrings(),
+				Required: true,
+			}.Schema(),
+			"value": {
+				Type:     schema.TypeFloat,
+				Required: true,
+			},
+		},
+	},
+}
+
+var countFilterSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Optional: true,
+	MinItems: 0,
+	MaxItems: 1,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"min": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  0,
+			},
+			"max": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  0,
+			},
+		},
+	},
+}
+
+func validateStringFilterMatchType(i interface{}, _ cty.Path) diag.Diagnostics {
+	rawType, ok := i.(string)
+	if !ok {
+		return diag.Errorf("expected match to be a string, got %T", i)
+	}
+
+	if err := prettyenum.ValidateStringFilterMatchType(rawType); err != nil {
+		return diag.FromErr(err)
+	}
+
+	return nil
+}
+
+// diffSuppressStringFilterMatchType sanitizes and then diffs two string filter match type payloads.
+func diffSuppressStringFilterMatchType(_, old, new string, _ *schema.ResourceData) bool {
+	if old == new {
+		return true
+	}
+	mtOld, err := prettyenum.NewStringFilterMatchType(old)
+	if err != nil {
+		return false
+	}
+	mtNew, err := prettyenum.NewStringFilterMatchType(new)
+	if err != nil {
+		return false
+	}
+	return mtOld.Model() == mtNew.Model()
+}
+
+func validateSpanFilterMatchType(i interface{}, _ cty.Path) diag.Diagnostics {
+	rawType, ok := i.(string)
+	if !ok {
+		return diag.Errorf("expected match_type to be a string, got %T", i)
+	}
+
+	if err := prettyenum.ValidateSpanFilterMatchType(rawType); err != nil {
+		return diag.FromErr(err)
+	}
+
+	return nil
+}
+
+// diffSuppressSpanFilterMatchType sanitizes and then diffs two span filter match type payloads.
+func diffSuppressSpanFilterMatchType(_, old, new string, _ *schema.ResourceData) bool {
+	if old == new {
+		return true
+	}
+	mtOld, err := prettyenum.NewSpanFilterMatchType(old)
+	if err != nil {
+		return false
+	}
+	mtNew, err := prettyenum.NewSpanFilterMatchType(new)
+	if err != nil {
+		return false
+	}
+	return mtOld.Model() == mtNew.Model()
+}

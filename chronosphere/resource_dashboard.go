@@ -1,0 +1,91 @@
+package chronosphere
+
+import (
+	"errors"
+	"fmt"
+
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
+	xjson "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/x/json"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"go.uber.org/atomic"
+)
+
+// DashboardFromModel maps an API model to an intschema model.
+func DashboardFromModel(m *models.Configv1Dashboard) (*intschema.Dashboard, error) {
+	return dashboardConverter{}.fromModel(m)
+}
+
+// DashboardMeta is metadata encoded in the dashboard JSON.
+type DashboardMeta struct {
+	Metadata struct {
+		Name string `json:"name"`
+	} `json:"metadata"`
+}
+
+func resourceDashboard() *schema.Resource {
+	resource := newGenericResource[
+		*models.Configv1Dashboard,
+		intschema.Dashboard,
+		*intschema.Dashboard,
+	](
+		"dashboard",
+		dashboardConverter{},
+		generatedDashboard{})
+
+	return &schema.Resource{
+		CreateContext: resource.CreateContext,
+		ReadContext:   resource.ReadContext,
+		UpdateContext: resource.UpdateContext,
+		DeleteContext: resource.DeleteContext,
+		Schema:        tfschema.Dashboard,
+		CustomizeDiff: resource.ValidateDryRun(&DashboardDryRunCount),
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+	}
+}
+
+// DashboardDryRunCount tracks how many times dry run is run during validation for testing.
+var DashboardDryRunCount atomic.Int64
+
+type dashboardConverter struct{}
+
+func (dashboardConverter) toModel(
+	d *intschema.Dashboard,
+) (*models.Configv1Dashboard, error) {
+	if d.DashboardJson == "" {
+		return nil, errors.New("dashboard_json is required")
+	}
+
+	var dashboard DashboardMeta
+	if err := xjson.Unmarshal([]byte(d.DashboardJson), &dashboard); err != nil {
+		return nil, fmt.Errorf("invalid dashboard_json: %s", err)
+	}
+
+	name := dashboard.Metadata.Name
+	if name == "" {
+		return nil, errors.New(`invalid dashboard_json: dashboard metadata must have "name" set`)
+	}
+
+	collSlug, collRef := collectionRefFromID(d.CollectionId.Slug())
+	return &models.Configv1Dashboard{
+		Name:           name,
+		Slug:           d.Slug,
+		CollectionSlug: collSlug,
+		Collection:     collRef,
+		DashboardJSON:  d.DashboardJson,
+	}, nil
+}
+
+func (dashboardConverter) fromModel(
+	m *models.Configv1Dashboard,
+) (*intschema.Dashboard, error) {
+	return &intschema.Dashboard{
+		DashboardJson: m.DashboardJSON,
+		CollectionId:  tfid.Slug(collectionIDFromRef(m.CollectionSlug, m.Collection)),
+		Slug:          m.Slug,
+	}, nil
+}

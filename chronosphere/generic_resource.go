@@ -1,0 +1,297 @@
+package chronosphere
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"go.uber.org/atomic"
+
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema/convertintschema"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/tfresource"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema/overridecreate"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
+
+// internalSchema is implemented by all intschema types.
+type internalSchema interface {
+	FromResourceData(d convertintschema.ResourceGetter) error
+	ToResourceData(d *schema.ResourceData) diag.Diagnostics
+}
+
+type overrideCreateResource interface {
+	GetOverrideCreateAction() (overridecreate.Action, error)
+}
+
+// internalSchemaPtr defines a pointer to an intschema struct value, where
+// the pointer implements internalSchema.
+type internalSchemaPtr[SV any] interface {
+	*SV
+	internalSchema
+}
+
+// newInternalSchema creates a new pointer type of SV, where *SV implements
+// internalSchema.
+func newInternalSchema[SV any, S internalSchemaPtr[SV]]() S {
+	var v SV
+	return S(&v)
+}
+
+// modelConverter provides a two-way mapping of a internal Terraform schema to
+// its respective Swagger model.
+//
+// This is intended to be implemented manually.
+type modelConverter[M any, S internalSchema] interface {
+	// toModel maps a Terraform resource into a Swagger model.
+	toModel(S) (M, error)
+
+	// fromModel maps a Swagger model into a Terraform resource.
+	fromModel(M) (S, error)
+}
+
+// resourceCRUD provides CRUD methods against a Swagger model.
+//
+// This is intended to be implemented by generated code (see tools/generateresources).
+type resourceCRUD[M any] interface {
+	create(ctx context.Context, clients apiclients.Clients, m M, dryRun bool) (slug string, err error)
+	read(ctx context.Context, clients apiclients.Clients, slug string) (M, error)
+	update(ctx context.Context, clients apiclients.Clients, m M, params updateParams) error
+	delete(ctx context.Context, clients apiclients.Clients, slug string) error
+}
+
+type updateParams struct {
+	createIfMissing bool
+	dryRun          bool
+}
+
+// resourceFields provides field getters against a Swagger model, as Swagger
+// does not generate any getters.
+//
+// This is intended to be implemented by generated code (see tools/generateresources).
+type resourceFields[M any] interface {
+	slugOf(M) string
+}
+
+// generatedResource joins the interfaces implemented by tools/generateresources.
+type generatedResource[M any] interface {
+	resourceCRUD[M]
+	resourceFields[M]
+}
+
+// genericResource implements Terraform CRUD bindings for any resource.
+type genericResource[M any, SV any, S internalSchemaPtr[SV]] struct {
+	name      string
+	converter modelConverter[M, S]
+	crud      resourceCRUD[M]
+	fields    resourceFields[M]
+}
+
+func newGenericResource[M any, SV any, S internalSchemaPtr[SV]](
+	name string,
+	c modelConverter[M, S],
+	g generatedResource[M],
+) genericResource[M, SV, S] {
+	return genericResource[M, SV, S]{
+		name:      name,
+		converter: c,
+		crud:      g,
+		fields:    g,
+	}
+}
+
+type noopConverter[T any] struct{}
+
+func (noopConverter[T]) toModel(v T) (T, error)   { return v, nil }
+func (noopConverter[T]) fromModel(v T) (T, error) { return v, nil }
+
+// newNoConvertResource is used for resources that don't have a consistent model
+// across create/read/update, relying on per-endpoint intschema mapping.
+func newNoConvertResource[SV any, S internalSchemaPtr[SV]](
+	name string,
+	g generatedResource[S],
+) genericResource[S, SV, S] {
+	return newGenericResource[S, SV, S](name, noopConverter[S]{}, g)
+}
+
+// CreateContext implements schema.CreateContextFunc.
+func (r genericResource[M, SV, S]) CreateContext(
+	ctx context.Context, d *schema.ResourceData, meta any,
+) diag.Diagnostics {
+	ctx = tfresource.NewContext(ctx, r.name)
+
+	clients := meta.(apiclients.Clients)
+
+	s := newInternalSchema[SV, S]()
+	if err := s.FromResourceData(d); err != nil {
+		return diag.Errorf(err.Error())
+	}
+
+	m, err := r.converter.toModel(s)
+	if err != nil {
+		return diag.Errorf(err.Error())
+	}
+
+	if c, ok := any(s).(overrideCreateResource); ok {
+		action, err := c.GetOverrideCreateAction()
+		if err != nil {
+			return diag.Errorf(err.Error())
+		}
+
+		switch action {
+		case overridecreate.ImportOrFail:
+			if err := r.crud.update(ctx, clients, m, updateParams{}); err != nil {
+				return diag.Errorf("unable to create or import %s: %v", r.name, clienterror.Wrap(err))
+			}
+			d.SetId(r.fields.slugOf(m))
+			return nil
+		case overridecreate.ImportIfExists:
+			if err := r.crud.update(ctx, clients, m, updateParams{createIfMissing: true}); err != nil {
+				return diag.Errorf("unable to create or import %s: %v", r.name, clienterror.Wrap(err))
+			}
+			d.SetId(r.fields.slugOf(m))
+			return nil
+		case overridecreate.AlwaysCreate:
+			// no-op
+		}
+	}
+
+	slug, err := r.crud.create(ctx, clients, m, false /* dryRun */)
+	if err != nil {
+		return diag.Errorf("unable to create %s: %v", r.name, clienterror.Wrap(err))
+	}
+	d.SetId(slug)
+
+	return nil
+}
+
+// ReadContext implements schema.ReadContextFunc.
+func (r genericResource[M, SV, S]) ReadContext(
+	ctx context.Context, d *schema.ResourceData, meta any,
+) diag.Diagnostics {
+	clients := meta.(apiclients.Clients)
+
+	m, err := r.crud.read(ctx, clients, d.Id())
+	if err != nil {
+		if clienterror.IsNotFound(err) {
+			setResourceNotFound(d)
+			return nil
+		}
+		return diag.Errorf("unable to read %s: %v", r.name, clienterror.Wrap(err))
+	}
+
+	d.SetId(r.fields.slugOf(m))
+
+	s, err := r.converter.fromModel(m)
+	if err != nil {
+		return diag.Errorf(err.Error())
+	}
+	return s.ToResourceData(d)
+}
+
+// UpdateContext implements schema.UpdateContextFunc.
+func (r genericResource[M, SV, S]) UpdateContext(
+	ctx context.Context, d *schema.ResourceData, meta any,
+) diag.Diagnostics {
+	clients := meta.(apiclients.Clients)
+
+	s := newInternalSchema[SV, S]()
+	if err := s.FromResourceData(d); err != nil {
+		return diag.Errorf(err.Error())
+	}
+
+	m, err := r.converter.toModel(s)
+	if err != nil {
+		return diag.Errorf(err.Error())
+	}
+	slug := r.fields.slugOf(m)
+	if slug != d.Id() {
+		return diag.Errorf(
+			"cannot change slug of existing %s: current slug %q, new slug %q",
+			r.name, d.Id(), slug)
+	}
+
+	if err := r.crud.update(ctx, clients, m, updateParams{}); err != nil {
+		return diag.Errorf("unable to update %s: %v", r.name, clienterror.Wrap(err))
+	}
+
+	return nil
+}
+
+// DeleteContext implements schema.DeleteContextFunc.
+func (r genericResource[M, SV, S]) DeleteContext(
+	ctx context.Context, d *schema.ResourceData, meta any,
+) diag.Diagnostics {
+	clients := meta.(apiclients.Clients)
+
+	if err := r.crud.delete(ctx, clients, d.Id()); clienterror.IsNotFound(err) {
+		// Already deleted on the server, treat as success.
+	} else if err != nil {
+		return diag.Errorf("unable to delete %s: %v", r.name, clienterror.Wrap(err))
+	}
+	d.SetId("")
+	return nil
+}
+
+// ValidateDryRun implements schema.CustomizeDiffFunc, and performs a dry-run validation.
+func (r genericResource[M, SV, S]) ValidateDryRun(dryRunCounter *atomic.Int64) schema.CustomizeDiffFunc {
+	return r.ValidateDryRunOptions(dryRunCounter, ValidateDryRunOpts[M]{})
+}
+
+// ValidateDryRunOpts is optional parameters for ValidateDryRun.
+type ValidateDryRunOpts[M any] struct {
+	// SetUnknownReferencesSkip is a set of fields to skip when setting unknown references.
+	SetUnknownReferencesSkip []string
+
+	// ModifyAPIModel is used to modify an API model before making the dry-run API call.
+	ModifyAPIModel func(M)
+}
+
+// ValidateDryRunOptions is the same as ValidateDryRun but supports additional options, see ValidateDryRunOpts.
+func (r genericResource[M, SV, S]) ValidateDryRunOptions(dryRunCounter *atomic.Int64, opts ValidateDryRunOpts[M]) schema.CustomizeDiffFunc {
+	return func(ctx context.Context, diff *schema.ResourceDiff, meta any) error {
+		if skipDryRun(diff) {
+			return nil
+		}
+		// Increment dry run count for testing.
+		dryRunCounter.Add(1)
+
+		logParams := map[string]any{
+			"resourceType": r.name,
+			"id":           diff.Id(),
+		}
+		if slug, ok := diff.Get("slug").(string); ok {
+			logParams["slug"] = slug
+		}
+		tflog.Info(ctx, "running dry run validation", logParams)
+
+		s := newInternalSchema[SV, S]()
+		if err := s.FromResourceData(diff); err != nil {
+			return err
+		}
+		setUnknownReferences(s, diff.GetRawConfig(), opts.SetUnknownReferencesSkip)
+
+		m, err := r.converter.toModel(s)
+		if err != nil {
+			return err
+		}
+
+		if opts.ModifyAPIModel != nil {
+			opts.ModifyAPIModel(m)
+		}
+
+		clients := meta.(apiclients.Clients)
+
+		if diff.Id() == "" {
+			_, err = r.crud.create(ctx, clients, m, true /* dryRun */)
+		} else {
+			err = r.crud.update(ctx, clients, m, updateParams{dryRun: true})
+		}
+		if err != nil && clienterror.IsEntityValidationFailed(err) {
+			return fmt.Errorf("dry run validation failed: %w", err)
+		}
+		return nil
+	}
+}

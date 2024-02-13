@@ -1,0 +1,536 @@
+// generateintschema maps our Terraform schemas into internal struct
+// representations which can freely convert to and from Terraform ResourceData.
+package main
+
+import (
+	"bytes"
+	"fmt"
+	"go/format"
+	"log"
+	"os"
+	"sort"
+	"strings"
+	"text/template"
+	"unicode"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"go.uber.org/multierr"
+	"golang.org/x/exp/maps"
+
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema/intschematag"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/registry"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema/overridecreate"
+)
+
+// Add shared schema references here to generate shared types.
+var sharedSchemaTypeNames = map[*schema.Schema]string{
+	tfschema.MatcherListSchema:                "Matcher",
+	tfschema.MonitorSeriesConditionSchema:     "MonitorSeriesCondition",
+	tfschema.ResourcePoolAllocationSchema:     "ResourcePoolAllocationSchema",
+	tfschema.ResourcePoolPrioritiesSchema:     "ResourcePoolPrioritiesSchema",
+	tfschema.TraceMetricsBoolFilterSchema:     "TraceMetricsBoolFilter",
+	tfschema.TraceMetricsDurationFilterSchema: "TraceMetricsDurationFilter",
+	tfschema.TraceMetricsStringFilterSchema:   "TraceMetricsStringFilter",
+	tfschema.TraceMetricsNumericFilterSchema:  "TraceMetricsNumericFilterSchema",
+	tfschema.ValueMappingsSchema:              "ValueMappings",
+	tfschema.TailSamplingBoolFilterSchema:     "TraceTailSamplingBoolFilterSchema",
+	tfschema.TailSamplingDurationFilterSchema: "TraceTailSamplingDurationFilterSchema",
+	tfschema.TailSamplingStringFilterSchema:   "TraceTailSamplingStringFilterSchema",
+	tfschema.TailSamplingNumericFilterSchema:  "TraceTailSamplingNumericFilterSchema",
+}
+
+// Add shared element references here to generate shared types. Usually we
+// shouldn't be consolidating on an element type, we should be consolidating on
+// the container type. This is only for extremely rare cases where the
+// containers diverge without affecting the generated intschema code.
+//
+// TODO: To keep things simple, we don't validate that there are no
+// duplicate struct defs for shared element resources since this is so rare. If
+// it becomes more common, we should add validation.
+var sharedElemTypeNames = map[*schema.Resource]string{
+	tfschema.NotificationRouteSchema.Elem.(*schema.Resource): "NotificationRoute",
+	tfschema.ResourcePoolElemSchema:                          "ResourcePoolsConfigPool",
+}
+
+// Exhaustive list of all "xxx_id" fields which identifies whether the field
+// should be generated as a tfid.ID or not (i.e. does the field refer to a
+// registered Terraform resource or not).
+var fieldIsTFID = map[string]bool{
+	"bucket_id":              true,
+	"collection_id":          true,
+	"dashboard_id":           true,
+	"notification_policy_id": true,
+	"team_id":                true,
+	"execution_group":        true,
+
+	"callback_id": false,
+	"external_id": false,
+}
+
+var fieldAddFile = map[string]bool{
+	"dashboard_json": true,
+}
+
+// Exhaustive list of all set/list fields which identifies whether the field
+// should be generated as a []tfid.ID.
+// Unlike fieldIsTFID, it only matches set/list fields.
+var listFieldIsTFID = map[*schema.Schema]bool{
+	mustLookup(tfschema.NotificationRouteSchema.Elem.(*schema.Resource).Schema, "notifiers"): true,
+}
+
+func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
+	resourceSchemas := make(map[string]map[string]*schema.Schema)
+	for _, r := range registry.Resources {
+		resourceSchemas[r.Name] = r.Schema
+	}
+	resourceSchemas["test_resource"] = tfschema.TestResource
+
+	files := []*fileData{
+		newSharedFile(),
+	}
+	for _, name := range sortedKeys(resourceSchemas) {
+		files = append(files, newFileData(schemaTypeResource, name, resourceSchemas[name]))
+	}
+	files = append(files, newFileData(schemaTypeData, "bucket", tfschema.DataBucket))
+	files = append(files, newFileData(schemaTypeData, "service", tfschema.DataService))
+
+	if err := validateNoDuplicateStructDefs(files); err != nil {
+		return err
+	}
+	for _, f := range files {
+		if err := f.writeFile(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func mustLookup(m map[string]*schema.Schema, k string) *schema.Schema {
+	s, ok := m[k]
+	if !ok {
+		panic(fmt.Errorf("key %q not found", k))
+	}
+	return s
+}
+
+func validateNoDuplicateStructDefs(files []*fileData) error {
+	refCounts := make(map[*schema.Schema]int)
+	for _, f := range files {
+		for _, d := range f.Structs {
+			if d.container == nil {
+				continue
+			}
+			refCounts[d.container]++
+		}
+	}
+	var errs error
+	for ref, n := range refCounts {
+		_, ok := sharedSchemaTypeNames[ref]
+		if n > 1 && !ok {
+			errs = multierr.Append(errs, fmt.Errorf(
+				"duplicate schema ref found in %d places: %v",
+				n, sortedKeys(ref.Elem.(*schema.Resource).Schema)))
+		}
+	}
+	return errs
+}
+
+func newSharedFile() *fileData {
+	f := &fileData{
+		filename: "shared_schemas.go",
+	}
+	for s, typeName := range sharedSchemaTypeNames {
+		f.newStructDef(typeName, s.Elem.(*schema.Resource).Schema, nil /* container */)
+	}
+	for e, typeName := range sharedElemTypeNames {
+		f.newStructDef(typeName, e.Schema, nil /* container */)
+	}
+
+	// Above map iterations are non-deterministic and we can't use sortedKeys
+	// as the map keys are not strings.
+	// Instead, sort the generated structs to make output deterministic.
+	sort.Slice(f.Structs, func(i, j int) bool {
+		return f.Structs[i].TypeName < f.Structs[j].TypeName
+	})
+	return f
+}
+
+type schemaType string
+
+const (
+	schemaTypeResource = "resource"
+	schemaTypeData     = "data"
+)
+
+func (st schemaType) filename(name string) string {
+	if st.Datasource() {
+		return "data_" + name + ".go"
+	}
+	return name + ".go"
+}
+
+func (st schemaType) structName(name string) string {
+	n := upperCamelCase(name)
+	if st.Datasource() {
+		return "Data" + n
+	}
+	return n
+}
+
+// Datasource returns if this is a schema for a datasource.
+func (st schemaType) Datasource() bool {
+	return st == schemaTypeData
+}
+
+// MarshalAddFuncName returns the marshal function to call for this schema type.
+func (st schemaType) MarshalAddFuncName() string {
+	if st == schemaTypeData {
+		return "AddData"
+	}
+	return "AddResource"
+}
+
+func newFileData(t schemaType, name string, objSchema map[string]*schema.Schema) *fileData {
+	f := &fileData{
+		Imports: []string{
+			"io",
+			"github.com/hashicorp/terraform-plugin-sdk/v2/diag",
+			"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema",
+			"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema/convertintschema",
+			"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/hclmarshal",
+			"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema",
+		},
+		Type:     t,
+		filename: t.filename(name),
+	}
+	f.newStructDef(t.structName(name), objSchema, nil /* container */)
+
+	// The newStructDef recursion will always push the main resource struct to
+	// the last element, so we reverse to ensure it shows up first for
+	// readability.
+	reverse(f.Structs)
+	r := f.Structs[0]
+	r.IsConverter = true
+	r.ResourceName = "chronosphere_" + name
+
+	for _, field := range r.Fields {
+		if field.Tag.TFName == overridecreate.Field {
+			r.IsOverridingCreate = true
+			f.Imports = append(f.Imports, "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema/overridecreate")
+		}
+	}
+
+	r.Fields = append(r.Fields, &field{
+		Name:     intschematag.StateIDField,
+		TypeName: "string",
+		Tag:      intschematag.InternalFieldTag(),
+		Comment: []string{
+			"Internal identifier used in the .state file, i.e. ResourceData.Id().",
+			"Cannot be set, else ToResourceData will panic.",
+		},
+	}, &field{
+		Name:     intschematag.HCLIDField,
+		TypeName: "string",
+		Tag:      intschematag.InternalFieldTag(),
+		Comment: []string{
+			"HCL-level identifier used in the .tf file. FromResourceData will always",
+			"leave this empty, and ToResourceData will panic if set.",
+		},
+	})
+
+	return f
+}
+
+type fileData struct {
+	Imports []string
+	Structs []*structDef
+
+	Type     schemaType
+	filename string
+}
+
+func (f *fileData) writeFile() error {
+	b := &bytes.Buffer{}
+	if err := fileTemplate.Execute(b, f); err != nil {
+		return fmt.Errorf("template execution failed: %v", err)
+	}
+	formatted, err := format.Source(b.Bytes())
+	if err != nil {
+		return fmt.Errorf("gofmt failed: %v", err)
+	}
+	fmt.Printf("writing file %s\n", f.filename)
+	return os.WriteFile(f.filename, formatted, 0o644)
+}
+
+func (f *fileData) newStructDef(
+	typeName string, objSchema map[string]*schema.Schema, container *schema.Schema,
+) {
+	d := &structDef{
+		TypeName:  typeName,
+		container: container,
+	}
+	// TODO: Order keys by:
+	// - ID / Name / Slug
+	// - Parent refs
+	// - Required fields
+	// - Optional fields
+	for _, name := range sortedKeys(objSchema) {
+		fieldName := upperCamelCase(name)
+		typeInfo := f.loadType(typeName, fieldName, name, objSchema[name], nil /* container */)
+		tag := intschematag.Tag{
+			TFName:            name,
+			Optional:          objSchema[name].Optional || typeInfo.optionalListEncodedObject,
+			Computed:          objSchema[name].Computed,
+			ListEncodedObject: typeInfo.listEncodedObject,
+		}
+		if d := objSchema[name].Default; d != nil {
+			tag.Default = fmt.Sprint(d)
+		}
+		d.Fields = append(d.Fields, &field{
+			Name:     fieldName,
+			TypeName: typeInfo.name,
+			Tag:      tag,
+		})
+
+		if addFileField(name, objSchema[name]) {
+			d.Fields = append(d.Fields, &field{
+				Name:     "HCLFile" + fieldName,
+				TypeName: "string",
+				Tag: intschematag.Tag{
+					TFName: name,
+					File:   true,
+				},
+			})
+		}
+	}
+	sort.SliceStable(d.Fields, func(i, j int) bool {
+		return d.Fields[i].sortScore() < d.Fields[j].sortScore()
+	})
+	f.Structs = append(f.Structs, d)
+}
+
+type typeInfo struct {
+	name                      string
+	listEncodedObject         bool
+	optionalListEncodedObject bool
+}
+
+func (f *fileData) loadType(
+	parentTypeName, fieldName, tfName string, fieldMeta any, container *schema.Schema,
+) typeInfo {
+	if typeName, ok := sharedSchemaTypeNames[container]; ok {
+		return typeInfo{name: typeName}
+	}
+	switch t := fieldMeta.(type) {
+	case *schema.Schema:
+		switch t.Type {
+		case schema.TypeList, schema.TypeSet:
+			if tfschema.IsListEncodedObject(t) {
+				typeName := f.loadType(parentTypeName, fieldName, tfName, t.Elem, t).name
+				optional := false
+				if t.Optional || t.MinItems == 0 {
+					// Optional nested objects are wrapped in pointers to ensure
+					// we can still distinguish an empty list from a non-empty
+					// list containing an empty value.
+					typeName = "*" + typeName
+					optional = true
+				}
+				return typeInfo{
+					name:                      typeName,
+					listEncodedObject:         true,
+					optionalListEncodedObject: optional,
+				}
+			} else if listFieldIsTFID[t] {
+				return typeInfo{name: "[]tfid.ID"}
+			} else {
+				return typeInfo{
+					name: "[]" + f.loadType(parentTypeName, fieldName, tfName, t.Elem, t).name,
+				}
+			}
+		case schema.TypeMap:
+			return typeInfo{
+				name: "map[string]" + f.loadType(parentTypeName, fieldName, tfName, t.Elem, t).name,
+			}
+		case schema.TypeString:
+			typeName := "string"
+			if isTFID(tfName) {
+				typeName = "tfid.ID"
+			}
+			return typeInfo{name: typeName}
+		case schema.TypeBool:
+			return typeInfo{name: "bool"}
+		case schema.TypeFloat:
+			return typeInfo{name: "float64"}
+		case schema.TypeInt:
+			return typeInfo{name: "int64"}
+		default:
+			panic(fmt.Sprintf("unhandled type: %s", t.Type))
+		}
+	case *schema.Resource:
+		if typeName, ok := sharedElemTypeNames[t]; ok {
+			return typeInfo{name: typeName}
+		}
+		typeName := parentTypeName + fieldName
+		f.newStructDef(typeName, t.Schema, container)
+		return typeInfo{name: typeName}
+	default:
+		panic(fmt.Sprintf("unhandled meta type: %T", fieldMeta))
+	}
+}
+
+type structDef struct {
+	IsConverter        bool
+	ResourceName       string
+	TypeName           string
+	Fields             []*field
+	IsOverridingCreate bool
+
+	container *schema.Schema
+}
+
+type field struct {
+	Name     string
+	TypeName string
+	Tag      intschematag.Tag
+
+	Comment []string // Optional.
+}
+
+func (f *field) sortScore() int {
+	switch f.Tag.TFName {
+	case "name":
+		return 0
+	case "slug":
+		return 1
+	}
+	if isTFID(f.Tag.TFName) {
+		return 2
+	}
+	if !f.Tag.Optional {
+		return 3
+	}
+
+	// This is a hack to ensure that "override" fields always
+	// come last in the serialized HCL output.
+	if f.Tag.TFName == "override" {
+		return 5
+	}
+
+	return 4
+}
+
+func isTFID(tfName string) bool {
+	isTFID, ok := fieldIsTFID[tfName]
+	if !ok && strings.HasSuffix(tfName, "_id") {
+		panic(fmt.Sprintf(
+			"field %q looks like tfid but is not configured in fieldIsTFID",
+			tfName))
+	}
+	return isTFID
+}
+
+func addFileField(tfName string, s *schema.Schema) bool {
+	return fieldAddFile[tfName] && s.Type == schema.TypeString
+}
+
+func upperCamelCase(snakeCase string) string {
+	b := &strings.Builder{}
+	startToken := true
+	for _, c := range snakeCase {
+		if startToken {
+			b.WriteRune(unicode.ToUpper(c))
+			startToken = false
+			continue
+		}
+		if c == '_' {
+			startToken = true
+			continue
+		}
+		b.WriteRune(c)
+	}
+	return b.String()
+}
+
+func reverse(defs []*structDef) {
+	for i := 0; i < len(defs)/2; i++ {
+		j := len(defs) - 1 - i
+		defs[i], defs[j] = defs[j], defs[i]
+	}
+}
+
+func sortedKeys[V any](m map[string]V) []string {
+	keys := maps.Keys(m)
+	sort.Strings(keys)
+	return keys
+}
+
+var fileTemplate = template.Must(template.New("").Parse(`// Code generated by go generate; DO NOT EDIT.
+package intschema
+
+import (
+{{range .Imports -}}
+{{printf "%q" .}}
+{{end -}}
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
+)
+
+var _ tfid.ID // Always use tfid for simplified import generation.
+
+{{ $schemaType := .Type }}
+{{range .Structs}}
+type {{.TypeName}} struct {
+	{{range .Fields -}}
+	{{if .Comment}}
+	{{end -}}
+	{{range .Comment -}}
+	// {{.}}
+	{{end -}}
+	{{.Name}} {{.TypeName}} ` + "`" + `{{.Tag.Marshal}}` + "`" + `
+	{{end}}
+}
+{{if .IsOverridingCreate}}
+func (o *{{.TypeName}}) GetOverrideCreateAction() (overridecreate.Action, error) {
+	return overridecreate.ParseAction(o.OverrideCreate)
+}
+{{end}}
+{{if .IsConverter}}
+func (o *{{.TypeName}}) FromResourceData(d convertintschema.ResourceGetter) error {
+	return convertintschema.FromResourceData(tfschema.{{.TypeName}}, d, o)
+}
+
+func (o *{{.TypeName}}) ToResourceData(d *schema.ResourceData) diag.Diagnostics {
+	return convertintschema.ToResourceData(o, d)
+}
+
+func (o *{{.TypeName}}) MarshalHCL(w io.Writer) error {
+	m := hclmarshal.New()
+	b := m.{{ $schemaType.MarshalAddFuncName }}("{{.ResourceName}}", o.HCLID)
+	if err := hclmarshal.MarshalIntSchema(o, b); err != nil {
+		return err
+	}
+	return m.MarshalTo(w)
+}
+
+func (o *{{.TypeName}}) Ref() tfid.ID {
+	if o.HCLID == "" {
+		panic("Ref is only valid when schema structs are used for marshalling")
+	}
+
+	return tfid.Ref{
+		{{ if $schemaType.Datasource -}}
+		Datasource: true,
+		{{ end -}}
+		Type: "{{.ResourceName}}",
+		ID: o.HCLID,
+	}.AsID()
+}
+{{end}}
+{{end}}
+`))
