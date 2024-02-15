@@ -60,8 +60,8 @@ type Resource struct {
 	// Schema is the tfschema which defines the resource.
 	Schema map[string]*schema.Schema
 
-	// If the underlying entity is in the public API (unstable or V1) and it
-	// does not match the entity spec (go/entity-spec), then set this field to
+	// If the underlying entity is in the public API and it
+	// does not match the entity spec, then set this field to
 	// skip generating CRUD+List bindings for the entity.
 	NonStandardEntity bool
 

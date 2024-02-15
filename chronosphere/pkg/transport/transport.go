@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/pkg/errors"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/buildvar"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/buildinfo"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/tfresource"
 	xswagger "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/x/swagger"
 )
@@ -93,7 +93,7 @@ func New(p Params) (*httptransport.Runtime, error) {
 	}
 
 	userAgent := fmt.Sprintf("%s/%s-%s (%s; %s; %s)",
-		p.Component, buildvar.Version, buildvar.Revision, runtime.Version(), runtime.GOOS, runtime.GOARCH)
+		p.Component, buildinfo.Version, buildinfo.SHA, runtime.Version(), runtime.GOOS, runtime.GOARCH)
 	transport.Transport = xswagger.WithRequestIDTrailerTransport(&customHeaderRoundTripper{
 		rt:              transport.Transport,
 		userAgent:       userAgent,

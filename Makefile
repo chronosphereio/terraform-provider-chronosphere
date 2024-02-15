@@ -10,25 +10,15 @@ SHELL=/bin/bash -o pipefail
 SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 REPO_DIR := $(abspath $(SELF_DIR))
 
-# LD Flags
-GIT_REVISION              := $(shell git rev-parse --short HEAD)
-GIT_BRANCH                := $(shell git rev-parse --abbrev-ref HEAD)
-GIT_VERSION               := $(shell git describe --tags 2>/dev/null | egrep '^v.+' || echo unknown)
-BUILD_DATE                := $(shell date -u  +"%Y-%m-%dT%H:%M:%SZ") # Use RFC-3339 date format
-BUILD_TS_UNIX             := $(shell date '+%s') # second since epoch
-INSTRUMENT_PACKAGE        := github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/buildvar
-
-# FIXME(codyg): Our Go binaries are built with -buildvcs=false due to some
-# strange buildkite issue where Go would detect a VCS but then fail to retrieve
-# any information: "error obtaining VCS status: exit status 128". We gave up on
-# root causing the issue to unblock the Go 1.18 upgrade.
+BUILD                     := $(abspath ./bin)
+GO_BUILD_LDFLAGS_CMD      := $(abspath ./scripts/go-build-ldflags.sh)
+GO_BUILD_LDFLAGS          := $(shell $(GO_BUILD_LDFLAGS_CMD))
+GO_BUILD_COMMON_ENV       := CGO_ENABLED=0
 GOFLAGS=-buildvcs=false
+INSTRUMENT_PACKAGE        := github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/buildinfo
 
 GO_GENERATE=PATH=$(TOOLS_BIN):$(PATH) go generate
 
-BUILD                     := $(abspath ./bin)
-
-GO_RELEASER_DOCKER_IMAGE  := gcr.io/chronosphere-dev/goreleaser:v1.21.2-gpg-agent
 GO_RELEASER_RELEASE_ARGS  ?= --rm-dist
 GO_RELEASER_WORKING_DIR   := /go/src/github.com/chronosphere/terraform-provider-chronosphere
 
@@ -98,7 +88,7 @@ debug:
 build:
 	@echo building with git version ${GIT_VERSION}
 	mkdir -p bin
-	go build $(GOFLAGS) -o bin/${BINARY} -ldflags "-X ${INSTRUMENT_PACKAGE}.Revision=${GIT_REVISION} -X ${INSTRUMENT_PACKAGE}.Version=${GIT_VERSION}"
+	$(GO_BUILD_COMMON_ENV) go build $(GOFLAGS) -ldflags '$(GO_BUILD_LDFLAGS)' -o $(BUILD)/${BINARY} 
 
 .PHONY: install
 install: build verify-terraform-arch
@@ -116,10 +106,6 @@ verify-terraform-arch:
 .PHONY: test
 test:
 	$(GO_TEST) $(TESTARGS) -v -timeout=30s -parallel=4 $(TESTPKGS)
-
-.PHONY: test-ci-old
-test-ci-old:
-	make TESTARGS="-json" test | tee test.log | go run ./scripts/json2test
 
 .PHONY: test-ci
 test-ci: install-tools
@@ -139,18 +125,13 @@ ifneq ($(SKIP_RELEASE_BRANCH_VALIDATION),true)
 	@[ "$$(git status --porcelain)" = "" ] || (echo "Must release from a clean git repo"; exit 1)
 endif
 	@echo Releasing new version
-	GIT_REVISION=$(GIT_REVISION) \
-		GIT_BRANCH=$(GIT_BRANCH) \
-		GIT_VERSION=$(GIT_VERSION) \
-		BUILD_DATE=$(BUILD_DATE) \
-		BUILD_TS_UNIX=$(BUILD_TS_UNIX) \
+	GO_BUILD_LDFLAGS="$(GO_BUILD_LDFLAGS)" \
 		INSTRUMENT_PACKAGE=$(INSTRUMENT_PACKAGE) \
 		GO_RELEASER_DOCKER_IMAGE=$(GO_RELEASER_DOCKER_IMAGE) \
 		GO_RELEASER_RELEASE_ARGS="$(GO_RELEASER_RELEASE_ARGS)" \
 		GO_RELEASER_WORKING_DIR=$(GO_RELEASER_WORKING_DIR) \
 		SSH_AUTH_SOCK=$(SSH_AUTH_SOCK) \
 		./scripts/run_goreleaser.sh ${GO_RELEASER_RELEASE_ARGS}
-	GIT_VERSION=$(GIT_VERSION) ./scripts/copy_release.py
 
 .PHONY: release-snapshot
 release-snapshot:
