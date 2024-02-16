@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# This script was copied without modification from the collector repo.
-#
 # This script is used to automate incrementing Git tags. If the last tag is "v0.n.0" this script
 # will create a new tag "v0.(n+1).0" pointing to the latest commit. This script is derived, with
 # minor modifications, from https://stackoverflow.com/questions/3760086/automatic-tagging-of-releases.

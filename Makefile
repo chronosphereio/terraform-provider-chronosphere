@@ -14,6 +14,7 @@ BUILD                     := $(abspath ./bin)
 GO_BUILD_LDFLAGS_CMD      := $(abspath ./scripts/go-build-ldflags.sh)
 GO_BUILD_LDFLAGS          := $(shell $(GO_BUILD_LDFLAGS_CMD))
 GO_BUILD_COMMON_ENV       := CGO_ENABLED=0
+# TODO: this was causing issues with releases. May not be a problem in recent go versions
 GOFLAGS=-buildvcs=false
 INSTRUMENT_PACKAGE        := github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/buildinfo
 
@@ -28,11 +29,7 @@ INTERNAL_TOOLS := \
   chronosphere/intschema/generateintschema
 
 GO_TEST   := $(or $(GO_TEST),go test)
-SCENARIOS := $(or $(SCENARIOS),./scenarios/...)
 
-SHARD_SCENARIOS = go run ./cmd/test_sharder -num-shards 2 -salt "8"
-
-# START_RULES general
 .PHONY: setup
 setup:
 	mkdir -p $(BUILD)
@@ -74,8 +71,12 @@ pagination: install-tools
 
 .PHONY: update-swagger
 update-swagger: install-tools
+	@[ -n "${SWAGGER_PATH}" ] || (echo "SWAGGER_PATH must be set, please set it and rerun this command"; exit 1)
 	rm -rf chronosphere/pkg/configunstable/{client,models}
+	cp ${SWAGGER_PATH}/unstable_config_swagger.json chronosphere/pkg/configunstable/swagger.json
+
 	rm -rf chronosphere/pkg/configv1/{client,models}
+	cp ${SWAGGER_PATH}/v1_config_swagger.json chronosphere/pkg/configv1/swagger.json
 
 	$(GO_GENERATE) ./chronosphere/pkg/configunstable/...
 	$(GO_GENERATE) ./chronosphere/pkg/configv1/...
@@ -143,7 +144,8 @@ release-snapshot:
 .PHONY: fmt
 fmt:
 	go fmt $(shell go list ./...)
-	terraform fmt examples/
+	# TODO: enable once examples are added
+	# terraform fmt examples/
 
 .PHONY: lint
 lint: install-tools
