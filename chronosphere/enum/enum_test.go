@@ -26,11 +26,6 @@ import (
 )
 
 func TestEnumConversions(t *testing.T) {
-	// v1 -> legacy
-	require.Equal(t,
-		"REGEXP_MATCHER_TYPE",
-		MatcherType.Legacy("REGEX"))
-
 	// v1 -> v1
 	require.Equal(t,
 		configv1.Configv1LabelMatcherMatcherTypeREGEX,
@@ -41,36 +36,15 @@ func TestEnumConversions(t *testing.T) {
 		configv1.Configv1LabelMatcherMatcherTypeEXACT,
 		MatcherType.V1("EXACT_MATCHER_TYPE"))
 
-	// legacy -> legacy
-	require.Equal(t,
-		"EXACT_MATCHER_TYPE",
-		MatcherType.Legacy("EXACT_MATCHER_TYPE"))
-
-	// alias -> legacy
-	require.Equal(t,
-		"EXACT_MATCHER_TYPE",
-		MatcherType.Legacy("EXACT"))
-
-	// alias -> empty legacy
-	require.Equal(t, "CUMULATIVE_EXPONENTIAL_HISTOGRAM", MetricType.Legacy("CUMULATIVE_EXPONENTIAL_HISTOGRAM"))
-
 	// alias -> v1
 	require.Equal(t,
 		configv1.Configv1LabelMatcherMatcherTypeEXACT,
 		MatcherType.V1("EXACT"))
 
-	// unknown -> legacy
-	require.Equal(t,
-		"FOO_BAR_BAZ",
-		MatcherType.Legacy("FOO_BAR_BAZ"))
-
 	// unknown -> v1
 	require.Equal(t,
 		configv1.Configv1LabelMatcherMatcherType("FOO_BAR_BAZ"),
 		MatcherType.V1("FOO_BAR_BAZ"))
-
-	// empty -> legacy
-	require.Equal(t, "INVALID_MATCHER_TYPE", MatcherType.Legacy(""))
 
 	// empty -> v1
 	require.Equal(t, configv1.Configv1LabelMatcherMatcherType(""), MatcherType.V1(""))

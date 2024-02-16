@@ -38,10 +38,6 @@ type Enum[L, V1 swaggerEnum] interface {
 	// Name returns the type name of the enum.
 	Name() string
 
-	// Legacy resolves into the enum's legacy value. If it is not registered
-	// it is simply propagated as an L type.
-	Legacy(s string) L
-
 	// V1 resolves into the enum's V1 value. If it is not
 	// registered, it is simply propagated as an L type.
 	V1(s string) V1
@@ -144,17 +140,6 @@ func (e enum[L, V1]) Name() string {
 	return e.name
 }
 
-func (e enum[L, V1]) Legacy(s string) L {
-	v, ok := e.values[s]
-	if !ok {
-		return L(s)
-	}
-	if v.legacy == "" {
-		return L(s)
-	}
-	return v.legacy
-}
-
 func (e enum[L, V1]) V1(s string) V1 {
 	v, ok := e.values[s]
 	if !ok {
@@ -188,10 +173,6 @@ func (e enum[L, V1]) ToStrings() Enum[string, string] {
 // in non-generic situations.
 type stringAdaptor[L, V1 swaggerEnum] struct {
 	enum[L, V1]
-}
-
-func (a stringAdaptor[L, V1]) Legacy(s string) string {
-	return string(a.enum.Legacy(s))
 }
 
 func (a stringAdaptor[L, V1]) V1(s string) string {
