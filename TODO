@@ -1,0 +1,2 @@
+ * pull in tail sampling v1
+ * remove enum's Legacy(..) method

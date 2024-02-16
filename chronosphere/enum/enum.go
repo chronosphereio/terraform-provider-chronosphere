@@ -28,8 +28,7 @@ type swaggerEnum interface {
 }
 
 // Enum defines a set of enum values, where a single logical value is
-// represented by multiple acceptable strings (legacy, v1, and an alias)
-// and can be converted to the desired API value (legacy or v1).
+// represented by multiple acceptable strings (legacy, v1, and an alias).
 //
 // Note that Enum will simply parrot back unknown values to ensure forwards
 // compatibilty, for example if an unknown value was read from the server.
