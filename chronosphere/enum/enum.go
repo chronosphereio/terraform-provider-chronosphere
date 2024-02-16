@@ -55,7 +55,7 @@ type Enum[L, V1 swaggerEnum] interface {
 // In general, you should NOT be using when introducing new enums. Legacy
 // mappings are only needed for backwards compatibility for old enums.
 type value[L, V1 swaggerEnum] struct {
-	// legacy is the apipb value. Required if isDefault=false.
+	// legacy is a value for backwards compatibility. Required if isDefault=false.
 	legacy L
 
 	// v1 is the configv1pb value. Required if isDefault=false.
@@ -74,8 +74,7 @@ type value[L, V1 swaggerEnum] struct {
 // v1OnlyValue is a subset of value which configures enums which don't require
 // legacy support.
 //
-// In general, you should be using this when introducing new enums, since
-// Terraform doesn't use the legacy API anymore.
+// In general, you should be using this when introducing new enums.
 type v1OnlyValue[V1 swaggerEnum] struct {
 	v1        V1
 	alias     string
@@ -125,7 +124,7 @@ func newEnum[L, V1 swaggerEnum](name string, values []value[L, V1]) enum[L, V1] 
 			defaultFound = true
 		}
 
-		// legacy is optional now that we use public api everywhere.
+		// legacy is optional now for new enums.
 		if v.legacy != "" {
 			register(string(v.legacy), v)
 		}
