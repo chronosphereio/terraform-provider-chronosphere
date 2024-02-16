@@ -39,12 +39,12 @@ type Enum[L, V1 swaggerEnum] interface {
 	// Name returns the type name of the enum.
 	Name() string
 
-	// Legacy resolves s into the enum's apipb value. If s is not registered, s
-	// is simply propagated as an L type.
+	// Legacy resolves into the enum's legacy value. If it is not registered
+	// it is simply propagated as an L type.
 	Legacy(s string) L
 
-	// V1 resolves s into the enum's configv1pb value. If s is not
-	// registered, s is simply propagated as an L type.
+	// V1 resolves into the enum's V1 value. If it is not
+	// registered, it is simply propagated as an L type.
 	V1(s string) V1
 
 	// Validate implements schema.ValidateDiagFunc.

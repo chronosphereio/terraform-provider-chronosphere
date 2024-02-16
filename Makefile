@@ -102,7 +102,7 @@ install: build verify-terraform-arch
 
 .PHONY: verify-terraform-arch
 verify-terraform-arch:
-	@terraform -version | grep ${OS_ARCH} >/dev/null || (echo "The terraform binary doesn't match OS/architecture ${OS_ARCH}. See http://go/terraform-arch for details on how to resolve this."; exit 1)
+	@terraform -version | grep ${OS_ARCH} >/dev/null || (echo "The terraform binary doesn't match OS/architecture ${OS_ARCH}"; exit 1)
 
 .PHONY: test
 test:
