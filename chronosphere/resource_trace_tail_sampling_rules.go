@@ -21,8 +21,8 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_tail_sampling_rules"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_tail_sampling_rules"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/tfresource"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
@@ -53,8 +53,8 @@ func resourceTraceTailSamplingRules() *schema.Resource {
 
 func toModel(
 	m *intschema.TraceTailSamplingRules,
-) (*models.ConfigunstableTraceTailSamplingRules, error) {
-	return &models.ConfigunstableTraceTailSamplingRules{
+) (*models.Configv1TraceTailSamplingRules, error) {
+	return &models.Configv1TraceTailSamplingRules{
 		DefaultSampleRate: defaultSampleRateToModel(m.DefaultSampleRate),
 		Rules:             sliceutil.Map(m.Rules, ruleToModel),
 	}, nil
@@ -62,11 +62,11 @@ func toModel(
 
 func defaultSampleRateToModel(
 	t *intschema.TraceTailSamplingRulesDefaultSampleRate,
-) *models.ConfigunstableDefaultSampleRate {
+) *models.Configv1DefaultSampleRate {
 	if t == nil {
 		return nil
 	}
-	return &models.ConfigunstableDefaultSampleRate{
+	return &models.Configv1DefaultSampleRate{
 		Enabled:    t.Enabled,
 		SampleRate: t.SampleRate,
 	}
@@ -74,8 +74,8 @@ func defaultSampleRateToModel(
 
 func ruleToModel(
 	r intschema.TraceTailSamplingRulesRules,
-) *models.ConfigunstableTraceTailSamplingRule {
-	return &models.ConfigunstableTraceTailSamplingRule{
+) *models.Configv1TraceTailSamplingRule {
+	return &models.Configv1TraceTailSamplingRule{
 		Name:       r.Name,
 		SystemName: r.SystemName,
 		Filter:     traceSearchFilterToModel(r.Filter),
@@ -101,7 +101,7 @@ func spanFilterToModel(
 	return &models.TraceSearchFilterSpanFilter{
 		Duration:        durationFilterToModel(s.Duration),
 		Error:           boolFilterToModel(s.Error),
-		MatchType:       enum.SpanFilterMatchType.Legacy(s.MatchType),
+		MatchType:       enum.SpanFilterMatchType.V1(s.MatchType),
 		Operation:       stringFilterToModel(s.Operation),
 		ParentOperation: stringFilterToModel(s.ParentOperation),
 		ParentService:   stringFilterToModel(s.ParentService),
@@ -141,7 +141,7 @@ func stringFilterToModel(
 		return nil
 	}
 	return &models.TraceSearchFilterStringFilter{
-		Match: enum.StringFilterMatchType.Legacy(s.Match),
+		Match: enum.StringFilterMatchType.V1(s.Match),
 		Value: s.Value,
 	}
 }
@@ -153,7 +153,7 @@ func numericFilterToModel(
 		return nil
 	}
 	return &models.TraceSearchFilterNumericFilter{
-		Comparison: enum.NumericFilterComparisonType.Legacy(s.Comparison),
+		Comparison: enum.NumericFilterComparisonType.V1(s.Comparison),
 		Value:      s.Value,
 	}
 }
@@ -197,7 +197,7 @@ func traceFilterToModel(
 // -----
 
 func fromModel(
-	m *models.ConfigunstableTraceTailSamplingRules,
+	m *models.Configv1TraceTailSamplingRules,
 ) *intschema.TraceTailSamplingRules {
 	return &intschema.TraceTailSamplingRules{
 		DefaultSampleRate: defaultSampleRateFromModel(m.DefaultSampleRate),
@@ -206,7 +206,7 @@ func fromModel(
 }
 
 func defaultSampleRateFromModel(
-	r *models.ConfigunstableDefaultSampleRate,
+	r *models.Configv1DefaultSampleRate,
 ) *intschema.TraceTailSamplingRulesDefaultSampleRate {
 	if r == nil {
 		return nil
@@ -218,7 +218,7 @@ func defaultSampleRateFromModel(
 }
 
 func ruleFromModel(
-	r *models.ConfigunstableTraceTailSamplingRule,
+	r *models.Configv1TraceTailSamplingRule,
 ) intschema.TraceTailSamplingRulesRules {
 	return intschema.TraceTailSamplingRulesRules{
 		Filter:     traceSearchFilterFromModel(r.Filter),
@@ -341,14 +341,14 @@ func resourceTraceTailSamplingRulesCreate(
 	ctx context.Context, d *schema.ResourceData, meta any,
 ) diag.Diagnostics {
 	ctx = tfresource.NewContext(ctx, "trace_tail_sampling_rules")
-	cli := getConfigUnstableClient(meta)
+	cli := getConfigClient(meta)
 
 	rules, err := buildTraceTailSamplingRules(d)
 	if err != nil {
 		return diag.Errorf("could not build trace tail sampling rules: %v", err)
 	}
 	req := &trace_tail_sampling_rules.CreateTraceTailSamplingRulesParams{
-		Body: &models.ConfigunstableCreateTraceTailSamplingRulesRequest{
+		Body: &models.Configv1CreateTraceTailSamplingRulesRequest{
 			TraceTailSamplingRules: rules,
 		},
 		Context: ctx,
@@ -367,7 +367,7 @@ func resourceTraceTailSamplingRulesRead(
 	ctx context.Context, d *schema.ResourceData, meta any,
 ) diag.Diagnostics {
 	ctx = tfresource.NewContext(ctx, "trace_tail_sampling_rules")
-	cli := getConfigUnstableClient(meta)
+	cli := getConfigClient(meta)
 
 	resp, err := cli.TraceTailSamplingRules.ReadTraceTailSamplingRules(&trace_tail_sampling_rules.ReadTraceTailSamplingRulesParams{Context: ctx})
 	if clienterror.IsNotFound(err) {
@@ -391,7 +391,7 @@ func resourceTraceTailSamplingRulesUpdate(
 	ctx context.Context, d *schema.ResourceData, meta any,
 ) diag.Diagnostics {
 	ctx = tfresource.NewContext(ctx, "trace_tail_sampling_rules")
-	cli := getConfigUnstableClient(meta)
+	cli := getConfigClient(meta)
 
 	rules, err := buildTraceTailSamplingRules(d)
 	if err != nil {
@@ -399,7 +399,7 @@ func resourceTraceTailSamplingRulesUpdate(
 	}
 	req := &trace_tail_sampling_rules.UpdateTraceTailSamplingRulesParams{
 		Context: ctx,
-		Body: &models.ConfigunstableUpdateTraceTailSamplingRulesRequest{
+		Body: &models.Configv1UpdateTraceTailSamplingRulesRequest{
 			TraceTailSamplingRules: rules,
 		},
 	}
@@ -413,7 +413,7 @@ func resourceTraceTailSamplingRulesDelete(
 	ctx context.Context, d *schema.ResourceData, meta any,
 ) diag.Diagnostics {
 	ctx = tfresource.NewContext(ctx, "trace_tail_sampling_rules")
-	cli := getConfigUnstableClient(meta)
+	cli := getConfigClient(meta)
 
 	req := &trace_tail_sampling_rules.DeleteTraceTailSamplingRulesParams{Context: ctx}
 	if _, err := cli.TraceTailSamplingRules.DeleteTraceTailSamplingRules(req); clienterror.IsNotFound(err) {
@@ -438,7 +438,7 @@ func resourceTraceTailSamplingRulesCustomizeDiff(
 	return validateTraceTailSamplingRules(rules)
 }
 
-func validateTraceTailSamplingRules(rules *models.ConfigunstableTraceTailSamplingRules) error {
+func validateTraceTailSamplingRules(rules *models.Configv1TraceTailSamplingRules) error {
 	for _, r := range rules.Rules {
 		if r.SampleRate < 0 || r.SampleRate > 1.0 {
 			return fmt.Errorf("expected sample rate to be a float from 0 to 1.0 inclusive, got %f", r.SampleRate)
@@ -452,7 +452,7 @@ func validateTraceTailSamplingRules(rules *models.ConfigunstableTraceTailSamplin
 	return nil
 }
 
-func buildTraceTailSamplingRules(d ResourceGetter) (*models.ConfigunstableTraceTailSamplingRules, error) {
+func buildTraceTailSamplingRules(d ResourceGetter) (*models.Configv1TraceTailSamplingRules, error) {
 	rules := &intschema.TraceTailSamplingRules{}
 	if err := rules.FromResourceData(d); err != nil {
 		return nil, err
