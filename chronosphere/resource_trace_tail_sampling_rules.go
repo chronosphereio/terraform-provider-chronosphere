@@ -47,7 +47,10 @@ func resourceTraceTailSamplingRules() *schema.Resource {
 	}
 }
 
-// TO MODEL
+// -----
+// toModel and related helpers.
+// -----
+
 func toModel(
 	m *intschema.TraceTailSamplingRules,
 ) (*models.ConfigunstableTraceTailSamplingRules, error) {
@@ -189,7 +192,10 @@ func traceFilterToModel(
 	}
 }
 
-// FROM MODEL
+// -----
+// fromModel and related helpers.
+// -----
+
 func fromModel(
 	m *models.ConfigunstableTraceTailSamplingRules,
 ) *intschema.TraceTailSamplingRules {
