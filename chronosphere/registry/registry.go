@@ -147,10 +147,6 @@ func mustValidate(rs []Resource) []Resource {
 }
 
 var Resources = mustValidate([]Resource{
-	// TODO:
-	// - Alert
-	// - ExportJob
-	// - TraceDerivedMetricsRule
 	{
 		Name:   "blackhole_alert_notifier",
 		Entity: "Notifier",
