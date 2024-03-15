@@ -36,7 +36,7 @@ const (
 
 // NotificationPolicyData stores policy information for inline policies, which is used by the bucket
 // resource to create and manage the policy.
-// It matches the previously marshalled values stored by previous versions.
+// It matches the previously marshalled values generated from legacy API models.
 type NotificationPolicyData struct {
 	Routes *Routes `json:"routes,omitempty"`
 }

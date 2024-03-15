@@ -37,13 +37,6 @@ var NotificationPolicy = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
 	},
-	// NB: there is custom bucket_id ForceNew behavior in the DiffSuppressFunc.
-	"bucket_id": {
-		Type:          schema.TypeString,
-		Optional:      true,
-		ConflictsWith: []string{"team_id"},
-		RequiredWith:  []string{"name"},
-	},
 	// NB: there is custom team_id ForceNew behavior in the DiffSuppressFunc.
 	"team_id": {
 		Type:         schema.TypeString,

@@ -144,7 +144,6 @@ func resourceBucketRead(ctx context.Context, d *schema.ResourceData, meta any) d
 		return diag.Errorf("unable to read bucket: %v", clienterror.Wrap(err))
 	}
 
-	bucketSlug := d.Id()
 	b, err := bucketConverter{}.fromModel(resp.Payload.Bucket)
 	if err != nil {
 		diag.Errorf("unable to convert bucket: %v", clienterror.Wrap(err))
@@ -155,7 +154,7 @@ func resourceBucketRead(ctx context.Context, d *schema.ResourceData, meta any) d
 	if b.NotificationPolicySlug != "" {
 		res, err := cfgCli.NotificationPolicy.ReadNotificationPolicy(&notification_policy.ReadNotificationPolicyParams{
 			Context: ctx,
-			Slug:    bucketSlug, // for inline policies, the slug of the policy is the same as the bucket.
+			Slug:    b.NotificationPolicySlug,
 		})
 		if err != nil {
 			if clienterror.IsNotFound(err) {
@@ -307,8 +306,8 @@ func reconcileNotificationPolicy(
 			if _, err := configCli.NotificationPolicy.DeleteNotificationPolicy(&notification_policy.DeleteNotificationPolicyParams{
 				Context: ctx,
 				Slug:    bucketPolicySlug,
-			}); policyIndependenceDeleteConflict(err) {
-				tflog.Info(ctx, "not deleting independent notification policy", map[string]any{
+			}); policyNotBucketOwned(err) {
+				tflog.Info(ctx, "cannot delete notification policy as it's not bucket owned", map[string]any{
 					"slug": bucketPolicySlug,
 				})
 			} else if clienterror.IsNotFound(err) {
@@ -409,15 +408,16 @@ func policyModelFromBucket(d *schema.ResourceData) (policy *configmodels.Configv
 	return policy, false, nil
 }
 
-// policyIndependenceDeleteConflict returns true if the given error represents a failure to delete a notification policy
-// due to mismatched expectation of it being independently managed by chronosphere_notification_policy.
-func policyIndependenceDeleteConflict(err error) bool {
+// When deleting policies, only bucket-owned policies are deleted, deletes of
+// other owned policies are ignored to support migrating from an inline policy
+// to an independent team-owned policy.
+func policyNotBucketOwned(err error) bool {
 	err = clienterror.Wrap(err)
 
 	var clientErr *clienterror.Error
 	return errors.As(err, &clientErr) &&
 		clientErr.Code == http.StatusBadRequest &&
-		strings.Contains(clientErr.Message, "terraform_independent_lifecycle")
+		strings.Contains(clientErr.Message, "not bucket owned")
 }
 
 func resourceBucketBuild(d *schema.ResourceData) (*configmodels.Configv1Bucket, error) {

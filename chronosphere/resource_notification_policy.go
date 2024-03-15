@@ -185,7 +185,7 @@ func (npr *notificationPolicyResourceMeta) resourceNotificationPolicyCustomizeDi
 	hasSlug := stringAttrLikelyDefined(diff, "slug")
 
 	// Validate presence of slug w.r.t. other fields
-	hasOwner := stringAttrLikelyDefined(diff, "bucket_id") || stringAttrLikelyDefined(diff, "team_id")
+	hasOwner := stringAttrLikelyDefined(diff, "team_id")
 	if hasSlug && !hasOwner {
 		return fmt.Errorf("cannot set slug for unowned policy, use a notification policy with team_id set")
 	}
@@ -202,17 +202,15 @@ func (npr *notificationPolicyResourceMeta) resourceNotificationPolicyCustomizeDi
 	// This is done in this diff function since the force new behavior covers both the bucket_id and team_id fields collectively.
 	// Putting ForceNew individually on those fields may cause unnecessary deletes-and-recreates in the case of
 	// an already-owned policy changing ownership (e.g. ownership changes from team X to team Y).
-	oldBucketID, _ := diff.GetChange("bucket_id")
 	oldTeamID, _ := diff.GetChange("team_id")
-	hadOwner := oldBucketID.(string) != "" || oldTeamID.(string) != ""
+	hadOwner := oldTeamID.(string) != ""
 
 	if hadOwner != hasOwner {
 		tflog.Info(ctx, "updating `is_independent` field to ForceNew notification policy", map[string]interface{}{
-			"ownedBefore":     hadOwner,
-			"ownedNow":        hasOwner,
-			"bucketIdChanged": diff.HasChange("bucket_id"),
-			"teamIdChanged":   diff.HasChange("team_id"),
-			"is_independent":  hasOwner,
+			"ownedBefore":    hadOwner,
+			"ownedNow":       hasOwner,
+			"teamIdChanged":  diff.HasChange("team_id"),
+			"is_independent": hasOwner,
 		})
 		if err := diff.SetNew("is_independent", hasOwner); err != nil {
 			return err
@@ -361,10 +359,9 @@ func expandNotificationPolicyRaw(
 
 // expandNotificationPolicy converts a notification policy resource to the corresponding API model type.
 func expandNotificationPolicy(p *intschema.NotificationPolicy) (*NotificationPolicyData, error) {
-	bucketSlug := p.BucketId.Slug()
 	teamSlug := p.TeamId.Slug()
 
-	isInline := bucketSlug == "" && teamSlug == ""
+	isInline := teamSlug == ""
 	if p.Slug != "" && isInline {
 		return nil, fmt.Errorf("cannot set slug for unowned policy, can only set slug if policy with team_id set")
 	}
@@ -429,8 +426,9 @@ func isNotificationPolicyIndependent(p *intschema.NotificationPolicy) bool {
 		// If policy exists, determine independence based on ID in the TF state
 		return !localid.IsLocalID(p.StateID)
 	}
-	// Otherwise, policy is independent if bucket_id or team_id is set in the TF definition.
-	return p.BucketId.Slug() != "" || p.TeamId.Slug() != ""
+
+	// Otherwise, policy is independent if team_id is set in the TF definition.
+	return p.TeamId.Slug() != ""
 }
 
 func moveRuleToRoute(p *intschema.NotificationPolicy) error {
@@ -455,7 +453,7 @@ func isNotificationPolicyIndependentForCustomizeDiff(
 		return false
 	}
 
-	return !isRawAttributeNull(diff, "bucket_id") || !isRawAttributeNull(diff, "team_id")
+	return !isRawAttributeNull(diff, "team_id")
 }
 
 func expandMatcherSchema(m intschema.Matcher) *configmodels.Configv1LabelMatcher {

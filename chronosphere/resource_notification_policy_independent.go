@@ -61,8 +61,7 @@ func (independentNotificationPolicyConverter) toModel(
 		return nil, err
 	}
 	return &models.Configv1NotificationPolicy{
-		BucketSlug: p.BucketId.Slug(),
-		Name:       p.Name,
+		Name: p.Name,
 		Routes: &models.NotificationPolicyRoutes{
 			Defaults:  defaults,
 			Overrides: overrides,
@@ -84,10 +83,12 @@ func (independentNotificationPolicyConverter) fromModel(
 		routes = notificationRoutesFromModel(m.Routes.Defaults)
 	}
 
+	// Note: BucketSlug being set should cause a change to be detected by TF.
+	// Since a policy is either bucket-owned or team-owned, a bucket owned policy
+	// will have no team, so the team will mismatch.
 	return &intschema.NotificationPolicy{
 		Name:                   m.Name,
 		Slug:                   m.Slug,
-		BucketId:               tfid.Slug(m.BucketSlug),
 		TeamId:                 tfid.Slug(m.TeamSlug),
 		Override:               overrides,
 		Route:                  routes,
