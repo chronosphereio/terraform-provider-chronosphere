@@ -11,11 +11,14 @@ import (
 	"github.com/go-openapi/strfmt"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dashboard"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dataset"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/link_template"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/noop_entity"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/saved_trace_search"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/service"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/sync_prometheus"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_behavior"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_tail_sampling_rules"
 )
@@ -63,11 +66,14 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli := new(ConfigUnstableAPI)
 	cli.Transport = transport
 	cli.Dashboard = dashboard.New(transport, formats)
+	cli.Dataset = dataset.New(transport, formats)
+	cli.GcpMetricsIntegration = gcp_metrics_integration.New(transport, formats)
 	cli.LinkTemplate = link_template.New(transport, formats)
 	cli.NoopEntity = noop_entity.New(transport, formats)
 	cli.SavedTraceSearch = saved_trace_search.New(transport, formats)
 	cli.Service = service.New(transport, formats)
 	cli.SyncPrometheus = sync_prometheus.New(transport, formats)
+	cli.TraceBehavior = trace_behavior.New(transport, formats)
 	cli.TraceJaegerRemoteSamplingStrategy = trace_jaeger_remote_sampling_strategy.New(transport, formats)
 	cli.TraceTailSamplingRules = trace_tail_sampling_rules.New(transport, formats)
 	return cli
@@ -116,6 +122,10 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 type ConfigUnstableAPI struct {
 	Dashboard dashboard.ClientService
 
+	Dataset dataset.ClientService
+
+	GcpMetricsIntegration gcp_metrics_integration.ClientService
+
 	LinkTemplate link_template.ClientService
 
 	NoopEntity noop_entity.ClientService
@@ -125,6 +135,8 @@ type ConfigUnstableAPI struct {
 	Service service.ClientService
 
 	SyncPrometheus sync_prometheus.ClientService
+
+	TraceBehavior trace_behavior.ClientService
 
 	TraceJaegerRemoteSamplingStrategy trace_jaeger_remote_sampling_strategy.ClientService
 
@@ -137,11 +149,14 @@ type ConfigUnstableAPI struct {
 func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 	c.Dashboard.SetTransport(transport)
+	c.Dataset.SetTransport(transport)
+	c.GcpMetricsIntegration.SetTransport(transport)
 	c.LinkTemplate.SetTransport(transport)
 	c.NoopEntity.SetTransport(transport)
 	c.SavedTraceSearch.SetTransport(transport)
 	c.Service.SetTransport(transport)
 	c.SyncPrometheus.SetTransport(transport)
+	c.TraceBehavior.SetTransport(transport)
 	c.TraceJaegerRemoteSamplingStrategy.SetTransport(transport)
 	c.TraceTailSamplingRules.SetTransport(transport)
 }

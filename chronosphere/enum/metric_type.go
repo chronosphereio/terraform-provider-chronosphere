@@ -55,4 +55,16 @@ var MetricType = newEnum("MetricType", []value[
 		v1:    configv1.RollupRuleMetricTypeMEASUREMENT,
 		alias: "MEASUREMENT",
 	},
+	{
+		v1:    configv1.RollupRuleMetricTypeCUMULATIVECOUNTER,
+		alias: "CUMULATIVE_COUNTER",
+	},
+	{
+		v1:    configv1.RollupRuleMetricTypeDELTACOUNTER,
+		alias: "DELTA_COUNTER",
+	},
+	{
+		v1:    configv1.RollupRuleMetricTypeDELTAEXPONENTIALHISTOGRAM,
+		alias: "DELTA_EXPONENTIAL_HISTOGRAM",
+	},
 })

@@ -38,14 +38,18 @@ type Configv1RollupRule struct {
 	DropRaw bool `json:"drop_raw,omitempty"`
 
 	// Enables expansive label matching behavior for the provided filters and
-	// label_policy.keep (if set). By default (expansive_match=false), a series
-	// matches and aggregates only if each label defined by filters and
-	// label_policy.keep (respectively) exist in said series. Setting
-	// expansive_match=true removes this restriction.
+	// label_policy.keep or graphite_label_policy.replace (if set). By default
+	// (expansive_match=false), a series matches and aggregates only if each label
+	// defined by filters and label_policy.keep or graphite_label_policy.replace
+	// (respectively) exist in said series. Setting expansive_match=true removes
+	// this restriction.
 	ExpansiveMatch bool `json:"expansive_match,omitempty"`
 
 	// Filters that determine to which metrics to apply the rule.
 	Filters []*Configv1LabelFilter `json:"filters"`
+
+	// graphite label policy
+	GraphiteLabelPolicy *RollupRuleGraphiteLabelPolicy `json:"graphite_label_policy,omitempty"`
 
 	// Interval between aggregated data points, equivalent to the resolution
 	// field in storage policy. If set, then the storage_policy field can't be
@@ -55,9 +59,8 @@ type Configv1RollupRule struct {
 	// label policy
 	LabelPolicy *Configv1RollupRuleLabelPolicy `json:"label_policy,omitempty"`
 
-	// Replaces or adds new labels to the rollup, optionally based on a matching
-	// regex for tag values. This is only available on Graphite rollup rules.
-	LabelReplace []*RollupRuleLabelReplace `json:"label_replace"`
+	// label replace
+	LabelReplace RollupRuleLabelReplace `json:"label_replace,omitempty"`
 
 	// Name of the new metric created as a result of the rollup.
 	MetricName string `json:"metric_name,omitempty"`
@@ -99,11 +102,11 @@ func (m *Configv1RollupRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateLabelPolicy(formats); err != nil {
+	if err := m.validateGraphiteLabelPolicy(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateLabelReplace(formats); err != nil {
+	if err := m.validateLabelPolicy(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -184,6 +187,25 @@ func (m *Configv1RollupRule) validateFilters(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Configv1RollupRule) validateGraphiteLabelPolicy(formats strfmt.Registry) error {
+	if swag.IsZero(m.GraphiteLabelPolicy) { // not required
+		return nil
+	}
+
+	if m.GraphiteLabelPolicy != nil {
+		if err := m.GraphiteLabelPolicy.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("graphite_label_policy")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("graphite_label_policy")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Configv1RollupRule) validateLabelPolicy(formats strfmt.Registry) error {
 	if swag.IsZero(m.LabelPolicy) { // not required
 		return nil
@@ -198,32 +220,6 @@ func (m *Configv1RollupRule) validateLabelPolicy(formats strfmt.Registry) error 
 			}
 			return err
 		}
-	}
-
-	return nil
-}
-
-func (m *Configv1RollupRule) validateLabelReplace(formats strfmt.Registry) error {
-	if swag.IsZero(m.LabelReplace) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.LabelReplace); i++ {
-		if swag.IsZero(m.LabelReplace[i]) { // not required
-			continue
-		}
-
-		if m.LabelReplace[i] != nil {
-			if err := m.LabelReplace[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("label_replace" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("label_replace" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
 	}
 
 	return nil
@@ -310,11 +306,11 @@ func (m *Configv1RollupRule) ContextValidate(ctx context.Context, formats strfmt
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateLabelPolicy(ctx, formats); err != nil {
+	if err := m.contextValidateGraphiteLabelPolicy(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateLabelReplace(ctx, formats); err != nil {
+	if err := m.contextValidateLabelPolicy(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -383,6 +379,22 @@ func (m *Configv1RollupRule) contextValidateFilters(ctx context.Context, formats
 	return nil
 }
 
+func (m *Configv1RollupRule) contextValidateGraphiteLabelPolicy(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.GraphiteLabelPolicy != nil {
+		if err := m.GraphiteLabelPolicy.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("graphite_label_policy")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("graphite_label_policy")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Configv1RollupRule) contextValidateLabelPolicy(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.LabelPolicy != nil {
@@ -394,26 +406,6 @@ func (m *Configv1RollupRule) contextValidateLabelPolicy(ctx context.Context, for
 			}
 			return err
 		}
-	}
-
-	return nil
-}
-
-func (m *Configv1RollupRule) contextValidateLabelReplace(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.LabelReplace); i++ {
-
-		if m.LabelReplace[i] != nil {
-			if err := m.LabelReplace[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("label_replace" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("label_replace" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
 	}
 
 	return nil

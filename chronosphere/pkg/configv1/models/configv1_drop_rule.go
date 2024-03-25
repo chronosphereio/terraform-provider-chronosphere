@@ -28,6 +28,9 @@ type Configv1DropRule struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
+	// Drops datapoints if datapoint values are NaN.
+	DropNanValue bool `json:"drop_nan_value,omitempty"`
+
 	// Series that match this filter are dropped.
 	Filters []*Configv1LabelFilter `json:"filters"`
 

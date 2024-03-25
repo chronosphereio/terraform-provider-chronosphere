@@ -80,6 +80,7 @@ var fieldIsTFID = map[string]bool{
 
 	"callback_id": false,
 	"external_id": false,
+	"project_id":  false,
 }
 
 var fieldAddFile = map[string]bool{

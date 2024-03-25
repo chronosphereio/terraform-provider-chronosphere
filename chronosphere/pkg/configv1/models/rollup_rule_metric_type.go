@@ -47,6 +47,15 @@ const (
 
 	// RollupRuleMetricTypeMEASUREMENT captures enum value "MEASUREMENT"
 	RollupRuleMetricTypeMEASUREMENT RollupRuleMetricType = "MEASUREMENT"
+
+	// RollupRuleMetricTypeCUMULATIVECOUNTER captures enum value "CUMULATIVE_COUNTER"
+	RollupRuleMetricTypeCUMULATIVECOUNTER RollupRuleMetricType = "CUMULATIVE_COUNTER"
+
+	// RollupRuleMetricTypeDELTACOUNTER captures enum value "DELTA_COUNTER"
+	RollupRuleMetricTypeDELTACOUNTER RollupRuleMetricType = "DELTA_COUNTER"
+
+	// RollupRuleMetricTypeDELTAEXPONENTIALHISTOGRAM captures enum value "DELTA_EXPONENTIAL_HISTOGRAM"
+	RollupRuleMetricTypeDELTAEXPONENTIALHISTOGRAM RollupRuleMetricType = "DELTA_EXPONENTIAL_HISTOGRAM"
 )
 
 // for schema
@@ -54,7 +63,7 @@ var rollupRuleMetricTypeEnum []interface{}
 
 func init() {
 	var res []RollupRuleMetricType
-	if err := json.Unmarshal([]byte(`["COUNTER","GAUGE","DELTA","DISTRIBUTION","CUMULATIVE_EXPONENTIAL_HISTOGRAM","MEASUREMENT"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["COUNTER","GAUGE","DELTA","DISTRIBUTION","CUMULATIVE_EXPONENTIAL_HISTOGRAM","MEASUREMENT","CUMULATIVE_COUNTER","DELTA_COUNTER","DELTA_EXPONENTIAL_HISTOGRAM"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {

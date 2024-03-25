@@ -151,4 +151,9 @@ var AggregationType = newEnum("AggregationType", []value[
 		v1:     configv1.Configv1AggregationTypeP9999,
 		alias:  "P9999",
 	},
+	{
+		legacy: "HISTOGRAM",
+		v1:     configv1.Configv1AggregationTypeHISTOGRAM,
+		alias:  "HISTOGRAM",
+	},
 })

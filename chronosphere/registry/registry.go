@@ -211,6 +211,13 @@ var Resources = mustValidate([]Resource{
 		DryRun: true,
 	},
 	{
+		Name:   "gcp_metrics_integration",
+		Entity: "GcpMetricsIntegration",
+		API:    Unstable,
+		Schema: tfschema.GcpMetricsIntegration,
+		DryRun: true,
+	},
+	{
 		Name:   "mapping_rule",
 		Entity: "MappingRule",
 		API:    V1,
