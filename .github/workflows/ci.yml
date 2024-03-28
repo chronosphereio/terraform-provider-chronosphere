@@ -1,0 +1,27 @@
+# This workflow will build and test the Chronosphere provider
+name: Go
+
+on:
+  push:
+    branches: main
+  pull_request: # don't include branches so that all PRs run.
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+
+      - name: Build
+        run: make build
+
+      - name: Test
+        run: make test
+
+      - name: Lint
+        run: make lint
