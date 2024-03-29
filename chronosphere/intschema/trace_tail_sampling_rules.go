@@ -55,43 +55,10 @@ func (o *TraceTailSamplingRules) Ref() tfid.ID {
 }
 
 type TraceTailSamplingRulesRules struct {
-	Name       string                             `intschema:"name,optional"`
-	SampleRate float64                            `intschema:"sample_rate"`
-	Filter     *TraceTailSamplingRulesRulesFilter `intschema:"filter,optional,list_encoded_object"`
-	SystemName string                             `intschema:"system_name,optional"`
-}
-
-type TraceTailSamplingRulesRulesFilter struct {
-	Span  []TraceTailSamplingRulesRulesFilterSpan `intschema:"span,optional"`
-	Trace *TraceTailSamplingRulesRulesFilterTrace `intschema:"trace,optional,list_encoded_object"`
-}
-
-type TraceTailSamplingRulesRulesFilterTrace struct {
-	Duration *TraceTailSamplingDurationFilterSchema `intschema:"duration,optional,list_encoded_object"`
-	Error    *TraceTailSamplingBoolFilterSchema     `intschema:"error,optional,list_encoded_object"`
-}
-
-type TraceTailSamplingRulesRulesFilterSpan struct {
-	Duration        *TraceTailSamplingDurationFilterSchema          `intschema:"duration,optional,list_encoded_object"`
-	Error           *TraceTailSamplingBoolFilterSchema              `intschema:"error,optional,list_encoded_object"`
-	MatchType       string                                          `intschema:"match_type,optional"`
-	Operation       *TraceTailSamplingStringFilterSchema            `intschema:"operation,optional,list_encoded_object"`
-	ParentOperation *TraceTailSamplingStringFilterSchema            `intschema:"parent_operation,optional,list_encoded_object"`
-	ParentService   *TraceTailSamplingStringFilterSchema            `intschema:"parent_service,optional,list_encoded_object"`
-	Service         *TraceTailSamplingStringFilterSchema            `intschema:"service,optional,list_encoded_object"`
-	SpanCount       *TraceTailSamplingRulesRulesFilterSpanSpanCount `intschema:"span_count,optional,list_encoded_object"`
-	Tags            []TraceTailSamplingRulesRulesFilterSpanTags     `intschema:"tags,optional"`
-}
-
-type TraceTailSamplingRulesRulesFilterSpanTags struct {
-	Key          string                                `intschema:"key,optional"`
-	NumericValue *TraceTailSamplingNumericFilterSchema `intschema:"numeric_value,optional,list_encoded_object"`
-	Value        *TraceTailSamplingStringFilterSchema  `intschema:"value,optional,list_encoded_object"`
-}
-
-type TraceTailSamplingRulesRulesFilterSpanSpanCount struct {
-	Max int64 `intschema:"max,optional"`
-	Min int64 `intschema:"min,optional"`
+	Name       string            `intschema:"name,optional"`
+	Filter     TraceSearchFilter `intschema:"filter,list_encoded_object"`
+	SampleRate float64           `intschema:"sample_rate"`
+	SystemName string            `intschema:"system_name,optional"`
 }
 
 type TraceTailSamplingRulesDefaultSampleRate struct {

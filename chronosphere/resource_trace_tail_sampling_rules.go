@@ -18,7 +18,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_tail_sampling_rules"
@@ -26,8 +28,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/tfresource"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // TraceTailSamplingRulesID is the static ID of the global trace tail sampling rules singleton.
@@ -54,9 +54,13 @@ func resourceTraceTailSamplingRules() *schema.Resource {
 func toModel(
 	m *intschema.TraceTailSamplingRules,
 ) (*models.Configv1TraceTailSamplingRules, error) {
+	spanFilters, err := sliceutil.MapErr(m.Rules, ruleToModel)
+	if err != nil {
+		return nil, err
+	}
 	return &models.Configv1TraceTailSamplingRules{
 		DefaultSampleRate: defaultSampleRateToModel(m.DefaultSampleRate),
-		Rules:             sliceutil.Map(m.Rules, ruleToModel),
+		Rules:             spanFilters,
 	}, nil
 }
 
@@ -72,124 +76,17 @@ func defaultSampleRateToModel(
 	}
 }
 
-func ruleToModel(
-	r intschema.TraceTailSamplingRulesRules,
-) *models.Configv1TraceTailSamplingRule {
+func ruleToModel(r intschema.TraceTailSamplingRulesRules) (*models.Configv1TraceTailSamplingRule, error) {
+	traceFilter, err := traceSearchFilterToModel(r.Filter)
+	if err != nil {
+		return nil, err
+	}
 	return &models.Configv1TraceTailSamplingRule{
 		Name:       r.Name,
 		SystemName: r.SystemName,
-		Filter:     traceSearchFilterToModel(r.Filter),
+		Filter:     traceFilter,
 		SampleRate: r.SampleRate,
-	}
-}
-
-func traceSearchFilterToModel(
-	f *intschema.TraceTailSamplingRulesRulesFilter,
-) *models.Configv1TraceSearchFilter {
-	if f == nil {
-		return nil
-	}
-	return &models.Configv1TraceSearchFilter{
-		Span:  sliceutil.Map(f.Span, spanFilterToModel),
-		Trace: traceFilterToModel(f.Trace),
-	}
-}
-
-func spanFilterToModel(
-	s intschema.TraceTailSamplingRulesRulesFilterSpan,
-) *models.TraceSearchFilterSpanFilter {
-	return &models.TraceSearchFilterSpanFilter{
-		Duration:        durationFilterToModel(s.Duration),
-		Error:           boolFilterToModel(s.Error),
-		MatchType:       enum.SpanFilterMatchType.V1(s.MatchType),
-		Operation:       stringFilterToModel(s.Operation),
-		ParentOperation: stringFilterToModel(s.ParentOperation),
-		ParentService:   stringFilterToModel(s.ParentService),
-		Service:         stringFilterToModel(s.Service),
-		SpanCount:       countFilterToModel(s.SpanCount),
-		Tags:            sliceutil.Map(s.Tags, tagToModel),
-	}
-}
-
-func durationFilterToModel(
-	d *intschema.TraceTailSamplingDurationFilterSchema,
-) *models.TraceSearchFilterDurationFilter {
-	if d == nil {
-		return nil
-	}
-	return &models.TraceSearchFilterDurationFilter{
-		MaxSecs: d.MaxSecs,
-		MinSecs: d.MinSecs,
-	}
-}
-
-func boolFilterToModel(
-	b *intschema.TraceTailSamplingBoolFilterSchema,
-) *models.TraceSearchFilterBoolFilter {
-	if b == nil {
-		return nil
-	}
-	return &models.TraceSearchFilterBoolFilter{
-		Value: b.Value,
-	}
-}
-
-func stringFilterToModel(
-	s *intschema.TraceTailSamplingStringFilterSchema,
-) *models.TraceSearchFilterStringFilter {
-	if s == nil {
-		return nil
-	}
-	return &models.TraceSearchFilterStringFilter{
-		Match: enum.StringFilterMatchType.V1(s.Match),
-		Value: s.Value,
-	}
-}
-
-func numericFilterToModel(
-	s *intschema.TraceTailSamplingNumericFilterSchema,
-) *models.TraceSearchFilterNumericFilter {
-	if s == nil {
-		return nil
-	}
-	return &models.TraceSearchFilterNumericFilter{
-		Comparison: enum.NumericFilterComparisonType.V1(s.Comparison),
-		Value:      s.Value,
-	}
-}
-
-func countFilterToModel(
-	c *intschema.TraceTailSamplingRulesRulesFilterSpanSpanCount,
-) *models.TraceSearchFilterCountFilter {
-	if c == nil {
-		return nil
-	}
-	return &models.TraceSearchFilterCountFilter{
-		Max: int32(c.Max),
-		Min: int32(c.Min),
-	}
-}
-
-func tagToModel(
-	t intschema.TraceTailSamplingRulesRulesFilterSpanTags,
-) *models.TraceSearchFilterTagFilter {
-	return &models.TraceSearchFilterTagFilter{
-		Key:          t.Key,
-		Value:        stringFilterToModel(t.Value),
-		NumericValue: numericFilterToModel(t.NumericValue),
-	}
-}
-
-func traceFilterToModel(
-	t *intschema.TraceTailSamplingRulesRulesFilterTrace,
-) *models.TraceSearchFilterTraceFilter {
-	if t == nil {
-		return nil
-	}
-	return &models.TraceSearchFilterTraceFilter{
-		Duration: durationFilterToModel(t.Duration),
-		Error:    boolFilterToModel(t.Error),
-	}
+	}, nil
 }
 
 // -----
@@ -225,115 +122,6 @@ func ruleFromModel(
 		SampleRate: r.SampleRate,
 		SystemName: r.SystemName,
 		Name:       r.Name,
-	}
-}
-
-func traceSearchFilterFromModel(
-	f *models.Configv1TraceSearchFilter,
-) *intschema.TraceTailSamplingRulesRulesFilter {
-	if f == nil {
-		return nil
-	}
-	return &intschema.TraceTailSamplingRulesRulesFilter{
-		Span:  sliceutil.Map(f.Span, spanFilterFromModel),
-		Trace: traceFilterFromModel(f.Trace),
-	}
-}
-
-func spanFilterFromModel(
-	s *models.TraceSearchFilterSpanFilter,
-) intschema.TraceTailSamplingRulesRulesFilterSpan {
-	return intschema.TraceTailSamplingRulesRulesFilterSpan{
-		Duration:        durationFilterFromModel(s.Duration),
-		Error:           boolFilterFromModel(s.Error),
-		MatchType:       string(s.MatchType),
-		Operation:       stringFilterFromModel(s.Operation),
-		ParentOperation: stringFilterFromModel(s.ParentOperation),
-		ParentService:   stringFilterFromModel(s.ParentService),
-		Service:         stringFilterFromModel(s.Service),
-		SpanCount:       countFilterFromModel(s.SpanCount),
-		Tags:            sliceutil.Map(s.Tags, tagFromModel),
-	}
-}
-
-func durationFilterFromModel(
-	d *models.TraceSearchFilterDurationFilter,
-) *intschema.TraceTailSamplingDurationFilterSchema {
-	if d == nil {
-		return nil
-	}
-	return &intschema.TraceTailSamplingDurationFilterSchema{
-		MaxSecs: d.MaxSecs,
-		MinSecs: d.MinSecs,
-	}
-}
-
-func boolFilterFromModel(
-	b *models.TraceSearchFilterBoolFilter,
-) *intschema.TraceTailSamplingBoolFilterSchema {
-	if b == nil {
-		return nil
-	}
-	return &intschema.TraceTailSamplingBoolFilterSchema{
-		Value: b.Value,
-	}
-}
-
-func stringFilterFromModel(
-	s *models.TraceSearchFilterStringFilter,
-) *intschema.TraceTailSamplingStringFilterSchema {
-	if s == nil {
-		return nil
-	}
-	return &intschema.TraceTailSamplingStringFilterSchema{
-		Match: string(s.Match),
-		Value: s.Value,
-	}
-}
-
-func numericFilterFromModel(
-	s *models.TraceSearchFilterNumericFilter,
-) *intschema.TraceTailSamplingNumericFilterSchema {
-	if s == nil {
-		return nil
-	}
-	return &intschema.TraceTailSamplingNumericFilterSchema{
-		Comparison: string(s.Comparison),
-		Value:      s.Value,
-	}
-}
-
-func countFilterFromModel(
-	c *models.TraceSearchFilterCountFilter,
-) *intschema.TraceTailSamplingRulesRulesFilterSpanSpanCount {
-	if c == nil {
-		return nil
-	}
-	return &intschema.TraceTailSamplingRulesRulesFilterSpanSpanCount{
-		Max: int64(c.Max),
-		Min: int64(c.Min),
-	}
-}
-
-func tagFromModel(
-	t *models.TraceSearchFilterTagFilter,
-) intschema.TraceTailSamplingRulesRulesFilterSpanTags {
-	return intschema.TraceTailSamplingRulesRulesFilterSpanTags{
-		Key:          t.Key,
-		Value:        stringFilterFromModel(t.Value),
-		NumericValue: numericFilterFromModel(t.NumericValue),
-	}
-}
-
-func traceFilterFromModel(
-	t *models.TraceSearchFilterTraceFilter,
-) *intschema.TraceTailSamplingRulesRulesFilterTrace {
-	if t == nil {
-		return nil
-	}
-	return &intschema.TraceTailSamplingRulesRulesFilterTrace{
-		Duration: durationFilterFromModel(t.Duration),
-		Error:    boolFilterFromModel(t.Error),
 	}
 }
 

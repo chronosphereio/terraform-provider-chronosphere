@@ -44,42 +44,59 @@ type ResourcePoolsConfigPool struct {
 	Priorities *ResourcePoolPrioritiesSchema `intschema:"priorities,optional,list_encoded_object"`
 }
 
-type TraceMetricsBoolFilter struct {
+type TraceBoolFilter struct {
 	Value bool `intschema:"value"`
 }
 
-type TraceMetricsDurationFilter struct {
+type TraceDurationFilter struct {
 	MaxSeconds float64 `intschema:"max_seconds,optional,default:0"`
+	MaxSecs    float64 `intschema:"max_secs,optional"`
 	MinSeconds float64 `intschema:"min_seconds,optional,default:0"`
+	MinSecs    float64 `intschema:"min_secs,optional,default:0"`
 }
 
-type TraceMetricsNumericFilterSchema struct {
+type TraceFilter struct {
+	Duration *TraceDurationFilter `intschema:"duration,optional,list_encoded_object"`
+	Error    *TraceBoolFilter     `intschema:"error,optional,list_encoded_object"`
+}
+
+type TraceNumericFilter struct {
 	Comparison string  `intschema:"comparison"`
 	Value      float64 `intschema:"value"`
 }
 
-type TraceMetricsStringFilter struct {
+type TraceSearchFilter struct {
+	Span  []TraceSpanFilter `intschema:"span,optional"`
+	Trace *TraceFilter      `intschema:"trace,optional,list_encoded_object"`
+}
+
+type TraceSpanCountFilter struct {
+	Max int64 `intschema:"max,optional,default:0"`
+	Min int64 `intschema:"min,optional,default:0"`
+}
+
+type TraceSpanFilter struct {
+	Duration        *TraceDurationFilter  `intschema:"duration,optional,list_encoded_object"`
+	Error           *TraceBoolFilter      `intschema:"error,optional,list_encoded_object"`
+	MatchType       string                `intschema:"match_type,optional,default:include"`
+	Operation       *TraceStringFilter    `intschema:"operation,optional,list_encoded_object"`
+	ParentOperation *TraceStringFilter    `intschema:"parent_operation,optional,list_encoded_object"`
+	ParentService   *TraceStringFilter    `intschema:"parent_service,optional,list_encoded_object"`
+	Service         *TraceStringFilter    `intschema:"service,optional,list_encoded_object"`
+	SpanCount       *TraceSpanCountFilter `intschema:"span_count,optional,list_encoded_object"`
+	Tag             []TraceTagFilter      `intschema:"tag,optional"`
+	Tags            []TraceTagFilter      `intschema:"tags,optional"`
+}
+
+type TraceStringFilter struct {
 	Value string `intschema:"value"`
 	Match string `intschema:"match,optional,default:exact"`
 }
 
-type TraceTailSamplingBoolFilterSchema struct {
-	Value bool `intschema:"value"`
-}
-
-type TraceTailSamplingDurationFilterSchema struct {
-	MaxSecs float64 `intschema:"max_secs,optional"`
-	MinSecs float64 `intschema:"min_secs,optional"`
-}
-
-type TraceTailSamplingNumericFilterSchema struct {
-	Comparison string  `intschema:"comparison"`
-	Value      float64 `intschema:"value"`
-}
-
-type TraceTailSamplingStringFilterSchema struct {
-	Value string `intschema:"value"`
-	Match string `intschema:"match,optional"`
+type TraceTagFilter struct {
+	Key          string              `intschema:"key,optional"`
+	NumericValue *TraceNumericFilter `intschema:"numeric_value,optional,list_encoded_object"`
+	Value        *TraceStringFilter  `intschema:"value,optional,list_encoded_object"`
 }
 
 type ValueMappings struct {
