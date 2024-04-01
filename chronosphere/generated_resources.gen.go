@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dataset"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/gcp_metrics_integration"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
@@ -1399,6 +1400,83 @@ func (generatedClassicDashboard) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.ClassicDashboard.DeleteClassicDashboard(req)
+	return err
+}
+
+type generatedUnstableDataset struct{}
+
+func (generatedUnstableDataset) slugOf(m *configunstablemodels.ConfigunstableDataset) string {
+	return m.Slug
+}
+
+func (generatedUnstableDataset) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableDataset,
+	dryRun bool,
+) (string, error) {
+	req := &dataset.CreateDatasetParams{
+		Context: ctx,
+		Body: &configunstablemodels.ConfigunstableCreateDatasetRequest{
+			Dataset: m,
+			DryRun:  dryRun,
+		},
+	}
+	resp, err := clients.ConfigUnstable.Dataset.CreateDataset(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.Dataset
+	if e == nil {
+		return "", nil
+	}
+	return e.Slug, nil
+}
+
+func (generatedUnstableDataset) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configunstablemodels.ConfigunstableDataset, error) {
+	req := &dataset.ReadDatasetParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigUnstable.Dataset.ReadDataset(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.Dataset, nil
+}
+
+func (generatedUnstableDataset) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableDataset,
+	params updateParams,
+) error {
+	req := &dataset.UpdateDatasetParams{
+		Context: ctx,
+		Slug:    m.Slug,
+		Body: dataset.UpdateDatasetBody{
+			Dataset:         m,
+			CreateIfMissing: params.createIfMissing,
+			DryRun:          params.dryRun,
+		},
+	}
+	_, err := clients.ConfigUnstable.Dataset.UpdateDataset(req)
+	return err
+}
+func (generatedUnstableDataset) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &dataset.DeleteDatasetParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigUnstable.Dataset.DeleteDataset(req)
 	return err
 }
 

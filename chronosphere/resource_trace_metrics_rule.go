@@ -55,15 +55,11 @@ type traceMetricsRuleConverter struct{}
 
 //nolint:unused
 func (traceMetricsRuleConverter) toModel(r *intschema.TraceMetricsRule) (*models.Configv1TraceMetricsRule, error) {
-	traceFilter, err := traceSearchFilterToModel(r.TraceFilter)
-	if err != nil {
-		return nil, err
-	}
 	return &models.Configv1TraceMetricsRule{
 		Slug:                 r.Slug,
 		Name:                 r.Name,
 		MetricName:           r.MetricName,
-		TraceFilter:          traceFilter,
+		TraceFilter:          traceSearchFilterToModel(r.TraceFilter),
 		HistogramBucketsSecs: r.HistogramBucketsSeconds,
 		MetricLabels:         r.MetricLabels,
 		GroupBy:              expandTraceMetricsRuleGroupBy(r.GroupBy),

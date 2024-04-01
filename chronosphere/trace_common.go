@@ -183,19 +183,19 @@ func traceSearchFilterFromModel(
 	}
 }
 
-func traceSearchFilterToModel(f intschema.TraceSearchFilter) (*models.Configv1TraceSearchFilter, error) {
+func traceSearchFilterToModel(f intschema.TraceSearchFilter) *models.Configv1TraceSearchFilter {
 	traceFilter, err := traceFilterToModel(f.Trace)
 	if err != nil {
-		return nil, err
+		return nil
 	}
 	spanFilters, err := sliceutil.MapErr(f.Span, spanFilterToModel)
 	if err != nil {
-		return nil, err
+		return nil
 	}
 	return &models.Configv1TraceSearchFilter{
 		Span:  spanFilters,
 		Trace: traceFilter,
-	}, nil
+	}
 }
 
 func spanFilterFromModel(
