@@ -75,6 +75,7 @@ func (dropRuleConverter) toModel(
 		Mode:                     dropRuleModeToModel(r.Active),
 		Filters:                  filter,
 		ConditionalRateBasedDrop: conditionalRateBasedDrop,
+		DropNanValue:             r.DropNanValue,
 		ValueBasedDrop:           valueBaseDropToModel(r.ValueBasedDrop),
 	}, nil
 }
@@ -87,6 +88,7 @@ func (dropRuleConverter) fromModel(
 		Slug:           m.Slug,
 		Active:         m.Mode == models.Configv1DropRuleModeENABLED,
 		Query:          aggregationfilter.ListFromModel(m.Filters, aggregationfilter.DropRuleDelimiter),
+		DropNanValue:   m.DropNanValue,
 		ValueBasedDrop: valueBasedDropFromModel(m.ValueBasedDrop),
 	}
 	if m.ConditionalRateBasedDrop != nil {
