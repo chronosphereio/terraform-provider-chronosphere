@@ -16,7 +16,6 @@ package chronosphere
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"go.uber.org/atomic"
@@ -25,7 +24,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
-	configv1 "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
@@ -57,9 +55,6 @@ func resourceRollupRule() *schema.Resource {
 		CustomizeDiff: func(ctx context.Context, d *schema.ResourceDiff, m interface{}) error {
 			rr := &intschema.RollupRule{}
 			if err := rr.FromResourceData(d); err != nil {
-				return err
-			}
-			if err := validateRollupRule(rr); err != nil {
 				return err
 			}
 			return r.ValidateDryRun(&RollupRuleDryRunCount)(ctx, d, m)
@@ -148,30 +143,4 @@ func rollupStoragePolicyFromModel(
 		Resolution: p.Resolution,
 		Retention:  p.Retention,
 	}
-}
-
-func validateRollupRule(r *intschema.RollupRule) error {
-	// Delta rules have a special-case where they don't need the normal
-	// required fields, if they are all empty.
-	if enum.MetricType.V1(r.MetricType) == configv1.RollupRuleMetricTypeDELTA &&
-		r.NewMetric == "" &&
-		len(r.GroupBy) == 0 &&
-		len(r.ExcludeBy) == 0 &&
-		r.Aggregation == "" {
-		return nil
-	}
-
-	if r.NewMetric == "" {
-		return fmt.Errorf("new_metric is required")
-	}
-	if r.Aggregation == "" {
-		return fmt.Errorf("aggregation is required")
-	}
-
-	hasGroupBy := len(r.GroupBy) > 0
-	hasExcludeBy := len(r.ExcludeBy) > 0
-	if hasGroupBy == hasExcludeBy {
-		return fmt.Errorf("exactly one of group_by or exclude_by is required")
-	}
-	return nil
 }
