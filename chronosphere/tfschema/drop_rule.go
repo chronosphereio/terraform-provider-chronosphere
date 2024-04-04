@@ -46,6 +46,10 @@ var DropRule = map[string]*schema.Schema{
 		Type:     schema.TypeBool,
 		Optional: true,
 	},
+	"drop_nan_value": {
+		Type:     schema.TypeBool,
+		Optional: true,
+	},
 	"activated_drop_duration": Duration{
 		Optional: true,
 	}.Schema(),
