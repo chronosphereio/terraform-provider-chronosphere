@@ -39,8 +39,7 @@ var RollupRule = map[string]*schema.Schema{
 		KVDelimiter: aggregationfilter.RollupRuleDelimiter,
 	}.Schema(),
 	"new_metric": {
-		Type: schema.TypeString,
-		// Required unless metric_type == DELTA, validated in chronosphere.validateRollupRule().
+		Type:     schema.TypeString,
 		Optional: true,
 	},
 	"metric_type": Enum{
