@@ -8,6 +8,7 @@ Added:
 - Add v1 `gcp_metrics_integration` resource.
 - Add `name` field to `dashboard` resource.
 - Add new v1 resource type, `dataset`, with the first telemetry type supported being tracing.
+- Add support for `graphite_label_policy` in `chronosphere_rollup_rule` resource
 
 Updated:
 - Renamed `chronosphere_grafana_dashboard` to `chronosphere_classic_dashboard`

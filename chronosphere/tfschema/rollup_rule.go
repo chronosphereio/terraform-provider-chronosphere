@@ -15,9 +15,10 @@
 package tfschema
 
 import (
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/aggregationfilter"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 var RollupRule = map[string]*schema.Schema{
@@ -107,4 +108,29 @@ var RollupRule = map[string]*schema.Schema{
 		Value:    enum.RollupModeType.ToStrings(),
 		Optional: true,
 	}.Schema(),
+	"graphite_label_policy": {
+		Type:     schema.TypeList,
+		MaxItems: 1,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"replace": {
+					Type:     schema.TypeList,
+					Optional: true,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"name": {
+								Type:     schema.TypeString,
+								Required: true,
+							},
+							"new_value": {
+								Type:     schema.TypeString,
+								Required: true,
+							},
+						},
+					},
+				},
+			},
+		},
+	},
 }

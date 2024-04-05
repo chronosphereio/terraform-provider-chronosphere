@@ -24,6 +24,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
@@ -100,7 +101,8 @@ func (rollupRuleConverter) toModel(
 			Keep:    r.GroupBy,
 			Discard: r.ExcludeBy,
 		},
-		Interval: r.Interval,
+		Interval:            r.Interval,
+		GraphiteLabelPolicy: rollupGraphiteLabelPolicyToModel(r.GraphiteLabelPolicy),
 	}, nil
 }
 
@@ -108,19 +110,20 @@ func (rollupRuleConverter) fromModel(
 	m *models.Configv1RollupRule,
 ) (*intschema.RollupRule, error) {
 	r := &intschema.RollupRule{
-		BucketId:        tfid.Slug(m.BucketSlug),
-		Name:            m.Name,
-		Slug:            m.Slug,
-		Filter:          aggregationfilter.StringFromModel(m.Filters, aggregationfilter.RollupRuleDelimiter),
-		MetricType:      string(m.MetricType),
-		Aggregation:     string(m.Aggregation),
-		DropRaw:         m.DropRaw,
-		MetricTypeTag:   m.AddMetricTypeLabel,
-		NewMetric:       m.MetricName,
-		Permissive:      m.ExpansiveMatch,
-		StoragePolicies: rollupStoragePolicyFromModel(m.StoragePolicy),
-		Mode:            string(m.Mode),
-		Interval:        m.Interval,
+		BucketId:            tfid.Slug(m.BucketSlug),
+		Name:                m.Name,
+		Slug:                m.Slug,
+		Filter:              aggregationfilter.StringFromModel(m.Filters, aggregationfilter.RollupRuleDelimiter),
+		MetricType:          string(m.MetricType),
+		Aggregation:         string(m.Aggregation),
+		DropRaw:             m.DropRaw,
+		MetricTypeTag:       m.AddMetricTypeLabel,
+		NewMetric:           m.MetricName,
+		Permissive:          m.ExpansiveMatch,
+		StoragePolicies:     rollupStoragePolicyFromModel(m.StoragePolicy),
+		Mode:                string(m.Mode),
+		Interval:            m.Interval,
+		GraphiteLabelPolicy: rollupGraphiteLabelPolicyFromModel(m.GraphiteLabelPolicy),
 	}
 	if m.LabelPolicy != nil {
 		r.GroupBy = m.LabelPolicy.Keep
@@ -150,5 +153,41 @@ func rollupStoragePolicyFromModel(
 	return &intschema.RollupRuleStoragePolicies{
 		Resolution: p.Resolution,
 		Retention:  p.Retention,
+	}
+}
+
+func rollupGraphiteLabelPolicyToModel(
+	p *intschema.RollupRuleGraphiteLabelPolicy,
+) *models.RollupRuleGraphiteLabelPolicy {
+	if p == nil {
+		return nil
+	}
+	return &models.RollupRuleGraphiteLabelPolicy{
+		Replace: sliceutil.Map(
+			p.Replace,
+			func(r intschema.RollupRuleGraphiteLabelPolicyReplace) *models.GraphiteLabelPolicyReplace {
+				return &models.GraphiteLabelPolicyReplace{
+					Name:     r.Name,
+					NewValue: r.NewValue,
+				}
+			}),
+	}
+}
+
+func rollupGraphiteLabelPolicyFromModel(
+	p *models.RollupRuleGraphiteLabelPolicy,
+) *intschema.RollupRuleGraphiteLabelPolicy {
+	if p == nil {
+		return nil
+	}
+	return &intschema.RollupRuleGraphiteLabelPolicy{
+		Replace: sliceutil.Map(
+			p.Replace,
+			func(r *models.GraphiteLabelPolicyReplace) intschema.RollupRuleGraphiteLabelPolicyReplace {
+				return intschema.RollupRuleGraphiteLabelPolicyReplace{
+					Name:     r.Name,
+					NewValue: r.NewValue,
+				}
+			}),
 	}
 }
