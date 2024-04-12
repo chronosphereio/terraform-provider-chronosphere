@@ -1,5 +1,5 @@
 DEV_PROVIDER_VERSION = 0.0.1-dev
-BINARY=terraform-provider-chronosphere_v$(PROVIDER_VERSION)
+BINARY=terraform-provider-chronosphere_v$(DEV_PROVIDER_VERSION)
 TESTPKGS?=$$(go list ./... | grep -v 'vendor' | grep -v 'scenario')
 TOOLS_BIN=$(abspath ./bin)
 OS=$(shell uname -s | tr '[:upper:]' '[:lower:]')
@@ -89,7 +89,7 @@ debug:
 build:
 	@echo building with git version ${GIT_VERSION}
 	mkdir -p bin
-	$(GO_BUILD_COMMON_ENV) go build $(GOFLAGS) -ldflags '$(GO_BUILD_LDFLAGS)' -o $(BUILD)/${BINARY} 
+	$(GO_BUILD_COMMON_ENV) go build $(GOFLAGS) -ldflags '$(GO_BUILD_LDFLAGS)' -o $(BUILD)/${BINARY}
 
 .PHONY: install
 install: build verify-terraform-arch
