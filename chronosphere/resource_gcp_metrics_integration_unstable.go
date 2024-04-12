@@ -61,6 +61,7 @@ func (gcpMetricsIntegrationConverter) toModel(
 	g *intschema.GcpMetricsIntegration,
 ) (*models.ConfigunstableGcpMetricsIntegration, error) {
 	return &models.ConfigunstableGcpMetricsIntegration{
+		Name:         g.Name,
 		Slug:         g.Slug,
 		MetricGroups: resourceToModelMetricGroups(g.MetricGroups),
 		ServiceAccount: &models.GcpMetricsIntegrationServiceAccount{
@@ -73,6 +74,7 @@ func (gcpMetricsIntegrationConverter) fromModel(
 	m *models.ConfigunstableGcpMetricsIntegration,
 ) (*intschema.GcpMetricsIntegration, error) {
 	return &intschema.GcpMetricsIntegration{
+		Name:         m.Name,
 		Slug:         m.Slug,
 		MetricGroups: resourceFromModelMetricGroups(m.MetricGroups),
 		ServiceAccount: &intschema.GcpMetricsIntegrationServiceAccount{
