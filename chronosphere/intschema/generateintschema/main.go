@@ -114,6 +114,7 @@ func run() error {
 		files = append(files, newFileData(schemaTypeResource, name, resourceSchemas[name]))
 	}
 	files = append(files, newFileData(schemaTypeData, "bucket", tfschema.DataBucket))
+	files = append(files, newFileData(schemaTypeData, "collection", tfschema.DataCollection))
 	files = append(files, newFileData(schemaTypeData, "service", tfschema.DataService))
 
 	if err := validateNoDuplicateStructDefs(files); err != nil {

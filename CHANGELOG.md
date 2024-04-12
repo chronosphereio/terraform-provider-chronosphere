@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+Added:
+- Add data source for `chronosphere_collection`
 - Add support for `drop_nan_value` in `chronosphere_drop_rule` resource
 - Add `name` to `gcp_metrics_integration` schema
 
