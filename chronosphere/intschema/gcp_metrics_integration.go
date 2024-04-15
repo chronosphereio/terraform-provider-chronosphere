@@ -14,6 +14,7 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type GcpMetricsIntegration struct {
+	Name           string                               `intschema:"name"`
 	Slug           string                               `intschema:"slug,optional"`
 	MetricGroups   []GcpMetricsIntegrationMetricGroups  `intschema:"metric_groups,optional"`
 	ServiceAccount *GcpMetricsIntegrationServiceAccount `intschema:"service_account,optional,list_encoded_object"`
