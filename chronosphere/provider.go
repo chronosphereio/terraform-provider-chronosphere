@@ -97,9 +97,8 @@ func Provider() *schema.Provider {
 		},
 		ResourcesMap: allResources,
 		DataSourcesMap: map[string]*schema.Resource{
-			"chronosphere_bucket":              dataSourceBucket(),
-			"chronosphere_service":             dataSourceService(),
-			"chronosphere_notification_policy": dataSourceNotificationPolicy(),
+			"chronosphere_bucket":  dataSourceBucket(),
+			"chronosphere_service": dataSourceService(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
