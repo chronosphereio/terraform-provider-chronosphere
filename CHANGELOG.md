@@ -5,7 +5,7 @@
 Added:
 - Add data source for `chronosphere_collection`
 - Add support for `drop_nan_value` in `chronosphere_drop_rule` resource
-- Add `name` to `gcp_metrics_integration` schema
+- Add `gcp_metrics_integration` resource.
 
 Deprecated:
 - Remove unsupported `bucket_id` in `chronosphere_notification_policy`
