@@ -19,7 +19,7 @@ import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 var GcpMetricsIntegration = map[string]*schema.Schema{
 	"name": {
 		Type:     schema.TypeString,
-		Optional: false,
+		Required: true,
 	},
 	"slug": {
 		Type:     schema.TypeString,
