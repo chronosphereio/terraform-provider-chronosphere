@@ -105,4 +105,29 @@ var RollupRule = map[string]*schema.Schema{
 		Value:    enum.RollupModeType.ToStrings(),
 		Optional: true,
 	}.Schema(),
+	"graphite_label_policy": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"replace": {
+					Type:     schema.TypeList,
+					Optional: true,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"name": {
+								Type:     schema.TypeString,
+								Required: true,
+							},
+							"new_value": {
+								Type:     schema.TypeString,
+								Required: true,
+							},
+						},
+					},
+				},
+			},
+		},
+	},
 }

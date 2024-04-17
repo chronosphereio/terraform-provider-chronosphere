@@ -14,21 +14,22 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type RollupRule struct {
-	Name            string                     `intschema:"name"`
-	Slug            string                     `intschema:"slug"`
-	BucketId        tfid.ID                    `intschema:"bucket_id,optional"`
-	Filter          string                     `intschema:"filter"`
-	MetricType      string                     `intschema:"metric_type"`
-	Aggregation     string                     `intschema:"aggregation,optional"`
-	DropRaw         bool                       `intschema:"drop_raw,optional,default:false"`
-	ExcludeBy       []string                   `intschema:"exclude_by,optional"`
-	GroupBy         []string                   `intschema:"group_by,optional"`
-	Interval        string                     `intschema:"interval,optional"`
-	MetricTypeTag   bool                       `intschema:"metric_type_tag,optional,default:false"`
-	Mode            string                     `intschema:"mode,optional"`
-	NewMetric       string                     `intschema:"new_metric,optional"`
-	Permissive      bool                       `intschema:"permissive,optional,default:false"`
-	StoragePolicies *RollupRuleStoragePolicies `intschema:"storage_policies,optional,computed,list_encoded_object"`
+	Name                string                         `intschema:"name"`
+	Slug                string                         `intschema:"slug"`
+	BucketId            tfid.ID                        `intschema:"bucket_id,optional"`
+	Filter              string                         `intschema:"filter"`
+	MetricType          string                         `intschema:"metric_type"`
+	Aggregation         string                         `intschema:"aggregation,optional"`
+	DropRaw             bool                           `intschema:"drop_raw,optional,default:false"`
+	ExcludeBy           []string                       `intschema:"exclude_by,optional"`
+	GraphiteLabelPolicy *RollupRuleGraphiteLabelPolicy `intschema:"graphite_label_policy,optional,list_encoded_object"`
+	GroupBy             []string                       `intschema:"group_by,optional"`
+	Interval            string                         `intschema:"interval,optional"`
+	MetricTypeTag       bool                           `intschema:"metric_type_tag,optional,default:false"`
+	Mode                string                         `intschema:"mode,optional"`
+	NewMetric           string                         `intschema:"new_metric,optional"`
+	Permissive          bool                           `intschema:"permissive,optional,default:false"`
+	StoragePolicies     *RollupRuleStoragePolicies     `intschema:"storage_policies,optional,computed,list_encoded_object"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -70,4 +71,13 @@ func (o *RollupRule) Ref() tfid.ID {
 type RollupRuleStoragePolicies struct {
 	Resolution string `intschema:"resolution"`
 	Retention  string `intschema:"retention"`
+}
+
+type RollupRuleGraphiteLabelPolicy struct {
+	Replace []RollupRuleGraphiteLabelPolicyReplace `intschema:"replace,optional"`
+}
+
+type RollupRuleGraphiteLabelPolicyReplace struct {
+	Name     string `intschema:"name"`
+	NewValue string `intschema:"new_value"`
 }
