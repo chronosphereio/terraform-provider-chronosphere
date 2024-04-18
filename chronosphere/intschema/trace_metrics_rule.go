@@ -14,13 +14,13 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type TraceMetricsRule struct {
-	Name                    string                      `intschema:"name"`
-	Slug                    string                      `intschema:"slug,optional,computed"`
-	MetricName              string                      `intschema:"metric_name"`
-	TraceFilter             TraceMetricsRuleTraceFilter `intschema:"trace_filter,list_encoded_object"`
-	GroupBy                 []TraceMetricsRuleGroupBy   `intschema:"group_by,optional"`
-	HistogramBucketsSeconds []float64                   `intschema:"histogram_buckets_seconds,optional"`
-	MetricLabels            map[string]string           `intschema:"metric_labels,optional"`
+	Name                    string                    `intschema:"name"`
+	Slug                    string                    `intschema:"slug,optional,computed"`
+	MetricName              string                    `intschema:"metric_name"`
+	TraceFilter             TraceSearchFilter         `intschema:"trace_filter,list_encoded_object"`
+	GroupBy                 []TraceMetricsRuleGroupBy `intschema:"group_by,optional"`
+	HistogramBucketsSeconds []float64                 `intschema:"histogram_buckets_seconds,optional"`
+	MetricLabels            map[string]string         `intschema:"metric_labels,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -57,39 +57,6 @@ func (o *TraceMetricsRule) Ref() tfid.ID {
 		Type: "chronosphere_trace_metrics_rule",
 		ID:   o.HCLID,
 	}.AsID()
-}
-
-type TraceMetricsRuleTraceFilter struct {
-	Span  []TraceMetricsRuleTraceFilterSpan `intschema:"span,optional"`
-	Trace *TraceMetricsRuleTraceFilterTrace `intschema:"trace,optional,list_encoded_object"`
-}
-
-type TraceMetricsRuleTraceFilterTrace struct {
-	Duration *TraceMetricsDurationFilter `intschema:"duration,optional,list_encoded_object"`
-	Error    *TraceMetricsBoolFilter     `intschema:"error,optional,list_encoded_object"`
-}
-
-type TraceMetricsRuleTraceFilterSpan struct {
-	Duration        *TraceMetricsDurationFilter               `intschema:"duration,optional,list_encoded_object"`
-	Error           *TraceMetricsBoolFilter                   `intschema:"error,optional,list_encoded_object"`
-	MatchType       string                                    `intschema:"match_type,optional,default:include"`
-	Operation       *TraceMetricsStringFilter                 `intschema:"operation,optional,list_encoded_object"`
-	ParentOperation *TraceMetricsStringFilter                 `intschema:"parent_operation,optional,list_encoded_object"`
-	ParentService   *TraceMetricsStringFilter                 `intschema:"parent_service,optional,list_encoded_object"`
-	Service         *TraceMetricsStringFilter                 `intschema:"service,optional,list_encoded_object"`
-	SpanCount       *TraceMetricsRuleTraceFilterSpanSpanCount `intschema:"span_count,optional,list_encoded_object"`
-	Tag             []TraceMetricsRuleTraceFilterSpanTag      `intschema:"tag,optional"`
-}
-
-type TraceMetricsRuleTraceFilterSpanTag struct {
-	Key          string                           `intschema:"key"`
-	NumericValue *TraceMetricsNumericFilterSchema `intschema:"numeric_value,optional,list_encoded_object"`
-	Value        *TraceMetricsStringFilter        `intschema:"value,optional,list_encoded_object"`
-}
-
-type TraceMetricsRuleTraceFilterSpanSpanCount struct {
-	Max int64 `intschema:"max,optional,default:0"`
-	Min int64 `intschema:"min,optional,default:0"`
 }
 
 type TraceMetricsRuleGroupBy struct {

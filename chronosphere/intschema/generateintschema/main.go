@@ -39,19 +39,19 @@ import (
 
 // Add shared schema references here to generate shared types.
 var sharedSchemaTypeNames = map[*schema.Schema]string{
-	tfschema.MatcherListSchema:                "Matcher",
-	tfschema.MonitorSeriesConditionSchema:     "MonitorSeriesCondition",
-	tfschema.ResourcePoolAllocationSchema:     "ResourcePoolAllocationSchema",
-	tfschema.ResourcePoolPrioritiesSchema:     "ResourcePoolPrioritiesSchema",
-	tfschema.TraceMetricsBoolFilterSchema:     "TraceMetricsBoolFilter",
-	tfschema.TraceMetricsDurationFilterSchema: "TraceMetricsDurationFilter",
-	tfschema.TraceMetricsStringFilterSchema:   "TraceMetricsStringFilter",
-	tfschema.TraceMetricsNumericFilterSchema:  "TraceMetricsNumericFilterSchema",
-	tfschema.ValueMappingsSchema:              "ValueMappings",
-	tfschema.TailSamplingBoolFilterSchema:     "TraceTailSamplingBoolFilterSchema",
-	tfschema.TailSamplingDurationFilterSchema: "TraceTailSamplingDurationFilterSchema",
-	tfschema.TailSamplingStringFilterSchema:   "TraceTailSamplingStringFilterSchema",
-	tfschema.TailSamplingNumericFilterSchema:  "TraceTailSamplingNumericFilterSchema",
+	tfschema.MatcherListSchema:            "Matcher",
+	tfschema.MonitorSeriesConditionSchema: "MonitorSeriesCondition",
+	tfschema.ResourcePoolAllocationSchema: "ResourcePoolAllocationSchema",
+	tfschema.ResourcePoolPrioritiesSchema: "ResourcePoolPrioritiesSchema",
+	tfschema.TraceBoolFilterSchema:        "TraceBoolFilter",
+	tfschema.TraceDurationFilterSchema:    "TraceDurationFilter",
+	tfschema.TraceFilterSchema:            "TraceFilter",
+	tfschema.TraceNumericFilterSchema:     "TraceNumericFilter",
+	tfschema.TraceSearchFilterSchema:      "TraceSearchFilter",
+	tfschema.TraceSpanCountFilterSchema:   "TraceSpanCountFilter",
+	tfschema.TraceSpanFilterListSchema:    "TraceSpanFilter",
+	tfschema.TraceStringFilterSchema:      "TraceStringFilter",
+	tfschema.ValueMappingsSchema:          "ValueMappings",
 }
 
 // Add shared element references here to generate shared types. Usually we
