@@ -74,7 +74,7 @@ var TraceSpanFilterListSchema = &schema.Schema{
 				Elem:     traceTagFilterSchema,
 			},
 			// This field is still defined for error messaging to existing users, but is deprecated. Prefer tag.
-			"tags": &schema.Schema{
+			"tags": {
 				Type:       schema.TypeList,
 				Optional:   true,
 				Elem:       traceTagFilterSchema,
