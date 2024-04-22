@@ -8,6 +8,7 @@ Added:
 - Add `gcp_metrics_integration` resource
 - Add new resource type, `dataset`, with the first telemetry type supported being tracing.
 - Add new `IN` and `NOT_IN` variations to tracing's `StringFilterMatchType` enum.
+- Add `name` field to `dashboard` resource.
 
 Deprecated:
 - Block unsupported use of duplicate routes with the same severity in `chronosphere_notification_policy`
