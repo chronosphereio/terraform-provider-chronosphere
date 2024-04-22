@@ -176,6 +176,13 @@ var Resources = mustValidate([]Resource{
 		DryRun: true,
 	},
 	{
+		Name:   "dataset",
+		Entity: "Dataset",
+		API:    Unstable,
+		Schema: tfschema.Dataset,
+		DryRun: true,
+	},
+	{
 		Name:   "derived_label",
 		Entity: "DerivedLabel",
 		API:    V1,

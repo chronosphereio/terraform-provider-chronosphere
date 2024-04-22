@@ -63,6 +63,7 @@ func Provider() *schema.Provider {
 		"chronosphere_trace_tail_sampling_rules":             resourceTraceTailSamplingRules(),
 		"chronosphere_service_account":                       resourceServiceAccount(),
 		"chronosphere_derived_label":                         resourceDerivedLabel(),
+		"chronosphere_dataset":                               resourceDataset(),
 	}
 
 	// Apply common CRUD wrappers to all resources.
