@@ -1083,7 +1083,9 @@
         "EXACT",
         "REGEX",
         "EXACT_NEGATION",
-        "REGEX_NEGATION"
+        "REGEX_NEGATION",
+        "IN",
+        "NOT_IN"
       ],
       "type": "string"
     },
@@ -1257,6 +1259,13 @@
         "value": {
           "description": "The value the filter compares to the target trace or span field.",
           "type": "string"
+        },
+        "in_values": {
+          "description": "Values the filter tests against when using IN or NOT_IN match type.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         }
       },
       "type": "object"

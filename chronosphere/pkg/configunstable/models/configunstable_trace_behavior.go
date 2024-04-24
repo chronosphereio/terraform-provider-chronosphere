@@ -27,9 +27,6 @@ type ConfigunstableTraceBehavior struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// id
-	ID string `json:"id,omitempty"`
-
 	// Required name of the TraceBehavior. May be modified after the TraceBehavior is created.
 	Name string `json:"name,omitempty"`
 
