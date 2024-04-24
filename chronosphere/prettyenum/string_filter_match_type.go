@@ -30,6 +30,8 @@ const (
 	StringFilterMatchTypeRegexModel         = StringFilterMatchType(models.StringFilterStringFilterMatchTypeREGEX)
 	StringFilterMatchTypeExactNegationModel = StringFilterMatchType(models.StringFilterStringFilterMatchTypeEXACTNEGATION)
 	StringFilterMatchTypeRegexNegationModel = StringFilterMatchType(models.StringFilterStringFilterMatchTypeREGEXNEGATION)
+	StringFilterMatchTypeInModel            = StringFilterMatchType(models.StringFilterStringFilterMatchTypeIN)
+	StringFilterMatchTypeNotInModel         = StringFilterMatchType(models.StringFilterStringFilterMatchTypeNOTIN)
 )
 
 var (
@@ -37,6 +39,8 @@ var (
 	StringFilterMatchTypeRegex         = StringFilterMatchType(strings.ToLower(string(StringFilterMatchTypeRegexModel)))
 	StringFilterMatchTypeExactNegation = StringFilterMatchType(strings.ToLower(string(StringFilterMatchTypeExactNegationModel)))
 	StringFilterMatchTypeRegexNegation = StringFilterMatchType(strings.ToLower(string(StringFilterMatchTypeRegexNegationModel)))
+	StringFilterMatchTypeIn            = StringFilterMatchType(strings.ToLower(string(StringFilterMatchTypeInModel)))
+	StringFilterMatchTypeNotIn         = StringFilterMatchType(strings.ToLower(string(StringFilterMatchTypeNotInModel)))
 )
 
 var modelFromStringFilterMatchType = map[StringFilterMatchType]models.StringFilterStringFilterMatchType{
@@ -44,11 +48,15 @@ var modelFromStringFilterMatchType = map[StringFilterMatchType]models.StringFilt
 	StringFilterMatchTypeRegex:         models.StringFilterStringFilterMatchTypeREGEX,
 	StringFilterMatchTypeExactNegation: models.StringFilterStringFilterMatchTypeEXACTNEGATION,
 	StringFilterMatchTypeRegexNegation: models.StringFilterStringFilterMatchTypeREGEXNEGATION,
+	StringFilterMatchTypeIn:            models.StringFilterStringFilterMatchTypeIN,
+	StringFilterMatchTypeNotIn:         models.StringFilterStringFilterMatchTypeNOTIN,
 
 	StringFilterMatchTypeExactModel:         models.StringFilterStringFilterMatchTypeEXACT,
 	StringFilterMatchTypeRegexModel:         models.StringFilterStringFilterMatchTypeREGEX,
 	StringFilterMatchTypeExactNegationModel: models.StringFilterStringFilterMatchTypeEXACTNEGATION,
 	StringFilterMatchTypeRegexNegationModel: models.StringFilterStringFilterMatchTypeREGEXNEGATION,
+	StringFilterMatchTypeInModel:            models.StringFilterStringFilterMatchTypeIN,
+	StringFilterMatchTypeNotInModel:         models.StringFilterStringFilterMatchTypeNOTIN,
 }
 
 var stringFilterMatchTypeFromModel = map[models.StringFilterStringFilterMatchType]StringFilterMatchType{
@@ -56,6 +64,8 @@ var stringFilterMatchTypeFromModel = map[models.StringFilterStringFilterMatchTyp
 	models.StringFilterStringFilterMatchTypeREGEX:         StringFilterMatchTypeRegex,
 	models.StringFilterStringFilterMatchTypeEXACTNEGATION: StringFilterMatchTypeExactNegation,
 	models.StringFilterStringFilterMatchTypeREGEXNEGATION: StringFilterMatchTypeRegexNegation,
+	models.StringFilterStringFilterMatchTypeIN:            StringFilterMatchTypeIn,
+	models.StringFilterStringFilterMatchTypeNOTIN:         StringFilterMatchTypeNotIn,
 }
 
 // ValidateStringFilterMatchType validates the raw matcher type value.

@@ -7,6 +7,7 @@ Added:
 - Add support for `drop_nan_value` in `chronosphere_drop_rule` resource
 - Add `gcp_metrics_integration` resource
 - Add new resource type, `dataset`, with the first telemetry type supported being tracing.
+- Add new `IN` and `NOT_IN` variations to tracing's `StringFilterMatchType` enum.
 
 Deprecated:
 - Remove unsupported `bucket_id` in `chronosphere_notification_policy`

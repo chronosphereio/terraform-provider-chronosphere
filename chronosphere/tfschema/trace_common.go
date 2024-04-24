@@ -68,21 +68,17 @@ var TraceSpanFilterListSchema = &schema.Schema{
 			"duration":         TraceDurationFilterSchema,
 			"error":            TraceBoolFilterSchema,
 			// Note: this is the preferable form (singular) of this list field.
-			"tag": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem:     traceTagFilterSchema,
-			},
-			// This field is still defined for error messaging to existing users, but is deprecated. Prefer tag.
-			"tags": {
-				Type:       schema.TypeList,
-				Optional:   true,
-				Elem:       traceTagFilterSchema,
-				Deprecated: "use tag instead",
-			},
+			"tag":        TraceTagFilterSchema,
+			"tags":       deprecated(TraceTagFilterSchema, "`tags` is deprecated, use `tag` instead."),
 			"span_count": TraceSpanCountFilterSchema,
 		},
 	},
+}
+
+var TraceTagFilterSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Optional: true,
+	Elem:     traceTagFilterItemSchema,
 }
 
 var TraceSpanCountFilterSchema = &schema.Schema{
@@ -168,7 +164,13 @@ var TraceStringFilterSchema = &schema.Schema{
 			},
 			"value": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
+			},
+			"in_values": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MinItems: 0,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 		},
 	},
@@ -193,7 +195,7 @@ var TraceNumericFilterSchema = &schema.Schema{
 	},
 }
 
-var traceTagFilterSchema = &schema.Resource{
+var traceTagFilterItemSchema = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"key": {
 			Type:     schema.TypeString,

@@ -61,6 +61,22 @@ func TestStringFilterMatchType(t *testing.T) {
 			model: models.StringFilterStringFilterMatchTypeREGEXNEGATION,
 		},
 		{
+			raw:   "in",
+			model: models.StringFilterStringFilterMatchTypeIN,
+		},
+		{
+			raw:   "IN",
+			model: models.StringFilterStringFilterMatchTypeIN,
+		},
+		{
+			raw:   "not_in",
+			model: models.StringFilterStringFilterMatchTypeNOTIN,
+		},
+		{
+			raw:   "NOT_IN",
+			model: models.StringFilterStringFilterMatchTypeNOTIN,
+		},
+		{
 			raw:    "bad",
 			expErr: errors.New("invalid match: bad"),
 		},
