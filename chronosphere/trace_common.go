@@ -37,8 +37,9 @@ func stringFilterToModel(
 	}
 
 	return &models.TraceSearchFilterStringFilter{
-		Match: match.Model(),
-		Value: f.Value,
+		Match:    match.Model(),
+		Value:    f.Value,
+		InValues: f.InValues,
 	}
 }
 
@@ -50,8 +51,9 @@ func stringFilterFromModel(
 	}
 
 	return &intschema.TraceStringFilter{
-		Match: string(prettyenum.StringFilterMatchTypeFromModel(f.Match)),
-		Value: f.Value,
+		Match:    string(prettyenum.StringFilterMatchTypeFromModel(f.Match)),
+		Value:    f.Value,
+		InValues: f.InValues,
 	}
 }
 

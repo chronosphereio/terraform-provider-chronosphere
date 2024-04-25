@@ -19,6 +19,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/service"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/sync_prometheus"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_behavior"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_behavior_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_tail_sampling_rules"
 )
@@ -74,6 +75,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli.Service = service.New(transport, formats)
 	cli.SyncPrometheus = sync_prometheus.New(transport, formats)
 	cli.TraceBehavior = trace_behavior.New(transport, formats)
+	cli.TraceBehaviorConfig = trace_behavior_config.New(transport, formats)
 	cli.TraceJaegerRemoteSamplingStrategy = trace_jaeger_remote_sampling_strategy.New(transport, formats)
 	cli.TraceTailSamplingRules = trace_tail_sampling_rules.New(transport, formats)
 	return cli
@@ -138,6 +140,8 @@ type ConfigUnstableAPI struct {
 
 	TraceBehavior trace_behavior.ClientService
 
+	TraceBehaviorConfig trace_behavior_config.ClientService
+
 	TraceJaegerRemoteSamplingStrategy trace_jaeger_remote_sampling_strategy.ClientService
 
 	TraceTailSamplingRules trace_tail_sampling_rules.ClientService
@@ -157,6 +161,7 @@ func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Service.SetTransport(transport)
 	c.SyncPrometheus.SetTransport(transport)
 	c.TraceBehavior.SetTransport(transport)
+	c.TraceBehaviorConfig.SetTransport(transport)
 	c.TraceJaegerRemoteSamplingStrategy.SetTransport(transport)
 	c.TraceTailSamplingRules.SetTransport(transport)
 }

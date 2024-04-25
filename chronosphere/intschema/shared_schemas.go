@@ -85,12 +85,19 @@ type TraceSpanFilter struct {
 	Service         *TraceStringFilter    `intschema:"service,optional,list_encoded_object"`
 	SpanCount       *TraceSpanCountFilter `intschema:"span_count,optional,list_encoded_object"`
 	Tag             []TraceTagFilter      `intschema:"tag,optional"`
-	Tags            []TraceTagFilter      `intschema:"tags,optional"`
+	Tags            []TraceSpanFilterTags `intschema:"tags,optional"`
+}
+
+type TraceSpanFilterTags struct {
+	Key          string              `intschema:"key,optional"`
+	NumericValue *TraceNumericFilter `intschema:"numeric_value,optional,list_encoded_object"`
+	Value        *TraceStringFilter  `intschema:"value,optional,list_encoded_object"`
 }
 
 type TraceStringFilter struct {
-	Value string `intschema:"value"`
-	Match string `intschema:"match,optional,default:exact"`
+	InValues []string `intschema:"in_values,optional"`
+	Match    string   `intschema:"match,optional,default:exact"`
+	Value    string   `intschema:"value,optional"`
 }
 
 type TraceTagFilter struct {

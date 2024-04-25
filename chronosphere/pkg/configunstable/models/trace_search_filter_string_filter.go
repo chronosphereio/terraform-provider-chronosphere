@@ -18,6 +18,9 @@ import (
 // swagger:model TraceSearchFilterStringFilter
 type TraceSearchFilterStringFilter struct {
 
+	// Values the filter tests against when using IN or NOT_IN match type.
+	InValues []string `json:"in_values"`
+
 	// match
 	Match StringFilterStringFilterMatchType `json:"match,omitempty"`
 
