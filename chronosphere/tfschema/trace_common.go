@@ -138,6 +138,10 @@ var TraceDurationFilterSchema = &schema.Schema{
 				Type:     schema.TypeFloat,
 				Optional: true,
 			},
+			"new_field": {
+				Type:     schema.TypeFloat,
+				Optional: true,
+			},
 			"max_seconds": { // This field is still defined for error messaging to existing users, but is deprecated. Prefer max_secs.
 				Type:       schema.TypeFloat,
 				Optional:   true,
