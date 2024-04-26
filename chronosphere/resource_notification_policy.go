@@ -248,17 +248,13 @@ func (npr *notificationPolicyResourceMeta) resourceNotificationPolicyCustomizeDi
 	// repeat_interval cannot be easily merged, so ensure that blocks with the same severity
 	// have the same repeat_interval.
 	validateRouteElem := func(rules []intschema.NotificationRoute) error {
-		repeatIntervalBySeverity := make(map[string]string)
+		bySeverity := make(map[string]bool)
 		for _, r := range rules {
-			prevInterval, ok := repeatIntervalBySeverity[r.Severity]
-			if !ok {
-				repeatIntervalBySeverity[r.Severity] = r.RepeatInterval
-				continue
+			if _, ok := bySeverity[r.Severity]; ok {
+				return fmt.Errorf("duplicate route with severity=%v", r.Severity)
 			}
 
-			if prevInterval != r.RepeatInterval {
-				return fmt.Errorf("cannot have different repeat intervals for severity %v", r.Severity)
-			}
+			bySeverity[r.Severity] = true
 		}
 
 		return nil
@@ -373,14 +369,22 @@ func expandNotificationPolicy(p *intschema.NotificationPolicy) (*NotificationPol
 		return nil, err
 	}
 
+	notifiers, err := expandNotificationPolicyRoutes(p.Route)
+	if err != nil {
+		return nil, err
+	}
 	routes := &configmodels.NotificationPolicyRoutes{
-		Defaults: expandNotificationPolicyRoutes(p.Route),
+		Defaults: notifiers,
 	}
 
 	for _, o := range p.Override {
+		notifiers, err := expandNotificationPolicyRoutes(o.Route)
+		if err != nil {
+			return nil, err
+		}
 		routes.Overrides = append(routes.Overrides, &configmodels.NotificationPolicyRoutesOverride{
 			AlertLabelMatchers: sliceutil.Map(o.AlertLabelMatcher, expandMatcherSchema),
-			Notifiers:          expandNotificationPolicyRoutes(o.Route),
+			Notifiers:          notifiers,
 		})
 	}
 
@@ -394,7 +398,7 @@ func expandNotificationPolicy(p *intschema.NotificationPolicy) (*NotificationPol
 	}, nil
 }
 
-func expandNotificationPolicyRoutes(routes []intschema.NotificationRoute) *configmodels.RoutesSeverityNotifiers {
+func expandNotificationPolicyRoutes(routes []intschema.NotificationRoute) (*configmodels.RoutesSeverityNotifiers, error) {
 	// In this method we want to add a key for the severity if any route with the
 	// severity exists. It doesn't have to have any notifiers in it.
 	out := &configmodels.RoutesSeverityNotifiers{}
@@ -411,14 +415,21 @@ func expandNotificationPolicyRoutes(routes []intschema.NotificationRoute) *confi
 		notifierList.RepeatIntervalSecs = int32(duration.Seconds())
 
 		if r.Severity == "warn" {
+			if out.Warn != nil {
+				return nil, fmt.Errorf("duplicate route with severity=warn")
+			}
 			out.Warn = notifierList
 		} else if r.Severity == "critical" {
+			if out.Critical != nil {
+				return nil, fmt.Errorf("duplicate route with severity=critical")
+			}
 			out.Critical = notifierList
 		} else {
 			panic(fmt.Sprintf("unknown severity: %s", r.Severity))
 		}
 	}
-	return out
+
+	return out, nil
 }
 
 func isNotificationPolicyIndependent(p *intschema.NotificationPolicy) bool {

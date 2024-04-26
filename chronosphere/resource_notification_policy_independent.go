@@ -15,6 +15,7 @@
 package chronosphere
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
@@ -110,6 +111,10 @@ func notificationRoutesToModel(
 		if err := checkSeverity(sev); err != nil {
 			return nil, err
 		}
+		if _, ok := bySev[sev]; ok {
+			return nil, fmt.Errorf("duplicate route with severity=%v", sev)
+		}
+
 		intervalSecs, err := durationToSecs(r.RepeatInterval)
 		if err != nil {
 			return nil, err
