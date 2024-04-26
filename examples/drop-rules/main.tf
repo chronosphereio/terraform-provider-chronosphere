@@ -1,5 +1,5 @@
 resource "chronosphere_drop_rule" "mah-drop-rule" {
-  name = "${var.prefix} Drop Rule"
+  name = "Drop Rule"
   query = [
     "ab=\"123\"",
   ]
@@ -10,7 +10,7 @@ resource "chronosphere_drop_rule" "mah-drop-rule" {
 }
 
 resource "chronosphere_drop_rule" "mah-drop-rule-nan" {
-  name = "${var.prefix} Drop Rule (Drop NaN Values)"
+  name = "Drop Rule (Drop NaN Values)"
   query = [
     "cd=\"321\"",
   ]

@@ -1,13 +1,13 @@
 resource "chronosphere_trace_metrics_rule" "tmr" {
-  name = "${var.prefix} tmr-name"
-  slug = "${var.prefix}-tmr-slug"
+  name = "tmr-name"
+  slug = "tmr-slug"
 
   histogram_buckets_seconds = [
     1,
     2,
     3,
   ]
-  metric_name = "${var.prefix}_tmr_metric_name"
+  metric_name = "tmr_metric_name"
 
   metric_labels = {
     "tmr_label_1" = "tmr_value_1"
@@ -104,8 +104,8 @@ resource "chronosphere_trace_metrics_rule" "tmr" {
 }
 
 resource "chronosphere_trace_metrics_rule" "tmr_with_group_by" {
-  name = "${var.prefix} tmr-with-group-by-name"
-  slug = "${var.prefix}-tmr-with-group-by-slug"
+  name = "tmr-with-group-by-name"
+  slug = "tmr-with-group-by-slug"
 
   histogram_buckets_seconds = [
     0.1,
@@ -114,7 +114,7 @@ resource "chronosphere_trace_metrics_rule" "tmr_with_group_by" {
     2.0,
     10.0,
   ]
-  metric_name = "${var.prefix}_tmr_with_group_by_metric_name"
+  metric_name = "tmr_with_group_by_metric_name"
 
   metric_labels = {
     "tmr_wgb_label_1" = "tmr_wbg_value_1"

@@ -1,5 +1,5 @@
 resource "chronosphere_bucket" "b" {
-  name                     = "${var.prefix} bucket"
+  name                     = "bucket"
   notification_policy_data = chronosphere_notification_policy.np.notification_policy_data
 }
 

@@ -1,7 +1,7 @@
 resource "chronosphere_classic_dashboard" "my_dashboard" {
   collection_id = chronosphere_collection.c.id
   dashboard_json = jsonencode({
-    title : "${var.prefix} Dashboard",
+    title : "Dashboard",
     panels : [{
       "gridPos" : {
         "h" : 12,

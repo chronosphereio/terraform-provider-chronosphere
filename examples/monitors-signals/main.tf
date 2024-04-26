@@ -1,5 +1,5 @@
 resource "chronosphere_monitor" "monitor_with_signal" {
-  name      = "${var.prefix} Monitor With Signals"
+  name      = "Monitor With Signals"
   bucket_id = chronosphere_bucket.b.id
   query {
     prometheus_expr = <<-EOF

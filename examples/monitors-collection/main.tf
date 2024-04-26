@@ -1,5 +1,5 @@
 resource "chronosphere_monitor" "collection_monitor" {
-  name          = "${var.prefix} Monitor in Collection"
+  name          = "Monitor in Collection"
   collection_id = chronosphere_collection.infra.id
 
   query {

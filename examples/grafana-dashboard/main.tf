@@ -1,7 +1,7 @@
 resource "chronosphere_grafana_dashboard" "my_dashboard" {
   bucket_id = chronosphere_bucket.b.id
   dashboard_json = jsonencode({
-    title : "${var.prefix} Dashboard",
+    title : "Dashboard",
     panels : [{
       "gridPos" : {
         "h" : 12,

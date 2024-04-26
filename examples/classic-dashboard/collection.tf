@@ -1,9 +1,9 @@
 resource "chronosphere_team" "t" {
-  name = "${var.prefix} team"
+  name = "team"
 }
 
 resource "chronosphere_collection" "c" {
-  name        = "${var.prefix} Bucket"
+  name        = "Bucket"
   team_id     = chronosphere_team.t.id
-  description = "${var.prefix} collection created by terraform examples"
+  description = "collection created by terraform examples"
 }

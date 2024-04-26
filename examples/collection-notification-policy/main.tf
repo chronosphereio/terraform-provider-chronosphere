@@ -1,6 +1,6 @@
 resource "chronosphere_notification_policy" "np" {
   team_id = chronosphere_team.t.id
-  name    = "${var.prefix} team NP"
+  name    = "team NP"
 
   route {
     severity  = "warn"
@@ -9,7 +9,7 @@ resource "chronosphere_notification_policy" "np" {
 }
 
 resource "chronosphere_collection" "infra" {
-  name        = "${var.prefix} Infrastructure Collection"
+  name        = "Infrastructure Collection"
   team_id     = chronosphere_team.t.id
   description = "Collection of resources related to infrastructure services."
 

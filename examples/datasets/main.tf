@@ -1,5 +1,5 @@
 resource "chronosphere_dataset" "example_prod_payfe" {
-  name        = "${var.prefix} Production paymentfe Traces"
+  name        = "Production paymentfe Traces"
   description = "Traces passing through the paymentfe service in production"
   configuration {
     type = "TRACES"

@@ -4,21 +4,21 @@ data "chronosphere_service" "gateway" {
 }
 
 resource "chronosphere_monitor" "m" {
-  name = "${var.prefix} Monitor in Gateway Service"
-  collection_id = data.chronosphere_service.gateway.id
+  name                   = "Monitor in Gateway Service"
+  collection_id          = data.chronosphere_service.gateway.id
   notification_policy_id = chronosphere_notification_policy.np.id
 
   query {
     prometheus_expr = "up{foo=\"bar\"}"
   }
 
-	series_conditions {
-		condition {
-			severity = "warn"
-			value = 2.0
-			op = "GT"
-		}
-	}
+  series_conditions {
+    condition {
+      severity = "warn"
+      value    = 2.0
+      op       = "GT"
+    }
+  }
 }
 
 
@@ -27,7 +27,7 @@ resource "chronosphere_dashboard" "dash_in_svc" {
   dashboard_json = jsonencode({
     kind : "Dashboard",
     metadata : {
-      name : "${var.prefix} Native Dashboard in Gateway Service"
+      name : "Native Dashboard in Gateway Service"
     }
     spec : {
     }
@@ -38,7 +38,7 @@ resource "chronosphere_dashboard" "dash_in_svc" {
 resource "chronosphere_grafana_dashboard" "dash_in_svc" {
   collection_id = data.chronosphere_service.gateway.id
   dashboard_json = jsonencode({
-    title : "${var.prefix} Dashboard In Gateway Service",
+    title : "Dashboard In Gateway Service",
     panels : [{
       "gridPos" : {
         "h" : 12,
