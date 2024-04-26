@@ -8,4 +8,8 @@ import (
 )
 
 //go:embed examples/*
-var devFS embed.FS
+var examplesFS embed.FS
+
+func Examples() embed.FS {
+	return examplesFS
+}
