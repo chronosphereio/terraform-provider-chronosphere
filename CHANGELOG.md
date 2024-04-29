@@ -13,5 +13,6 @@ Deprecated:
 - Block unsupported use of duplicate routes with the same severity in `chronosphere_notification_policy`
 - Remove unsupported `bucket_id` in `chronosphere_notification_policy`
 - Remove unsupported data source for `chronosphere_notification_policy`
+- Remove deprecated `rules` field from `chronosphere_notification_policy`
 - Remove in-provider validation of rollup rules in favor of server-side dry run validation
 - Consolidating tracing schemas: replace usage of `tags` with `tag`, `min_seconds` with `min_secs`, and `max_seconds` with `max_secs`.

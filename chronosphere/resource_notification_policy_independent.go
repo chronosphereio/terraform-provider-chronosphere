@@ -50,9 +50,6 @@ type independentNotificationPolicyConverter struct{}
 func (independentNotificationPolicyConverter) toModel(
 	p *intschema.NotificationPolicy,
 ) (*models.Configv1NotificationPolicy, error) {
-	if err := moveRuleToRoute(p); err != nil {
-		return nil, err
-	}
 	defaults, err := notificationRoutesToModel(p.Route)
 	if err != nil {
 		return nil, err

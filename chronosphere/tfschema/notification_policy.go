@@ -43,7 +43,6 @@ var NotificationPolicy = map[string]*schema.Schema{
 		Optional:     true,
 		RequiredWith: []string{"name"},
 	},
-	"rule":  deprecated(NotificationRouteSchema, "`rule` is deprecated, use `route` instead."),
 	"route": NotificationRouteSchema,
 	"override": {
 		Type:     schema.TypeList,
