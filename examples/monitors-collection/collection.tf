@@ -1,0 +1,1 @@
+../collection-notification-policy/main.tf

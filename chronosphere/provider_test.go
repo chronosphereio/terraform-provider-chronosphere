@@ -28,17 +28,38 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// Sanity test that the provider schema can be loaded by TF.
-func TestProviderLoadSchema(t *testing.T) {
-	p := NewProject(t)
-
-	p.Write(t, "main.tf", `
-	resource "chronosphere_collection" "c" {
-		name = "C"
+func TestExamples(t *testing.T) {
+	skips := map[string]string{
+		"data-bucket":        "datasources are not supported without a real tenant",
+		"data-collection":    "datasources are not supported without a real tenant",
+		"service-datasource": "datasources are not supported without a real tenant",
 	}
-	`)
-	p.Init(t)
-	p.Plan(t)
+
+	exampleRoot := "../examples"
+	examplesList, err := os.ReadDir(exampleRoot)
+	require.NoError(t, err)
+	for _, entry := range examplesList {
+		if !entry.IsDir() {
+			continue
+		}
+		if reason, ok := skips[entry.Name()]; ok {
+			t.Logf("skipping %s: %s", entry.Name(), reason)
+			continue
+		}
+		t.Run(entry.Name(), func(t *testing.T) {
+			p := NewProject(t)
+			exampleFiles, err := os.ReadDir(filepath.Join(exampleRoot, entry.Name()))
+			require.NoError(t, err)
+			for _, fileEntry := range exampleFiles {
+				path := filepath.Join(exampleRoot, entry.Name(), fileEntry.Name())
+				contents, err := os.ReadFile(path)
+				require.NoError(t, err)
+				p.Write(t, filepath.Base(fileEntry.Name()), string(contents))
+			}
+			p.Init(t)
+			p.Plan(t)
+		})
+	}
 }
 
 // Project represents a Terraform project.
@@ -52,23 +73,14 @@ func NewProject(t testing.TB) *Project {
 	dir, err := os.MkdirTemp(t.TempDir(), "tf-work")
 	require.NoError(t, err)
 
-	require.NoError(t, os.WriteFile(filepath.Join(dir, "provider.tf"), []byte(`
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "provider_config.tf"), []byte(`
 	`), 0o666))
 
 	p := &Project{
 		dir:         dir,
 		providerCfg: startProvider(t),
 	}
-	p.Write(t, "provider.tf", `
-	terraform {
-		required_providers {
-			chronosphere = {
-				version = "0.0.1-dev"
-				source  = "local/chronosphereio/chronosphere"
-			}
-		}
-	}
-
+	p.Write(t, "provider_config.tf", `
 	provider "chronosphere" {
 		org = "test"
 		api_token = "test"
