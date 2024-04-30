@@ -19,7 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var GrafanaDashboard = map[string]*schema.Schema{
+var ClassicDashboard = map[string]*schema.Schema{
 	"bucket_id": {
 		Type:         schema.TypeString,
 		Optional:     true,
@@ -33,12 +33,12 @@ var GrafanaDashboard = map[string]*schema.Schema{
 	"dashboard_json": {
 		Type:             schema.TypeString,
 		Required:         true,
-		DiffSuppressFunc: grafanaDashboardJSONDiffSuppress,
+		DiffSuppressFunc: classicDashboardJSONDiffSuppress,
 	},
 }
 
-// grafanaDashboardJSONDiffSuppress sanitizes and then diffs two dashboard JSON payloads.
-func grafanaDashboardJSONDiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
+// classicDashboardJSONDiffSuppress sanitizes and then diffs two dashboard JSON payloads.
+func classicDashboardJSONDiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
 	sanitizedOld, err := grafana.SanitizedDashboardJSON(old, grafana.WithUID(""))
 	if err != nil {
 		return false
