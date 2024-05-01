@@ -38,6 +38,9 @@ jobs:
         with:
           terraform_version: "1.8.0"
 
+      - name: Validate Generated Code
+        run: make test-generate
+
       - name: Test
         run: make test
 
