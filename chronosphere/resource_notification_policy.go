@@ -238,24 +238,14 @@ func (npr *notificationPolicyResourceMeta) resourceNotificationPolicyCustomizeDi
 		return errors.New("specify at least one `route` or `override`")
 	}
 
-	// route blocks are merged, which is simple for notifiers as the list can be appended.
-	// repeat_interval cannot be easily merged, so ensure that blocks with the same severity
-	// have the same repeat_interval.
-	validateRouteElem := func(routes []intschema.NotificationRoute) error {
-		bySeverity := make(map[string]bool)
-		for _, r := range routes {
-			if _, ok := bySeverity[r.Severity]; ok {
-				return fmt.Errorf("duplicate route with severity=%v", r.Severity)
-			}
-
-			bySeverity[r.Severity] = true
+	// We prevent duplicate routes with the same severity.
+	bySeverity := make(map[string]bool)
+	for _, o := range policy.Route {
+		if _, ok := bySeverity[o.Severity]; ok {
+			return fmt.Errorf("duplicate route with severity=%v", o.Severity)
 		}
 
-		return nil
-	}
-
-	if err := validateRouteElem(policy.Route); err != nil {
-		return fmt.Errorf("route: %v", err)
+		bySeverity[o.Severity] = true
 	}
 
 	dryRunOpts := ValidateDryRunOpts[*configmodels.Configv1NotificationPolicy]{
