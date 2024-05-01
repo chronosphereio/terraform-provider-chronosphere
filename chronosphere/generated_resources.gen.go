@@ -11,7 +11,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/gcp_metrics_integration"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
@@ -493,13 +492,13 @@ func (generatedDropRule) delete(
 	return err
 }
 
-type generatedGrafanaDashboard struct{}
+type generatedClassicDashboard struct{}
 
-func (generatedGrafanaDashboard) slugOf(m *configv1models.Configv1GrafanaDashboard) string {
+func (generatedClassicDashboard) slugOf(m *configv1models.Configv1GrafanaDashboard) string {
 	return m.Slug
 }
 
-func (generatedGrafanaDashboard) create(
+func (generatedClassicDashboard) create(
 	ctx context.Context,
 	clients apiclients.Clients,
 	m *configv1models.Configv1GrafanaDashboard,
@@ -523,7 +522,7 @@ func (generatedGrafanaDashboard) create(
 	return e.Slug, nil
 }
 
-func (generatedGrafanaDashboard) read(
+func (generatedClassicDashboard) read(
 	ctx context.Context,
 	clients apiclients.Clients,
 	slug string,
@@ -539,7 +538,7 @@ func (generatedGrafanaDashboard) read(
 	return resp.Payload.GrafanaDashboard, nil
 }
 
-func (generatedGrafanaDashboard) update(
+func (generatedClassicDashboard) update(
 	ctx context.Context,
 	clients apiclients.Clients,
 	m *configv1models.Configv1GrafanaDashboard,
@@ -557,7 +556,7 @@ func (generatedGrafanaDashboard) update(
 	_, err := clients.ConfigV1.GrafanaDashboard.UpdateGrafanaDashboard(req)
 	return err
 }
-func (generatedGrafanaDashboard) delete(
+func (generatedClassicDashboard) delete(
 	ctx context.Context,
 	clients apiclients.Clients,
 	slug string,
@@ -1323,83 +1322,6 @@ func (generatedTraceMetricsRule) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.TraceMetricsRule.DeleteTraceMetricsRule(req)
-	return err
-}
-
-type generatedClassicDashboard struct{}
-
-func (generatedClassicDashboard) slugOf(m *configv1models.Configv1GrafanaDashboard) string {
-	return m.Slug
-}
-
-func (generatedClassicDashboard) create(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configv1models.Configv1GrafanaDashboard,
-	dryRun bool,
-) (string, error) {
-	req := &classic_dashboard.CreateClassicDashboardParams{
-		Context: ctx,
-		Body: &configv1models.Configv1CreateClassicDashboardRequest{
-			ClassicDashboard: m,
-			DryRun:           dryRun,
-		},
-	}
-	resp, err := clients.ConfigV1.ClassicDashboard.CreateClassicDashboard(req)
-	if err != nil {
-		return "", err
-	}
-	e := resp.Payload.ClassicDashboard
-	if e == nil {
-		return "", nil
-	}
-	return e.Slug, nil
-}
-
-func (generatedClassicDashboard) read(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) (*configv1models.Configv1GrafanaDashboard, error) {
-	req := &classic_dashboard.ReadClassicDashboardParams{
-		Context: ctx,
-		Slug:    slug,
-	}
-	resp, err := clients.ConfigV1.ClassicDashboard.ReadClassicDashboard(req)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Payload.ClassicDashboard, nil
-}
-
-func (generatedClassicDashboard) update(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configv1models.Configv1GrafanaDashboard,
-	params updateParams,
-) error {
-	req := &classic_dashboard.UpdateClassicDashboardParams{
-		Context: ctx,
-		Slug:    m.Slug,
-		Body: classic_dashboard.UpdateClassicDashboardBody{
-			ClassicDashboard: m,
-			CreateIfMissing:  params.createIfMissing,
-			DryRun:           params.dryRun,
-		},
-	}
-	_, err := clients.ConfigV1.ClassicDashboard.UpdateClassicDashboard(req)
-	return err
-}
-func (generatedClassicDashboard) delete(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) error {
-	req := &classic_dashboard.DeleteClassicDashboardParams{
-		Context: ctx,
-		Slug:    slug,
-	}
-	_, err := clients.ConfigV1.ClassicDashboard.DeleteClassicDashboard(req)
 	return err
 }
 
