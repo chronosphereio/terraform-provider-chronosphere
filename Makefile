@@ -48,7 +48,7 @@ generate: install-tools
 # subset of generate that skips swagger since swagger is slow to generate.
 .PHONY: generate-no-swagger
 generate-no-swagger: install-tools
-	$(GO_GENERATE) ./chronosphere ./chronosphere.intschema ./chronosphere/pagination
+	$(GO_GENERATE) ./chronosphere ./chronosphere/intschema ./chronosphere/pagination
 
 .PHONY: test-generate
 test-generate: generate

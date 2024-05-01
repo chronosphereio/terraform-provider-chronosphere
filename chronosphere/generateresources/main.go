@@ -52,9 +52,6 @@ func run() error {
 		entityTypes = append(entityTypes, newEntityType(v1, e))
 	}
 
-	// Create custom binding for classic dashboards.
-	entityTypes = append(entityTypes, newClassicDashboard(v1))
-
 	includesUnstable := false
 	for _, e := range registry.StandardEntities(registry.Unstable) {
 		entityTypes = append(entityTypes, newEntityType(unstable, e))
@@ -97,7 +94,7 @@ type entityType struct {
 }
 
 func newEntityType(a api, r registry.Resource) entityType {
-	return entityType{
+	et := entityType{
 		API:                  a,
 		GoType:               fmt.Sprintf("%s%s", a.GoPrefix, r.Entity),
 		SwaggerType:          r.Entity,
@@ -107,6 +104,12 @@ func newEntityType(a api, r registry.Resource) entityType {
 		DryRun:               r.DryRun,
 		UpdateUnsupported:    r.UpdateUnsupported,
 	}
+
+	// special case for classic dashboards
+	if r.Name == "classic_dashboard" {
+		et.GoType = fmt.Sprintf("%s%s", a.GoPrefix, "ClassicDashboard")
+	}
+	return et
 }
 
 type data struct {
