@@ -21,7 +21,6 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/grafana"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -91,7 +90,7 @@ func (classicDashboardConverter) toModel(
 func (classicDashboardConverter) fromModel(
 	m *models.Configv1GrafanaDashboard,
 ) (*intschema.ClassicDashboard, error) {
-	dashboardJSON, err := grafana.SanitizedDashboardJSON(string(m.DashboardJSON))
+	dashboardJSON, err := tfschema.SanitizedDashboardJSON(string(m.DashboardJSON))
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +109,7 @@ func ClassicDashboardFromModel(m *models.Configv1GrafanaDashboard) (*intschema.C
 // ClassicDashboardExtract sanitizes the dashboard JSON and extracts DashboardMetadata.
 func ClassicDashboardExtract(dashboardJSON string) (DashboardMetadata, string, error) {
 	var dashMeta DashboardMetadata
-	sanitizedJSON, err := grafana.SanitizedDashboardJSON(
+	sanitizedJSON, err := tfschema.SanitizedDashboardJSON(
 		dashboardJSON,
 		func(dashboard map[string]any) error {
 			dashMeta.Name = getJSONFieldStrOrEmpty(dashboard, "title")
