@@ -79,9 +79,14 @@ func (dashboardConverter) toModel(
 		return nil, fmt.Errorf("invalid dashboard_json: %s", err)
 	}
 
-	name := dashboard.Metadata.Name
+	if d.Name != "" && dashboard.Metadata.Name != "" {
+		return nil, errors.New("only one of `name` and `dashboard_json.metadata.name` can be set")
+	}
+
+	// always prefer the top level name explicitly set
+	name := d.Name
 	if name == "" {
-		return nil, errors.New(`invalid dashboard_json: dashboard metadata must have "name" set`)
+		name = dashboard.Metadata.Name
 	}
 
 	collSlug, collRef := collectionRefFromID(d.CollectionId.Slug())
@@ -97,9 +102,21 @@ func (dashboardConverter) toModel(
 func (dashboardConverter) fromModel(
 	m *models.Configv1Dashboard,
 ) (*intschema.Dashboard, error) {
+	name := m.Name
+
+	// In the event that the name is determined from the dashboard_json metadata,
+	// do not set the intschema name to prevent plan diffs.
+	var dashboard DashboardMeta
+	if err := xjson.Unmarshal([]byte(m.DashboardJSON), &dashboard); err == nil {
+		if dashboard.Metadata.Name != "" {
+			name = ""
+		}
+	}
+
 	return &intschema.Dashboard{
+		Name:          name,
+		Slug:          m.Slug,
 		DashboardJson: m.DashboardJSON,
 		CollectionId:  tfid.Slug(collectionIDFromRef(m.CollectionSlug, m.Collection)),
-		Slug:          m.Slug,
 	}, nil
 }

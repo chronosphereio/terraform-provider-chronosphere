@@ -20,6 +20,10 @@ import (
 )
 
 var Dashboard = map[string]*schema.Schema{
+	"name": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
 	"slug": {
 		Type:     schema.TypeString,
 		Optional: true,

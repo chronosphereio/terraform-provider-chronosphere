@@ -8,6 +8,7 @@ Added:
 - Add `gcp_metrics_integration` resource
 - Add new resource type, `dataset`, with the first telemetry type supported being tracing.
 - Add new `IN` and `NOT_IN` variations to tracing's `StringFilterMatchType` enum.
+- Add `name` field to `dashboard` resource.
 
 Updated:
 - Renamed `chronosphere_grafana_dashboard` to `chronosphere_classic_dashboard`
