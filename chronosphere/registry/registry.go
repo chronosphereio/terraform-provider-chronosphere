@@ -178,7 +178,7 @@ var Resources = mustValidate([]Resource{
 	{
 		Name:   "dataset",
 		Entity: "Dataset",
-		API:    Unstable,
+		API:    V1,
 		Schema: tfschema.Dataset,
 		DryRun: true,
 	},

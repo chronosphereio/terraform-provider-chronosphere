@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // DatasetType is a wrapper of models.DatasetDatasetType with support for user friendly values.

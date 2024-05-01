@@ -20,20 +20,24 @@ import (
 	"go.uber.org/atomic"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
-	v1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/prettyenum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
+// DatasetFromModel maps an API model to an intschema model.
+func DatasetFromModel(m *models.Configv1Dataset) (*intschema.Dataset, error) {
+	return datasetConverter{}.fromModel(m)
+}
+
 func resourceDataset() *schema.Resource {
 	r := newGenericResource[
-		*models.ConfigunstableDataset,
+		*models.Configv1Dataset,
 		intschema.Dataset,
 		*intschema.Dataset,
 	]("dataset",
 		datasetConverter{},
-		generatedUnstableDataset{})
+		generatedDataset{})
 
 	return &schema.Resource{
 		CreateContext: r.CreateContext,
@@ -53,8 +57,8 @@ var DatasetDryRunCount atomic.Int64
 
 type datasetConverter struct{}
 
-func (d datasetConverter) toModel(s *intschema.Dataset) (*models.ConfigunstableDataset, error) {
-	return &models.ConfigunstableDataset{
+func (d datasetConverter) toModel(s *intschema.Dataset) (*models.Configv1Dataset, error) {
+	return &models.Configv1Dataset{
 		Configuration: datasetConfigurationToModel(s.Configuration),
 		Description:   s.Description,
 		Name:          s.Name,
@@ -69,34 +73,16 @@ func datasetConfigurationToModel(s intschema.DatasetConfiguration) *models.Datas
 	}
 }
 
-func traceDatasetToModel(dataset *intschema.DatasetConfigurationTraceDataset) *models.ConfigunstableTraceDataset {
+func traceDatasetToModel(dataset *intschema.DatasetConfigurationTraceDataset) *models.Configv1TraceDataset {
 	if dataset == nil {
 		return nil
 	}
-	configv1Criteria := traceSearchFilterToModel(dataset.MatchCriteria)
-	criteria := unstableSearchFilterFromV1(configv1Criteria)
-	return &models.ConfigunstableTraceDataset{
-		MatchCriteria: criteria,
+	return &models.Configv1TraceDataset{
+		MatchCriteria: traceSearchFilterToModel(dataset.MatchCriteria),
 	}
 }
 
-func unstableSearchFilterFromV1(criteria *v1models.Configv1TraceSearchFilter) *models.Configv1TraceSearchFilter {
-	if criteria == nil {
-		return nil
-	}
-	serialized, err := criteria.MarshalBinary()
-	if err != nil {
-		return nil
-	}
-	result := &models.Configv1TraceSearchFilter{}
-	err = result.UnmarshalBinary(serialized)
-	if err != nil {
-		return nil
-	}
-	return result
-}
-
-func (d datasetConverter) fromModel(m *models.ConfigunstableDataset) (*intschema.Dataset, error) {
+func (d datasetConverter) fromModel(m *models.Configv1Dataset) (*intschema.Dataset, error) {
 	dsConfig, err := datasetConfigurationFromModel(m.Configuration)
 	if err != nil {
 		return nil, err
@@ -129,28 +115,8 @@ func datasetConfigurationFromModel(m *models.DatasetDatasetConfiguration) (intsc
 	}
 }
 
-func traceDatasetFromModel(m *models.ConfigunstableTraceDataset) (*intschema.DatasetConfigurationTraceDataset, error) {
-	configV1, err := v1SearchFilterFromUnstable(m.MatchCriteria)
-	if err != nil {
-		return nil, err
-	}
+func traceDatasetFromModel(m *models.Configv1TraceDataset) (*intschema.DatasetConfigurationTraceDataset, error) {
 	return &intschema.DatasetConfigurationTraceDataset{
-		MatchCriteria: traceSearchFilterFromModel(configV1),
+		MatchCriteria: traceSearchFilterFromModel(m.MatchCriteria),
 	}, nil
-}
-
-func v1SearchFilterFromUnstable(criteria *models.Configv1TraceSearchFilter) (*v1models.Configv1TraceSearchFilter, error) {
-	if criteria == nil {
-		return nil, nil
-	}
-	serialized, err := criteria.MarshalBinary()
-	if err != nil {
-		return nil, err
-	}
-	result := &v1models.Configv1TraceSearchFilter{}
-	err = result.UnmarshalBinary(serialized)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
 }

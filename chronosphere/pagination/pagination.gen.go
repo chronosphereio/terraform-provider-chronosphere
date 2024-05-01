@@ -4,7 +4,6 @@ package pagination
 import (
 	"context"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dataset"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/gcp_metrics_integration"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
@@ -12,6 +11,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dataset"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_metric"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
@@ -224,6 +224,75 @@ func ListDashboardsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.Dashboards {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListDatasets(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1Dataset, error) {
+	return ListDatasetsByFilter(ctx, client, Filter{})
+}
+
+func ListDatasetsBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1Dataset, error) {
+	return ListDatasetsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListDatasetsByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1Dataset, error) {
+	return ListDatasetsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListDatasetsByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*dataset.ListDatasetsParams),
+) ([]*configv1models.Configv1Dataset, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1Dataset
+	)
+	for {
+		p := &dataset.ListDatasetsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.Dataset.ListDatasets(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.Datasets {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
@@ -1259,78 +1328,6 @@ func ListClassicDashboardsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.ClassicDashboards {
-				result = append(result, v)
-			}
-			if resp.Payload.Page != nil {
-				nextToken = resp.Payload.Page.NextToken
-			}
-		}
-		if nextToken == "" {
-			break
-		}
-	}
-	return result, nil
-}
-
-func ListUnstableDatasets(
-	ctx context.Context,
-	client *configunstable.Client,
-) ([]*configunstablemodels.ConfigunstableDataset, error) {
-	return ListUnstableDatasetsByFilter(ctx, client, Filter{})
-}
-
-func ListUnstableDatasetsBySlugs(
-	ctx context.Context,
-	client *configunstable.Client,
-	slugs []string,
-) ([]*configunstablemodels.ConfigunstableDataset, error) {
-	return ListUnstableDatasetsByFilter(ctx, client, Filter{
-		Slugs: slugs,
-	})
-}
-
-func ListUnstableDatasetsByNames(
-	ctx context.Context,
-	client *configunstable.Client,
-	names []string,
-) ([]*configunstablemodels.ConfigunstableDataset, error) {
-	return ListUnstableDatasetsByFilter(ctx, client, Filter{
-		Names: names,
-	})
-}
-
-func ListUnstableDatasetsByFilter(
-	ctx context.Context,
-	client *configunstable.Client,
-	f Filter,
-	opts ...func(*dataset.ListDatasetsParams),
-) ([]*configunstablemodels.ConfigunstableDataset, error) {
-	if !unstable.Enabled() {
-		return nil, nil
-	}
-	var (
-		nextToken string
-		result    []*configunstablemodels.ConfigunstableDataset
-	)
-	for {
-		p := &dataset.ListDatasetsParams{
-			Context:   ctx,
-			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
-		}
-		for _, opt := range opts {
-			opt(p)
-		}
-		resp, err := client.Dataset.ListDatasets(p)
-		if err != nil {
-			return nil, err
-		}
-
-		// If payload or page token aren't set, no next page.
-		nextToken = ""
-		if resp.Payload != nil {
-			for _, v := range resp.Payload.Datasets {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
