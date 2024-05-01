@@ -20,7 +20,6 @@ type NotificationPolicy struct {
 	IsIndependent          bool                         `intschema:"is_independent,computed"`
 	NotificationPolicyData string                       `intschema:"notification_policy_data,optional,computed"`
 	Route                  []NotificationRoute          `intschema:"route,optional"`
-	Rule                   []NotificationRoute          `intschema:"rule,optional"`
 	Override               []NotificationPolicyOverride `intschema:"override,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().

@@ -217,7 +217,7 @@ func (npr *notificationPolicyResourceMeta) resourceNotificationPolicyCustomizeDi
 		}
 	}
 
-	// This forces a diff to notification_policy_data if the rule list, route list, or ownership changes.
+	// This forces a diff to notification_policy_data if the route list, or ownership changes.
 	// This is not the default terraform behavior, which usually only computes fields on resource creation.
 	if changedKeys := diff.GetChangedKeysPrefix(""); len(changedKeys) > 0 {
 		tflog.Debug(ctx, "Notification policy change detected, update notification_policy_data", map[string]any{
@@ -233,49 +233,29 @@ func (npr *notificationPolicyResourceMeta) resourceNotificationPolicyCustomizeDi
 		return err
 	}
 
-	// Only one of route or rule can be set.
-	if len(policy.Route) > 0 && len(policy.Rule) > 0 {
-		return errors.New("cannot set both `route` and `rule`, update `rule` blocks to use `route` instead.")
-	}
-
-	// At least one-of route, rule, or override must be set.
-	// Note: we don't mention rule in the error, since it's deprecated (route should be used instead).
-	if len(policy.Route) == 0 && len(policy.Rule) == 0 && len(policy.Override) == 0 {
+	// At least one-of route, or override must be set.
+	if len(policy.Route) == 0 && len(policy.Override) == 0 {
 		return errors.New("specify at least one `route` or `override`")
 	}
 
-	// rule/route blocks are merged, which is simple for notifiers as the list can be appended.
-	// repeat_interval cannot be easily merged, so ensure that blocks with the same severity
-	// have the same repeat_interval.
-	validateRouteElem := func(rules []intschema.NotificationRoute) error {
-		bySeverity := make(map[string]bool)
-		for _, r := range rules {
-			if _, ok := bySeverity[r.Severity]; ok {
-				return fmt.Errorf("duplicate route with severity=%v", r.Severity)
-			}
-
-			bySeverity[r.Severity] = true
+	// We prevent duplicate routes with the same severity.
+	bySeverity := make(map[string]bool)
+	for _, o := range policy.Route {
+		if _, ok := bySeverity[o.Severity]; ok {
+			return fmt.Errorf("duplicate route with severity=%v", o.Severity)
 		}
 
-		return nil
-	}
-
-	if err := validateRouteElem(policy.Route); err != nil {
-		return fmt.Errorf("route: %v", err)
-	}
-	if err := validateRouteElem(policy.Rule); err != nil {
-		return fmt.Errorf("rule: %v", err)
+		bySeverity[o.Severity] = true
 	}
 
 	dryRunOpts := ValidateDryRunOpts[*configmodels.Configv1NotificationPolicy]{
-		// Note: We skip notifier fields in route, rule and override as they're
+		// Note: We skip notifier fields in route and override as they're
 		// within a set, which setUnknownReferences does not support.
 		// When there's an unknown notifier slug, the list of notifiers is empty.
 		// Since the server accepts empty lists, we don't need to set dummy values for dry-run
 		// validation to work properly.
 		SetUnknownReferencesSkip: []string{
 			"route.[].notifiers.[]",
-			"rule.[].notifiers.[]",
 			"override.[].route.[].notifiers.[]",
 		},
 
@@ -365,10 +345,6 @@ func expandNotificationPolicy(p *intschema.NotificationPolicy) (*NotificationPol
 		return nil, fmt.Errorf("cannot set name for unowned policy, can only set name if policy with team_id set")
 	}
 
-	if err := moveRuleToRoute(p); err != nil {
-		return nil, err
-	}
-
 	notifiers, err := expandNotificationPolicyRoutes(p.Route)
 	if err != nil {
 		return nil, err
@@ -440,17 +416,6 @@ func isNotificationPolicyIndependent(p *intschema.NotificationPolicy) bool {
 
 	// Otherwise, policy is independent if team_id is set in the TF definition.
 	return p.TeamId.Slug() != ""
-}
-
-func moveRuleToRoute(p *intschema.NotificationPolicy) error {
-	if len(p.Rule) > 0 {
-		if len(p.Route) > 0 {
-			return errors.New("Cannot include both rules and routes")
-		}
-		p.Route = p.Rule
-		p.Rule = nil
-	}
-	return nil
 }
 
 // isNotificationPolicyIndependentForCustomizeDiff is a version of isNotificationPolicyIndependent which is safe
