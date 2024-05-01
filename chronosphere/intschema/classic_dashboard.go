@@ -13,7 +13,7 @@ import (
 
 var _ tfid.ID // Always use tfid for simplified import generation.
 
-type GrafanaDashboard struct {
+type ClassicDashboard struct {
 	BucketId             tfid.ID `intschema:"bucket_id,optional"`
 	CollectionId         tfid.ID `intschema:"collection_id,optional"`
 	DashboardJson        string  `intschema:"dashboard_json"`
@@ -28,30 +28,30 @@ type GrafanaDashboard struct {
 	HCLID string `intschema:"-"`
 }
 
-func (o *GrafanaDashboard) FromResourceData(d convertintschema.ResourceGetter) error {
-	return convertintschema.FromResourceData(tfschema.GrafanaDashboard, d, o)
+func (o *ClassicDashboard) FromResourceData(d convertintschema.ResourceGetter) error {
+	return convertintschema.FromResourceData(tfschema.ClassicDashboard, d, o)
 }
 
-func (o *GrafanaDashboard) ToResourceData(d *schema.ResourceData) diag.Diagnostics {
+func (o *ClassicDashboard) ToResourceData(d *schema.ResourceData) diag.Diagnostics {
 	return convertintschema.ToResourceData(o, d)
 }
 
-func (o *GrafanaDashboard) MarshalHCL(w io.Writer) error {
+func (o *ClassicDashboard) MarshalHCL(w io.Writer) error {
 	m := hclmarshal.New()
-	b := m.AddResource("chronosphere_grafana_dashboard", o.HCLID)
+	b := m.AddResource("chronosphere_classic_dashboard", o.HCLID)
 	if err := hclmarshal.MarshalIntSchema(o, b); err != nil {
 		return err
 	}
 	return m.MarshalTo(w)
 }
 
-func (o *GrafanaDashboard) Ref() tfid.ID {
+func (o *ClassicDashboard) Ref() tfid.ID {
 	if o.HCLID == "" {
 		panic("Ref is only valid when schema structs are used for marshalling")
 	}
 
 	return tfid.Ref{
-		Type: "chronosphere_grafana_dashboard",
+		Type: "chronosphere_classic_dashboard",
 		ID:   o.HCLID,
 	}.AsID()
 }

@@ -12,14 +12,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package grafana
+package tfschema
 
 import (
 	"encoding/json"
 	"fmt"
 
 	xjson "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/x/json"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
+
+var ClassicDashboard = map[string]*schema.Schema{
+	"bucket_id": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		AtLeastOneOf: []string{"bucket_id", "collection_id"},
+	},
+	"collection_id": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		AtLeastOneOf: []string{"bucket_id", "collection_id"},
+	},
+	"dashboard_json": {
+		Type:             schema.TypeString,
+		Required:         true,
+		DiffSuppressFunc: classicDashboardJSONDiffSuppress,
+	},
+}
+
+// classicDashboardJSONDiffSuppress sanitizes and then diffs two dashboard JSON payloads.
+func classicDashboardJSONDiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
+	sanitizedOld, err := SanitizedDashboardJSON(old, WithDashboardUID(""))
+	if err != nil {
+		return false
+	}
+
+	sanitizedNew, err := SanitizedDashboardJSON(new, WithDashboardUID(""))
+	if err != nil {
+		return false
+	}
+
+	return sanitizedOld == sanitizedNew
+}
 
 // sanitizedDashboardFields is a set of Grafana dashboard JSON fields that can be sanitized
 // when comparing dashboards.
@@ -31,7 +65,7 @@ var sanitizedDashboardFields = map[string]bool{
 // SanitizeOpt is an option passed to SanitizedDashboardJSON.
 type SanitizeOpt func(map[string]any) error
 
-// SanitizedDashboardJSON sanitizes a Grafana dashboard JSON payload,
+// SanitizedDashboardJSON sanitizes a dashboard JSON payload,
 // clearing fields irrelevant to reading or upserting dashboards.
 func SanitizedDashboardJSON(data string, opts ...SanitizeOpt) (string, error) {
 	var dash map[string]any
@@ -57,10 +91,10 @@ func SanitizedDashboardJSON(data string, opts ...SanitizeOpt) (string, error) {
 	return string(sanitizedJSON), nil
 }
 
-// WithUID sets or clears the dashboard `uid` field.
+// WithDashboardUID sets or clears the dashboard `uid` field.
 // If uid is given, the `uid` field is set to it in the JSON payload.
 // Otherwise, the payload omits the `uid` field.
-func WithUID(uid string) SanitizeOpt {
+func WithDashboardUID(uid string) SanitizeOpt {
 	return func(dash map[string]any) error {
 		if uid == "" {
 			delete(dash, "uid")

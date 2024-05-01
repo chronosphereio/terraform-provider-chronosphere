@@ -211,10 +211,10 @@ var Resources = mustValidate([]Resource{
 		DryRun: true,
 	},
 	{
-		Name:   "grafana_dashboard",
+		Name:   "classic_dashboard",
 		Entity: "GrafanaDashboard",
 		API:    V1,
-		Schema: tfschema.GrafanaDashboard,
+		Schema: tfschema.ClassicDashboard,
 		DryRun: true,
 	},
 	{

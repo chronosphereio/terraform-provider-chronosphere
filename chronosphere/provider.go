@@ -47,7 +47,6 @@ func Provider() *schema.Provider {
 		"chronosphere_email_alert_notifier":                  resourceEmailAlertNotifier(),
 		"chronosphere_victorops_alert_notifier":              resourceVictorOpsAlertNotifier(),
 		"chronosphere_blackhole_alert_notifier":              resourceBlackHoleAlertNotifier(),
-		"chronosphere_grafana_dashboard":                     resourceGrafanaDashboard(),
 		"chronosphere_gcp_metrics_integration":               resourceGcpMetricsIntegration(),
 		"chronosphere_recording_rule":                        resourceRecordingRule(),
 		"chronosphere_rollup_rule":                           resourceRollupRule(),
