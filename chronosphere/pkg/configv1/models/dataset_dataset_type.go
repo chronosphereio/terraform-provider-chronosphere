@@ -32,9 +32,6 @@ const (
 
 	// DatasetDatasetTypeTRACES captures enum value "TRACES"
 	DatasetDatasetTypeTRACES DatasetDatasetType = "TRACES"
-
-	// DatasetDatasetTypeLOGS captures enum value "LOGS"
-	DatasetDatasetTypeLOGS DatasetDatasetType = "LOGS"
 )
 
 // for schema
@@ -42,7 +39,7 @@ var datasetDatasetTypeEnum []interface{}
 
 func init() {
 	var res []DatasetDatasetType
-	if err := json.Unmarshal([]byte(`["TRACES","LOGS"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["TRACES"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
