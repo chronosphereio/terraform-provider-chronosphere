@@ -69,8 +69,9 @@ var RollupRule = map[string]*schema.Schema{
 		Computed: true,
 	},
 	"interval": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:          schema.TypeString,
+		Optional:      true,
+		ConflictsWith: []string{"storage_policies"},
 	},
 	"group_by": {
 		Type:     schema.TypeList,
