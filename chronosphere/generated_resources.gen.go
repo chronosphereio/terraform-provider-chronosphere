@@ -7,12 +7,12 @@ import (
 	"fmt"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dataset"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/gcp_metrics_integration"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dataset"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_metric"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
@@ -258,6 +258,83 @@ func (generatedDashboard) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.Dashboard.DeleteDashboard(req)
+	return err
+}
+
+type generatedDataset struct{}
+
+func (generatedDataset) slugOf(m *configv1models.Configv1Dataset) string {
+	return m.Slug
+}
+
+func (generatedDataset) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1Dataset,
+	dryRun bool,
+) (string, error) {
+	req := &dataset.CreateDatasetParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateDatasetRequest{
+			Dataset: m,
+			DryRun:  dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.Dataset.CreateDataset(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.Dataset
+	if e == nil {
+		return "", nil
+	}
+	return e.Slug, nil
+}
+
+func (generatedDataset) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1Dataset, error) {
+	req := &dataset.ReadDatasetParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigV1.Dataset.ReadDataset(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.Dataset, nil
+}
+
+func (generatedDataset) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1Dataset,
+	params updateParams,
+) error {
+	req := &dataset.UpdateDatasetParams{
+		Context: ctx,
+		Slug:    m.Slug,
+		Body: dataset.UpdateDatasetBody{
+			Dataset:         m,
+			CreateIfMissing: params.createIfMissing,
+			DryRun:          params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.Dataset.UpdateDataset(req)
+	return err
+}
+func (generatedDataset) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &dataset.DeleteDatasetParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigV1.Dataset.DeleteDataset(req)
 	return err
 }
 
@@ -1322,83 +1399,6 @@ func (generatedTraceMetricsRule) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.TraceMetricsRule.DeleteTraceMetricsRule(req)
-	return err
-}
-
-type generatedUnstableDataset struct{}
-
-func (generatedUnstableDataset) slugOf(m *configunstablemodels.ConfigunstableDataset) string {
-	return m.Slug
-}
-
-func (generatedUnstableDataset) create(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configunstablemodels.ConfigunstableDataset,
-	dryRun bool,
-) (string, error) {
-	req := &dataset.CreateDatasetParams{
-		Context: ctx,
-		Body: &configunstablemodels.ConfigunstableCreateDatasetRequest{
-			Dataset: m,
-			DryRun:  dryRun,
-		},
-	}
-	resp, err := clients.ConfigUnstable.Dataset.CreateDataset(req)
-	if err != nil {
-		return "", err
-	}
-	e := resp.Payload.Dataset
-	if e == nil {
-		return "", nil
-	}
-	return e.Slug, nil
-}
-
-func (generatedUnstableDataset) read(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) (*configunstablemodels.ConfigunstableDataset, error) {
-	req := &dataset.ReadDatasetParams{
-		Context: ctx,
-		Slug:    slug,
-	}
-	resp, err := clients.ConfigUnstable.Dataset.ReadDataset(req)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Payload.Dataset, nil
-}
-
-func (generatedUnstableDataset) update(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configunstablemodels.ConfigunstableDataset,
-	params updateParams,
-) error {
-	req := &dataset.UpdateDatasetParams{
-		Context: ctx,
-		Slug:    m.Slug,
-		Body: dataset.UpdateDatasetBody{
-			Dataset:         m,
-			CreateIfMissing: params.createIfMissing,
-			DryRun:          params.dryRun,
-		},
-	}
-	_, err := clients.ConfigUnstable.Dataset.UpdateDataset(req)
-	return err
-}
-func (generatedUnstableDataset) delete(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) error {
-	req := &dataset.DeleteDatasetParams{
-		Context: ctx,
-		Slug:    slug,
-	}
-	_, err := clients.ConfigUnstable.Dataset.DeleteDataset(req)
 	return err
 }
 

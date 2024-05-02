@@ -14,7 +14,9 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dataset"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/link_template"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_allocation_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/noop_entity"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/otel_metrics_ingestion"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/saved_trace_search"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/service"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/sync_prometheus"
@@ -70,7 +72,9 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli.Dataset = dataset.New(transport, formats)
 	cli.GcpMetricsIntegration = gcp_metrics_integration.New(transport, formats)
 	cli.LinkTemplate = link_template.New(transport, formats)
+	cli.LogAllocationConfig = log_allocation_config.New(transport, formats)
 	cli.NoopEntity = noop_entity.New(transport, formats)
+	cli.OtelMetricsIngestion = otel_metrics_ingestion.New(transport, formats)
 	cli.SavedTraceSearch = saved_trace_search.New(transport, formats)
 	cli.Service = service.New(transport, formats)
 	cli.SyncPrometheus = sync_prometheus.New(transport, formats)
@@ -130,7 +134,11 @@ type ConfigUnstableAPI struct {
 
 	LinkTemplate link_template.ClientService
 
+	LogAllocationConfig log_allocation_config.ClientService
+
 	NoopEntity noop_entity.ClientService
+
+	OtelMetricsIngestion otel_metrics_ingestion.ClientService
 
 	SavedTraceSearch saved_trace_search.ClientService
 
@@ -156,7 +164,9 @@ func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Dataset.SetTransport(transport)
 	c.GcpMetricsIntegration.SetTransport(transport)
 	c.LinkTemplate.SetTransport(transport)
+	c.LogAllocationConfig.SetTransport(transport)
 	c.NoopEntity.SetTransport(transport)
+	c.OtelMetricsIngestion.SetTransport(transport)
 	c.SavedTraceSearch.SetTransport(transport)
 	c.Service.SetTransport(transport)
 	c.SyncPrometheus.SetTransport(transport)

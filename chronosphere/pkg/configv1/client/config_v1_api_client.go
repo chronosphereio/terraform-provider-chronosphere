@@ -14,6 +14,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dataset"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_metric"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
@@ -80,6 +81,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.ClassicDashboard = classic_dashboard.New(transport, formats)
 	cli.Collection = collection.New(transport, formats)
 	cli.Dashboard = dashboard.New(transport, formats)
+	cli.Dataset = dataset.New(transport, formats)
 	cli.DerivedLabel = derived_label.New(transport, formats)
 	cli.DerivedMetric = derived_metric.New(transport, formats)
 	cli.DropRule = drop_rule.New(transport, formats)
@@ -150,6 +152,8 @@ type ConfigV1API struct {
 
 	Dashboard dashboard.ClientService
 
+	Dataset dataset.ClientService
+
 	DerivedLabel derived_label.ClientService
 
 	DerivedMetric derived_metric.ClientService
@@ -196,6 +200,7 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.ClassicDashboard.SetTransport(transport)
 	c.Collection.SetTransport(transport)
 	c.Dashboard.SetTransport(transport)
+	c.Dataset.SetTransport(transport)
 	c.DerivedLabel.SetTransport(transport)
 	c.DerivedMetric.SetTransport(transport)
 	c.DropRule.SetTransport(transport)
