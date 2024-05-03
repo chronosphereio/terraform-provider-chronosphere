@@ -61,6 +61,7 @@ var MappingRule = map[string]*schema.Schema{
 				}.Schema(),
 			},
 		},
+		Deprecated: "use `interval` instead",
 	},
 	"drop": {
 		Type:     schema.TypeBool,

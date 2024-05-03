@@ -66,7 +66,8 @@ var RollupRule = map[string]*schema.Schema{
 			},
 		},
 		// When no policies are specified, the server-side will set the defaults.
-		Computed: true,
+		Computed:   true,
+		Deprecated: "use `interval` instead",
 	},
 	"interval": {
 		Type:          schema.TypeString,
