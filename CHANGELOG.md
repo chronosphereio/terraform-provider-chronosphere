@@ -24,6 +24,7 @@ Deprecated:
 - Remove in-provider validation of rollup rules in favor of server-side dry run validation
 - Consolidating tracing schemas: replace usage of `tags` with `tag`, `min_seconds` with `min_secs`, and `max_seconds` with `max_secs`.
 - Deprecate `chronosphere_rollup_rule.storage_policies` and `chronsphere_mapping_rule.storage_policy` and recommend `interval`
+- Removes support for setting `chronosphere_dashboard` name through the `dashboard_json.metadata.name` field.
 
 Internal:
 - Validate code generation in pull request CI
