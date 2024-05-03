@@ -71,6 +71,14 @@ type rollupRuleConverter struct{}
 func (rollupRuleConverter) toModel(
 	r *intschema.RollupRule,
 ) (*models.Configv1RollupRule, error) {
+	// The schema doesn't allow interval and policies to be set together.
+	// However, we receive both because storage_policies is an optional computed field
+	// which will send the last server-returned value even if the user doesn't have it set
+	// in the configuration. Hence we clear it manually to workaround sc-81013.
+	if r.Interval != "" && r.StoragePolicies != nil {
+		r.StoragePolicies = nil
+	}
+
 	filter, err := aggregationfilter.StringToModel(r.Filter, aggregationfilter.RollupRuleDelimiter)
 	if err != nil {
 		return nil, err
