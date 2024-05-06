@@ -7,8 +7,6 @@ import (
 	"fmt"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/gcp_metrics_integration"
-	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
@@ -16,6 +14,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_metric"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
@@ -566,6 +565,83 @@ func (generatedDropRule) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.DropRule.DeleteDropRule(req)
+	return err
+}
+
+type generatedGcpMetricsIntegration struct{}
+
+func (generatedGcpMetricsIntegration) slugOf(m *configv1models.Configv1GcpMetricsIntegration) string {
+	return m.Slug
+}
+
+func (generatedGcpMetricsIntegration) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1GcpMetricsIntegration,
+	dryRun bool,
+) (string, error) {
+	req := &gcp_metrics_integration.CreateGcpMetricsIntegrationParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateGcpMetricsIntegrationRequest{
+			GcpMetricsIntegration: m,
+			DryRun:                dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.GcpMetricsIntegration.CreateGcpMetricsIntegration(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.GcpMetricsIntegration
+	if e == nil {
+		return "", nil
+	}
+	return e.Slug, nil
+}
+
+func (generatedGcpMetricsIntegration) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1GcpMetricsIntegration, error) {
+	req := &gcp_metrics_integration.ReadGcpMetricsIntegrationParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigV1.GcpMetricsIntegration.ReadGcpMetricsIntegration(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.GcpMetricsIntegration, nil
+}
+
+func (generatedGcpMetricsIntegration) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1GcpMetricsIntegration,
+	params updateParams,
+) error {
+	req := &gcp_metrics_integration.UpdateGcpMetricsIntegrationParams{
+		Context: ctx,
+		Slug:    m.Slug,
+		Body: gcp_metrics_integration.UpdateGcpMetricsIntegrationBody{
+			GcpMetricsIntegration: m,
+			CreateIfMissing:       params.createIfMissing,
+			DryRun:                params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.GcpMetricsIntegration.UpdateGcpMetricsIntegration(req)
+	return err
+}
+func (generatedGcpMetricsIntegration) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &gcp_metrics_integration.DeleteGcpMetricsIntegrationParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigV1.GcpMetricsIntegration.DeleteGcpMetricsIntegration(req)
 	return err
 }
 
@@ -1399,82 +1475,5 @@ func (generatedTraceMetricsRule) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.TraceMetricsRule.DeleteTraceMetricsRule(req)
-	return err
-}
-
-type generatedUnstableGcpMetricsIntegration struct{}
-
-func (generatedUnstableGcpMetricsIntegration) slugOf(m *configunstablemodels.ConfigunstableGcpMetricsIntegration) string {
-	return m.Slug
-}
-
-func (generatedUnstableGcpMetricsIntegration) create(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configunstablemodels.ConfigunstableGcpMetricsIntegration,
-	dryRun bool,
-) (string, error) {
-	req := &gcp_metrics_integration.CreateGcpMetricsIntegrationParams{
-		Context: ctx,
-		Body: &configunstablemodels.ConfigunstableCreateGcpMetricsIntegrationRequest{
-			GcpMetricsIntegration: m,
-			DryRun:                dryRun,
-		},
-	}
-	resp, err := clients.ConfigUnstable.GcpMetricsIntegration.CreateGcpMetricsIntegration(req)
-	if err != nil {
-		return "", err
-	}
-	e := resp.Payload.GcpMetricsIntegration
-	if e == nil {
-		return "", nil
-	}
-	return e.Slug, nil
-}
-
-func (generatedUnstableGcpMetricsIntegration) read(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) (*configunstablemodels.ConfigunstableGcpMetricsIntegration, error) {
-	req := &gcp_metrics_integration.ReadGcpMetricsIntegrationParams{
-		Context: ctx,
-		Slug:    slug,
-	}
-	resp, err := clients.ConfigUnstable.GcpMetricsIntegration.ReadGcpMetricsIntegration(req)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Payload.GcpMetricsIntegration, nil
-}
-
-func (generatedUnstableGcpMetricsIntegration) update(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configunstablemodels.ConfigunstableGcpMetricsIntegration,
-	params updateParams,
-) error {
-	req := &gcp_metrics_integration.UpdateGcpMetricsIntegrationParams{
-		Context: ctx,
-		Slug:    m.Slug,
-		Body: gcp_metrics_integration.UpdateGcpMetricsIntegrationBody{
-			GcpMetricsIntegration: m,
-			CreateIfMissing:       params.createIfMissing,
-			DryRun:                params.dryRun,
-		},
-	}
-	_, err := clients.ConfigUnstable.GcpMetricsIntegration.UpdateGcpMetricsIntegration(req)
-	return err
-}
-func (generatedUnstableGcpMetricsIntegration) delete(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) error {
-	req := &gcp_metrics_integration.DeleteGcpMetricsIntegrationParams{
-		Context: ctx,
-		Slug:    slug,
-	}
-	_, err := clients.ConfigUnstable.GcpMetricsIntegration.DeleteGcpMetricsIntegration(req)
 	return err
 }

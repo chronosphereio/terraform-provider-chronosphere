@@ -3,9 +3,6 @@ package pagination
 
 import (
 	"context"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/gcp_metrics_integration"
-	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
@@ -15,6 +12,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_metric"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
@@ -27,7 +25,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
 	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/unstable"
 )
 
 func ListBuckets(
@@ -500,6 +497,75 @@ func ListDropRulesByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.DropRules {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListGcpMetricsIntegrations(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1GcpMetricsIntegration, error) {
+	return ListGcpMetricsIntegrationsByFilter(ctx, client, Filter{})
+}
+
+func ListGcpMetricsIntegrationsBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1GcpMetricsIntegration, error) {
+	return ListGcpMetricsIntegrationsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListGcpMetricsIntegrationsByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1GcpMetricsIntegration, error) {
+	return ListGcpMetricsIntegrationsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListGcpMetricsIntegrationsByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*gcp_metrics_integration.ListGcpMetricsIntegrationsParams),
+) ([]*configv1models.Configv1GcpMetricsIntegration, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1GcpMetricsIntegration
+	)
+	for {
+		p := &gcp_metrics_integration.ListGcpMetricsIntegrationsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.GcpMetricsIntegration.ListGcpMetricsIntegrations(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.GcpMetricsIntegrations {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
@@ -1328,78 +1394,6 @@ func ListClassicDashboardsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.ClassicDashboards {
-				result = append(result, v)
-			}
-			if resp.Payload.Page != nil {
-				nextToken = resp.Payload.Page.NextToken
-			}
-		}
-		if nextToken == "" {
-			break
-		}
-	}
-	return result, nil
-}
-
-func ListUnstableGcpMetricsIntegrations(
-	ctx context.Context,
-	client *configunstable.Client,
-) ([]*configunstablemodels.ConfigunstableGcpMetricsIntegration, error) {
-	return ListUnstableGcpMetricsIntegrationsByFilter(ctx, client, Filter{})
-}
-
-func ListUnstableGcpMetricsIntegrationsBySlugs(
-	ctx context.Context,
-	client *configunstable.Client,
-	slugs []string,
-) ([]*configunstablemodels.ConfigunstableGcpMetricsIntegration, error) {
-	return ListUnstableGcpMetricsIntegrationsByFilter(ctx, client, Filter{
-		Slugs: slugs,
-	})
-}
-
-func ListUnstableGcpMetricsIntegrationsByNames(
-	ctx context.Context,
-	client *configunstable.Client,
-	names []string,
-) ([]*configunstablemodels.ConfigunstableGcpMetricsIntegration, error) {
-	return ListUnstableGcpMetricsIntegrationsByFilter(ctx, client, Filter{
-		Names: names,
-	})
-}
-
-func ListUnstableGcpMetricsIntegrationsByFilter(
-	ctx context.Context,
-	client *configunstable.Client,
-	f Filter,
-	opts ...func(*gcp_metrics_integration.ListGcpMetricsIntegrationsParams),
-) ([]*configunstablemodels.ConfigunstableGcpMetricsIntegration, error) {
-	if !unstable.Enabled() {
-		return nil, nil
-	}
-	var (
-		nextToken string
-		result    []*configunstablemodels.ConfigunstableGcpMetricsIntegration
-	)
-	for {
-		p := &gcp_metrics_integration.ListGcpMetricsIntegrationsParams{
-			Context:   ctx,
-			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
-		}
-		for _, opt := range opts {
-			opt(p)
-		}
-		resp, err := client.GcpMetricsIntegration.ListGcpMetricsIntegrations(p)
-		if err != nil {
-			return nil, err
-		}
-
-		// If payload or page token aren't set, no next page.
-		nextToken = ""
-		if resp.Payload != nil {
-			for _, v := range resp.Payload.GcpMetricsIntegrations {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {

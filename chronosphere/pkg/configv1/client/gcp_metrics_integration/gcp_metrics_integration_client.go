@@ -52,7 +52,7 @@ func (a *Client) CreateGcpMetricsIntegration(params *CreateGcpMetricsIntegration
 	op := &runtime.ClientOperation{
 		ID:                 "CreateGcpMetricsIntegration",
 		Method:             "POST",
-		PathPattern:        "/api/unstable/config/gcp-metrics-integrations",
+		PathPattern:        "/api/v1/config/gcp-metrics-integrations",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -89,7 +89,7 @@ func (a *Client) DeleteGcpMetricsIntegration(params *DeleteGcpMetricsIntegration
 	op := &runtime.ClientOperation{
 		ID:                 "DeleteGcpMetricsIntegration",
 		Method:             "DELETE",
-		PathPattern:        "/api/unstable/config/gcp-metrics-integrations/{slug}",
+		PathPattern:        "/api/v1/config/gcp-metrics-integrations/{slug}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -126,7 +126,7 @@ func (a *Client) ListGcpMetricsIntegrations(params *ListGcpMetricsIntegrationsPa
 	op := &runtime.ClientOperation{
 		ID:                 "ListGcpMetricsIntegrations",
 		Method:             "GET",
-		PathPattern:        "/api/unstable/config/gcp-metrics-integrations",
+		PathPattern:        "/api/v1/config/gcp-metrics-integrations",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -163,7 +163,7 @@ func (a *Client) ReadGcpMetricsIntegration(params *ReadGcpMetricsIntegrationPara
 	op := &runtime.ClientOperation{
 		ID:                 "ReadGcpMetricsIntegration",
 		Method:             "GET",
-		PathPattern:        "/api/unstable/config/gcp-metrics-integrations/{slug}",
+		PathPattern:        "/api/v1/config/gcp-metrics-integrations/{slug}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -200,7 +200,7 @@ func (a *Client) UpdateGcpMetricsIntegration(params *UpdateGcpMetricsIntegration
 	op := &runtime.ClientOperation{
 		ID:                 "UpdateGcpMetricsIntegration",
 		Method:             "PUT",
-		PathPattern:        "/api/unstable/config/gcp-metrics-integrations/{slug}",
+		PathPattern:        "/api/v1/config/gcp-metrics-integrations/{slug}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},

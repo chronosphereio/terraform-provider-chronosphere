@@ -19,24 +19,24 @@ import (
 	"go.uber.org/atomic"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
 // GcpMetricsIntegrationFromModel maps an API model to the intschema model.
-func GcpMetricsIntegrationFromModel(m *models.ConfigunstableGcpMetricsIntegration) (*intschema.GcpMetricsIntegration, error) {
+func GcpMetricsIntegrationFromModel(m *models.Configv1GcpMetricsIntegration) (*intschema.GcpMetricsIntegration, error) {
 	return (gcpMetricsIntegrationConverter{}).fromModel(m)
 }
 
 func resourceGcpMetricsIntegration() *schema.Resource {
 	r := newGenericResource[
-		*models.ConfigunstableGcpMetricsIntegration,
+		*models.Configv1GcpMetricsIntegration,
 		intschema.GcpMetricsIntegration,
 		*intschema.GcpMetricsIntegration,
 	](
 		"gcp_metrics_integration",
 		gcpMetricsIntegrationConverter{},
-		generatedUnstableGcpMetricsIntegration{},
+		generatedGcpMetricsIntegration{},
 	)
 
 	return &schema.Resource{
@@ -59,19 +59,19 @@ type gcpMetricsIntegrationConverter struct{}
 
 func (gcpMetricsIntegrationConverter) toModel(
 	g *intschema.GcpMetricsIntegration,
-) (*models.ConfigunstableGcpMetricsIntegration, error) {
-	return &models.ConfigunstableGcpMetricsIntegration{
+) (*models.Configv1GcpMetricsIntegration, error) {
+	return &models.Configv1GcpMetricsIntegration{
 		Name:         g.Name,
 		Slug:         g.Slug,
 		MetricGroups: resourceToModelMetricGroups(g.MetricGroups),
-		ServiceAccount: &models.GcpMetricsIntegrationServiceAccount{
+		ServiceAccount: &models.Configv1GcpMetricsIntegrationServiceAccount{
 			ClientEmail: g.ServiceAccount.ClientEmail,
 		},
 	}, nil
 }
 
 func (gcpMetricsIntegrationConverter) fromModel(
-	m *models.ConfigunstableGcpMetricsIntegration,
+	m *models.Configv1GcpMetricsIntegration,
 ) (*intschema.GcpMetricsIntegration, error) {
 	return &intschema.GcpMetricsIntegration{
 		Name:         m.Name,

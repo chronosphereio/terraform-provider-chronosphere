@@ -220,7 +220,7 @@ var Resources = mustValidate([]Resource{
 	{
 		Name:   "gcp_metrics_integration",
 		Entity: "GcpMetricsIntegration",
-		API:    Unstable,
+		API:    V1,
 		Schema: tfschema.GcpMetricsIntegration,
 		DryRun: true,
 	},
