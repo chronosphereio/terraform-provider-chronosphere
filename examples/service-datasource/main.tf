@@ -23,12 +23,10 @@ resource "chronosphere_monitor" "m" {
 
 
 resource "chronosphere_dashboard" "dash_in_svc" {
+  name = "Native Dashboard in Gateway Service"
   collection_id = data.chronosphere_service.gateway.id
   dashboard_json = jsonencode({
     kind : "Dashboard",
-    metadata : {
-      name : "Native Dashboard in Gateway Service"
-    }
     spec : {
     }
   })
