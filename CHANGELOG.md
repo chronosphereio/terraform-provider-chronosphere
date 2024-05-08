@@ -5,7 +5,7 @@
 Added:
 - Add data source for `chronosphere_collection`
 - Add support for `drop_nan_value` in `chronosphere_drop_rule` resource
-- Add `gcp_metrics_integration` resource
+- Add v1 `gcp_metrics_integration` resource.
 - Add `name` field to `dashboard` resource.
 - Add new v1 resource type, `dataset`, with the first telemetry type supported being tracing.
 

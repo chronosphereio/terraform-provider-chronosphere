@@ -12,7 +12,6 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dataset"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/link_template"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_allocation_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/noop_entity"
@@ -70,7 +69,6 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli.Transport = transport
 	cli.Dashboard = dashboard.New(transport, formats)
 	cli.Dataset = dataset.New(transport, formats)
-	cli.GcpMetricsIntegration = gcp_metrics_integration.New(transport, formats)
 	cli.LinkTemplate = link_template.New(transport, formats)
 	cli.LogAllocationConfig = log_allocation_config.New(transport, formats)
 	cli.NoopEntity = noop_entity.New(transport, formats)
@@ -130,8 +128,6 @@ type ConfigUnstableAPI struct {
 
 	Dataset dataset.ClientService
 
-	GcpMetricsIntegration gcp_metrics_integration.ClientService
-
 	LinkTemplate link_template.ClientService
 
 	LogAllocationConfig log_allocation_config.ClientService
@@ -162,7 +158,6 @@ func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 	c.Dashboard.SetTransport(transport)
 	c.Dataset.SetTransport(transport)
-	c.GcpMetricsIntegration.SetTransport(transport)
 	c.LinkTemplate.SetTransport(transport)
 	c.LogAllocationConfig.SetTransport(transport)
 	c.NoopEntity.SetTransport(transport)
