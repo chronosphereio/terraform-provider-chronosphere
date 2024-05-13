@@ -1,4 +1,4 @@
-resource "chronosphere_drop_rule" "mah-drop-rule" {
+resource "chronosphere_drop_rule" "my-drop-rule" {
   name = "Drop Rule"
   query = [
     "ab=\"123\"",
@@ -9,7 +9,7 @@ resource "chronosphere_drop_rule" "mah-drop-rule" {
   rate_limit_threshold    = 50.0
 }
 
-resource "chronosphere_drop_rule" "mah-drop-rule-nan" {
+resource "chronosphere_drop_rule" "my-drop-rule-nan" {
   name = "Drop Rule (Drop NaN Values)"
   query = [
     "cd=\"321\"",

@@ -33,7 +33,7 @@ resource "chronosphere_dashboard" "dash_in_svc" {
 }
 
 
-resource "chronosphere_grafana_dashboard" "dash_in_svc" {
+resource "chronosphere_classic_dashboard" "dash_in_svc" {
   collection_id = data.chronosphere_service.gateway.id
   dashboard_json = jsonencode({
     title : "Dashboard In Gateway Service",
