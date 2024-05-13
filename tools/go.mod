@@ -1,6 +1,6 @@
 module github.com/chronosphereio/terraform-provider-chronosphere/tools
 
-go 1.21
+go 1.22.3
 
 require (
 	github.com/go-swagger/go-swagger v0.30.4
