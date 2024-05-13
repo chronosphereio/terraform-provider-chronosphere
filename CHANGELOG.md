@@ -29,3 +29,4 @@ Deprecated:
 
 Internal:
 - Validate code generation in pull request CI
+- Updated to use go version 1.22.3

@@ -2,7 +2,7 @@ module github.com/chronosphereio/terraform-provider-chronosphere
 
 replace github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1 => github.com/chronosphereio/terraform-plugin-sdk/v2 v2.0.0-20220830001851-edb6d12500f2
 
-go 1.21.1
+go 1.22.3
 
 require (
 	github.com/getkin/kin-openapi v0.98.0
