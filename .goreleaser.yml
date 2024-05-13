@@ -1,0 +1,46 @@
+project_name: terraform-provider-chronosphere
+builds:
+  - id: terraform-provider-chronosphere
+    main: ./main.go
+    binary: "{{ .ProjectName }}_v{{ .Version }}"
+    env:
+      - CGO_ENABLED=0
+    ldflags: >-
+      -X {{.Env.INSTRUMENT_PACKAGE}}.Revision={{.Env.GIT_REVISION}}
+      -X {{.Env.INSTRUMENT_PACKAGE}}.Branch={{.Env.GIT_BRANCH}}
+      -X {{.Env.INSTRUMENT_PACKAGE}}.Version={{.Env.GIT_VERSION}}
+      -X {{.Env.INSTRUMENT_PACKAGE}}.BuildDate={{.Env.BUILD_DATE}}
+      -X {{.Env.INSTRUMENT_PACKAGE}}.BuildTimeUnix={{.Env.BUILD_TS_UNIX}}
+      -X {{.Env.INSTRUMENT_PACKAGE}}.LogBuildInfoAtStartup=true
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+archives:
+  - id: terraform-provider-archive
+    format: zip
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    builds:
+    - terraform-provider-chronosphere
+checksum:
+  extra_files:
+    - glob: 'terraform-registry-manifest.json'
+      name_template: '{{ .ProjectName }}_{{ .Version }}_manifest.json'
+  name_template: '{{ .ProjectName }}_{{ .Version }}_SHA256SUMS'
+  algorithm: sha256
+signs:
+  - artifacts: checksum
+    args:
+      # if you are using this in a GitHub action or some other automated pipeline, you
+      # need to pass the batch flag to indicate its not interactive.
+      - "--batch"
+      - "--local-user"
+      - "terraform-signer@chronosphere.io" # set this environment variable for your signing key
+      - "--output"
+      - "${signature}"
+      - "--detach-sign"
+      - "${artifact}"
+release:
+  disable: true

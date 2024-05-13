@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-# This script is copied from the enterprise repo
-
 set -euo pipefail
 [[ -z ${DEBUG:-} ]] || set -o xtrace
 
-OS="$( uname -s | tr '[:upper:]' '[:lower:]' )"
-DIR="$( cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && cd .. && pwd -P )"
+OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+DIR="$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && cd .. && pwd -P)"
 GITCONFIG_VOLUME=${GIT_CONFIG:-"${HOME}/.gitconfig"}
 GCLOUD_CONFIG_DIR="${CLOUDSDK_CONFIG:-${HOME}/.config/gcloud}"
 SSH_CONFIG_DIR_VOLUME="${HOME}/.ssh"
