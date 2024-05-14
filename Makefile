@@ -20,7 +20,7 @@ INSTRUMENT_PACKAGE        := github.com/chronosphereio/terraform-provider-chrono
 
 GO_GENERATE=PATH=$(TOOLS_BIN):$(PATH) go generate
 
-GO_RELEASER_RELEASE_ARGS  ?= --rm-dist
+GO_RELEASER_RELEASE_ARGS  ?= --clean
 GO_RELEASER_WORKING_DIR   := /go/src/github.com/chronosphere/terraform-provider-chronosphere
 
 INTERNAL_TOOLS := \

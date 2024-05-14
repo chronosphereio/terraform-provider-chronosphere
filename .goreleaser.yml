@@ -1,17 +1,14 @@
 project_name: terraform-provider-chronosphere
+before:
+  hooks:
+  - go mod tidy
 builds:
   - id: terraform-provider-chronosphere
     main: ./main.go
     binary: "{{ .ProjectName }}_v{{ .Version }}"
     env:
       - CGO_ENABLED=0
-    ldflags: >-
-      -X {{.Env.INSTRUMENT_PACKAGE}}.Revision={{.Env.GIT_REVISION}}
-      -X {{.Env.INSTRUMENT_PACKAGE}}.Branch={{.Env.GIT_BRANCH}}
-      -X {{.Env.INSTRUMENT_PACKAGE}}.Version={{.Env.GIT_VERSION}}
-      -X {{.Env.INSTRUMENT_PACKAGE}}.BuildDate={{.Env.BUILD_DATE}}
-      -X {{.Env.INSTRUMENT_PACKAGE}}.BuildTimeUnix={{.Env.BUILD_TS_UNIX}}
-      -X {{.Env.INSTRUMENT_PACKAGE}}.LogBuildInfoAtStartup=true
+    ldflags: "{{ .Env.GO_BUILD_LDFLAGS }}"
     goos:
       - linux
       - darwin
