@@ -9,3 +9,8 @@ Deprecated:
 ## v1.0.0
 
 Initial public release for terraform-provider-chronosphere.
+
+## Unreleased
+
+Added:
+- Add unstable `otel_metrics_ingestion` resource.
