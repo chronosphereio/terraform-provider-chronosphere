@@ -2,4 +2,4 @@
 
 ## v1.0.0
 
-Initial release for terraform-provider-chronosphere.
+Initial public release for terraform-provider-chronosphere.
