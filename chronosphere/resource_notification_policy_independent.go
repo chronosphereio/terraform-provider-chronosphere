@@ -90,7 +90,7 @@ func (independentNotificationPolicyConverter) fromModel(
 		TeamId:                 tfid.Slug(m.TeamSlug),
 		Override:               overrides,
 		Route:                  routes,
-		NotificationPolicyData: tfschema.IndependentNotificationPolicyData,
+		NotificationPolicyData: tfid.Slug(tfschema.IndependentNotificationPolicyData),
 		IsIndependent:          true,
 	}, nil
 }

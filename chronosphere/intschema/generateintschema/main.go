@@ -72,12 +72,13 @@ var sharedElemTypeNames = map[*schema.Resource]string{
 // should be generated as a tfid.ID or not (i.e. does the field refer to a
 // registered Terraform resource or not).
 var fieldIsTFID = map[string]bool{
-	"bucket_id":              true,
-	"collection_id":          true,
-	"dashboard_id":           true,
-	"notification_policy_id": true,
-	"team_id":                true,
-	"execution_group":        true,
+	"bucket_id":                true,
+	"collection_id":            true,
+	"dashboard_id":             true,
+	"notification_policy_id":   true,
+	"team_id":                  true,
+	"execution_group":          true,
+	"notification_policy_data": true,
 
 	"callback_id": false,
 	"external_id": false,
