@@ -117,8 +117,9 @@ var OpsgenieAlertNotifier = map[string]*schema.Schema{
 		ConflictsWith: []string{"basic_auth_username"},
 	},
 	"proxy_url": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:       schema.TypeString,
+		Optional:   true,
+		Deprecated: "custom proxy URLs are not supported",
 	},
 	"tls_insecure_skip_verify": {
 		Type:     schema.TypeBool,
