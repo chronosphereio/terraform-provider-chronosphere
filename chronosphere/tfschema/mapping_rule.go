@@ -70,9 +70,10 @@ var MappingRule = map[string]*schema.Schema{
 	},
 	// Whether or not to drop the timestamp.
 	"drop_timestamp": {
-		Type:     schema.TypeBool,
-		Optional: true,
-		Default:  false,
+		Type:       schema.TypeBool,
+		Optional:   true,
+		Default:    false,
+		Deprecated: "drop timestamp is no longer supported",
 	},
 	"interval": {
 		Type:     schema.TypeString,
