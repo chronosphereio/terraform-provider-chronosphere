@@ -16,9 +16,9 @@ var _ tfid.ID // Always use tfid for simplified import generation.
 type NotificationPolicy struct {
 	Name                   string                       `intschema:"name,optional"`
 	Slug                   string                       `intschema:"slug,optional,computed"`
+	NotificationPolicyData tfid.ID                      `intschema:"notification_policy_data,optional,computed"`
 	TeamId                 tfid.ID                      `intschema:"team_id,optional"`
 	IsIndependent          bool                         `intschema:"is_independent,computed"`
-	NotificationPolicyData string                       `intschema:"notification_policy_data,optional,computed"`
 	Route                  []NotificationRoute          `intschema:"route,optional"`
 	Override               []NotificationPolicyOverride `intschema:"override,optional"`
 

@@ -167,7 +167,7 @@ func resourceBucketRead(ctx context.Context, d *schema.ResourceData, meta any) d
 			if err != nil {
 				return diag.Errorf("unable to convert notification policy: %v", err)
 			}
-			b.NotificationPolicyData = notificationPolicyData
+			b.NotificationPolicyData = tfid.Slug(notificationPolicyData)
 		}
 	}
 	return b.ToResourceData(d)

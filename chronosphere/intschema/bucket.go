@@ -16,12 +16,12 @@ var _ tfid.ID // Always use tfid for simplified import generation.
 type Bucket struct {
 	Name                   string            `intschema:"name"`
 	Slug                   string            `intschema:"slug,optional,computed"`
+	NotificationPolicyData tfid.ID           `intschema:"notification_policy_data,optional"`
 	NotificationPolicyId   tfid.ID           `intschema:"notification_policy_id,optional"`
 	TeamId                 tfid.ID           `intschema:"team_id,optional"`
 	NotificationPolicySlug string            `intschema:"notification_policy_slug,computed"`
 	Description            string            `intschema:"description,optional"`
 	Labels                 map[string]string `intschema:"labels,optional"`
-	NotificationPolicyData string            `intschema:"notification_policy_data,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
