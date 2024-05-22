@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+Added:
+ * Add unstable `otel_metrics_ingestion` resource.
+
 Deprecated:
- * `proxy_url` is deprecated in alert receivers. 
+ * `proxy_url` is deprecated in alert receivers.
  * `chronosphere_mapping_rule.drop_timestamp` is deprecated.
 
 ## v1.0.0

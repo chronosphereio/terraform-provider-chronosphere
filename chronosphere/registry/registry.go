@@ -254,6 +254,13 @@ var Resources = mustValidate([]Resource{
 		DryRun: true,
 	},
 	{
+		Name:              "otel_metrics_ingestion",
+		Entity:            "OtelMetricsIngestion",
+		API:               Unstable,
+		Schema:            tfschema.OtelMetricsIngestion,
+		NonStandardEntity: true,
+	},
+	{
 		Name:   "pagerduty_alert_notifier",
 		Entity: "Notifier",
 		API:    V1,

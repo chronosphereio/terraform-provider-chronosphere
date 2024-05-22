@@ -63,6 +63,7 @@ func Provider() *schema.Provider {
 		"chronosphere_service_account":                       resourceServiceAccount(),
 		"chronosphere_derived_label":                         resourceDerivedLabel(),
 		"chronosphere_dataset":                               resourceDataset(),
+		"chronosphere_otel_metrics_ingestion":                resourceOtelMetricsIngestion(),
 	}
 
 	// Apply common CRUD wrappers to all resources.

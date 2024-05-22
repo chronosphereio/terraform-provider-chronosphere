@@ -66,10 +66,12 @@ func TestEnumValidateError(t *testing.T) {
 
 func TestAllEnumsValidate(t *testing.T) {
 	v1Spec := loadSwaggerSpec(t, "../pkg/configv1/swagger.json")
+	unstableSpec := loadSwaggerSpec(t, "../pkg/configunstable/swagger.json")
 
 	tests := []struct {
 		legacySwaggerName string
 		v1SwaggerName     string
+		unstable          bool
 		enum              Enum[string, string]
 	}{
 		{
@@ -97,10 +99,24 @@ func TestAllEnumsValidate(t *testing.T) {
 			v1SwaggerName:     "ResponderResponderType",
 			enum:              OpsgenieResponderType.ToStrings(),
 		},
+		{
+			v1SwaggerName: "ResourceAttributesFlattenMode",
+			enum:          ResourceAttributesFlattenMode.ToStrings(),
+			unstable:      true,
+		},
+		{
+			v1SwaggerName: "ResourceAttributesFilterMode",
+			enum:          ResourceAttributesFilterMode.ToStrings(),
+			unstable:      true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.enum.Name(), func(t *testing.T) {
-			for _, v := range loadEnumValues(t, v1Spec, tt.v1SwaggerName) {
+			swaggerSpec := v1Spec
+			if tt.unstable {
+				swaggerSpec = unstableSpec
+			}
+			for _, v := range loadEnumValues(t, swaggerSpec, tt.v1SwaggerName) {
 				require.Nil(t, tt.enum.Validate(v, nil))
 			}
 		})
