@@ -71,7 +71,7 @@ func TestAllEnumsValidate(t *testing.T) {
 	tests := []struct {
 		legacySwaggerName string
 		v1SwaggerName     string
-		swaggerSpec       *openapi2.T
+		unstable          bool
 		enum              Enum[string, string]
 	}{
 		{
@@ -100,21 +100,21 @@ func TestAllEnumsValidate(t *testing.T) {
 			enum:              OpsgenieResponderType.ToStrings(),
 		},
 		{
-			swaggerSpec:   unstableSpec,
 			v1SwaggerName: "ResourceAttributesFlattenMode",
 			enum:          ResourceAttributesFlattenMode.ToStrings(),
+			unstable:      true,
 		},
 		{
-			swaggerSpec:   unstableSpec,
 			v1SwaggerName: "ResourceAttributesFilterMode",
 			enum:          ResourceAttributesFilterMode.ToStrings(),
+			unstable:      true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.enum.Name(), func(t *testing.T) {
 			swaggerSpec := v1Spec
-			if tt.swaggerSpec != nil {
-				swaggerSpec = tt.swaggerSpec
+			if tt.unstable {
+				swaggerSpec = unstableSpec
 			}
 			for _, v := range loadEnumValues(t, swaggerSpec, tt.v1SwaggerName) {
 				require.Nil(t, tt.enum.Validate(v, nil))
