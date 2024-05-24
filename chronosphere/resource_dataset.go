@@ -15,6 +15,8 @@
 package chronosphere
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	"go.uber.org/atomic"
@@ -58,28 +60,40 @@ var DatasetDryRunCount atomic.Int64
 type datasetConverter struct{}
 
 func (d datasetConverter) toModel(s *intschema.Dataset) (*models.Configv1Dataset, error) {
+	cfg, err := datasetConfigurationToModel(s.Configuration)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't convert DatasetConfiguration to model: %w", err)
+	}
 	return &models.Configv1Dataset{
-		Configuration: datasetConfigurationToModel(s.Configuration),
+		Configuration: cfg,
 		Description:   s.Description,
 		Name:          s.Name,
 		Slug:          s.Slug,
 	}, nil
 }
 
-func datasetConfigurationToModel(s intschema.DatasetConfiguration) *models.DatasetDatasetConfiguration {
-	return &models.DatasetDatasetConfiguration{
-		TraceDataset: traceDatasetToModel(s.TraceDataset),
-		Type:         prettyenum.DatasetType(s.Type).Model(),
+func datasetConfigurationToModel(s intschema.DatasetConfiguration) (*models.DatasetDatasetConfiguration, error) {
+	dataset, err := traceDatasetToModel(s.TraceDataset)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't convert TraceDataset to model: %w", err)
 	}
+	return &models.DatasetDatasetConfiguration{
+		TraceDataset: dataset,
+		Type:         prettyenum.DatasetType(s.Type).Model(),
+	}, nil
 }
 
-func traceDatasetToModel(dataset *intschema.DatasetConfigurationTraceDataset) *models.Configv1TraceDataset {
+func traceDatasetToModel(dataset *intschema.DatasetConfigurationTraceDataset) (*models.Configv1TraceDataset, error) {
 	if dataset == nil {
-		return nil
+		return nil, nil
+	}
+	filter, err := traceSearchFilterToModel(dataset.MatchCriteria)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't convert MatchCriteria to model: %w", err)
 	}
 	return &models.Configv1TraceDataset{
-		MatchCriteria: traceSearchFilterToModel(dataset.MatchCriteria),
-	}
+		MatchCriteria: filter,
+	}, nil
 }
 
 func (d datasetConverter) fromModel(m *models.Configv1Dataset) (*intschema.Dataset, error) {

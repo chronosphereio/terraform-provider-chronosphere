@@ -77,10 +77,14 @@ func defaultSampleRateToModel(
 }
 
 func ruleToModel(r intschema.TraceTailSamplingRulesRules) (*models.Configv1TraceTailSamplingRule, error) {
+	filter, err := traceSearchFilterToModel(r.Filter)
+	if err != nil {
+		return nil, fmt.Errorf("could not convert filter to model: %w", err)
+	}
 	return &models.Configv1TraceTailSamplingRule{
 		Name:       r.Name,
 		SystemName: r.SystemName,
-		Filter:     traceSearchFilterToModel(r.Filter),
+		Filter:     filter,
 		SampleRate: r.SampleRate,
 	}, nil
 }

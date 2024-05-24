@@ -15,6 +15,8 @@
 package chronosphere
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"go.uber.org/atomic"
 
@@ -55,11 +57,15 @@ type traceMetricsRuleConverter struct{}
 
 //nolint:unused
 func (traceMetricsRuleConverter) toModel(r *intschema.TraceMetricsRule) (*models.Configv1TraceMetricsRule, error) {
+	filter, err := traceSearchFilterToModel(r.TraceFilter)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't convert trace filter to model: %w", err)
+	}
 	return &models.Configv1TraceMetricsRule{
 		Slug:                 r.Slug,
 		Name:                 r.Name,
 		MetricName:           r.MetricName,
-		TraceFilter:          traceSearchFilterToModel(r.TraceFilter),
+		TraceFilter:          filter,
 		HistogramBucketsSecs: r.HistogramBucketsSeconds,
 		MetricLabels:         r.MetricLabels,
 		GroupBy:              expandTraceMetricsRuleGroupBy(r.GroupBy),
