@@ -19,6 +19,7 @@ import (
 	"os"
 	"testing"
 
+	configunstable "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	configv1 "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 
 	"github.com/getkin/kin-openapi/openapi2"
@@ -54,6 +55,16 @@ func TestEnumConversions(t *testing.T) {
 
 	// invalid legacy -> v1
 	require.Equal(t, configv1.Configv1LabelMatcherMatcherType(""), MatcherType.V1("INVALID_MATCHER_TYPE"))
+
+	// v1 -> v1
+	require.Equal(t,
+		configunstable.LogScaleActionPagerDutyActionSeverityERROR,
+		LogScalePagerDutyActionSeverity.V1("ERROR"))
+
+	// v1 -> v1
+	require.Equal(t,
+		configunstable.WebhookActionHTTPMethodPOST,
+		LogScaleWebhookActionHTTPMethod.V1("POST"))
 }
 
 func TestEnumValidateError(t *testing.T) {
@@ -107,6 +118,21 @@ func TestAllEnumsValidate(t *testing.T) {
 		{
 			v1SwaggerName: "ResourceAttributesFilterMode",
 			enum:          ResourceAttributesFilterMode.ToStrings(),
+			unstable:      true,
+		},
+		{
+			v1SwaggerName: "LogScaleActionPagerDutyActionSeverity",
+			enum:          LogScalePagerDutyActionSeverity.ToStrings(),
+			unstable:      true,
+		},
+		{
+			v1SwaggerName: "WebhookActionHTTPMethod",
+			enum:          LogScaleWebhookActionHTTPMethod.ToStrings(),
+			unstable:      true,
+		},
+		{
+			v1SwaggerName: "LogScaleAlertAlertType",
+			enum:          LogscaleAlertType.ToStrings(),
 			unstable:      true,
 		},
 	}

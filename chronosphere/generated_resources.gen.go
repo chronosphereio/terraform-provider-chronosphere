@@ -5,6 +5,8 @@ import (
 	"context"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_action"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/otel_metrics_ingestion"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
@@ -1667,6 +1669,164 @@ func (generatedTraceTailSamplingRules) delete(
 		Context: ctx,
 	}
 	_, err := clients.ConfigV1.TraceTailSamplingRules.DeleteTraceTailSamplingRules(req)
+	return err
+}
+
+type generatedUnstableLogScaleAction struct{}
+
+func (generatedUnstableLogScaleAction) slugOf(m *configunstablemodels.ConfigunstableLogScaleAction) string {
+	return m.Slug
+}
+
+func (generatedUnstableLogScaleAction) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableLogScaleAction,
+	dryRun bool,
+) (string, error) {
+	req := &log_scale_action.CreateLogScaleActionParams{
+		Context: ctx,
+		Body: &configunstablemodels.ConfigunstableCreateLogScaleActionRequest{
+			LogScaleAction: m,
+			DryRun:         dryRun,
+		},
+	}
+	resp, err := clients.ConfigUnstable.LogScaleAction.CreateLogScaleAction(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.LogScaleAction
+	if e == nil {
+		return "", nil
+	}
+	return (generatedUnstableLogScaleAction{}).slugOf(e), nil
+}
+
+func (generatedUnstableLogScaleAction) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configunstablemodels.ConfigunstableLogScaleAction, error) {
+	req := &log_scale_action.ReadLogScaleActionParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigUnstable.LogScaleAction.ReadLogScaleAction(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.LogScaleAction, nil
+}
+
+func (generatedUnstableLogScaleAction) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableLogScaleAction,
+	params updateParams,
+) error {
+	req := &log_scale_action.UpdateLogScaleActionParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configunstablemodels.ConfigUnstableUpdateLogScaleActionBody{
+
+			LogScaleAction:  m,
+			CreateIfMissing: params.createIfMissing,
+			DryRun:          params.dryRun,
+		},
+	}
+	_, err := clients.ConfigUnstable.LogScaleAction.UpdateLogScaleAction(req)
+	return err
+}
+func (generatedUnstableLogScaleAction) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &log_scale_action.DeleteLogScaleActionParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigUnstable.LogScaleAction.DeleteLogScaleAction(req)
+	return err
+}
+
+type generatedUnstableLogScaleAlert struct{}
+
+func (generatedUnstableLogScaleAlert) slugOf(m *configunstablemodels.ConfigunstableLogScaleAlert) string {
+	return m.Slug
+}
+
+func (generatedUnstableLogScaleAlert) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableLogScaleAlert,
+	dryRun bool,
+) (string, error) {
+	req := &log_scale_alert.CreateLogScaleAlertParams{
+		Context: ctx,
+		Body: &configunstablemodels.ConfigunstableCreateLogScaleAlertRequest{
+			LogScaleAlert: m,
+			DryRun:        dryRun,
+		},
+	}
+	resp, err := clients.ConfigUnstable.LogScaleAlert.CreateLogScaleAlert(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.LogScaleAlert
+	if e == nil {
+		return "", nil
+	}
+	return (generatedUnstableLogScaleAlert{}).slugOf(e), nil
+}
+
+func (generatedUnstableLogScaleAlert) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configunstablemodels.ConfigunstableLogScaleAlert, error) {
+	req := &log_scale_alert.ReadLogScaleAlertParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigUnstable.LogScaleAlert.ReadLogScaleAlert(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.LogScaleAlert, nil
+}
+
+func (generatedUnstableLogScaleAlert) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableLogScaleAlert,
+	params updateParams,
+) error {
+	req := &log_scale_alert.UpdateLogScaleAlertParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configunstablemodels.ConfigUnstableUpdateLogScaleAlertBody{
+
+			LogScaleAlert:   m,
+			CreateIfMissing: params.createIfMissing,
+			DryRun:          params.dryRun,
+		},
+	}
+	_, err := clients.ConfigUnstable.LogScaleAlert.UpdateLogScaleAlert(req)
+	return err
+}
+func (generatedUnstableLogScaleAlert) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &log_scale_alert.DeleteLogScaleAlertParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigUnstable.LogScaleAlert.DeleteLogScaleAlert(req)
 	return err
 }
 
