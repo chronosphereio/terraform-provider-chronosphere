@@ -23,6 +23,7 @@ type MonitorSeriesCondition struct {
 
 type NotificationRoute struct {
 	Severity       string    `intschema:"severity"`
+	GroupBy        []string  `intschema:"group_by,optional"`
 	Notifiers      []tfid.ID `intschema:"notifiers,optional"`
 	RepeatInterval string    `intschema:"repeat_interval,optional"`
 }

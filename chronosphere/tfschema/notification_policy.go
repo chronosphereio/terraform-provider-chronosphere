@@ -85,6 +85,11 @@ var NotificationRouteSchema = typeset.Set{
 		"repeat_interval": Duration{
 			Optional: true,
 		},
+		"group_by": typeset.NotNormalized(&schema.Schema{
+			Type:     schema.TypeSet,
+			Optional: true,
+			Elem:     &schema.Schema{Type: schema.TypeString},
+		}),
 	},
 }.Schema()
 
