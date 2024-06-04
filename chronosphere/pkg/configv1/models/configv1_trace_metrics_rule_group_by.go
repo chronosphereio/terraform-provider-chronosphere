@@ -13,10 +13,10 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// TraceMetricsRuleGroupBy GroupBy contains fields required to group the resultant metrics of a TraceMetricsRule by a specific key.
+// Configv1TraceMetricsRuleGroupBy GroupBy contains fields required to group the resultant metrics of a TraceMetricsRule by a specific key.
 //
-// swagger:model TraceMetricsRuleGroupBy
-type TraceMetricsRuleGroupBy struct {
+// swagger:model configv1TraceMetricsRuleGroupBy
+type Configv1TraceMetricsRuleGroupBy struct {
 
 	// key
 	Key *GroupByGroupByKey `json:"key,omitempty"`
@@ -25,8 +25,8 @@ type TraceMetricsRuleGroupBy struct {
 	Label string `json:"label,omitempty"`
 }
 
-// Validate validates this trace metrics rule group by
-func (m *TraceMetricsRuleGroupBy) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 trace metrics rule group by
+func (m *Configv1TraceMetricsRuleGroupBy) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateKey(formats); err != nil {
@@ -39,7 +39,7 @@ func (m *TraceMetricsRuleGroupBy) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *TraceMetricsRuleGroupBy) validateKey(formats strfmt.Registry) error {
+func (m *Configv1TraceMetricsRuleGroupBy) validateKey(formats strfmt.Registry) error {
 	if swag.IsZero(m.Key) { // not required
 		return nil
 	}
@@ -58,8 +58,8 @@ func (m *TraceMetricsRuleGroupBy) validateKey(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this trace metrics rule group by based on the context it is used
-func (m *TraceMetricsRuleGroupBy) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 trace metrics rule group by based on the context it is used
+func (m *Configv1TraceMetricsRuleGroupBy) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateKey(ctx, formats); err != nil {
@@ -72,7 +72,7 @@ func (m *TraceMetricsRuleGroupBy) ContextValidate(ctx context.Context, formats s
 	return nil
 }
 
-func (m *TraceMetricsRuleGroupBy) contextValidateKey(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1TraceMetricsRuleGroupBy) contextValidateKey(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Key != nil {
 		if err := m.Key.ContextValidate(ctx, formats); err != nil {
@@ -89,7 +89,7 @@ func (m *TraceMetricsRuleGroupBy) contextValidateKey(ctx context.Context, format
 }
 
 // MarshalBinary interface implementation
-func (m *TraceMetricsRuleGroupBy) MarshalBinary() ([]byte, error) {
+func (m *Configv1TraceMetricsRuleGroupBy) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -97,8 +97,8 @@ func (m *TraceMetricsRuleGroupBy) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *TraceMetricsRuleGroupBy) UnmarshalBinary(b []byte) error {
-	var res TraceMetricsRuleGroupBy
+func (m *Configv1TraceMetricsRuleGroupBy) UnmarshalBinary(b []byte) error {
+	var res Configv1TraceMetricsRuleGroupBy
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -21,7 +21,7 @@ type MappingRuleAggregationPolicy struct {
 	// aggregation
 	Aggregation Configv1AggregationType `json:"aggregation,omitempty"`
 
-	// Whether to drop the timestamp while writing the metric.
+	// Deprecated: This field is no longer supported.
 	DropTimestamp bool `json:"drop_timestamp,omitempty"`
 
 	// Interval between aggregated data points, equivalent to the resolution
