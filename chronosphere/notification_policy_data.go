@@ -52,6 +52,7 @@ type Routes struct {
 type RoutesNotifierList struct {
 	Notifiers      []*RoutesNotifierListNotifier `json:"notifiers"`
 	RepeatInterval string                        `json:"repeat_interval,omitempty"`
+	GroupBy        *RoutesNotifierListGroupBy    `json:"group_by,omitempty"`
 }
 
 // RoutesOverride is a set of rules that override the default routes
@@ -64,6 +65,11 @@ type RoutesOverride struct {
 type RoutesNotifierListNotifier struct {
 	Name string `json:"name,omitempty"`
 	Slug string `json:"slug,omitempty"`
+}
+
+// RoutesNotifierListGroupBy is the groupBy field
+type RoutesNotifierListGroupBy struct {
+	LabelNames []string `json:"label_names,omitempty"`
 }
 
 // AlertLabelMatcher represents a matcher for entities
@@ -245,6 +251,7 @@ func routesNotifierListFromModel(m *configmodels.RoutesNotifierList) RoutesNotif
 	return RoutesNotifierList{
 		Notifiers:      sliceutil.Map(m.NotifierSlugs, routesNotifierListNotifierFromSlug),
 		RepeatInterval: durationFromSecs(m.RepeatIntervalSecs),
+		GroupBy:        routesNotifierListGroupByFromModel(m.GroupBy),
 	}
 }
 
@@ -252,6 +259,13 @@ func routesNotifierListNotifierFromSlug(slug string) *RoutesNotifierListNotifier
 	return &RoutesNotifierListNotifier{
 		Slug: slug,
 	}
+}
+
+func routesNotifierListGroupByFromModel(m *configmodels.NotificationPolicyRoutesGroupBy) *RoutesNotifierListGroupBy {
+	if m == nil {
+		return &RoutesNotifierListGroupBy{}
+	}
+	return &RoutesNotifierListGroupBy{LabelNames: m.LabelNames}
 }
 
 func notificationPolicyResponseToInlineData(res *notification_policy.ReadNotificationPolicyOK) (string, error) {
