@@ -16,6 +16,326 @@
       ],
       "type": "string"
     },
+    "ConfigV1UpdateBucketBody": {
+      "properties": {
+        "bucket": {
+          "$ref": "#/definitions/configv1Bucket"
+        },
+        "create_if_missing": {
+          "description": "If true, the Bucket will be created if it does not already exist, identified by slug. If false, an error will be returned if the Bucket does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the Bucket will not be created nor updated, and no response Bucket will be returned. The response will return an error if the given Bucket is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateClassicDashboardBody": {
+      "properties": {
+        "classic_dashboard": {
+          "$ref": "#/definitions/configv1GrafanaDashboard"
+        },
+        "create_if_missing": {
+          "description": "If true, the GrafanaDashboard will be created if it does not already exist, identified by slug. If false, an error will be returned if the GrafanaDashboard does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the GrafanaDashboard will not be created nor updated, and no response GrafanaDashboard will be returned. The response will return an error if the given GrafanaDashboard is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateCollectionBody": {
+      "properties": {
+        "collection": {
+          "$ref": "#/definitions/configv1Collection"
+        },
+        "create_if_missing": {
+          "description": "If true, the Collection will be created if it does not already exist, identified by slug. If false, an error will be returned if the Collection does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the Collection will not be created nor updated, and no response Collection will be returned. The response will return an error if the given Collection is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateDashboardBody": {
+      "properties": {
+        "dashboard": {
+          "$ref": "#/definitions/configv1Dashboard"
+        },
+        "create_if_missing": {
+          "description": "If true, the Dashboard will be created if it does not already exist, identified by slug. If false, an error will be returned if the Dashboard does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the Dashboard will not be created nor updated, and no response Dashboard will be returned. The response will return an error if the given Dashboard is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateDatasetBody": {
+      "properties": {
+        "dataset": {
+          "$ref": "#/definitions/configv1Dataset"
+        },
+        "create_if_missing": {
+          "description": "If true, the Dataset will be created if it does not already exist, identified by slug. If false, an error will be returned if the Dataset does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the Dataset will not be created nor updated, and no response Dataset will be returned. The response will return an error if the given Dataset is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateDerivedLabelBody": {
+      "properties": {
+        "derived_label": {
+          "$ref": "#/definitions/configv1DerivedLabel"
+        },
+        "create_if_missing": {
+          "description": "If true, the DerivedLabel will be created if it does not already exist, identified by slug. If false, an error will be returned if the DerivedLabel does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the DerivedLabel will not be created nor updated, and no response DerivedLabel will be returned. The response will return an error if the given DerivedLabel is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateDerivedMetricBody": {
+      "properties": {
+        "derived_metric": {
+          "$ref": "#/definitions/configv1DerivedMetric"
+        },
+        "create_if_missing": {
+          "description": "If true, the DerivedMetric will be created if it does not already exist, identified by slug. If false, an error will be returned if the DerivedMetric does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the DerivedMetric will not be created nor updated, and no response DerivedMetric will be returned. The response will return an error if the given DerivedMetric is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateDropRuleBody": {
+      "properties": {
+        "drop_rule": {
+          "$ref": "#/definitions/configv1DropRule"
+        },
+        "create_if_missing": {
+          "description": "If true, the DropRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the DropRule does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the DropRule will not be created nor updated, and no response DropRule will be returned. The response will return an error if the given DropRule is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateGcpMetricsIntegrationBody": {
+      "properties": {
+        "gcp_metrics_integration": {
+          "$ref": "#/definitions/configv1GcpMetricsIntegration"
+        },
+        "create_if_missing": {
+          "description": "If true, the GcpMetricsIntegration will be created if it does not already exist, identified by slug. If false, an error will be returned if the GcpMetricsIntegration does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the GcpMetricsIntegration will not be created nor updated, and no response GcpMetricsIntegration will be returned. The response will return an error if the given GcpMetricsIntegration is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateGrafanaDashboardBody": {
+      "properties": {
+        "grafana_dashboard": {
+          "$ref": "#/definitions/configv1GrafanaDashboard"
+        },
+        "create_if_missing": {
+          "description": "If true, the GrafanaDashboard will be created if it does not already exist, identified by slug. If false, an error will be returned if the GrafanaDashboard does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the GrafanaDashboard will not be created nor updated, and no response GrafanaDashboard will be returned. The response will return an error if the given GrafanaDashboard is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateMappingRuleBody": {
+      "properties": {
+        "mapping_rule": {
+          "$ref": "#/definitions/configv1MappingRule"
+        },
+        "create_if_missing": {
+          "description": "If true, the MappingRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the MappingRule does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the MappingRule will not be created nor updated, and no response MappingRule will be returned. The response will return an error if the given MappingRule is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateMonitorBody": {
+      "properties": {
+        "monitor": {
+          "$ref": "#/definitions/configv1Monitor"
+        },
+        "create_if_missing": {
+          "description": "If true, the Monitor will be created if it does not already exist, identified by slug. If false, an error will be returned if the Monitor does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the Monitor will not be created nor updated, and no response Monitor will be returned. The response will return an error if the given Monitor is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateMutingRuleBody": {
+      "properties": {
+        "muting_rule": {
+          "$ref": "#/definitions/configv1MutingRule"
+        },
+        "create_if_missing": {
+          "description": "If true, the MutingRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the MutingRule does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the MutingRule will not be created nor updated, and no response MutingRule will be returned. The response will return an error if the given MutingRule is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateNotificationPolicyBody": {
+      "properties": {
+        "notification_policy": {
+          "$ref": "#/definitions/configv1NotificationPolicy"
+        },
+        "create_if_missing": {
+          "description": "If true, the NotificationPolicy will be created if it does not already exist, identified by slug. If false, an error will be returned if the NotificationPolicy does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the NotificationPolicy will not be created nor updated, and no response NotificationPolicy will be returned. The response will return an error if the given NotificationPolicy is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateNotifierBody": {
+      "properties": {
+        "notifier": {
+          "$ref": "#/definitions/configv1Notifier"
+        },
+        "create_if_missing": {
+          "description": "If true, the Notifier will be created if it does not already exist, identified by slug. If false, an error will be returned if the Notifier does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the Notifier will not be created nor updated, and no response Notifier will be returned. The response will return an error if the given Notifier is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateRecordingRuleBody": {
+      "properties": {
+        "recording_rule": {
+          "$ref": "#/definitions/configv1RecordingRule"
+        },
+        "create_if_missing": {
+          "description": "If true, the RecordingRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the RecordingRule does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the RecordingRule will not be created nor updated, and no response RecordingRule will be returned. The response will return an error if the given RecordingRule is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateRollupRuleBody": {
+      "properties": {
+        "rollup_rule": {
+          "$ref": "#/definitions/configv1RollupRule"
+        },
+        "create_if_missing": {
+          "description": "If true, the RollupRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the RollupRule does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the RollupRule will not be created nor updated, and no response RollupRule will be returned. The response will return an error if the given RollupRule is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateTeamBody": {
+      "properties": {
+        "team": {
+          "$ref": "#/definitions/configv1Team"
+        },
+        "create_if_missing": {
+          "description": "If true, the Team will be created if it does not already exist, identified by slug. If false, an error will be returned if the Team does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the Team will not be created nor updated, and no response Team will be returned. The response will return an error if the given Team is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateTraceJaegerRemoteSamplingStrategyBody": {
+      "properties": {
+        "trace_jaeger_remote_sampling_strategy": {
+          "$ref": "#/definitions/configv1TraceJaegerRemoteSamplingStrategy"
+        },
+        "create_if_missing": {
+          "description": "If true, the TraceJaegerRemoteSamplingStrategy will be created if it does not already exist, identified by slug. If false, an error will be returned if the TraceJaegerRemoteSamplingStrategy does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the TraceJaegerRemoteSamplingStrategy will not be created nor updated, and no response TraceJaegerRemoteSamplingStrategy will be returned. The response will return an error if the given TraceJaegerRemoteSamplingStrategy is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateTraceMetricsRuleBody": {
+      "properties": {
+        "trace_metrics_rule": {
+          "$ref": "#/definitions/configv1TraceMetricsRule"
+        },
+        "create_if_missing": {
+          "description": "If true, the TraceMetricsRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the TraceMetricsRule does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the TraceMetricsRule will not be created nor updated, and no response TraceMetricsRule will be returned. The response will return an error if the given TraceMetricsRule is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "ConstructedLabelValueDefinition": {
       "properties": {
         "value": {
@@ -278,7 +598,7 @@
           "type": "string"
         },
         "drop_timestamp": {
-          "description": "Whether to drop the timestamp while writing the metric.",
+          "description": "Deprecated: This field is no longer supported.",
           "type": "boolean"
         }
       },
@@ -419,6 +739,18 @@
       },
       "type": "object"
     },
+    "NotificationPolicyRoutesGroupBy": {
+      "properties": {
+        "label_names": {
+          "description": "Set of label names used to group alerts.\nFor example, if label_names is [\"service\", \"code\"] then all alerts including labels {service=\"foo\",code=\"404\"}\nwill be grouped together.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "NotificationPolicyRoutesOverride": {
       "properties": {
         "alert_label_matchers": {
@@ -461,7 +793,7 @@
           "type": "string"
         },
         "proxy_url": {
-          "description": "Optional proxy URL.",
+          "description": "Optional proxy URL.\nDEPRECATED: Custom proxies are unsupported.",
           "type": "string"
         },
         "tls_config": {
@@ -932,6 +1264,7 @@
       "type": "object"
     },
     "RollupRuleMetricType": {
+      "description": " - CUMULATIVE_COUNTER: Alias of COUNTER.\n - DELTA_COUNTER: Alias of DELTA.",
       "enum": [
         "COUNTER",
         "GAUGE",
@@ -958,6 +1291,9 @@
           "description": "Frequency at which to resend alerts.",
           "format": "int32",
           "type": "integer"
+        },
+        "group_by": {
+          "$ref": "#/definitions/NotificationPolicyRoutesGroupBy"
         }
       },
       "type": "object"
@@ -1179,19 +1515,6 @@
           "description": "Maximum number of traces to sample per second.",
           "format": "int32",
           "type": "integer"
-        }
-      },
-      "type": "object"
-    },
-    "TraceMetricsRuleGroupBy": {
-      "description": "GroupBy contains fields required to group the resultant metrics of a TraceMetricsRule by a specific key.",
-      "properties": {
-        "label": {
-          "description": "The label to use in the resultant metrics.",
-          "type": "string"
-        },
-        "key": {
-          "$ref": "#/definitions/GroupByGroupByKey"
         }
       },
       "type": "object"
@@ -2802,12 +3125,12 @@
           "type": "integer"
         },
         "prometheus_query": {
-          "description": "PromQL query. If set, graphite_query cannot be set.",
+          "description": "PromQL query. If set, no other queries can be set.",
           "example": "up{job=\"prometheus\"} == 0",
           "type": "string"
         },
         "graphite_query": {
-          "description": "Graphite query. If set, prometheus_query cannot be set.",
+          "description": "Graphite query. If set, no other queries can be set.",
           "example": "sumSeries(stats.timers.*.mean_90)",
           "type": "string"
         },
@@ -3369,6 +3692,7 @@
       "type": "object"
     },
     "configv1RollupRuleLabelPolicy": {
+      "description": "TODO: consolidate w/ RecordingRule.LabelPolicy once both of these\n entities implement the same label semantics.",
       "properties": {
         "keep": {
           "description": "Labels that should be retained in the output metric. If set, then the\ndiscard field must be empty.",
@@ -3610,9 +3934,22 @@
         "group_by": {
           "description": "Add labels to the resultant metrics based on these specified GroupBy messages.",
           "items": {
-            "$ref": "#/definitions/TraceMetricsRuleGroupBy"
+            "$ref": "#/definitions/configv1TraceMetricsRuleGroupBy"
           },
           "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "configv1TraceMetricsRuleGroupBy": {
+      "description": "GroupBy contains fields required to group the resultant metrics of a TraceMetricsRule by a specific key.",
+      "properties": {
+        "label": {
+          "description": "The label to use in the resultant metrics.",
+          "type": "string"
+        },
+        "key": {
+          "$ref": "#/definitions/GroupByGroupByKey"
         }
       },
       "type": "object"
@@ -4138,20 +4475,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "bucket": {
-                  "$ref": "#/definitions/configv1Bucket"
-                },
-                "create_if_missing": {
-                  "description": "If true, the Bucket will be created if it does not already exist, identified by slug. If false, an error will be returned if the Bucket does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the Bucket will not be created nor updated, and no response Bucket will be returned. The response will return an error if the given Bucket is invalid.",
-                  "type": "boolean"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateBucketBody"
             }
           }
         ],
@@ -4436,20 +4760,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "classic_dashboard": {
-                  "$ref": "#/definitions/configv1GrafanaDashboard"
-                },
-                "create_if_missing": {
-                  "description": "If true, the GrafanaDashboard will be created if it does not already exist, identified by slug. If false, an error will be returned if the GrafanaDashboard does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the GrafanaDashboard will not be created nor updated, and no response GrafanaDashboard will be returned. The response will return an error if the given GrafanaDashboard is invalid.",
-                  "type": "boolean"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateClassicDashboardBody"
             }
           }
         ],
@@ -4728,20 +5039,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "collection": {
-                  "$ref": "#/definitions/configv1Collection"
-                },
-                "create_if_missing": {
-                  "description": "If true, the Collection will be created if it does not already exist, identified by slug. If false, an error will be returned if the Collection does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the Collection will not be created nor updated, and no response Collection will be returned. The response will return an error if the given Collection is invalid.",
-                  "type": "boolean"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateCollectionBody"
             }
           }
         ],
@@ -5016,20 +5314,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the Dashboard will be created if it does not already exist, identified by slug. If false, an error will be returned if the Dashboard does not already exist.",
-                  "type": "boolean"
-                },
-                "dashboard": {
-                  "$ref": "#/definitions/configv1Dashboard"
-                },
-                "dry_run": {
-                  "description": "If true, the Dashboard will not be created nor updated, and no response Dashboard will be returned. The response will return an error if the given Dashboard is invalid.",
-                  "type": "boolean"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateDashboardBody"
             }
           }
         ],
@@ -5298,20 +5583,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the Dataset will be created if it does not already exist, identified by slug. If false, an error will be returned if the Dataset does not already exist.",
-                  "type": "boolean"
-                },
-                "dataset": {
-                  "$ref": "#/definitions/configv1Dataset"
-                },
-                "dry_run": {
-                  "description": "If true, the Dataset will not be created nor updated, and no response Dataset will be returned. The response will return an error if the given Dataset is invalid.",
-                  "type": "boolean"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateDatasetBody"
             }
           }
         ],
@@ -5570,20 +5842,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the DerivedLabel will be created if it does not already exist, identified by slug. If false, an error will be returned if the DerivedLabel does not already exist.",
-                  "type": "boolean"
-                },
-                "derived_label": {
-                  "$ref": "#/definitions/configv1DerivedLabel"
-                },
-                "dry_run": {
-                  "description": "If true, the DerivedLabel will not be created nor updated, and no response DerivedLabel will be returned. The response will return an error if the given DerivedLabel is invalid.",
-                  "type": "boolean"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateDerivedLabelBody"
             }
           }
         ],
@@ -5842,20 +6101,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the DerivedMetric will be created if it does not already exist, identified by slug. If false, an error will be returned if the DerivedMetric does not already exist.",
-                  "type": "boolean"
-                },
-                "derived_metric": {
-                  "$ref": "#/definitions/configv1DerivedMetric"
-                },
-                "dry_run": {
-                  "description": "If true, the DerivedMetric will not be created nor updated, and no response DerivedMetric will be returned. The response will return an error if the given DerivedMetric is invalid.",
-                  "type": "boolean"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateDerivedMetricBody"
             }
           }
         ],
@@ -6114,20 +6360,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the DropRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the DropRule does not already exist.",
-                  "type": "boolean"
-                },
-                "drop_rule": {
-                  "$ref": "#/definitions/configv1DropRule"
-                },
-                "dry_run": {
-                  "description": "If true, the DropRule will not be created nor updated, and no response DropRule will be returned. The response will return an error if the given DropRule is invalid.",
-                  "type": "boolean"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateDropRuleBody"
             }
           }
         ],
@@ -6386,20 +6619,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the GcpMetricsIntegration will be created if it does not already exist, identified by slug. If false, an error will be returned if the GcpMetricsIntegration does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the GcpMetricsIntegration will not be created nor updated, and no response GcpMetricsIntegration will be returned. The response will return an error if the given GcpMetricsIntegration is invalid.",
-                  "type": "boolean"
-                },
-                "gcp_metrics_integration": {
-                  "$ref": "#/definitions/configv1GcpMetricsIntegration"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateGcpMetricsIntegrationBody"
             }
           }
         ],
@@ -6684,20 +6904,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the GrafanaDashboard will be created if it does not already exist, identified by slug. If false, an error will be returned if the GrafanaDashboard does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the GrafanaDashboard will not be created nor updated, and no response GrafanaDashboard will be returned. The response will return an error if the given GrafanaDashboard is invalid.",
-                  "type": "boolean"
-                },
-                "grafana_dashboard": {
-                  "$ref": "#/definitions/configv1GrafanaDashboard"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateGrafanaDashboardBody"
             }
           }
         ],
@@ -6966,20 +7173,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the MappingRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the MappingRule does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the MappingRule will not be created nor updated, and no response MappingRule will be returned. The response will return an error if the given MappingRule is invalid.",
-                  "type": "boolean"
-                },
-                "mapping_rule": {
-                  "$ref": "#/definitions/configv1MappingRule"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateMappingRuleBody"
             }
           }
         ],
@@ -7268,20 +7462,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the Monitor will be created if it does not already exist, identified by slug. If false, an error will be returned if the Monitor does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the Monitor will not be created nor updated, and no response Monitor will be returned. The response will return an error if the given Monitor is invalid.",
-                  "type": "boolean"
-                },
-                "monitor": {
-                  "$ref": "#/definitions/configv1Monitor"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateMonitorBody"
             }
           }
         ],
@@ -7555,20 +7736,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the MutingRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the MutingRule does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the MutingRule will not be created nor updated, and no response MutingRule will be returned. The response will return an error if the given MutingRule is invalid.",
-                  "type": "boolean"
-                },
-                "muting_rule": {
-                  "$ref": "#/definitions/configv1MutingRule"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateMutingRuleBody"
             }
           }
         ],
@@ -7847,20 +8015,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the NotificationPolicy will be created if it does not already exist, identified by slug. If false, an error will be returned if the NotificationPolicy does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the NotificationPolicy will not be created nor updated, and no response NotificationPolicy will be returned. The response will return an error if the given NotificationPolicy is invalid.",
-                  "type": "boolean"
-                },
-                "notification_policy": {
-                  "$ref": "#/definitions/configv1NotificationPolicy"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateNotificationPolicyBody"
             }
           }
         ],
@@ -8119,20 +8274,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the Notifier will be created if it does not already exist, identified by slug. If false, an error will be returned if the Notifier does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the Notifier will not be created nor updated, and no response Notifier will be returned. The response will return an error if the given Notifier is invalid.",
-                  "type": "boolean"
-                },
-                "notifier": {
-                  "$ref": "#/definitions/configv1Notifier"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateNotifierBody"
             }
           }
         ],
@@ -8411,20 +8553,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the RecordingRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the RecordingRule does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the RecordingRule will not be created nor updated, and no response RecordingRule will be returned. The response will return an error if the given RecordingRule is invalid.",
-                  "type": "boolean"
-                },
-                "recording_rule": {
-                  "$ref": "#/definitions/configv1RecordingRule"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateRecordingRuleBody"
             }
           }
         ],
@@ -8869,20 +8998,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the RollupRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the RollupRule does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the RollupRule will not be created nor updated, and no response RollupRule will be returned. The response will return an error if the given RollupRule is invalid.",
-                  "type": "boolean"
-                },
-                "rollup_rule": {
-                  "$ref": "#/definitions/configv1RollupRule"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateRollupRuleBody"
             }
           }
         ],
@@ -9382,20 +9498,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the Team will be created if it does not already exist, identified by slug. If false, an error will be returned if the Team does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the Team will not be created nor updated, and no response Team will be returned. The response will return an error if the given Team is invalid.",
-                  "type": "boolean"
-                },
-                "team": {
-                  "$ref": "#/definitions/configv1Team"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateTeamBody"
             }
           }
         ],
@@ -9669,20 +9772,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the TraceJaegerRemoteSamplingStrategy will be created if it does not already exist, identified by slug. If false, an error will be returned if the TraceJaegerRemoteSamplingStrategy does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the TraceJaegerRemoteSamplingStrategy will not be created nor updated, and no response TraceJaegerRemoteSamplingStrategy will be returned. The response will return an error if the given TraceJaegerRemoteSamplingStrategy is invalid.",
-                  "type": "boolean"
-                },
-                "trace_jaeger_remote_sampling_strategy": {
-                  "$ref": "#/definitions/configv1TraceJaegerRemoteSamplingStrategy"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateTraceJaegerRemoteSamplingStrategyBody"
             }
           }
         ],
@@ -9952,20 +10042,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "create_if_missing": {
-                  "description": "If true, the TraceMetricsRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the TraceMetricsRule does not already exist.",
-                  "type": "boolean"
-                },
-                "dry_run": {
-                  "description": "If true, the TraceMetricsRule will not be created nor updated, and no response TraceMetricsRule will be returned. The response will return an error if the given TraceMetricsRule is invalid.",
-                  "type": "boolean"
-                },
-                "trace_metrics_rule": {
-                  "$ref": "#/definitions/configv1TraceMetricsRule"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/ConfigV1UpdateTraceMetricsRuleBody"
             }
           }
         ],

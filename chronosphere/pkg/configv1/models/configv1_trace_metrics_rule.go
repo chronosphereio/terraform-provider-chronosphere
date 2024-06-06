@@ -26,7 +26,7 @@ type Configv1TraceMetricsRule struct {
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
 	// Add labels to the resultant metrics based on these specified GroupBy messages.
-	GroupBy []*TraceMetricsRuleGroupBy `json:"group_by"`
+	GroupBy []*Configv1TraceMetricsRuleGroupBy `json:"group_by"`
 
 	// Histogram bucket values, in seconds, for generated duration metrics.
 	HistogramBucketsSecs []float64 `json:"histogram_buckets_secs"`
