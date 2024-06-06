@@ -264,7 +264,7 @@ func routesNotifierListNotifierFromSlug(slug string) *RoutesNotifierListNotifier
 
 func routesNotifierListGroupByFromModel(m *configmodels.NotificationPolicyRoutesGroupBy) *RoutesNotifierListGroupBy {
 	if m == nil {
-		return &RoutesNotifierListGroupBy{}
+		return nil
 	}
 	return &RoutesNotifierListGroupBy{LabelNames: m.LabelNames}
 }
