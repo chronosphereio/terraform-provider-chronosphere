@@ -48,7 +48,8 @@ type Routes struct {
 }
 
 // RoutesNotifierList is a list of notifiers along with configuration for
-// how when those notifiers should repeat alerting.
+// when those notifiers should repeat alerting and whether they should be grouped
+// by any specific values.
 type RoutesNotifierList struct {
 	Notifiers      []*RoutesNotifierListNotifier `json:"notifiers"`
 	RepeatInterval string                        `json:"repeat_interval,omitempty"`
@@ -67,7 +68,7 @@ type RoutesNotifierListNotifier struct {
 	Slug string `json:"slug,omitempty"`
 }
 
-// RoutesNotifierListGroupBy is the groupBy field
+// RoutesNotifierListGroupBy is a list of label names by which notifications are grouped.
 type RoutesNotifierListGroupBy struct {
 	LabelNames []string `json:"label_names,omitempty"`
 }

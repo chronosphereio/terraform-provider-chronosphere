@@ -4,7 +4,7 @@
 
 Added:
  * Add unstable `otel_metrics_ingestion` resource.
- * Add `group_by` to `notification_routes` resource.
+ * Add `group_by` to `notification_routes` in `notification_policy` resource.
 
 Deprecated:
  * `proxy_url` is deprecated in alert receivers.
