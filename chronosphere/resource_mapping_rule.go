@@ -97,7 +97,7 @@ func (mappingRuleConverter) fromModel(
 	if m.AggregationPolicy != nil {
 		r.Aggregations = aggregationFromModel(m.AggregationPolicy.Aggregation)
 		r.StoragePolicy = mappingStoragePolicyFromModel(m.AggregationPolicy.StoragePolicy)
-		r.DropTimestamp = m.AggregationPolicy.DropTimestamp
+		r.DropTimestamp = m.AggregationPolicy.DropTimestamp //nolint:staticcheck // deprecated field
 		r.Interval = m.AggregationPolicy.Interval
 	}
 	return r, nil

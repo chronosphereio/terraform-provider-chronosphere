@@ -14,6 +14,8 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dataset"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/link_template"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_allocation_config"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_action"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/noop_entity"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/otel_metrics_ingestion"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/saved_trace_search"
@@ -71,6 +73,8 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli.Dataset = dataset.New(transport, formats)
 	cli.LinkTemplate = link_template.New(transport, formats)
 	cli.LogAllocationConfig = log_allocation_config.New(transport, formats)
+	cli.LogScaleAction = log_scale_action.New(transport, formats)
+	cli.LogScaleAlert = log_scale_alert.New(transport, formats)
 	cli.NoopEntity = noop_entity.New(transport, formats)
 	cli.OtelMetricsIngestion = otel_metrics_ingestion.New(transport, formats)
 	cli.SavedTraceSearch = saved_trace_search.New(transport, formats)
@@ -132,6 +136,10 @@ type ConfigUnstableAPI struct {
 
 	LogAllocationConfig log_allocation_config.ClientService
 
+	LogScaleAction log_scale_action.ClientService
+
+	LogScaleAlert log_scale_alert.ClientService
+
 	NoopEntity noop_entity.ClientService
 
 	OtelMetricsIngestion otel_metrics_ingestion.ClientService
@@ -160,6 +168,8 @@ func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Dataset.SetTransport(transport)
 	c.LinkTemplate.SetTransport(transport)
 	c.LogAllocationConfig.SetTransport(transport)
+	c.LogScaleAction.SetTransport(transport)
+	c.LogScaleAlert.SetTransport(transport)
 	c.NoopEntity.SetTransport(transport)
 	c.OtelMetricsIngestion.SetTransport(transport)
 	c.SavedTraceSearch.SetTransport(transport)

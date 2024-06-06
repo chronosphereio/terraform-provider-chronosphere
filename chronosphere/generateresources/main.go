@@ -207,7 +207,7 @@ func ({{.GoType}}) update(
 	req := &{{.SwaggerClientPackage}}.Update{{.SwaggerType}}Params{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: {{.SwaggerClientPackage}}.Update{{.SwaggerType}}Body{
+		Body: &{{.API.Package}}models.{{.API.Client}}Update{{.SwaggerType}}Body{
 			{{.SwaggerType}}: m,
 			CreateIfMissing: params.createIfMissing,
 			{{ if .DryRun }} DryRun: params.dryRun, {{ end }}
