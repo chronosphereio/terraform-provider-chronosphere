@@ -84,7 +84,7 @@ func (generatedBucket) update(
 	req := &bucket.UpdateBucketParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: bucket.UpdateBucketBody{
+		Body: &configv1models.ConfigV1UpdateBucketBody{
 			Bucket:          m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -161,7 +161,7 @@ func (generatedCollection) update(
 	req := &collection.UpdateCollectionParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: collection.UpdateCollectionBody{
+		Body: &configv1models.ConfigV1UpdateCollectionBody{
 			Collection:      m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -238,7 +238,7 @@ func (generatedDashboard) update(
 	req := &dashboard.UpdateDashboardParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: dashboard.UpdateDashboardBody{
+		Body: &configv1models.ConfigV1UpdateDashboardBody{
 			Dashboard:       m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -315,7 +315,7 @@ func (generatedDataset) update(
 	req := &dataset.UpdateDatasetParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: dataset.UpdateDatasetBody{
+		Body: &configv1models.ConfigV1UpdateDatasetBody{
 			Dataset:         m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -392,7 +392,7 @@ func (generatedDerivedLabel) update(
 	req := &derived_label.UpdateDerivedLabelParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: derived_label.UpdateDerivedLabelBody{
+		Body: &configv1models.ConfigV1UpdateDerivedLabelBody{
 			DerivedLabel:    m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -469,7 +469,7 @@ func (generatedDerivedMetric) update(
 	req := &derived_metric.UpdateDerivedMetricParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: derived_metric.UpdateDerivedMetricBody{
+		Body: &configv1models.ConfigV1UpdateDerivedMetricBody{
 			DerivedMetric:   m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -546,7 +546,7 @@ func (generatedDropRule) update(
 	req := &drop_rule.UpdateDropRuleParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: drop_rule.UpdateDropRuleBody{
+		Body: &configv1models.ConfigV1UpdateDropRuleBody{
 			DropRule:        m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -623,7 +623,7 @@ func (generatedGcpMetricsIntegration) update(
 	req := &gcp_metrics_integration.UpdateGcpMetricsIntegrationParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: gcp_metrics_integration.UpdateGcpMetricsIntegrationBody{
+		Body: &configv1models.ConfigV1UpdateGcpMetricsIntegrationBody{
 			GcpMetricsIntegration: m,
 			CreateIfMissing:       params.createIfMissing,
 			DryRun:                params.dryRun,
@@ -700,7 +700,7 @@ func (generatedClassicDashboard) update(
 	req := &grafana_dashboard.UpdateGrafanaDashboardParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: grafana_dashboard.UpdateGrafanaDashboardBody{
+		Body: &configv1models.ConfigV1UpdateGrafanaDashboardBody{
 			GrafanaDashboard: m,
 			CreateIfMissing:  params.createIfMissing,
 			DryRun:           params.dryRun,
@@ -777,7 +777,7 @@ func (generatedMappingRule) update(
 	req := &mapping_rule.UpdateMappingRuleParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: mapping_rule.UpdateMappingRuleBody{
+		Body: &configv1models.ConfigV1UpdateMappingRuleBody{
 			MappingRule:     m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -854,7 +854,7 @@ func (generatedMonitor) update(
 	req := &monitor.UpdateMonitorParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: monitor.UpdateMonitorBody{
+		Body: &configv1models.ConfigV1UpdateMonitorBody{
 			Monitor:         m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -931,7 +931,7 @@ func (generatedNotificationPolicy) update(
 	req := &notification_policy.UpdateNotificationPolicyParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: notification_policy.UpdateNotificationPolicyBody{
+		Body: &configv1models.ConfigV1UpdateNotificationPolicyBody{
 			NotificationPolicy: m,
 			CreateIfMissing:    params.createIfMissing,
 			DryRun:             params.dryRun,
@@ -1008,7 +1008,7 @@ func (generatedNotifier) update(
 	req := &notifier.UpdateNotifierParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: notifier.UpdateNotifierBody{
+		Body: &configv1models.ConfigV1UpdateNotifierBody{
 			Notifier:        m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -1085,7 +1085,7 @@ func (generatedRecordingRule) update(
 	req := &recording_rule.UpdateRecordingRuleParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: recording_rule.UpdateRecordingRuleBody{
+		Body: &configv1models.ConfigV1UpdateRecordingRuleBody{
 			RecordingRule:   m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -1162,7 +1162,7 @@ func (generatedRollupRule) update(
 	req := &rollup_rule.UpdateRollupRuleParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: rollup_rule.UpdateRollupRuleBody{
+		Body: &configv1models.ConfigV1UpdateRollupRuleBody{
 			RollupRule:      m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -1298,7 +1298,7 @@ func (generatedTeam) update(
 	req := &team.UpdateTeamParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: team.UpdateTeamBody{
+		Body: &configv1models.ConfigV1UpdateTeamBody{
 			Team:            m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -1375,7 +1375,7 @@ func (generatedTraceJaegerRemoteSamplingStrategy) update(
 	req := &trace_jaeger_remote_sampling_strategy.UpdateTraceJaegerRemoteSamplingStrategyParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: trace_jaeger_remote_sampling_strategy.UpdateTraceJaegerRemoteSamplingStrategyBody{
+		Body: &configv1models.ConfigV1UpdateTraceJaegerRemoteSamplingStrategyBody{
 			TraceJaegerRemoteSamplingStrategy: m,
 			CreateIfMissing:                   params.createIfMissing,
 			DryRun:                            params.dryRun,
@@ -1457,7 +1457,7 @@ func (generatedTraceMetricsRule) update(
 	req := &trace_metrics_rule.UpdateTraceMetricsRuleParams{
 		Context: ctx,
 		Slug:    m.Slug,
-		Body: trace_metrics_rule.UpdateTraceMetricsRuleBody{
+		Body: &configv1models.ConfigV1UpdateTraceMetricsRuleBody{
 			TraceMetricsRule: m,
 			CreateIfMissing:  params.createIfMissing,
 		},
