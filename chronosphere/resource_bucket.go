@@ -191,7 +191,7 @@ func resourceBucketUpdate(ctx context.Context, d *schema.ResourceData, meta any)
 	if _, err := cli.Bucket.UpdateBucket(&bucket.UpdateBucketParams{
 		Context: ctx,
 		Slug:    b.Slug,
-		Body: bucket.UpdateBucketBody{
+		Body: &configmodels.ConfigV1UpdateBucketBody{
 			Bucket: b,
 		},
 	}); err != nil {
@@ -365,7 +365,7 @@ func reconcileNotificationPolicy(
 			resp, err := configCli.NotificationPolicy.UpdateNotificationPolicy(&notification_policy.UpdateNotificationPolicyParams{
 				Context: ctx,
 				Slug:    policy.Slug,
-				Body: notification_policy.UpdateNotificationPolicyBody{
+				Body: &configmodels.ConfigV1UpdateNotificationPolicyBody{
 					NotificationPolicy: policy,
 				},
 			})

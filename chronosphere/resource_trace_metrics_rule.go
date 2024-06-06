@@ -82,10 +82,10 @@ func TraceMetricsRuleFromModel(r *models.Configv1TraceMetricsRule) (*intschema.T
 	return traceMetricsRuleConverter{}.fromModel(r)
 }
 
-func expandTraceMetricsRuleGroupBy(d []intschema.TraceMetricsRuleGroupBy) []*models.TraceMetricsRuleGroupBy {
-	result := make([]*models.TraceMetricsRuleGroupBy, 0, len(d))
+func expandTraceMetricsRuleGroupBy(d []intschema.TraceMetricsRuleGroupBy) []*models.Configv1TraceMetricsRuleGroupBy {
+	result := make([]*models.Configv1TraceMetricsRuleGroupBy, 0, len(d))
 	for _, obj := range d {
-		result = append(result, &models.TraceMetricsRuleGroupBy{
+		result = append(result, &models.Configv1TraceMetricsRuleGroupBy{
 			Key: &models.GroupByGroupByKey{
 				NamedKey: obj.Key.NamedKey,
 				Type:     models.GroupByKeyGroupByKeyType(obj.Key.Type),
@@ -96,7 +96,7 @@ func expandTraceMetricsRuleGroupBy(d []intschema.TraceMetricsRuleGroupBy) []*mod
 	return result
 }
 
-func traceMetricsRuleGroupByFromModel(m *models.TraceMetricsRuleGroupBy) intschema.TraceMetricsRuleGroupBy {
+func traceMetricsRuleGroupByFromModel(m *models.Configv1TraceMetricsRuleGroupBy) intschema.TraceMetricsRuleGroupBy {
 	if m == nil || m.Key == nil {
 		return intschema.TraceMetricsRuleGroupBy{}
 	}
