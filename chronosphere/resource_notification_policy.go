@@ -379,7 +379,11 @@ func expandNotificationPolicyRoutes(routes []intschema.NotificationRoute) (*conf
 	// severity exists. It doesn't have to have any notifiers in it.
 	out := &configmodels.RoutesSeverityNotifiers{}
 	for _, r := range routes {
-		notifierList := &configmodels.RoutesNotifierList{}
+		notifierList := &configmodels.RoutesNotifierList{
+			GroupBy: &configmodels.NotificationPolicyRoutesGroupBy{
+				LabelNames: r.GroupBy,
+			},
+		}
 		for _, notifierID := range r.Notifiers {
 			notifierList.NotifierSlugs = append(notifierList.NotifierSlugs, notifierID.Slug())
 		}
