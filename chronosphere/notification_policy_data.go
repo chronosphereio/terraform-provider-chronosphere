@@ -185,7 +185,15 @@ func notifierListMapToModel(notifierList RoutesNotifierList) (*configmodels.Rout
 	return &configmodels.RoutesNotifierList{
 		NotifierSlugs:      sliceutil.Map(notifierList.Notifiers, func(n *RoutesNotifierListNotifier) string { return n.Slug }),
 		RepeatIntervalSecs: durationInSecs,
+		GroupBy:            groupByToModel(notifierList),
 	}, nil
+}
+
+func groupByToModel(notifierList RoutesNotifierList) *configmodels.NotificationPolicyRoutesGroupBy {
+	if notifierList.GroupBy == nil {
+		return nil
+	}
+	return &configmodels.NotificationPolicyRoutesGroupBy{LabelNames: notifierList.GroupBy.LabelNames}
 }
 
 func routesFromModel(m *configmodels.NotificationPolicyRoutes) (*Routes, error) {
