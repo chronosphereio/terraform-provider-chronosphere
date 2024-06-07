@@ -246,7 +246,9 @@ func validateResourcePoolsConfig(cfg *apimodels.Configv1ResourcePools) error {
 			return err
 		}
 	}
-	if sum != 100 {
+	// We support allocations up to three decimal places.
+	// TODO(codyg): dry run validation to avoid duplicating this logic.
+	if sum < 99.999 || sum > 100.001 {
 		return stderrors.New("total allocation must sum to 100%")
 	}
 

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Bug fixes:
+ * Fixed bug where `chronosphere_resource_pools_config` would not allow certain combinations
+   of allocation percents due to float arithmetic not adding to exactly 100%.
+
 Added:
  * Add unstable `otel_metrics_ingestion` resource.
 
