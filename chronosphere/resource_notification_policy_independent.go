@@ -116,12 +116,11 @@ func notificationRoutesToModel(
 		if err != nil {
 			return nil, err
 		}
+
 		bySev[sev] = &models.RoutesNotifierList{
 			NotifierSlugs:      sliceutil.Map(r.Notifiers, (tfid.ID).Slug),
 			RepeatIntervalSecs: intervalSecs,
-			GroupBy: &models.NotificationPolicyRoutesGroupBy{
-				LabelNames: r.GroupBy,
-			},
+			GroupBy:            notificationRouteToGroupByModel(r),
 		}
 	}
 	return &models.RoutesSeverityNotifiers{
@@ -155,6 +154,15 @@ func notificationRoutesFromModel(
 	load(warn, m.Warn)
 	load(critical, m.Critical)
 	return out
+}
+
+func notificationRouteToGroupByModel(r intschema.NotificationRoute) *models.NotificationPolicyRoutesGroupBy {
+	if r.GroupBy == nil {
+		return nil
+	}
+	return &models.NotificationPolicyRoutesGroupBy{
+		LabelNames: r.GroupBy,
+	}
 }
 
 func notificationOverrideToModel(
