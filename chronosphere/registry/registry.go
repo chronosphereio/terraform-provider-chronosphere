@@ -29,7 +29,18 @@ import (
 // StandardEntities returns all unique entity names which are registered against
 // the given api, where all resources w/ NonStandardEntity=true are filtered
 // out. Useful for generating standard CRUD+List bindings.
-func StandardEntities(api API) []Resource {
+func AllEntities(api API) []Resource {
+	return entities(api, true /* includeSingletons */)
+}
+
+// StandardEntities returns all unique entity names which are registered against
+// the given api, where all resources w/ NonStandardEntity=true are filtered
+// out. Useful for generating standard CRUD+List bindings.
+func NamedEntities(api API) []Resource {
+	return entities(api, false /* includeSingletons */)
+}
+
+func entities(api API, includeSingletons bool) []Resource {
 	// Some of our resources share the same underlying entity (i.e. notifier),
 	// so we use a map to remove duplicates.
 	m := make(map[string]Resource)
@@ -37,7 +48,7 @@ func StandardEntities(api API) []Resource {
 		if r.API != api {
 			continue
 		}
-		if r.NonStandardEntity {
+		if r.SingletonID != "" && !includeSingletons {
 			continue
 		}
 		m[r.Entity] = r
@@ -74,10 +85,8 @@ type Resource struct {
 	// Schema is the tfschema which defines the resource.
 	Schema map[string]*schema.Schema
 
-	// If the underlying entity is in the public API and it
-	// does not match the entity spec, then set this field to
-	// skip generating CRUD+List bindings for the entity.
-	NonStandardEntity bool
+	// Only set if the resource is a singleton.
+	SingletonID string
 
 	// DryRun is a flag to indicate whether the resource supports dry run.
 	DryRun bool
@@ -115,8 +124,8 @@ func (r Resource) validate() error {
 	if r.Schema == nil {
 		return errors.New("Schema is required")
 	}
-	if r.NonStandardEntity && r.API == Legacy {
-		return errors.New("cannot set NonStandardEntity=true when API=Legacy")
+	if r.SingletonID != "" && r.API == Legacy {
+		return errors.New("cannot set SingletonID when API=Legacy")
 	}
 
 	return nil
@@ -254,11 +263,11 @@ var Resources = mustValidate([]Resource{
 		DryRun: true,
 	},
 	{
-		Name:              "otel_metrics_ingestion",
-		Entity:            "OtelMetricsIngestion",
-		API:               Unstable,
-		Schema:            tfschema.OtelMetricsIngestion,
-		NonStandardEntity: true,
+		Name:        "otel_metrics_ingestion",
+		Entity:      "OtelMetricsIngestion",
+		API:         Unstable,
+		Schema:      tfschema.OtelMetricsIngestion,
+		SingletonID: "OtelMetricsIngestionID",
 	},
 	{
 		Name:   "pagerduty_alert_notifier",
@@ -275,11 +284,11 @@ var Resources = mustValidate([]Resource{
 		DryRun: true,
 	},
 	{
-		Name:              "resource_pools_config",
-		Entity:            "ResourcePoolsConfig",
-		API:               V1,
-		Schema:            tfschema.ResourcePoolsConfig,
-		NonStandardEntity: true,
+		Name:        "resource_pools_config",
+		Entity:      "ResourcePools",
+		API:         V1,
+		Schema:      tfschema.ResourcePoolsConfig,
+		SingletonID: "ResourcePoolsConfigID",
 	},
 	{
 		Name:   "rollup_rule",
@@ -338,10 +347,10 @@ var Resources = mustValidate([]Resource{
 		DryRun: true,
 	},
 	{
-		Name:              "trace_tail_sampling_rules",
-		Entity:            "TraceTailSamplingRules",
-		API:               V1,
-		Schema:            tfschema.TraceTailSamplingRules,
-		NonStandardEntity: true,
+		Name:        "trace_tail_sampling_rules",
+		Entity:      "TraceTailSamplingRules",
+		API:         V1,
+		Schema:      tfschema.TraceTailSamplingRules,
+		SingletonID: "TraceTailSamplingRulesID",
 	},
 })
