@@ -111,11 +111,6 @@ func newEntityType(a api, r registry.Resource) entityType {
 	if r.Name == "classic_dashboard" {
 		et.GoType = fmt.Sprintf("%s%s", a.GoPrefix, "ClassicDashboard")
 	}
-	// if r.Name == "resource_pools_config" {
-	// 	et.SwaggerModel = "ResourcePools"
-	// 	et.SwaggerType = "ResourcePools"
-	// 	et.SwaggerClientPackage = "resource_pools"
-	// }
 	return et
 }
 
