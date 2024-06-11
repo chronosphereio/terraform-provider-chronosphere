@@ -73,9 +73,9 @@ func (resourcePoolsConfigConverter) toModel(
 
 	// The resource has equivalent "pool" and deprecated "pools" lists.
 	// Only one is set at any given time and the server does not distinguish the different lists.
-	resourcePools := r.Pool
-	if len(r.Pools) > 0 {
-		resourcePools = r.Pools
+	resourcePools := r.Pools
+	if len(r.Pool) > 0 {
+		resourcePools = r.Pool
 	}
 
 	pools, err := sliceutil.MapErr(resourcePools, buildPool)
