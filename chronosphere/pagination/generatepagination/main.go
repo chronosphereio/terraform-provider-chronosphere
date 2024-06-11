@@ -49,12 +49,12 @@ func run() error {
 	}
 
 	var entityTypes []entityType
-	for _, e := range registry.StandardEntities(registry.V1) {
+	for _, e := range registry.NamedEntities(registry.V1) {
 		entityTypes = append(entityTypes, newEntityType(v1, e))
 	}
 	entityTypes = append(entityTypes, newClassicDashboard(v1))
 	includesUnstable := false
-	for _, e := range registry.StandardEntities(registry.Unstable) {
+	for _, e := range registry.NamedEntities(registry.Unstable) {
 		entityTypes = append(entityTypes, newEntityType(unstable, e))
 		includesUnstable = true
 	}

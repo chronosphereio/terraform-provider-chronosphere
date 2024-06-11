@@ -30,9 +30,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
-// TraceTailSamplingRulesID is the static ID of the global trace tail sampling rules singleton.
-const TraceTailSamplingRulesID = "trace_tail_sampling_singleton"
-
 func resourceTraceTailSamplingRules() *schema.Resource {
 	return &schema.Resource{
 		Schema:        tfschema.TraceTailSamplingRules,

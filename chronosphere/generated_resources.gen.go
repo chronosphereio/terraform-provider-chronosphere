@@ -7,6 +7,8 @@ import (
 	"fmt"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/otel_metrics_ingestion"
+	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
@@ -21,11 +23,13 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notifier"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/recording_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/resource_pools"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/rollup_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_tail_sampling_rules"
 	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
@@ -56,7 +60,7 @@ func (generatedBucket) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedBucket{}).slugOf(e), nil
 }
 
 func (generatedBucket) read(
@@ -84,7 +88,9 @@ func (generatedBucket) update(
 	req := &bucket.UpdateBucketParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateBucketBody{
+
 			Bucket:          m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -133,7 +139,7 @@ func (generatedCollection) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedCollection{}).slugOf(e), nil
 }
 
 func (generatedCollection) read(
@@ -161,7 +167,9 @@ func (generatedCollection) update(
 	req := &collection.UpdateCollectionParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateCollectionBody{
+
 			Collection:      m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -210,7 +218,7 @@ func (generatedDashboard) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedDashboard{}).slugOf(e), nil
 }
 
 func (generatedDashboard) read(
@@ -238,7 +246,9 @@ func (generatedDashboard) update(
 	req := &dashboard.UpdateDashboardParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateDashboardBody{
+
 			Dashboard:       m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -287,7 +297,7 @@ func (generatedDataset) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedDataset{}).slugOf(e), nil
 }
 
 func (generatedDataset) read(
@@ -315,7 +325,9 @@ func (generatedDataset) update(
 	req := &dataset.UpdateDatasetParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateDatasetBody{
+
 			Dataset:         m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -364,7 +376,7 @@ func (generatedDerivedLabel) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedDerivedLabel{}).slugOf(e), nil
 }
 
 func (generatedDerivedLabel) read(
@@ -392,7 +404,9 @@ func (generatedDerivedLabel) update(
 	req := &derived_label.UpdateDerivedLabelParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateDerivedLabelBody{
+
 			DerivedLabel:    m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -441,7 +455,7 @@ func (generatedDerivedMetric) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedDerivedMetric{}).slugOf(e), nil
 }
 
 func (generatedDerivedMetric) read(
@@ -469,7 +483,9 @@ func (generatedDerivedMetric) update(
 	req := &derived_metric.UpdateDerivedMetricParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateDerivedMetricBody{
+
 			DerivedMetric:   m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -518,7 +534,7 @@ func (generatedDropRule) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedDropRule{}).slugOf(e), nil
 }
 
 func (generatedDropRule) read(
@@ -546,7 +562,9 @@ func (generatedDropRule) update(
 	req := &drop_rule.UpdateDropRuleParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateDropRuleBody{
+
 			DropRule:        m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -595,7 +613,7 @@ func (generatedGcpMetricsIntegration) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedGcpMetricsIntegration{}).slugOf(e), nil
 }
 
 func (generatedGcpMetricsIntegration) read(
@@ -623,7 +641,9 @@ func (generatedGcpMetricsIntegration) update(
 	req := &gcp_metrics_integration.UpdateGcpMetricsIntegrationParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateGcpMetricsIntegrationBody{
+
 			GcpMetricsIntegration: m,
 			CreateIfMissing:       params.createIfMissing,
 			DryRun:                params.dryRun,
@@ -672,7 +692,7 @@ func (generatedClassicDashboard) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedClassicDashboard{}).slugOf(e), nil
 }
 
 func (generatedClassicDashboard) read(
@@ -700,7 +720,9 @@ func (generatedClassicDashboard) update(
 	req := &grafana_dashboard.UpdateGrafanaDashboardParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateGrafanaDashboardBody{
+
 			GrafanaDashboard: m,
 			CreateIfMissing:  params.createIfMissing,
 			DryRun:           params.dryRun,
@@ -749,7 +771,7 @@ func (generatedMappingRule) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedMappingRule{}).slugOf(e), nil
 }
 
 func (generatedMappingRule) read(
@@ -777,7 +799,9 @@ func (generatedMappingRule) update(
 	req := &mapping_rule.UpdateMappingRuleParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateMappingRuleBody{
+
 			MappingRule:     m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -826,7 +850,7 @@ func (generatedMonitor) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedMonitor{}).slugOf(e), nil
 }
 
 func (generatedMonitor) read(
@@ -854,7 +878,9 @@ func (generatedMonitor) update(
 	req := &monitor.UpdateMonitorParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateMonitorBody{
+
 			Monitor:         m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -903,7 +929,7 @@ func (generatedNotificationPolicy) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedNotificationPolicy{}).slugOf(e), nil
 }
 
 func (generatedNotificationPolicy) read(
@@ -931,7 +957,9 @@ func (generatedNotificationPolicy) update(
 	req := &notification_policy.UpdateNotificationPolicyParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateNotificationPolicyBody{
+
 			NotificationPolicy: m,
 			CreateIfMissing:    params.createIfMissing,
 			DryRun:             params.dryRun,
@@ -980,7 +1008,7 @@ func (generatedNotifier) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedNotifier{}).slugOf(e), nil
 }
 
 func (generatedNotifier) read(
@@ -1008,7 +1036,9 @@ func (generatedNotifier) update(
 	req := &notifier.UpdateNotifierParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateNotifierBody{
+
 			Notifier:        m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -1057,7 +1087,7 @@ func (generatedRecordingRule) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedRecordingRule{}).slugOf(e), nil
 }
 
 func (generatedRecordingRule) read(
@@ -1085,7 +1115,9 @@ func (generatedRecordingRule) update(
 	req := &recording_rule.UpdateRecordingRuleParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateRecordingRuleBody{
+
 			RecordingRule:   m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -1104,6 +1136,85 @@ func (generatedRecordingRule) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.RecordingRule.DeleteRecordingRule(req)
+	return err
+}
+
+type generatedResourcePools struct{}
+
+// ResourcePoolsID is the static ID of the global ResourcePools singleton.
+const ResourcePoolsID = "resource_pool_singleton"
+
+func (generatedResourcePools) slugOf(m *configv1models.Configv1ResourcePools) string {
+	return ResourcePoolsID
+}
+
+func (generatedResourcePools) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1ResourcePools,
+	dryRun bool,
+) (string, error) {
+	req := &resource_pools.CreateResourcePoolsParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateResourcePoolsRequest{
+			ResourcePools: m,
+			DryRun:        dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.ResourcePools.CreateResourcePools(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.ResourcePools
+	if e == nil {
+		return "", nil
+	}
+	return (generatedResourcePools{}).slugOf(e), nil
+}
+
+func (generatedResourcePools) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1ResourcePools, error) {
+	req := &resource_pools.ReadResourcePoolsParams{
+		Context: ctx,
+	}
+	resp, err := clients.ConfigV1.ResourcePools.ReadResourcePools(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.ResourcePools, nil
+}
+
+func (generatedResourcePools) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1ResourcePools,
+	params updateParams,
+) error {
+	req := &resource_pools.UpdateResourcePoolsParams{
+		Context: ctx,
+
+		Body: &configv1models.Configv1UpdateResourcePoolsRequest{
+
+			ResourcePools:   m,
+			CreateIfMissing: params.createIfMissing,
+			DryRun:          params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.ResourcePools.UpdateResourcePools(req)
+	return err
+}
+func (generatedResourcePools) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &resource_pools.DeleteResourcePoolsParams{
+		Context: ctx,
+	}
+	_, err := clients.ConfigV1.ResourcePools.DeleteResourcePools(req)
 	return err
 }
 
@@ -1134,7 +1245,7 @@ func (generatedRollupRule) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedRollupRule{}).slugOf(e), nil
 }
 
 func (generatedRollupRule) read(
@@ -1162,7 +1273,9 @@ func (generatedRollupRule) update(
 	req := &rollup_rule.UpdateRollupRuleParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateRollupRuleBody{
+
 			RollupRule:      m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -1211,7 +1324,7 @@ func (generatedServiceAccount) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedServiceAccount{}).slugOf(e), nil
 }
 
 func (generatedServiceAccount) read(
@@ -1270,7 +1383,7 @@ func (generatedTeam) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedTeam{}).slugOf(e), nil
 }
 
 func (generatedTeam) read(
@@ -1298,7 +1411,9 @@ func (generatedTeam) update(
 	req := &team.UpdateTeamParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateTeamBody{
+
 			Team:            m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
@@ -1347,7 +1462,7 @@ func (generatedTraceJaegerRemoteSamplingStrategy) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedTraceJaegerRemoteSamplingStrategy{}).slugOf(e), nil
 }
 
 func (generatedTraceJaegerRemoteSamplingStrategy) read(
@@ -1375,7 +1490,9 @@ func (generatedTraceJaegerRemoteSamplingStrategy) update(
 	req := &trace_jaeger_remote_sampling_strategy.UpdateTraceJaegerRemoteSamplingStrategyParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateTraceJaegerRemoteSamplingStrategyBody{
+
 			TraceJaegerRemoteSamplingStrategy: m,
 			CreateIfMissing:                   params.createIfMissing,
 			DryRun:                            params.dryRun,
@@ -1426,7 +1543,7 @@ func (generatedTraceMetricsRule) create(
 	if e == nil {
 		return "", nil
 	}
-	return e.Slug, nil
+	return (generatedTraceMetricsRule{}).slugOf(e), nil
 }
 
 func (generatedTraceMetricsRule) read(
@@ -1457,7 +1574,9 @@ func (generatedTraceMetricsRule) update(
 	req := &trace_metrics_rule.UpdateTraceMetricsRuleParams{
 		Context: ctx,
 		Slug:    m.Slug,
+
 		Body: &configv1models.ConfigV1UpdateTraceMetricsRuleBody{
+
 			TraceMetricsRule: m,
 			CreateIfMissing:  params.createIfMissing,
 		},
@@ -1475,5 +1594,171 @@ func (generatedTraceMetricsRule) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.TraceMetricsRule.DeleteTraceMetricsRule(req)
+	return err
+}
+
+type generatedTraceTailSamplingRules struct{}
+
+// TraceTailSamplingRulesID is the static ID of the global TraceTailSamplingRules singleton.
+const TraceTailSamplingRulesID = "trace_tail_sampling_singleton"
+
+func (generatedTraceTailSamplingRules) slugOf(m *configv1models.Configv1TraceTailSamplingRules) string {
+	return TraceTailSamplingRulesID
+}
+
+func (generatedTraceTailSamplingRules) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1TraceTailSamplingRules,
+	dryRun bool,
+) (string, error) {
+	if dryRun {
+		return "", fmt.Errorf("dry run not supported for this entity type")
+	}
+	req := &trace_tail_sampling_rules.CreateTraceTailSamplingRulesParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateTraceTailSamplingRulesRequest{
+			TraceTailSamplingRules: m,
+		},
+	}
+	resp, err := clients.ConfigV1.TraceTailSamplingRules.CreateTraceTailSamplingRules(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.TraceTailSamplingRules
+	if e == nil {
+		return "", nil
+	}
+	return (generatedTraceTailSamplingRules{}).slugOf(e), nil
+}
+
+func (generatedTraceTailSamplingRules) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1TraceTailSamplingRules, error) {
+	req := &trace_tail_sampling_rules.ReadTraceTailSamplingRulesParams{
+		Context: ctx,
+	}
+	resp, err := clients.ConfigV1.TraceTailSamplingRules.ReadTraceTailSamplingRules(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.TraceTailSamplingRules, nil
+}
+
+func (generatedTraceTailSamplingRules) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1TraceTailSamplingRules,
+	params updateParams,
+) error {
+	if params.dryRun {
+		return fmt.Errorf("dry run not supported for this entity type")
+	}
+	req := &trace_tail_sampling_rules.UpdateTraceTailSamplingRulesParams{
+		Context: ctx,
+
+		Body: &configv1models.Configv1UpdateTraceTailSamplingRulesRequest{
+
+			TraceTailSamplingRules: m,
+			CreateIfMissing:        params.createIfMissing,
+		},
+	}
+	_, err := clients.ConfigV1.TraceTailSamplingRules.UpdateTraceTailSamplingRules(req)
+	return err
+}
+func (generatedTraceTailSamplingRules) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &trace_tail_sampling_rules.DeleteTraceTailSamplingRulesParams{
+		Context: ctx,
+	}
+	_, err := clients.ConfigV1.TraceTailSamplingRules.DeleteTraceTailSamplingRules(req)
+	return err
+}
+
+type generatedUnstableOtelMetricsIngestion struct{}
+
+// OtelMetricsIngestionID is the static ID of the global OtelMetricsIngestion singleton.
+const OtelMetricsIngestionID = "otel_metrics_ingestion_singleton"
+
+func (generatedUnstableOtelMetricsIngestion) slugOf(m *configunstablemodels.ConfigunstableOtelMetricsIngestion) string {
+	return OtelMetricsIngestionID
+}
+
+func (generatedUnstableOtelMetricsIngestion) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableOtelMetricsIngestion,
+	dryRun bool,
+) (string, error) {
+	if dryRun {
+		return "", fmt.Errorf("dry run not supported for this entity type")
+	}
+	req := &otel_metrics_ingestion.CreateOtelMetricsIngestionParams{
+		Context: ctx,
+		Body: &configunstablemodels.ConfigunstableCreateOtelMetricsIngestionRequest{
+			OtelMetricsIngestion: m,
+		},
+	}
+	resp, err := clients.ConfigUnstable.OtelMetricsIngestion.CreateOtelMetricsIngestion(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.OtelMetricsIngestion
+	if e == nil {
+		return "", nil
+	}
+	return (generatedUnstableOtelMetricsIngestion{}).slugOf(e), nil
+}
+
+func (generatedUnstableOtelMetricsIngestion) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configunstablemodels.ConfigunstableOtelMetricsIngestion, error) {
+	req := &otel_metrics_ingestion.ReadOtelMetricsIngestionParams{
+		Context: ctx,
+	}
+	resp, err := clients.ConfigUnstable.OtelMetricsIngestion.ReadOtelMetricsIngestion(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.OtelMetricsIngestion, nil
+}
+
+func (generatedUnstableOtelMetricsIngestion) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableOtelMetricsIngestion,
+	params updateParams,
+) error {
+	if params.dryRun {
+		return fmt.Errorf("dry run not supported for this entity type")
+	}
+	req := &otel_metrics_ingestion.UpdateOtelMetricsIngestionParams{
+		Context: ctx,
+
+		Body: &configunstablemodels.ConfigunstableUpdateOtelMetricsIngestionRequest{
+
+			OtelMetricsIngestion: m,
+			CreateIfMissing:      params.createIfMissing,
+		},
+	}
+	_, err := clients.ConfigUnstable.OtelMetricsIngestion.UpdateOtelMetricsIngestion(req)
+	return err
+}
+func (generatedUnstableOtelMetricsIngestion) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &otel_metrics_ingestion.DeleteOtelMetricsIngestionParams{
+		Context: ctx,
+	}
+	_, err := clients.ConfigUnstable.OtelMetricsIngestion.DeleteOtelMetricsIngestion(req)
 	return err
 }
