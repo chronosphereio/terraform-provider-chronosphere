@@ -81,9 +81,7 @@ func (resourcePoolsConfigConverter) toModel(
 		resourcePools = r.Pools
 	}
 
-	pools, err := sliceutil.MapErr(resourcePools, func(pool intschema.ResourcePoolsConfigPool) (*apimodels.ResourcePoolsPool, error) {
-		return buildPool(pool)
-	})
+	pools, err := sliceutil.MapErr(resourcePools, buildPool)
 	if err != nil {
 		return nil, err
 	}
