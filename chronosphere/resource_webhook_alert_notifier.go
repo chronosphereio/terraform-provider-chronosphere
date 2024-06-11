@@ -30,11 +30,7 @@ func WebhookAlertNotifierFromModel(
 }
 
 func resourceWebhookAlertNotifier() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1Notifier,
-		intschema.WebhookAlertNotifier,
-		*intschema.WebhookAlertNotifier,
-	](
+	r := newGenericResource(
 		"webhook_alert_notifier",
 		webhookAlertNotifierConverter{},
 		generatedNotifier{},

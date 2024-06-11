@@ -29,11 +29,7 @@ func GcpMetricsIntegrationFromModel(m *models.Configv1GcpMetricsIntegration) (*i
 }
 
 func resourceGcpMetricsIntegration() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1GcpMetricsIntegration,
-		intschema.GcpMetricsIntegration,
-		*intschema.GcpMetricsIntegration,
-	](
+	r := newGenericResource(
 		"gcp_metrics_integration",
 		gcpMetricsIntegrationConverter{},
 		generatedGcpMetricsIntegration{},

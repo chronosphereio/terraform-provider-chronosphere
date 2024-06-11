@@ -62,11 +62,7 @@ var BucketDryRunCount atomic.Int64
 
 // resourceBucket represents a bucket and an optional default notification policy.
 func resourceBucket() *schema.Resource {
-	r := newGenericResource[
-		*configmodels.Configv1Bucket,
-		intschema.Bucket,
-		*intschema.Bucket,
-	](
+	r := newGenericResource(
 		"bucket",
 		bucketConverter{},
 		generatedBucket{},

@@ -31,11 +31,7 @@ func DatasetFromModel(m *models.Configv1Dataset) (*intschema.Dataset, error) {
 }
 
 func resourceDataset() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1Dataset,
-		intschema.Dataset,
-		*intschema.Dataset,
-	]("dataset",
+	r := newGenericResource("dataset",
 		datasetConverter{},
 		generatedDataset{})
 

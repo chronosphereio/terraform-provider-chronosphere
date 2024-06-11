@@ -30,11 +30,7 @@ func SlackAlertNotifierFromModel(
 }
 
 func resourceSlackAlertNotifier() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1Notifier,
-		intschema.SlackAlertNotifier,
-		*intschema.SlackAlertNotifier,
-	](
+	r := newGenericResource(
 		"slack_alert_notifier",
 		slackAlertNotifierConverter{},
 		generatedNotifier{},

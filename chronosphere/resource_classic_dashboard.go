@@ -27,11 +27,7 @@ import (
 )
 
 func resourceClassicDashboard() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1GrafanaDashboard,
-		intschema.ClassicDashboard,
-		*intschema.ClassicDashboard,
-	](
+	r := newGenericResource(
 		"grafana_dashboard",
 		classicDashboardConverter{},
 		generatedClassicDashboard{},

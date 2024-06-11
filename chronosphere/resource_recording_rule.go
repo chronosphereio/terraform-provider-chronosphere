@@ -30,11 +30,7 @@ func RecordingRuleFromModel(m *models.Configv1RecordingRule) (*intschema.Recordi
 }
 
 func resourceRecordingRule() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1RecordingRule,
-		intschema.RecordingRule,
-		*intschema.RecordingRule,
-	](
+	r := newGenericResource(
 		"recording_rule",
 		recordingRuleConverter{},
 		generatedRecordingRule{},

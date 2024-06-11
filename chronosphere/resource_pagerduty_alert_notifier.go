@@ -30,11 +30,7 @@ func PagerdutyAlertNotifierFromModel(
 }
 
 func resourcePagerdutyAlertNotifier() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1Notifier,
-		intschema.PagerdutyAlertNotifier,
-		*intschema.PagerdutyAlertNotifier,
-	](
+	r := newGenericResource(
 		"pagerduty_alert_notifier",
 		pagerdutyAlertNotifierConverter{},
 		generatedNotifier{},

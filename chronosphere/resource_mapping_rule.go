@@ -34,11 +34,7 @@ func MappingRuleFromModel(m *models.Configv1MappingRule) (*intschema.MappingRule
 }
 
 func resourceMappingRule() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1MappingRule,
-		intschema.MappingRule,
-		*intschema.MappingRule,
-	](
+	r := newGenericResource(
 		"mapping_rule",
 		mappingRuleConverter{},
 		generatedMappingRule{},
