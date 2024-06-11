@@ -152,7 +152,7 @@ import (
 
 func ({{.GoType}}) slugOf(m *{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}) string {
 	{{ if .SingletonID -}}
-	return {{.SingletonID}}
+	return "{{.SingletonID}}"
 	{{- else -}}
 	return m.Slug
 	{{- end }}

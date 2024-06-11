@@ -1142,7 +1142,7 @@ func (generatedRecordingRule) delete(
 type generatedResourcePools struct{}
 
 func (generatedResourcePools) slugOf(m *configv1models.Configv1ResourcePools) string {
-	return ResourcePoolsConfigID
+	return "resource_pool_singleton"
 }
 
 func (generatedResourcePools) create(
@@ -1597,7 +1597,7 @@ func (generatedTraceMetricsRule) delete(
 type generatedTraceTailSamplingRules struct{}
 
 func (generatedTraceTailSamplingRules) slugOf(m *configv1models.Configv1TraceTailSamplingRules) string {
-	return TraceTailSamplingRulesID
+	return "trace_tail_sampling_singleton"
 }
 
 func (generatedTraceTailSamplingRules) create(
@@ -1677,7 +1677,7 @@ func (generatedTraceTailSamplingRules) delete(
 type generatedUnstableOtelMetricsIngestion struct{}
 
 func (generatedUnstableOtelMetricsIngestion) slugOf(m *configunstablemodels.ConfigunstableOtelMetricsIngestion) string {
-	return OtelMetricsIngestionID
+	return "otel_metrics_ingestion_singleton"
 }
 
 func (generatedUnstableOtelMetricsIngestion) create(

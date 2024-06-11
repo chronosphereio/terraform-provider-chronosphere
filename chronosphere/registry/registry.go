@@ -267,7 +267,7 @@ var Resources = mustValidate([]Resource{
 		Entity:      "OtelMetricsIngestion",
 		API:         Unstable,
 		Schema:      tfschema.OtelMetricsIngestion,
-		SingletonID: "OtelMetricsIngestionID",
+		SingletonID: "otel_metrics_ingestion_singleton",
 	},
 	{
 		Name:   "pagerduty_alert_notifier",
@@ -288,7 +288,7 @@ var Resources = mustValidate([]Resource{
 		Entity:      "ResourcePools",
 		API:         V1,
 		Schema:      tfschema.ResourcePoolsConfig,
-		SingletonID: "ResourcePoolsConfigID",
+		SingletonID: "resource_pool_singleton",
 		DryRun:      true,
 	},
 	{
@@ -352,6 +352,6 @@ var Resources = mustValidate([]Resource{
 		Entity:      "TraceTailSamplingRules",
 		API:         V1,
 		Schema:      tfschema.TraceTailSamplingRules,
-		SingletonID: "TraceTailSamplingRulesID",
+		SingletonID: "trace_tail_sampling_singleton",
 	},
 })

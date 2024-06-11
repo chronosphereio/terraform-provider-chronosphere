@@ -28,9 +28,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
-// ResourcePoolsConfigID is the static ID of the global resource pools singleton.
-const ResourcePoolsConfigID = "resource_pool_singleton"
-
 // ResourcePoolsConfigFromModel maps an API model into an intschema model.
 func ResourcePoolsConfigFromModel(m *apimodels.Configv1ResourcePools) (*intschema.ResourcePoolsConfig, error) {
 	return (resourcePoolsConfigConverter{}).fromModel(m)
