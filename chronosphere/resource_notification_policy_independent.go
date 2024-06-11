@@ -140,15 +140,11 @@ func notificationRoutesFromModel(
 		if f == nil {
 			return
 		}
-		var groupBy []string
-		if f.GroupBy != nil {
-			groupBy = f.GroupBy.LabelNames
-		}
 		out = append(out, intschema.NotificationRoute{
 			Severity:       sev,
 			Notifiers:      sliceutil.Map(f.NotifierSlugs, tfid.Slug),
 			RepeatInterval: durationFromSecs(f.RepeatIntervalSecs),
-			GroupBy:        groupBy,
+			GroupBy:        notificationRouteFromGroupByModel(f),
 		})
 	}
 	load(warn, m.Warn)
@@ -163,6 +159,16 @@ func notificationRouteToGroupByModel(r intschema.NotificationRoute) *models.Noti
 	return &models.NotificationPolicyRoutesGroupBy{
 		LabelNames: r.GroupBy,
 	}
+}
+
+func notificationRouteFromGroupByModel(f *models.RoutesNotifierList) []string {
+	if f == nil {
+		return nil
+	}
+	if f.GroupBy != nil {
+		return f.GroupBy.LabelNames
+	}
+	return []string{}
 }
 
 func notificationOverrideToModel(
