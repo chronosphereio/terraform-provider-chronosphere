@@ -143,7 +143,7 @@ import (
 
 {{ range .EntityTypes }}
 
-	type {{.GoType}} struct{}
+type {{.GoType}} struct{}
 
 func ({{.GoType}}) slugOf(m *{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}) string {
 	{{ if .SingletonID -}}
