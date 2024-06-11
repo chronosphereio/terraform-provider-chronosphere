@@ -26,16 +26,15 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
-// StandardEntities returns all unique entity names which are registered against
-// the given api, where all resources w/ NonStandardEntity=true are filtered
-// out. Useful for generating standard CRUD+List bindings.
+// AllEntities returns all entities which are registered against the given API.
+// It includes Singletons, and is used for generating CRUD bindings.
 func AllEntities(api API) []Resource {
 	return entities(api, true /* includeSingletons */)
 }
 
-// StandardEntities returns all unique entity names which are registered against
-// the given api, where all resources w/ NonStandardEntity=true are filtered
-// out. Useful for generating standard CRUD+List bindings.
+// NamedEntities returns all entities which are registered against the given API.
+// It only includes non-singleton entities and is useful for use-cases that
+// don't make sense for singletons, such as generating List bindings.
 func NamedEntities(api API) []Resource {
 	return entities(api, false /* includeSingletons */)
 }
