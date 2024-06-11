@@ -62,6 +62,12 @@ ListLogScaleActionsParams contains all the parameters to send to the API endpoin
 */
 type ListLogScaleActionsParams struct {
 
+	/* Names.
+
+	   Filters results by name, where any LogScaleAction with a matching name in the given list (and matches all other filters) is returned.
+	*/
+	Names []string
+
 	/* PageMaxSize.
 
 	     Page size preference (i.e. how many items are returned in the next
@@ -138,6 +144,17 @@ func (o *ListLogScaleActionsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithNames adds the names to the list log scale actions params
+func (o *ListLogScaleActionsParams) WithNames(names []string) *ListLogScaleActionsParams {
+	o.SetNames(names)
+	return o
+}
+
+// SetNames adds the names to the list log scale actions params
+func (o *ListLogScaleActionsParams) SetNames(names []string) {
+	o.Names = names
+}
+
 // WithPageMaxSize adds the pageMaxSize to the list log scale actions params
 func (o *ListLogScaleActionsParams) WithPageMaxSize(pageMaxSize *int64) *ListLogScaleActionsParams {
 	o.SetPageMaxSize(pageMaxSize)
@@ -178,6 +195,17 @@ func (o *ListLogScaleActionsParams) WriteToRequest(r runtime.ClientRequest, reg 
 		return err
 	}
 	var res []error
+
+	if o.Names != nil {
+
+		// binding items for names
+		joinedNames := o.bindParamNames(reg)
+
+		// query array param names
+		if err := r.SetQueryParam("names", joinedNames...); err != nil {
+			return err
+		}
+	}
 
 	if o.PageMaxSize != nil {
 
@@ -228,6 +256,23 @@ func (o *ListLogScaleActionsParams) WriteToRequest(r runtime.ClientRequest, reg 
 		return errors.CompositeValidationError(res...)
 	}
 	return nil
+}
+
+// bindParamListLogScaleActions binds the parameter names
+func (o *ListLogScaleActionsParams) bindParamNames(formats strfmt.Registry) []string {
+	namesIR := o.Names
+
+	var namesIC []string
+	for _, namesIIR := range namesIR { // explode []string
+
+		namesIIV := namesIIR // string as string
+		namesIC = append(namesIC, namesIIV)
+	}
+
+	// items.CollectionFormat: "multi"
+	namesIS := swag.JoinByFormat(namesIC, "multi")
+
+	return namesIS
 }
 
 // bindParamListLogScaleActions binds the parameter slugs
