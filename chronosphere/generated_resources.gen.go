@@ -1141,8 +1141,11 @@ func (generatedRecordingRule) delete(
 
 type generatedResourcePools struct{}
 
+// ResourcePoolsID is the static ID of the global ResourcePools singleton.
+const ResourcePoolsID = "resource_pool_singleton"
+
 func (generatedResourcePools) slugOf(m *configv1models.Configv1ResourcePools) string {
-	return "resource_pool_singleton"
+	return ResourcePoolsID
 }
 
 func (generatedResourcePools) create(
@@ -1596,8 +1599,11 @@ func (generatedTraceMetricsRule) delete(
 
 type generatedTraceTailSamplingRules struct{}
 
+// TraceTailSamplingRulesID is the static ID of the global TraceTailSamplingRules singleton.
+const TraceTailSamplingRulesID = "trace_tail_sampling_singleton"
+
 func (generatedTraceTailSamplingRules) slugOf(m *configv1models.Configv1TraceTailSamplingRules) string {
-	return "trace_tail_sampling_singleton"
+	return TraceTailSamplingRulesID
 }
 
 func (generatedTraceTailSamplingRules) create(
@@ -1676,8 +1682,11 @@ func (generatedTraceTailSamplingRules) delete(
 
 type generatedUnstableOtelMetricsIngestion struct{}
 
+// OtelMetricsIngestionID is the static ID of the global OtelMetricsIngestion singleton.
+const OtelMetricsIngestionID = "otel_metrics_ingestion_singleton"
+
 func (generatedUnstableOtelMetricsIngestion) slugOf(m *configunstablemodels.ConfigunstableOtelMetricsIngestion) string {
-	return "otel_metrics_ingestion_singleton"
+	return OtelMetricsIngestionID
 }
 
 func (generatedUnstableOtelMetricsIngestion) create(

@@ -30,9 +30,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
-// OtelMetricsIngestionID is the static ID of the global OTel metrics ingestion singleton.
-const OtelMetricsIngestionID = "otel_metrics_ingestion_singleton"
-
 func resourceOtelMetricsIngestion() *schema.Resource {
 	return &schema.Resource{
 		Schema:        tfschema.OtelMetricsIngestion,

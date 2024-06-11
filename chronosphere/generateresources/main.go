@@ -92,6 +92,7 @@ type entityType struct {
 	DryRun               bool
 	UpdateUnsupported    bool
 	SingletonID          string
+	SingletonIDConst     string
 }
 
 func newEntityType(a api, r registry.Resource) entityType {
@@ -105,6 +106,7 @@ func newEntityType(a api, r registry.Resource) entityType {
 		DryRun:               r.DryRun,
 		UpdateUnsupported:    r.UpdateUnsupported,
 		SingletonID:          r.SingletonID,
+		SingletonIDConst:     fmt.Sprintf("%sID", r.Entity),
 	}
 
 	// special case for classic dashboards
@@ -145,9 +147,14 @@ import (
 
 type {{.GoType}} struct{}
 
+{{ if .SingletonID -}}
+// {{.SingletonIDConst}} is the static ID of the global {{.SwaggerModel}} singleton.
+const {{.SingletonIDConst}} = "{{.SingletonID}}"
+{{- end }}
+
 func ({{.GoType}}) slugOf(m *{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}) string {
 	{{ if .SingletonID -}}
-	return "{{.SingletonID}}"
+	return {{.SingletonIDConst}}
 	{{- else -}}
 	return m.Slug
 	{{- end }}
