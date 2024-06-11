@@ -289,6 +289,7 @@ var Resources = mustValidate([]Resource{
 		API:         V1,
 		Schema:      tfschema.ResourcePoolsConfig,
 		SingletonID: "ResourcePoolsConfigID",
+		DryRun:      true,
 	},
 	{
 		Name:   "rollup_rule",

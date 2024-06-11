@@ -1151,13 +1151,11 @@ func (generatedResourcePools) create(
 	m *configv1models.Configv1ResourcePools,
 	dryRun bool,
 ) (string, error) {
-	if dryRun {
-		return "", fmt.Errorf("dry run not supported for this entity type")
-	}
 	req := &resource_pools.CreateResourcePoolsParams{
 		Context: ctx,
 		Body: &configv1models.Configv1CreateResourcePoolsRequest{
 			ResourcePools: m,
+			DryRun:        dryRun,
 		},
 	}
 	resp, err := clients.ConfigV1.ResourcePools.CreateResourcePools(req)
@@ -1192,9 +1190,6 @@ func (generatedResourcePools) update(
 	m *configv1models.Configv1ResourcePools,
 	params updateParams,
 ) error {
-	if params.dryRun {
-		return fmt.Errorf("dry run not supported for this entity type")
-	}
 	req := &resource_pools.UpdateResourcePoolsParams{
 		Context: ctx,
 
@@ -1202,6 +1197,7 @@ func (generatedResourcePools) update(
 
 			ResourcePools:   m,
 			CreateIfMissing: params.createIfMissing,
+			DryRun:          params.dryRun,
 		},
 	}
 	_, err := clients.ConfigV1.ResourcePools.UpdateResourcePools(req)

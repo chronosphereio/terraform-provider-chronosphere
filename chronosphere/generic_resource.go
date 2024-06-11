@@ -202,6 +202,19 @@ func (r genericResource[M, SV, S]) ReadContext(
 	if err != nil {
 		return diag.Errorf(err.Error())
 	}
+
+	type normalizer interface {
+		normalize(schemaCfg, serverCfg S)
+	}
+	if nr, ok := r.converter.(normalizer); ok {
+		// Normalize the server-read value against the value set in config.
+		configured := newInternalSchema[SV, S]()
+		if err := configured.FromResourceData(d); err != nil {
+			return diag.Errorf("cannot read config from schema: %v", err)
+		}
+		nr.normalize(configured, s)
+	}
+
 	return s.ToResourceData(d)
 }
 
