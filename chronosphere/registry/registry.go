@@ -267,6 +267,7 @@ var Resources = mustValidate([]Resource{
 		API:         Unstable,
 		Schema:      tfschema.OtelMetricsIngestion,
 		SingletonID: "otel_metrics_ingestion_singleton",
+		DryRun:      true,
 	},
 	{
 		Name:   "pagerduty_alert_notifier",

@@ -1695,13 +1695,11 @@ func (generatedUnstableOtelMetricsIngestion) create(
 	m *configunstablemodels.ConfigunstableOtelMetricsIngestion,
 	dryRun bool,
 ) (string, error) {
-	if dryRun {
-		return "", fmt.Errorf("dry run not supported for this entity type")
-	}
 	req := &otel_metrics_ingestion.CreateOtelMetricsIngestionParams{
 		Context: ctx,
 		Body: &configunstablemodels.ConfigunstableCreateOtelMetricsIngestionRequest{
 			OtelMetricsIngestion: m,
+			DryRun:               dryRun,
 		},
 	}
 	resp, err := clients.ConfigUnstable.OtelMetricsIngestion.CreateOtelMetricsIngestion(req)
@@ -1736,9 +1734,6 @@ func (generatedUnstableOtelMetricsIngestion) update(
 	m *configunstablemodels.ConfigunstableOtelMetricsIngestion,
 	params updateParams,
 ) error {
-	if params.dryRun {
-		return fmt.Errorf("dry run not supported for this entity type")
-	}
 	req := &otel_metrics_ingestion.UpdateOtelMetricsIngestionParams{
 		Context: ctx,
 
@@ -1746,6 +1741,7 @@ func (generatedUnstableOtelMetricsIngestion) update(
 
 			OtelMetricsIngestion: m,
 			CreateIfMissing:      params.createIfMissing,
+			DryRun:               params.dryRun,
 		},
 	}
 	_, err := clients.ConfigUnstable.OtelMetricsIngestion.UpdateOtelMetricsIngestion(req)
