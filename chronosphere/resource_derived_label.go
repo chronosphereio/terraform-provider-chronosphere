@@ -31,11 +31,7 @@ func DerivedLabelFromModel(m *models.Configv1DerivedLabel) (*intschema.DerivedLa
 }
 
 func resourceDerivedLabel() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1DerivedLabel,
-		intschema.DerivedLabel,
-		*intschema.DerivedLabel,
-	](
+	r := newGenericResource(
 		"derived_label",
 		derivedLabelConverter{},
 		generatedDerivedLabel{},

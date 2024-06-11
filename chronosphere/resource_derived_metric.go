@@ -32,11 +32,7 @@ func DerivedMetricFromModel(m *models.Configv1DerivedMetric) (*intschema.Derived
 }
 
 func resourceDerivedMetric() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1DerivedMetric,
-		intschema.DerivedMetric,
-		*intschema.DerivedMetric,
-	](
+	r := newGenericResource(
 		"derived_metric",
 		derivedMetricConverter{},
 		generatedDerivedMetric{},

@@ -38,11 +38,7 @@ func RollupRuleFromModel(m *models.Configv1RollupRule) (*intschema.RollupRule, e
 }
 
 func resourceRollupRule() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1RollupRule,
-		intschema.RollupRule,
-		*intschema.RollupRule,
-	](
+	r := newGenericResource(
 		"rollup_rule",
 		rollupRuleConverter{},
 		generatedRollupRule{},

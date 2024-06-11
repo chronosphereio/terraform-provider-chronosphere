@@ -35,11 +35,7 @@ func MonitorFromModel(m *models.Configv1Monitor) (*intschema.Monitor, error) {
 }
 
 func resourceMonitor() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1Monitor,
-		intschema.Monitor,
-		*intschema.Monitor,
-	](
+	r := newGenericResource(
 		"monitor",
 		monitorConverter{},
 		generatedMonitor{},

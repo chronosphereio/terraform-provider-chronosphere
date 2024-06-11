@@ -33,11 +33,7 @@ func DashboardFromModel(m *models.Configv1Dashboard) (*intschema.Dashboard, erro
 }
 
 func resourceDashboard() *schema.Resource {
-	resource := newGenericResource[
-		*models.Configv1Dashboard,
-		intschema.Dashboard,
-		*intschema.Dashboard,
-	](
+	resource := newGenericResource(
 		"dashboard",
 		dashboardConverter{},
 		generatedDashboard{})

@@ -25,11 +25,7 @@ import (
 )
 
 func resourceTraceMetricsRule() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1TraceMetricsRule,
-		intschema.TraceMetricsRule,
-		*intschema.TraceMetricsRule,
-	](
+	r := newGenericResource(
 		"trace_metrics_rule",
 		traceMetricsRuleConverter{},
 		generatedTraceMetricsRule{},

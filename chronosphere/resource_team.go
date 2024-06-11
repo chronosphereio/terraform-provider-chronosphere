@@ -29,11 +29,7 @@ func TeamFromModel(m *models.Configv1Team) (*intschema.Team, error) {
 }
 
 func resourceTeam() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1Team,
-		intschema.Team,
-		*intschema.Team,
-	](
+	r := newGenericResource(
 		"team",
 		teamConverter{},
 		generatedTeam{},
