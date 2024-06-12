@@ -5,7 +5,8 @@
 ## v1.1.0
 
 Added:
- * Add unstable `otel_metrics_ingestion` resource.
+ * Add unstable `chronosphere_otel_metrics_ingestion` resource.
+ * Add server-side validation support for `chronosphere_trace_tail_sampling_rules`
 
 Deprecated:
  * `proxy_url` is deprecated in alert receivers.
