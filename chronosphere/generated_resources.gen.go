@@ -1612,13 +1612,11 @@ func (generatedTraceTailSamplingRules) create(
 	m *configv1models.Configv1TraceTailSamplingRules,
 	dryRun bool,
 ) (string, error) {
-	if dryRun {
-		return "", fmt.Errorf("dry run not supported for this entity type")
-	}
 	req := &trace_tail_sampling_rules.CreateTraceTailSamplingRulesParams{
 		Context: ctx,
 		Body: &configv1models.Configv1CreateTraceTailSamplingRulesRequest{
 			TraceTailSamplingRules: m,
+			DryRun:                 dryRun,
 		},
 	}
 	resp, err := clients.ConfigV1.TraceTailSamplingRules.CreateTraceTailSamplingRules(req)
@@ -1653,9 +1651,6 @@ func (generatedTraceTailSamplingRules) update(
 	m *configv1models.Configv1TraceTailSamplingRules,
 	params updateParams,
 ) error {
-	if params.dryRun {
-		return fmt.Errorf("dry run not supported for this entity type")
-	}
 	req := &trace_tail_sampling_rules.UpdateTraceTailSamplingRulesParams{
 		Context: ctx,
 
@@ -1663,6 +1658,7 @@ func (generatedTraceTailSamplingRules) update(
 
 			TraceTailSamplingRules: m,
 			CreateIfMissing:        params.createIfMissing,
+			DryRun:                 params.dryRun,
 		},
 	}
 	_, err := clients.ConfigV1.TraceTailSamplingRules.UpdateTraceTailSamplingRules(req)

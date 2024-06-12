@@ -353,5 +353,6 @@ var Resources = mustValidate([]Resource{
 		API:         V1,
 		Schema:      tfschema.TraceTailSamplingRules,
 		SingletonID: "trace_tail_sampling_singleton",
+		DryRun:      true,
 	},
 })
