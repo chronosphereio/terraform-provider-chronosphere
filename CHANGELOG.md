@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.1.0
+
 Added:
  * Add unstable `otel_metrics_ingestion` resource.
 
