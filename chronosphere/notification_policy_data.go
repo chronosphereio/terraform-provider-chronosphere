@@ -193,11 +193,10 @@ func notifierListGroupByToModel(notifierListGroupBy *RoutesNotifierListGroupBy) 
 	if notifierListGroupBy == nil {
 		return nil
 	}
-	routesGroupBy := &configmodels.NotificationPolicyRoutesGroupBy{}
-	if notifierListGroupBy.LabelNames != nil {
-		routesGroupBy.LabelNames = notifierListGroupBy.LabelNames
+
+	return &configmodels.NotificationPolicyRoutesGroupBy{
+		LabelNames: notifierListGroupBy.LabelNames,
 	}
-	return routesGroupBy
 }
 
 func routesFromModel(m *configmodels.NotificationPolicyRoutes) (*Routes, error) {
@@ -279,12 +278,9 @@ func routesNotifierListGroupByFromModel(m *configmodels.NotificationPolicyRoutes
 		return nil
 	}
 
-	routesGroupBy := &RoutesNotifierListGroupBy{}
-	if m.LabelNames != nil {
-		routesGroupBy.LabelNames = m.LabelNames
+	return &RoutesNotifierListGroupBy{
+		LabelNames: m.LabelNames,
 	}
-
-	return routesGroupBy
 }
 
 func notificationPolicyResponseToInlineData(res *notification_policy.ReadNotificationPolicyOK) (string, error) {
