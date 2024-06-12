@@ -87,8 +87,8 @@ type Resource struct {
 	// Only set if the resource is a singleton.
 	SingletonID string
 
-	// DryRun is a flag to indicate whether the resource supports dry run.
-	DryRun bool
+	// DisableDryRun is a flag to disable dry run for a resource.
+	DisableDryRun bool
 
 	// DisableExportImport silently disables all paginated list helpers by
 	// returning no results, thus preventing export-config/import-state from
@@ -160,91 +160,78 @@ var Resources = mustValidate([]Resource{
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.BlackholeAlertNotifier,
-		DryRun: true,
 	},
 	{
 		Name:   "bucket",
 		Entity: "Bucket",
 		API:    V1,
 		Schema: tfschema.Bucket,
-		DryRun: true,
 	},
 	{
 		Name:   "collection",
 		Entity: "Collection",
 		API:    V1,
 		Schema: tfschema.Collection,
-		DryRun: true,
 	},
 	{
 		Name:   "dashboard",
 		Entity: "Dashboard",
 		API:    V1,
 		Schema: tfschema.Dashboard,
-		DryRun: true,
 	},
 	{
 		Name:   "dataset",
 		Entity: "Dataset",
 		API:    V1,
 		Schema: tfschema.Dataset,
-		DryRun: true,
 	},
 	{
 		Name:   "derived_label",
 		Entity: "DerivedLabel",
 		API:    V1,
 		Schema: tfschema.DerivedLabel,
-		DryRun: true,
 	},
 	{
 		Name:   "derived_metric",
 		Entity: "DerivedMetric",
 		API:    V1,
 		Schema: tfschema.DerivedMetric,
-		DryRun: true,
 	},
 	{
 		Name:   "drop_rule",
 		Entity: "DropRule",
 		API:    V1,
 		Schema: tfschema.DropRule,
-		DryRun: true,
 	},
 	{
 		Name:   "email_alert_notifier",
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.EmailAlertNotifier,
-		DryRun: true,
 	},
 	{
 		Name:   "classic_dashboard",
 		Entity: "GrafanaDashboard",
 		API:    V1,
 		Schema: tfschema.ClassicDashboard,
-		DryRun: true,
 	},
 	{
 		Name:   "gcp_metrics_integration",
 		Entity: "GcpMetricsIntegration",
 		API:    V1,
 		Schema: tfschema.GcpMetricsIntegration,
-		DryRun: true,
 	},
 	{
 		Name:   "mapping_rule",
 		Entity: "MappingRule",
 		API:    V1,
 		Schema: tfschema.MappingRule,
-		DryRun: true,
 	},
 	{
 		Name:   "monitor",
 		Entity: "Monitor",
 		API:    V1,
 		Schema: tfschema.Monitor,
-		DryRun: true,
 	},
 	{
 		Name:   "notification_policy",
@@ -252,14 +239,12 @@ var Resources = mustValidate([]Resource{
 		API:    V1,
 		Schema: tfschema.NotificationPolicy,
 		// N.B. Notification Policies explicitly don't support ownership transfers.
-		DryRun: true,
 	},
 	{
 		Name:   "opsgenie_alert_notifier",
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.OpsgenieAlertNotifier,
-		DryRun: true,
 	},
 	{
 		Name:        "otel_metrics_ingestion",
@@ -267,21 +252,18 @@ var Resources = mustValidate([]Resource{
 		API:         Unstable,
 		Schema:      tfschema.OtelMetricsIngestion,
 		SingletonID: "otel_metrics_ingestion_singleton",
-		DryRun:      true,
 	},
 	{
 		Name:   "pagerduty_alert_notifier",
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.PagerdutyAlertNotifier,
-		DryRun: true,
 	},
 	{
 		Name:   "recording_rule",
 		Entity: "RecordingRule",
 		API:    V1,
 		Schema: tfschema.RecordingRule,
-		DryRun: true,
 	},
 	{
 		Name:        "resource_pools_config",
@@ -289,21 +271,18 @@ var Resources = mustValidate([]Resource{
 		API:         V1,
 		Schema:      tfschema.ResourcePoolsConfig,
 		SingletonID: "resource_pool_singleton",
-		DryRun:      true,
 	},
 	{
 		Name:   "rollup_rule",
 		Entity: "RollupRule",
 		API:    V1,
 		Schema: tfschema.RollupRule,
-		DryRun: true,
 	},
 	{
 		Name:              "service_account",
 		Entity:            "ServiceAccount",
 		API:               V1,
 		Schema:            tfschema.ServiceAccount,
-		DryRun:            true,
 		UpdateUnsupported: true,
 	},
 	{
@@ -311,41 +290,37 @@ var Resources = mustValidate([]Resource{
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.SlackAlertNotifier,
-		DryRun: true,
 	},
 	{
 		Name:   "team",
 		Entity: "Team",
 		API:    V1,
 		Schema: tfschema.Team,
-		DryRun: true,
 	},
 	{
-		Name:   "trace_metrics_rule",
-		Entity: "TraceMetricsRule",
-		API:    V1,
-		Schema: tfschema.TraceMetricsRule,
+		Name:          "trace_metrics_rule",
+		Entity:        "TraceMetricsRule",
+		API:           V1,
+		Schema:        tfschema.TraceMetricsRule,
+		DisableDryRun: true,
 	},
 	{
 		Name:   "trace_jaeger_remote_sampling_strategy",
 		Entity: "TraceJaegerRemoteSamplingStrategy",
 		API:    V1,
 		Schema: tfschema.TraceJaegerRemoteSamplingStrategy,
-		DryRun: true,
 	},
 	{
 		Name:   "victorops_alert_notifier",
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.VictoropsAlertNotifier,
-		DryRun: true,
 	},
 	{
 		Name:   "webhook_alert_notifier",
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.WebhookAlertNotifier,
-		DryRun: true,
 	},
 	{
 		Name:        "trace_tail_sampling_rules",
@@ -353,6 +328,5 @@ var Resources = mustValidate([]Resource{
 		API:         V1,
 		Schema:      tfschema.TraceTailSamplingRules,
 		SingletonID: "trace_tail_sampling_singleton",
-		DryRun:      true,
 	},
 })

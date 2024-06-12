@@ -89,7 +89,7 @@ type entityType struct {
 	FieldName            string
 	SwaggerClient        string
 	SwaggerClientPackage string
-	DryRun               bool
+	DisableDryRun        bool
 	UpdateUnsupported    bool
 	SingletonID          string
 	SingletonIDConst     string
@@ -103,7 +103,7 @@ func newEntityType(a api, r registry.Resource) entityType {
 		SwaggerModel:         r.Entity,
 		SwaggerClient:        fmt.Sprintf("%s.%s", a.Client, r.Entity),
 		SwaggerClientPackage: strcase.ToSnake(r.Entity),
-		DryRun:               r.DryRun,
+		DisableDryRun:        r.DisableDryRun,
 		UpdateUnsupported:    r.UpdateUnsupported,
 		SingletonID:          r.SingletonID,
 		SingletonIDConst:     fmt.Sprintf("%sID", r.Entity),
@@ -127,7 +127,7 @@ package chronosphere
 import (
 	"context"
 	{{ range .EntityTypes }}
-	{{ if not .DryRun }}
+	{{ if .DisableDryRun }}
 	"fmt"
 	{{ break }}
 	{{ end }}
@@ -166,7 +166,7 @@ func ({{.GoType}}) create(
 	m *{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}},
 	dryRun bool,
 ) (string, error) {
-	{{ if not .DryRun -}}
+	{{ if .DisableDryRun -}}
 	if dryRun {
 		return "", fmt.Errorf("dry run not supported for this entity type")
 	}
@@ -175,7 +175,7 @@ func ({{.GoType}}) create(
 		Context: ctx,
 		Body: &{{.API.Package}}models.{{.API.SwaggerPrefix}}Create{{.SwaggerType}}Request{
 			{{.SwaggerType}}: m,
-			{{ if .DryRun }} DryRun: dryRun, {{ end }}
+			{{ if not .DisableDryRun }} DryRun: dryRun, {{ end }}
 		},
 	}
 	resp, err := clients.{{.SwaggerClient}}.Create{{.SwaggerType}}(req)
@@ -214,7 +214,7 @@ func ({{.GoType}}) update(
 	m *{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}},
 	params updateParams,
 ) error {
-	{{ if not .DryRun -}}
+	{{ if .DisableDryRun -}}
 	if params.dryRun {
 		return fmt.Errorf("dry run not supported for this entity type")
 	}
@@ -231,7 +231,7 @@ func ({{.GoType}}) update(
 		{{ end }}
 			{{.SwaggerType}}: m,
 			CreateIfMissing: params.createIfMissing,
-			{{ if .DryRun }} DryRun: params.dryRun, {{ end }}
+			{{ if not .DisableDryRun }} DryRun: params.dryRun, {{ end }}
 		},
 	}
 	_, err := clients.{{.SwaggerClient}}.Update{{.SwaggerType}}(req)
