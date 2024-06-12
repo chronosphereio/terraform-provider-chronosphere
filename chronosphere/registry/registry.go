@@ -298,11 +298,10 @@ var Resources = mustValidate([]Resource{
 		Schema: tfschema.Team,
 	},
 	{
-		Name:          "trace_metrics_rule",
-		Entity:        "TraceMetricsRule",
-		API:           V1,
-		Schema:        tfschema.TraceMetricsRule,
-		DisableDryRun: true,
+		Name:   "trace_metrics_rule",
+		Entity: "TraceMetricsRule",
+		API:    V1,
+		Schema: tfschema.TraceMetricsRule,
 	},
 	{
 		Name:   "trace_jaeger_remote_sampling_strategy",
