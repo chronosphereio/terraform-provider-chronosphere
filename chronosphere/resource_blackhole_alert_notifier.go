@@ -30,11 +30,7 @@ func BlackholeAlertNotifierFromModel(
 }
 
 func resourceBlackHoleAlertNotifier() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1Notifier,
-		intschema.BlackholeAlertNotifier,
-		*intschema.BlackholeAlertNotifier,
-	](
+	r := newGenericResource(
 		"blackhole_alert_notifier",
 		blackholeAlertNotifierConverter{},
 		generatedNotifier{},

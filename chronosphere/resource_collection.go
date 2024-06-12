@@ -33,11 +33,7 @@ func CollectionFromModel(m *models.Configv1Collection) (*intschema.Collection, e
 }
 
 func resourceCollection() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1Collection,
-		intschema.Collection,
-		*intschema.Collection,
-	](
+	r := newGenericResource(
 		"collection",
 		collectionConverter{},
 		generatedCollection{},

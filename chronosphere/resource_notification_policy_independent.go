@@ -30,11 +30,7 @@ func newIndependentNotificationPolicy() genericResource[
 	intschema.NotificationPolicy,
 	*intschema.NotificationPolicy,
 ] {
-	return newGenericResource[
-		*models.Configv1NotificationPolicy,
-		intschema.NotificationPolicy,
-		*intschema.NotificationPolicy,
-	](
+	return newGenericResource(
 		"notification_policy",
 		independentNotificationPolicyConverter{},
 		generatedNotificationPolicy{})

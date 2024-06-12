@@ -48,12 +48,12 @@ func run() error {
 	}
 
 	var entityTypes []entityType
-	for _, e := range registry.StandardEntities(registry.V1) {
+	for _, e := range registry.AllEntities(registry.V1) {
 		entityTypes = append(entityTypes, newEntityType(v1, e))
 	}
 
 	includesUnstable := false
-	for _, e := range registry.StandardEntities(registry.Unstable) {
+	for _, e := range registry.AllEntities(registry.Unstable) {
 		entityTypes = append(entityTypes, newEntityType(unstable, e))
 		includesUnstable = true
 	}
@@ -91,6 +91,8 @@ type entityType struct {
 	SwaggerClientPackage string
 	DryRun               bool
 	UpdateUnsupported    bool
+	SingletonID          string
+	SingletonIDConst     string
 }
 
 func newEntityType(a api, r registry.Resource) entityType {
@@ -103,6 +105,8 @@ func newEntityType(a api, r registry.Resource) entityType {
 		SwaggerClientPackage: strcase.ToSnake(r.Entity),
 		DryRun:               r.DryRun,
 		UpdateUnsupported:    r.UpdateUnsupported,
+		SingletonID:          r.SingletonID,
+		SingletonIDConst:     fmt.Sprintf("%sID", r.Entity),
 	}
 
 	// special case for classic dashboards
@@ -141,17 +145,26 @@ import (
 
 {{ range .EntityTypes }}
 
-	type {{.GoType}} struct{}
+type {{.GoType}} struct{}
+
+{{ if .SingletonID -}}
+// {{.SingletonIDConst}} is the static ID of the global {{.SwaggerModel}} singleton.
+const {{.SingletonIDConst}} = "{{.SingletonID}}"
+{{- end }}
 
 func ({{.GoType}}) slugOf(m *{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}) string {
+	{{ if .SingletonID -}}
+	return {{.SingletonIDConst}}
+	{{- else -}}
 	return m.Slug
+	{{- end }}
 }
 
 func ({{.GoType}}) create(
 	ctx context.Context,
 	clients apiclients.Clients,
 	m *{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}},
-    dryRun bool,
+	dryRun bool,
 ) (string, error) {
 	{{ if not .DryRun -}}
 	if dryRun {
@@ -173,7 +186,7 @@ func ({{.GoType}}) create(
 	if e == nil {
 	  return "", nil
 	}
-	return e.Slug, nil
+	return ({{.GoType}}{}).slugOf(e), nil
 }
 
 func ({{.GoType}}) read(
@@ -183,7 +196,9 @@ func ({{.GoType}}) read(
 ) (*{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}, error) {
 	req := &{{.SwaggerClientPackage}}.Read{{.SwaggerType}}Params{
 		Context: ctx,
+		{{ if not .SingletonID -}}
 		Slug:    slug,
+		{{- end }}
 	}
 	resp, err := clients.{{.SwaggerClient}}.Read{{.SwaggerType}}(req)
 	if err != nil {
@@ -206,8 +221,14 @@ func ({{.GoType}}) update(
 	{{ end -}}
 	req := &{{.SwaggerClientPackage}}.Update{{.SwaggerType}}Params{
 		Context: ctx,
+		{{ if not .SingletonID -}}
 		Slug:    m.Slug,
+		{{- end }}
+		{{ if not .SingletonID }}
 		Body: &{{.API.Package}}models.{{.API.Client}}Update{{.SwaggerType}}Body{
+		{{ else }}
+		Body: &{{.API.Package}}models.{{.API.SwaggerPrefix}}Update{{.SwaggerType}}Request{
+		{{ end }}
 			{{.SwaggerType}}: m,
 			CreateIfMissing: params.createIfMissing,
 			{{ if .DryRun }} DryRun: params.dryRun, {{ end }}
@@ -225,7 +246,9 @@ func ({{.GoType}}) delete(
 ) error {
 	req := &{{.SwaggerClientPackage}}.Delete{{.SwaggerType}}Params{
 		Context: ctx,
+		{{ if not .SingletonID -}}
 		Slug:    slug,
+		{{- end }}
 	}
 	_, err := clients.{{.SwaggerClient}}.Delete{{.SwaggerType}}(req)
 	return err

@@ -29,11 +29,7 @@ func TraceJaegerRemoteSamplingStrategyFromModel(
 }
 
 func resourceTraceJRSStrategy() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1TraceJaegerRemoteSamplingStrategy,
-		intschema.TraceJaegerRemoteSamplingStrategy,
-		*intschema.TraceJaegerRemoteSamplingStrategy,
-	](
+	r := newGenericResource(
 		"trace_jaeger_remote_sampling_strategy",
 		traceJRSConverter{},
 		generatedTraceJaegerRemoteSamplingStrategy{},

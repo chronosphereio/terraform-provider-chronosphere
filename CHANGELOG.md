@@ -2,13 +2,21 @@
 
 ## Unreleased
 
+## v1.1.0
+
 Added:
- * Add unstable `otel_metrics_ingestion` resource.
+ * Add unstable `chronosphere_otel_metrics_ingestion` resource.
+ * Add server-side validation support for `chronosphere_trace_tail_sampling_rules`
  * Add `group_by` to `notification_routes` in `notification_policy` resource.
 
 Deprecated:
  * `proxy_url` is deprecated in alert receivers.
  * `chronosphere_mapping_rule.drop_timestamp` is deprecated.
+
+Bug fixes:
+* Fixed bug where `chronosphere_resource_pools_config` would not allow certain combinations
+  of allocation percents due to float arithmetic not adding to exactly 100%. TF now relies
+  on server-side validation of pools.
 
 ## v1.0.0
 
