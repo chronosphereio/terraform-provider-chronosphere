@@ -22,10 +22,14 @@ type MonitorSeriesCondition struct {
 }
 
 type NotificationRoute struct {
-	Severity       string    `intschema:"severity"`
-	GroupBy        []string  `intschema:"group_by,optional"`
-	Notifiers      []tfid.ID `intschema:"notifiers,optional"`
-	RepeatInterval string    `intschema:"repeat_interval,optional"`
+	Severity       string                    `intschema:"severity"`
+	GroupBy        *NotificationRouteGroupBy `intschema:"group_by,optional,list_encoded_object"`
+	Notifiers      []tfid.ID                 `intschema:"notifiers,optional"`
+	RepeatInterval string                    `intschema:"repeat_interval,optional"`
+}
+
+type NotificationRouteGroupBy struct {
+	LabelNames []string `intschema:"label_names,optional"`
 }
 
 type ResourcePoolAllocationSchema struct {

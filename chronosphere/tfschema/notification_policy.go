@@ -87,8 +87,17 @@ var NotificationRouteSchema = typeset.Set{
 		},
 		"group_by": typeset.NotNormalized(&schema.Schema{
 			Type:     schema.TypeList,
+			MaxItems: 1,
 			Optional: true,
-			Elem:     &schema.Schema{Type: schema.TypeString},
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"label_names": {
+						Type:     schema.TypeList,
+						Optional: true,
+						Elem:     &schema.Schema{Type: schema.TypeString},
+					},
+				},
+			},
 		}),
 	},
 }.Schema()

@@ -156,19 +156,19 @@ func notificationRouteToGroupByModel(r intschema.NotificationRoute) *models.Noti
 	if r.GroupBy == nil {
 		return nil
 	}
+
 	return &models.NotificationPolicyRoutesGroupBy{
-		LabelNames: r.GroupBy,
+		LabelNames: r.GroupBy.LabelNames,
 	}
 }
 
-func notificationRouteFromGroupByModel(f *models.RoutesNotifierList) []string {
-	if f == nil {
+func notificationRouteFromGroupByModel(f *models.RoutesNotifierList) *intschema.NotificationRouteGroupBy {
+	if f == nil || f.GroupBy == nil {
 		return nil
 	}
-	if f.GroupBy != nil {
-		return f.GroupBy.LabelNames
+	return &intschema.NotificationRouteGroupBy{
+		LabelNames: f.GroupBy.LabelNames,
 	}
-	return []string{}
 }
 
 func notificationOverrideToModel(
