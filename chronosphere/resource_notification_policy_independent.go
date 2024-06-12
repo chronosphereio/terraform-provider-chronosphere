@@ -116,7 +116,7 @@ func notificationRoutesToModel(
 		bySev[sev] = &models.RoutesNotifierList{
 			NotifierSlugs:      sliceutil.Map(r.Notifiers, (tfid.ID).Slug),
 			RepeatIntervalSecs: intervalSecs,
-			GroupBy:            notificationRouteToGroupByModel(r),
+			GroupBy:            notificationRouteGroupByToModel(r.GroupBy),
 		}
 	}
 	return &models.RoutesSeverityNotifiers{
@@ -140,7 +140,7 @@ func notificationRoutesFromModel(
 			Severity:       sev,
 			Notifiers:      sliceutil.Map(f.NotifierSlugs, tfid.Slug),
 			RepeatInterval: durationFromSecs(f.RepeatIntervalSecs),
-			GroupBy:        notificationRouteFromGroupByModel(f),
+			GroupBy:        notificationRouteGroupByFromModel(f.GroupBy),
 		})
 	}
 	load(warn, m.Warn)
@@ -148,22 +148,21 @@ func notificationRoutesFromModel(
 	return out
 }
 
-func notificationRouteToGroupByModel(r intschema.NotificationRoute) *models.NotificationPolicyRoutesGroupBy {
-	if r.GroupBy == nil {
+func notificationRouteGroupByToModel(g *intschema.NotificationRouteGroupBy) *models.NotificationPolicyRoutesGroupBy {
+	if g == nil {
 		return nil
 	}
-
 	return &models.NotificationPolicyRoutesGroupBy{
-		LabelNames: r.GroupBy.LabelNames,
+		LabelNames: g.LabelNames,
 	}
 }
 
-func notificationRouteFromGroupByModel(f *models.RoutesNotifierList) *intschema.NotificationRouteGroupBy {
-	if f == nil || f.GroupBy == nil {
+func notificationRouteGroupByFromModel(g *models.NotificationPolicyRoutesGroupBy) *intschema.NotificationRouteGroupBy {
+	if g == nil {
 		return nil
 	}
 	return &intschema.NotificationRouteGroupBy{
-		LabelNames: f.GroupBy.LabelNames,
+		LabelNames: g.LabelNames,
 	}
 }
 
