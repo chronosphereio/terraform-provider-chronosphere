@@ -4,8 +4,6 @@ package chronosphere
 import (
 	"context"
 
-	"fmt"
-
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/otel_metrics_ingestion"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
@@ -1526,13 +1524,11 @@ func (generatedTraceMetricsRule) create(
 	m *configv1models.Configv1TraceMetricsRule,
 	dryRun bool,
 ) (string, error) {
-	if dryRun {
-		return "", fmt.Errorf("dry run not supported for this entity type")
-	}
 	req := &trace_metrics_rule.CreateTraceMetricsRuleParams{
 		Context: ctx,
 		Body: &configv1models.Configv1CreateTraceMetricsRuleRequest{
 			TraceMetricsRule: m,
+			DryRun:           dryRun,
 		},
 	}
 	resp, err := clients.ConfigV1.TraceMetricsRule.CreateTraceMetricsRule(req)
@@ -1568,9 +1564,6 @@ func (generatedTraceMetricsRule) update(
 	m *configv1models.Configv1TraceMetricsRule,
 	params updateParams,
 ) error {
-	if params.dryRun {
-		return fmt.Errorf("dry run not supported for this entity type")
-	}
 	req := &trace_metrics_rule.UpdateTraceMetricsRuleParams{
 		Context: ctx,
 		Slug:    m.Slug,
@@ -1579,6 +1572,7 @@ func (generatedTraceMetricsRule) update(
 
 			TraceMetricsRule: m,
 			CreateIfMissing:  params.createIfMissing,
+			DryRun:           params.dryRun,
 		},
 	}
 	_, err := clients.ConfigV1.TraceMetricsRule.UpdateTraceMetricsRule(req)

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+ * Add server-side dry-run validation support for `chronosphere_trace_metrics_rule`.
+
 ## v1.1.0
 
 Added:
