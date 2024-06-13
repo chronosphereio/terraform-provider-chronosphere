@@ -5,6 +5,9 @@ resource "chronosphere_notification_policy" "np" {
   route {
     severity  = "warn"
     notifiers = [chronosphere_email_alert_notifier.email.id]
+    group_by {
+      label_names = ["example-attribute"]
+    }
   }
 }
 

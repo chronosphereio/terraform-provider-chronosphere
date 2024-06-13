@@ -7,6 +7,7 @@
 Added:
  * Add unstable `chronosphere_otel_metrics_ingestion` resource.
  * Add server-side validation support for `chronosphere_trace_tail_sampling_rules`
+ * Add `group_by` to `notification_routes` in `notification_policy` resource.
 
 Deprecated:
  * `proxy_url` is deprecated in alert receivers.
