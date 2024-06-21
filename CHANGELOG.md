@@ -5,6 +5,9 @@
 Added:
  * Add server-side dry-run validation support for `chronosphere_trace_metrics_rule`.
 
+Fixed:
+ * Reduce plan errors caused by dry-run concurrency.
+
 ## v1.1.0
 
 Added:

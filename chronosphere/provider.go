@@ -173,10 +173,9 @@ func composeMutationsReadResources(resources map[string]*schema.Resource) {
 	}
 }
 
-// mutexProtectedResources updates all the given resources, intercepting each
-// create, update, and delete resource function to first acquire a provider-scoped mutex.
-// This guards against the server being extremely sensitive to even low levels of concurrent request
-// to change alert-related config.
+// mutexProtectedResources updates all the given resources to limit concurrent calls to create/update/delete
+// including dry-run calls (in CustomizeDiff).
+// This limits load on the server, and reduces the likelihood of slug clashes.
 func mutexProtectedResources(resources map[string]*schema.Resource) {
 	if allowConcurrentMutations() {
 		return
@@ -201,6 +200,15 @@ func mutexProtectedResources(resources map[string]*schema.Resource) {
 			resource.UpdateContext = locked(resource.UpdateContext)
 		}
 		resource.DeleteContext = locked(resource.DeleteContext)
+
+		if originalCustomizeDiff := resource.CustomizeDiff; originalCustomizeDiff != nil {
+			resource.CustomizeDiff = func(ctx context.Context, rd *schema.ResourceDiff, i interface{}) error {
+				mu.Lock()
+				defer mu.Unlock()
+
+				return originalCustomizeDiff(ctx, rd, i)
+			}
+		}
 	}
 }
 
