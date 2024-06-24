@@ -43,6 +43,7 @@ var sharedSchemaTypeNames = map[*schema.Schema]string{
 	tfschema.MonitorSeriesConditionSchema: "MonitorSeriesCondition",
 	tfschema.ResourcePoolAllocationSchema: "ResourcePoolAllocationSchema",
 	tfschema.ResourcePoolPrioritiesSchema: "ResourcePoolPrioritiesSchema",
+	tfschema.LogAllocationConfigSchema:    "LogAllocationConfigSchema",
 	tfschema.TraceBoolFilterSchema:        "TraceBoolFilter",
 	tfschema.TraceDurationFilterSchema:    "TraceDurationFilter",
 	tfschema.TraceFilterSchema:            "TraceFilter",

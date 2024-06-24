@@ -7,6 +7,8 @@
 Added:
 * Add unstable `chronosphere_logscale_alert` resource.
 * Add unstable `chronosphere_logscale_action` resource.
+* Add unstable `chronosphere_log_allocation_config` resource.
+* Add support for `LOGS` type `dataset` resource.
 
 ## v1.2.0
 

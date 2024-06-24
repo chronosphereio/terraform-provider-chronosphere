@@ -7,6 +7,10 @@ import (
 
 var _ tfid.ID // Always use tfid for simplified import generation.
 
+type LogAllocationConfigSchema struct {
+	PercentOfLicense float64 `intschema:"percent_of_license"`
+}
+
 type Matcher struct {
 	Name  string `intschema:"name"`
 	Type  string `intschema:"type"`

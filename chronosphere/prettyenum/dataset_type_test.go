@@ -38,6 +38,14 @@ func TestDatasetType(t *testing.T) {
 			model: models.DatasetDatasetTypeTRACES,
 		},
 		{
+			raw:   "logs",
+			model: models.DatasetDatasetTypeLOGS,
+		},
+		{
+			raw:   "LOGS",
+			model: models.DatasetDatasetTypeLOGS,
+		},
+		{
 			raw:    "bad",
 			expErr: errors.New("invalid dataset type: bad"),
 		},
@@ -64,6 +72,10 @@ func TestDatasetTypeFromModel(t *testing.T) {
 		{
 			model:    models.DatasetDatasetTypeTRACES,
 			expected: DatasetDatasetTypeTracesModel,
+		},
+		{
+			model:    models.DatasetDatasetTypeLOGS,
+			expected: DatasetDatasetTypeLogsModel,
 		},
 	}
 
