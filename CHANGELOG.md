@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+## v1.2.0
+
 Added:
  * Add server-side dry-run validation support for `chronosphere_trace_metrics_rule`.
+ * Add `group_by` to `notification_routes` in `notification_policy` resource.
 
 Fixed:
  * Reduce plan errors caused by dry-run concurrency.
@@ -13,7 +16,6 @@ Fixed:
 Added:
  * Add unstable `chronosphere_otel_metrics_ingestion` resource.
  * Add server-side validation support for `chronosphere_trace_tail_sampling_rules`
- * Add `group_by` to `notification_routes` in `notification_policy` resource.
 
 Deprecated:
  * `proxy_url` is deprecated in alert receivers.
