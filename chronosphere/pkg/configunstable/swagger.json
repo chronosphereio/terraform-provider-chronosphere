@@ -485,6 +485,13 @@
       },
       "type": "object"
     },
+    "LogScaleAlertAlertType": {
+      "enum": [
+        "STANDARD",
+        "FILTER"
+      ],
+      "type": "string"
+    },
     "NoopEntityNestedEnum": {
       "enum": [
         "ENABLED"
@@ -1740,7 +1747,7 @@
         "description": {
           "type": "string"
         },
-        "enabled": {
+        "disabled": {
           "type": "boolean"
         },
         "log_scale_query": {
@@ -1756,6 +1763,10 @@
           "format": "int32",
           "type": "integer"
         },
+        "throttle_field": {
+          "description": "Optional field to throttle by.",
+          "type": "string"
+        },
         "log_scale_action_slugs": {
           "description": "Optional. When value is empty this alert will not trigger anything.",
           "items": {
@@ -1768,6 +1779,13 @@
             "type": "string"
           },
           "type": "array"
+        },
+        "run_as_user": {
+          "description": "Email of the user that the alert runs on behalf of",
+          "type": "string"
+        },
+        "alert_type": {
+          "$ref": "#/definitions/LogScaleAlertAlertType"
         }
       },
       "type": "object"
@@ -3475,6 +3493,16 @@
               "type": "string"
             },
             "name": "slugs",
+            "type": "array"
+          },
+          {
+            "collectionFormat": "multi",
+            "description": "Filters results by name, where any LogScaleAction with a matching name in the given list (and matches all other filters) is returned.",
+            "in": "query",
+            "items": {
+              "type": "string"
+            },
+            "name": "names",
             "type": "array"
           }
         ],

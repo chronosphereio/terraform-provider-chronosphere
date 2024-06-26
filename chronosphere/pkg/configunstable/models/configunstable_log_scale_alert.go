@@ -19,6 +19,9 @@ import (
 // swagger:model configunstableLogScaleAlert
 type ConfigunstableLogScaleAlert struct {
 
+	// alert type
+	AlertType LogScaleAlertAlertType `json:"alert_type,omitempty"`
+
 	// Timestamp of when the LogScaleAlert was created. Cannot be set by clients.
 	// Read Only: true
 	// Format: date-time
@@ -27,8 +30,8 @@ type ConfigunstableLogScaleAlert struct {
 	// description
 	Description string `json:"description,omitempty"`
 
-	// enabled
-	Enabled bool `json:"enabled,omitempty"`
+	// disabled
+	Disabled bool `json:"disabled,omitempty"`
 
 	// Optional. When value is empty this alert will not trigger anything.
 	LogScaleActionSlugs []string `json:"log_scale_action_slugs"`
@@ -42,11 +45,17 @@ type ConfigunstableLogScaleAlert struct {
 	// repository
 	Repository string `json:"repository,omitempty"`
 
+	// Email of the user that the alert runs on behalf of
+	RunAsUser string `json:"run_as_user,omitempty"`
+
 	// Unique identifier of the LogScaleAlert. If slug is not provided, one will be generated based of the name field. Cannot be modified after the LogScaleAlert is created.
 	Slug string `json:"slug,omitempty"`
 
 	// tags
 	Tags []string `json:"tags"`
+
+	// Optional field to throttle by.
+	ThrottleField string `json:"throttle_field,omitempty"`
 
 	// The alert is triggered at most once per throttle period.
 	ThrottleSecs int32 `json:"throttle_secs,omitempty"`
@@ -65,6 +74,10 @@ type ConfigunstableLogScaleAlert struct {
 func (m *ConfigunstableLogScaleAlert) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAlertType(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCreatedAt(formats); err != nil {
 		res = append(res, err)
 	}
@@ -76,6 +89,23 @@ func (m *ConfigunstableLogScaleAlert) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *ConfigunstableLogScaleAlert) validateAlertType(formats strfmt.Registry) error {
+	if swag.IsZero(m.AlertType) { // not required
+		return nil
+	}
+
+	if err := m.AlertType.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("alert_type")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("alert_type")
+		}
+		return err
+	}
+
 	return nil
 }
 
@@ -107,6 +137,10 @@ func (m *ConfigunstableLogScaleAlert) validateUpdatedAt(formats strfmt.Registry)
 func (m *ConfigunstableLogScaleAlert) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateAlertType(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -118,6 +152,20 @@ func (m *ConfigunstableLogScaleAlert) ContextValidate(ctx context.Context, forma
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *ConfigunstableLogScaleAlert) contextValidateAlertType(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.AlertType.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("alert_type")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("alert_type")
+		}
+		return err
+	}
+
 	return nil
 }
 
