@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+* Add unstable `chronosphere_log_allocation_config` resource.
+
 ## v1.2.0
 
 Added:

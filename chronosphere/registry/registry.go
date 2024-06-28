@@ -328,4 +328,11 @@ var Resources = mustValidate([]Resource{
 		Schema:      tfschema.TraceTailSamplingRules,
 		SingletonID: "trace_tail_sampling_singleton",
 	},
+	{
+		Name:        "log_allocation_config",
+		Entity:      "LogAllocationConfig",
+		API:         Unstable,
+		Schema:      tfschema.LogAllocationConfig,
+		SingletonID: "log_allocation_config_singleton",
+	},
 })
