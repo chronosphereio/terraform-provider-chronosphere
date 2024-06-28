@@ -64,6 +64,8 @@ func Provider() *schema.Provider {
 		"chronosphere_derived_label":                         resourceDerivedLabel(),
 		"chronosphere_dataset":                               resourceDataset(),
 		"chronosphere_otel_metrics_ingestion":                resourceOtelMetricsIngestion(),
+		"chronosphere_logscale_alert":                        resourceLogscaleAlert(),
+		"chronosphere_logscale_action":                       resourceLogscaleAction(),
 	}
 
 	// Apply common CRUD wrappers to all resources.

@@ -3,6 +3,10 @@ package pagination
 
 import (
 	"context"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_action"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_alert"
+	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
@@ -25,6 +29,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
 	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/unstable"
 )
 
 func ListBuckets(
@@ -1394,6 +1399,150 @@ func ListClassicDashboardsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.ClassicDashboards {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListUnstableLogScaleActions(
+	ctx context.Context,
+	client *configunstable.Client,
+) ([]*configunstablemodels.ConfigunstableLogScaleAction, error) {
+	return ListUnstableLogScaleActionsByFilter(ctx, client, Filter{})
+}
+
+func ListUnstableLogScaleActionsBySlugs(
+	ctx context.Context,
+	client *configunstable.Client,
+	slugs []string,
+) ([]*configunstablemodels.ConfigunstableLogScaleAction, error) {
+	return ListUnstableLogScaleActionsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListUnstableLogScaleActionsByNames(
+	ctx context.Context,
+	client *configunstable.Client,
+	names []string,
+) ([]*configunstablemodels.ConfigunstableLogScaleAction, error) {
+	return ListUnstableLogScaleActionsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListUnstableLogScaleActionsByFilter(
+	ctx context.Context,
+	client *configunstable.Client,
+	f Filter,
+	opts ...func(*log_scale_action.ListLogScaleActionsParams),
+) ([]*configunstablemodels.ConfigunstableLogScaleAction, error) {
+	if !unstable.Enabled() {
+		return nil, nil
+	}
+	var (
+		nextToken string
+		result    []*configunstablemodels.ConfigunstableLogScaleAction
+	)
+	for {
+		p := &log_scale_action.ListLogScaleActionsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.LogScaleAction.ListLogScaleActions(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.LogScaleActions {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListUnstableLogScaleAlerts(
+	ctx context.Context,
+	client *configunstable.Client,
+) ([]*configunstablemodels.ConfigunstableLogScaleAlert, error) {
+	return ListUnstableLogScaleAlertsByFilter(ctx, client, Filter{})
+}
+
+func ListUnstableLogScaleAlertsBySlugs(
+	ctx context.Context,
+	client *configunstable.Client,
+	slugs []string,
+) ([]*configunstablemodels.ConfigunstableLogScaleAlert, error) {
+	return ListUnstableLogScaleAlertsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListUnstableLogScaleAlertsByNames(
+	ctx context.Context,
+	client *configunstable.Client,
+	names []string,
+) ([]*configunstablemodels.ConfigunstableLogScaleAlert, error) {
+	return ListUnstableLogScaleAlertsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListUnstableLogScaleAlertsByFilter(
+	ctx context.Context,
+	client *configunstable.Client,
+	f Filter,
+	opts ...func(*log_scale_alert.ListLogScaleAlertsParams),
+) ([]*configunstablemodels.ConfigunstableLogScaleAlert, error) {
+	if !unstable.Enabled() {
+		return nil, nil
+	}
+	var (
+		nextToken string
+		result    []*configunstablemodels.ConfigunstableLogScaleAlert
+	)
+	for {
+		p := &log_scale_alert.ListLogScaleAlertsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.LogScaleAlert.ListLogScaleAlerts(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.LogScaleAlerts {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {

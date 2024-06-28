@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Added:
+* Add unstable `chronosphere_logscale_alert` resource.
+* Add unstable `chronosphere_logscale_action` resource.
+
 ## v1.2.0
 
 Added:

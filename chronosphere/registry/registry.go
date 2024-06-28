@@ -328,4 +328,16 @@ var Resources = mustValidate([]Resource{
 		Schema:      tfschema.TraceTailSamplingRules,
 		SingletonID: "trace_tail_sampling_singleton",
 	},
+	{
+		Name:   "logscale_alert",
+		Entity: "LogScaleAlert",
+		API:    Unstable,
+		Schema: tfschema.LogscaleAlert,
+	},
+	{
+		Name:   "logscale_action",
+		Entity: "LogScaleAction",
+		API:    Unstable,
+		Schema: tfschema.LogscaleAction,
+	},
 })
