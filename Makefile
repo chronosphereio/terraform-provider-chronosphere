@@ -42,13 +42,18 @@ install-tools:
 	  GOBIN=$(TOOLS_BIN) go install $(GOFLAGS) github.com/chronosphereio/terraform-provider-chronosphere/$(path); )
 
 .PHONY: generate
-generate: install-tools
+generate: install-tools generate-docs
 	$(GO_GENERATE) ./...
 
 # subset of generate that skips swagger since swagger is slow to generate.
 .PHONY: generate-no-swagger
-generate-no-swagger: install-tools
+generate-no-swagger: install-tools generate-docs
 	$(GO_GENERATE) ./chronosphere ./chronosphere/intschema ./chronosphere/pagination
+
+.PHONY: generate-docs
+generate-docs: install-tools
+	@echo "--- generating terraform provider docs"
+	GOFLAGS=$(GOFLAGS) $(TOOLS_BIN)/tfplugindocs generate --examples-dir examples --provider-name chronosphere
 
 .PHONY: test-generate
 test-generate: generate
