@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // NewCreateTraceBehaviorConfigParams creates a new CreateTraceBehaviorConfigParams object,
@@ -64,7 +64,7 @@ CreateTraceBehaviorConfigParams contains all the parameters to send to the API e
 type CreateTraceBehaviorConfigParams struct {
 
 	// Body.
-	Body *models.ConfigunstableCreateTraceBehaviorConfigRequest
+	Body *models.Configv1CreateTraceBehaviorConfigRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -120,13 +120,13 @@ func (o *CreateTraceBehaviorConfigParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the create trace behavior config params
-func (o *CreateTraceBehaviorConfigParams) WithBody(body *models.ConfigunstableCreateTraceBehaviorConfigRequest) *CreateTraceBehaviorConfigParams {
+func (o *CreateTraceBehaviorConfigParams) WithBody(body *models.Configv1CreateTraceBehaviorConfigRequest) *CreateTraceBehaviorConfigParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the create trace behavior config params
-func (o *CreateTraceBehaviorConfigParams) SetBody(body *models.ConfigunstableCreateTraceBehaviorConfigRequest) {
+func (o *CreateTraceBehaviorConfigParams) SetBody(body *models.Configv1CreateTraceBehaviorConfigRequest) {
 	o.Body = body
 }
 

@@ -15,11 +15,15 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// ConfigunstableTraceBehaviorConfig TraceBehaviorConfig is a singleton configuration object that specifies the
+// Configv1TraceBehaviorConfig TraceBehaviorConfig is a singleton configuration object that specifies the
 // configuration for trace behaviors.
 //
-// swagger:model configunstableTraceBehaviorConfig
-type ConfigunstableTraceBehaviorConfig struct {
+// swagger:model configv1TraceBehaviorConfig
+type Configv1TraceBehaviorConfig struct {
+
+	// The baseline behavior to use for behavior assignments and base head sampling rates. Must reference a
+	// TraceBehavior entity with type: TYPE_BASELINE.
+	BaselineBehaviorSlug string `json:"baseline_behavior_slug,omitempty"`
 
 	// Timestamp of when the TraceBehaviorConfig was created. Cannot be set by clients.
 	// Read Only: true
@@ -37,21 +41,20 @@ type ConfigunstableTraceBehaviorConfig struct {
 	// * The list may contain datasets that are not referenced in either of the above.
 	DatasetPriorities []string `json:"dataset_priorities"`
 
-	// List of Main Behavior Assignments. The datasets referenced here are the
-	// datasets considered to be 'enrolled' in behaviors. The behaviors referenced
-	// here are the active behaviors for the dataset when there is no override in
-	// place.
-	// * There can only be one main behavior assignment per dataset.
-	// * There can only be one TraceBehavior referenced that has the type field
-	// set to TYPE_BASELINE.
+	// List of assignments for the main behavior. The referenced datasets are datasets
+	// to be enrolled in behaviors. The referenced behaviors are the active behaviors
+	// for the dataset when there is no override in place.
+	// * Only one main behavior can be assigned to a dataset.
+	// * Only one referenced `TraceBehavior` with `type` field set to `TYPE_BASELINE` can
+	// be set, which must match the slug referenced by `baseline_behavior_slug`.
 	MainBehaviorAssignments []*TraceBehaviorConfigMainBehaviorAssignment `json:"main_behavior_assignments"`
 
-	// List of OverrideBehaviorAssignments. OverrideBehaviorAssignments are used to
+	// List of assignments for the override behavior. OverrideBehaviorAssignments are used to
 	// specify the active behavior for a dataset over a specific time range.
-	// * There can only be one override assignment for each Dataset.
-	// * There can only be one TraceBehavior referenced that has the type field
-	// set to TYPE_BASELINE, and it must be the same as the one in the
-	// main_behavior_assignments list.
+	// * Only one override behavior can be assigned to a dataset.
+	// * Only one referenced `TraceBehavior` with `type` field set to `TYPE_BASELINE` can
+	// be set, which must match the slug referenced by `baseline_behavior_slug`, and any
+	// baseline behavior referenced in `main_behavior_assignments`.
 	OverrideBehaviorAssignments []*TraceBehaviorConfigOverrideBehaviorAssignment `json:"override_behavior_assignments"`
 
 	// Timestamp of when the TraceBehaviorConfig was last updated. Cannot be set by clients.
@@ -60,8 +63,8 @@ type ConfigunstableTraceBehaviorConfig struct {
 	UpdatedAt strfmt.DateTime `json:"updated_at,omitempty"`
 }
 
-// Validate validates this configunstable trace behavior config
-func (m *ConfigunstableTraceBehaviorConfig) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 trace behavior config
+func (m *Configv1TraceBehaviorConfig) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCreatedAt(formats); err != nil {
@@ -86,7 +89,7 @@ func (m *ConfigunstableTraceBehaviorConfig) Validate(formats strfmt.Registry) er
 	return nil
 }
 
-func (m *ConfigunstableTraceBehaviorConfig) validateCreatedAt(formats strfmt.Registry) error {
+func (m *Configv1TraceBehaviorConfig) validateCreatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.CreatedAt) { // not required
 		return nil
 	}
@@ -98,7 +101,7 @@ func (m *ConfigunstableTraceBehaviorConfig) validateCreatedAt(formats strfmt.Reg
 	return nil
 }
 
-func (m *ConfigunstableTraceBehaviorConfig) validateMainBehaviorAssignments(formats strfmt.Registry) error {
+func (m *Configv1TraceBehaviorConfig) validateMainBehaviorAssignments(formats strfmt.Registry) error {
 	if swag.IsZero(m.MainBehaviorAssignments) { // not required
 		return nil
 	}
@@ -124,7 +127,7 @@ func (m *ConfigunstableTraceBehaviorConfig) validateMainBehaviorAssignments(form
 	return nil
 }
 
-func (m *ConfigunstableTraceBehaviorConfig) validateOverrideBehaviorAssignments(formats strfmt.Registry) error {
+func (m *Configv1TraceBehaviorConfig) validateOverrideBehaviorAssignments(formats strfmt.Registry) error {
 	if swag.IsZero(m.OverrideBehaviorAssignments) { // not required
 		return nil
 	}
@@ -150,7 +153,7 @@ func (m *ConfigunstableTraceBehaviorConfig) validateOverrideBehaviorAssignments(
 	return nil
 }
 
-func (m *ConfigunstableTraceBehaviorConfig) validateUpdatedAt(formats strfmt.Registry) error {
+func (m *Configv1TraceBehaviorConfig) validateUpdatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.UpdatedAt) { // not required
 		return nil
 	}
@@ -162,8 +165,8 @@ func (m *ConfigunstableTraceBehaviorConfig) validateUpdatedAt(formats strfmt.Reg
 	return nil
 }
 
-// ContextValidate validate this configunstable trace behavior config based on the context it is used
-func (m *ConfigunstableTraceBehaviorConfig) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 trace behavior config based on the context it is used
+func (m *Configv1TraceBehaviorConfig) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
@@ -188,7 +191,7 @@ func (m *ConfigunstableTraceBehaviorConfig) ContextValidate(ctx context.Context,
 	return nil
 }
 
-func (m *ConfigunstableTraceBehaviorConfig) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1TraceBehaviorConfig) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
 		return err
@@ -197,7 +200,7 @@ func (m *ConfigunstableTraceBehaviorConfig) contextValidateCreatedAt(ctx context
 	return nil
 }
 
-func (m *ConfigunstableTraceBehaviorConfig) contextValidateMainBehaviorAssignments(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1TraceBehaviorConfig) contextValidateMainBehaviorAssignments(ctx context.Context, formats strfmt.Registry) error {
 
 	for i := 0; i < len(m.MainBehaviorAssignments); i++ {
 
@@ -217,7 +220,7 @@ func (m *ConfigunstableTraceBehaviorConfig) contextValidateMainBehaviorAssignmen
 	return nil
 }
 
-func (m *ConfigunstableTraceBehaviorConfig) contextValidateOverrideBehaviorAssignments(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1TraceBehaviorConfig) contextValidateOverrideBehaviorAssignments(ctx context.Context, formats strfmt.Registry) error {
 
 	for i := 0; i < len(m.OverrideBehaviorAssignments); i++ {
 
@@ -237,7 +240,7 @@ func (m *ConfigunstableTraceBehaviorConfig) contextValidateOverrideBehaviorAssig
 	return nil
 }
 
-func (m *ConfigunstableTraceBehaviorConfig) contextValidateUpdatedAt(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1TraceBehaviorConfig) contextValidateUpdatedAt(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "updated_at", "body", strfmt.DateTime(m.UpdatedAt)); err != nil {
 		return err
@@ -247,7 +250,7 @@ func (m *ConfigunstableTraceBehaviorConfig) contextValidateUpdatedAt(ctx context
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableTraceBehaviorConfig) MarshalBinary() ([]byte, error) {
+func (m *Configv1TraceBehaviorConfig) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -255,8 +258,8 @@ func (m *ConfigunstableTraceBehaviorConfig) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableTraceBehaviorConfig) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableTraceBehaviorConfig
+func (m *Configv1TraceBehaviorConfig) UnmarshalBinary(b []byte) error {
+	var res Configv1TraceBehaviorConfig
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

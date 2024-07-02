@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // UpdateTraceBehaviorConfigReader is a Reader for the UpdateTraceBehaviorConfig structure.
@@ -70,7 +70,7 @@ UpdateTraceBehaviorConfigOK describes a response with status code 200, with defa
 A successful response containing the updated TraceBehaviorConfig.
 */
 type UpdateTraceBehaviorConfigOK struct {
-	Payload *models.ConfigunstableUpdateTraceBehaviorConfigResponse
+	Payload *models.Configv1UpdateTraceBehaviorConfigResponse
 }
 
 // IsSuccess returns true when this update trace behavior config o k response has a 2xx status code
@@ -104,20 +104,20 @@ func (o *UpdateTraceBehaviorConfigOK) Code() int {
 }
 
 func (o *UpdateTraceBehaviorConfigOK) Error() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/trace-behavior-config][%d] updateTraceBehaviorConfigOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/trace-behavior-config][%d] updateTraceBehaviorConfigOK  %+v", 200, o.Payload)
 }
 
 func (o *UpdateTraceBehaviorConfigOK) String() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/trace-behavior-config][%d] updateTraceBehaviorConfigOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/trace-behavior-config][%d] updateTraceBehaviorConfigOK  %+v", 200, o.Payload)
 }
 
-func (o *UpdateTraceBehaviorConfigOK) GetPayload() *models.ConfigunstableUpdateTraceBehaviorConfigResponse {
+func (o *UpdateTraceBehaviorConfigOK) GetPayload() *models.Configv1UpdateTraceBehaviorConfigResponse {
 	return o.Payload
 }
 
 func (o *UpdateTraceBehaviorConfigOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.ConfigunstableUpdateTraceBehaviorConfigResponse)
+	o.Payload = new(models.Configv1UpdateTraceBehaviorConfigResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -172,11 +172,11 @@ func (o *UpdateTraceBehaviorConfigBadRequest) Code() int {
 }
 
 func (o *UpdateTraceBehaviorConfigBadRequest) Error() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/trace-behavior-config][%d] updateTraceBehaviorConfigBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/trace-behavior-config][%d] updateTraceBehaviorConfigBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *UpdateTraceBehaviorConfigBadRequest) String() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/trace-behavior-config][%d] updateTraceBehaviorConfigBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/trace-behavior-config][%d] updateTraceBehaviorConfigBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *UpdateTraceBehaviorConfigBadRequest) GetPayload() *models.APIError {
@@ -240,11 +240,11 @@ func (o *UpdateTraceBehaviorConfigNotFound) Code() int {
 }
 
 func (o *UpdateTraceBehaviorConfigNotFound) Error() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/trace-behavior-config][%d] updateTraceBehaviorConfigNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/trace-behavior-config][%d] updateTraceBehaviorConfigNotFound  %+v", 404, o.Payload)
 }
 
 func (o *UpdateTraceBehaviorConfigNotFound) String() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/trace-behavior-config][%d] updateTraceBehaviorConfigNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/trace-behavior-config][%d] updateTraceBehaviorConfigNotFound  %+v", 404, o.Payload)
 }
 
 func (o *UpdateTraceBehaviorConfigNotFound) GetPayload() *models.APIError {
@@ -308,11 +308,11 @@ func (o *UpdateTraceBehaviorConfigInternalServerError) Code() int {
 }
 
 func (o *UpdateTraceBehaviorConfigInternalServerError) Error() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/trace-behavior-config][%d] updateTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/trace-behavior-config][%d] updateTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *UpdateTraceBehaviorConfigInternalServerError) String() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/trace-behavior-config][%d] updateTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/trace-behavior-config][%d] updateTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *UpdateTraceBehaviorConfigInternalServerError) GetPayload() *models.APIError {
@@ -380,11 +380,11 @@ func (o *UpdateTraceBehaviorConfigDefault) Code() int {
 }
 
 func (o *UpdateTraceBehaviorConfigDefault) Error() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/trace-behavior-config][%d] UpdateTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/trace-behavior-config][%d] UpdateTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *UpdateTraceBehaviorConfigDefault) String() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/trace-behavior-config][%d] UpdateTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/trace-behavior-config][%d] UpdateTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *UpdateTraceBehaviorConfigDefault) GetPayload() models.GenericError {

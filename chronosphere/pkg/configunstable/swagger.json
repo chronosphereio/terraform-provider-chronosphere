@@ -127,22 +127,6 @@
       },
       "type": "object"
     },
-    "ConfigUnstableUpdateDatasetBody": {
-      "properties": {
-        "dataset": {
-          "$ref": "#/definitions/configunstableDataset"
-        },
-        "create_if_missing": {
-          "description": "If true, the Dataset will be created if it does not already exist, identified by slug. If false, an error will be returned if the Dataset does not already exist.",
-          "type": "boolean"
-        },
-        "dry_run": {
-          "description": "If true, the Dataset will not be created nor updated, and no response Dataset will be returned. The response will return an error if the given Dataset is invalid.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
     "ConfigUnstableUpdateLinkTemplateBody": {
       "properties": {
         "link_template": {
@@ -262,27 +246,6 @@
         }
       },
       "type": "object"
-    },
-    "DatasetDatasetConfiguration": {
-      "properties": {
-        "type": {
-          "$ref": "#/definitions/DatasetDatasetType"
-        },
-        "trace_dataset": {
-          "$ref": "#/definitions/configunstableTraceDataset"
-        },
-        "log_dataset": {
-          "$ref": "#/definitions/configunstableLogDataset"
-        }
-      },
-      "type": "object"
-    },
-    "DatasetDatasetType": {
-      "enum": [
-        "TRACES",
-        "LOGS"
-      ],
-      "type": "string"
     },
     "LogAllocationConfigAllocation": {
       "description": "Configuration for allocating resources to a dataset.",
@@ -761,73 +724,6 @@
       },
       "type": "object"
     },
-    "TraceBehaviorConfigMainBehaviorAssignment": {
-      "properties": {
-        "created_at": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "updated_at": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "dataset_slug": {
-          "description": "Slug reference of a TraceDataset",
-          "type": "string"
-        },
-        "behavior_slug": {
-          "description": "Slug reference of a TraceBehavior",
-          "type": "string"
-        },
-        "created_by": {
-          "description": "Author/creator of the entry.",
-          "type": "string"
-        },
-        "description": {
-          "description": "Description of the entry.",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "TraceBehaviorConfigOverrideBehaviorAssignment": {
-      "properties": {
-        "created_at": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "updated_at": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "dataset_slug": {
-          "description": "Slug reference of a TraceDataset",
-          "type": "string"
-        },
-        "behavior_slug": {
-          "description": "Slug reference of a TraceBehavior",
-          "type": "string"
-        },
-        "start_time": {
-          "description": "Start and end time of the override.",
-          "format": "date-time",
-          "type": "string"
-        },
-        "end_time": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "created_by": {
-          "description": "Author/creator of the entry.",
-          "type": "string"
-        },
-        "description": {
-          "description": "Description of the entry.",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "TraceBehaviorTraceBehaviorType": {
       "description": " - TYPE_KEEP_ALL: Keep all traces.\n - TYPE_DROP_ALL: Drop all traces.\n - TYPE_BASELINE: Keep traces based on a default sample rate and additional sample rates for fast, slow, and error traces.",
       "enum": [
@@ -1073,26 +969,6 @@
       },
       "type": "object"
     },
-    "configunstableCreateDatasetRequest": {
-      "properties": {
-        "dataset": {
-          "$ref": "#/definitions/configunstableDataset"
-        },
-        "dry_run": {
-          "description": "If true, the Dataset will not be created, and no response Dataset will be returned. The response will return an error if the given Dataset is invalid.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableCreateDatasetResponse": {
-      "properties": {
-        "dataset": {
-          "$ref": "#/definitions/configunstableDataset"
-        }
-      },
-      "type": "object"
-    },
     "configunstableCreateLinkTemplateRequest": {
       "properties": {
         "link_template": {
@@ -1245,26 +1121,6 @@
       },
       "type": "object"
     },
-    "configunstableCreateTraceBehaviorConfigRequest": {
-      "properties": {
-        "trace_behavior_config": {
-          "$ref": "#/definitions/configunstableTraceBehaviorConfig"
-        },
-        "dry_run": {
-          "description": "If true, the TraceBehaviorConfig will not be created, and no response TraceBehaviorConfig will be returned. The response will return an error if the given TraceBehaviorConfig is invalid.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableCreateTraceBehaviorConfigResponse": {
-      "properties": {
-        "trace_behavior_config": {
-          "$ref": "#/definitions/configunstableTraceBehaviorConfig"
-        }
-      },
-      "type": "object"
-    },
     "configunstableCreateTraceBehaviorRequest": {
       "properties": {
         "trace_behavior": {
@@ -1358,38 +1214,6 @@
       },
       "type": "object"
     },
-    "configunstableDataset": {
-      "properties": {
-        "name": {
-          "description": "Required name of the Dataset. May be modified after the Dataset is created.",
-          "type": "string"
-        },
-        "slug": {
-          "description": "Unique identifier of the Dataset. If slug is not provided, one will be generated based of the name field. Cannot be modified after the Dataset is created.",
-          "type": "string"
-        },
-        "created_at": {
-          "description": "Timestamp of when the Dataset was created. Cannot be set by clients.",
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "updated_at": {
-          "description": "Timestamp of when the Dataset was last updated. Cannot be set by clients.",
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "description": {
-          "description": "Optional longer-form description of the dataset.",
-          "type": "string"
-        },
-        "configuration": {
-          "$ref": "#/definitions/DatasetDatasetConfiguration"
-        }
-      },
-      "type": "object"
-    },
     "configunstableDefaultSampleRate": {
       "properties": {
         "enabled": {
@@ -1405,9 +1229,6 @@
       "type": "object"
     },
     "configunstableDeleteDashboardResponse": {
-      "type": "object"
-    },
-    "configunstableDeleteDatasetResponse": {
       "type": "object"
     },
     "configunstableDeleteLinkTemplateResponse": {
@@ -1437,9 +1258,6 @@
       "type": "object"
     },
     "configunstableDeleteServiceResponse": {
-      "type": "object"
-    },
-    "configunstableDeleteTraceBehaviorConfigResponse": {
       "type": "object"
     },
     "configunstableDeleteTraceBehaviorResponse": {
@@ -1492,20 +1310,6 @@
         "dashboards": {
           "items": {
             "$ref": "#/definitions/configunstableDashboard"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableListDatasetsResponse": {
-      "properties": {
-        "page": {
-          "$ref": "#/definitions/configv1PageResult"
-        },
-        "datasets": {
-          "items": {
-            "$ref": "#/definitions/configunstableDataset"
           },
           "type": "array"
         }
@@ -1653,14 +1457,6 @@
       },
       "type": "object"
     },
-    "configunstableLogDataset": {
-      "properties": {
-        "match_criteria": {
-          "$ref": "#/definitions/configunstableLogSearchFilter"
-        }
-      },
-      "type": "object"
-    },
     "configunstableLogScaleAction": {
       "properties": {
         "slug": {
@@ -1790,15 +1586,6 @@
       },
       "type": "object"
     },
-    "configunstableLogSearchFilter": {
-      "properties": {
-        "query": {
-          "description": "Matches logs which match this query.\nQuery may only include top level operations (no nested clauses).\nOnly one type of operator AND/OR is allowed.",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "configunstableNoopEntity": {
       "properties": {
         "slug": {
@@ -1864,14 +1651,6 @@
       },
       "type": "object"
     },
-    "configunstableReadDatasetResponse": {
-      "properties": {
-        "dataset": {
-          "$ref": "#/definitions/configunstableDataset"
-        }
-      },
-      "type": "object"
-    },
     "configunstableReadLinkTemplateResponse": {
       "properties": {
         "link_template": {
@@ -1932,14 +1711,6 @@
       "properties": {
         "service": {
           "$ref": "#/definitions/configunstableService"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableReadTraceBehaviorConfigResponse": {
-      "properties": {
-        "trace_behavior_config": {
-          "$ref": "#/definitions/configunstableTraceBehaviorConfig"
         }
       },
       "type": "object"
@@ -2107,53 +1878,6 @@
       },
       "type": "object"
     },
-    "configunstableTraceBehaviorConfig": {
-      "description": "TraceBehaviorConfig is a singleton configuration object that specifies the\nconfiguration for trace behaviors.",
-      "properties": {
-        "created_at": {
-          "description": "Timestamp of when the TraceBehaviorConfig was created. Cannot be set by clients.",
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "updated_at": {
-          "description": "Timestamp of when the TraceBehaviorConfig was last updated. Cannot be set by clients.",
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "main_behavior_assignments": {
-          "description": "List of Main Behavior Assignments. The datasets referenced here are the\ndatasets considered to be 'enrolled' in behaviors. The behaviors referenced\nhere are the active behaviors for the dataset when there is no override in\nplace. \n* There can only be one main behavior assignment per dataset.\n* There can only be one TraceBehavior referenced that has the type field\nset to TYPE_BASELINE.",
-          "items": {
-            "$ref": "#/definitions/TraceBehaviorConfigMainBehaviorAssignment"
-          },
-          "type": "array"
-        },
-        "override_behavior_assignments": {
-          "description": "List of OverrideBehaviorAssignments. OverrideBehaviorAssignments are used to\nspecify the active behavior for a dataset over a specific time range.\n* There can only be one override assignment for each Dataset.\n* There can only be one TraceBehavior referenced that has the type field\nset to TYPE_BASELINE, and it must be the same as the one in the\nmain_behavior_assignments list.",
-          "items": {
-            "$ref": "#/definitions/TraceBehaviorConfigOverrideBehaviorAssignment"
-          },
-          "type": "array"
-        },
-        "dataset_priorities": {
-          "description": "List of dataset priorities. This list specifies the order in which datasets\nare considered when determining the behavior to follow for a trace. Dataset\npriorities are used to break ties when a trace matches more than one dataset\nwith an active behavior.\n* Each entry in this list must refer to the slug of an existing dataset.\n* The order of the list is the order in which the datasets are considered.\n* The list must contain all datasets referenced in either main_behavior_assignments\n  and override_behavior_assignments.\n* The list may contain datasets that are not referenced in either of the above.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableTraceDataset": {
-      "properties": {
-        "match_criteria": {
-          "$ref": "#/definitions/configv1TraceSearchFilter"
-        }
-      },
-      "type": "object"
-    },
     "configunstableTraceJaegerRemoteSamplingStrategy": {
       "properties": {
         "slug": {
@@ -2254,14 +1978,6 @@
       },
       "type": "object"
     },
-    "configunstableUpdateDatasetResponse": {
-      "properties": {
-        "dataset": {
-          "$ref": "#/definitions/configunstableDataset"
-        }
-      },
-      "type": "object"
-    },
     "configunstableUpdateLinkTemplateResponse": {
       "properties": {
         "link_template": {
@@ -2354,30 +2070,6 @@
       "properties": {
         "service": {
           "$ref": "#/definitions/configunstableService"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableUpdateTraceBehaviorConfigRequest": {
-      "properties": {
-        "trace_behavior_config": {
-          "$ref": "#/definitions/configunstableTraceBehaviorConfig"
-        },
-        "create_if_missing": {
-          "description": "If true, the TraceBehaviorConfig will be created if it does not already exist. If false, an error will be returned if the TraceBehaviorConfig does not already exist.",
-          "type": "boolean"
-        },
-        "dry_run": {
-          "description": "If true, the TraceBehaviorConfig will not be created nor updated, and no response TraceBehaviorConfig will be returned. The response will return an error if the given TraceBehaviorConfig is invalid.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableUpdateTraceBehaviorConfigResponse": {
-      "properties": {
-        "trace_behavior_config": {
-          "$ref": "#/definitions/configunstableTraceBehaviorConfig"
         }
       },
       "type": "object"
@@ -2752,275 +2444,6 @@
         },
         "tags": [
           "Dashboard"
-        ]
-      }
-    },
-    "/api/unstable/config/datasets": {
-      "get": {
-        "operationId": "ListDatasets",
-        "parameters": [
-          {
-            "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
-            "format": "int64",
-            "in": "query",
-            "name": "page.max_size",
-            "type": "integer"
-          },
-          {
-            "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
-            "in": "query",
-            "name": "page.token",
-            "type": "string"
-          },
-          {
-            "collectionFormat": "multi",
-            "description": "Filters results by slug, where any Dataset with a matching slug in the given list (and matches all other filters) is returned.",
-            "in": "query",
-            "items": {
-              "type": "string"
-            },
-            "name": "slugs",
-            "type": "array"
-          },
-          {
-            "collectionFormat": "multi",
-            "description": "Filters results by name, where any Dataset with a matching name in the given list (and matches all other filters) is returned.",
-            "in": "query",
-            "items": {
-              "type": "string"
-            },
-            "name": "names",
-            "type": "array"
-          },
-          {
-            "description": "Custom filtering option: list filtered down to a specific telemetry type.",
-            "enum": [
-              "TRACES",
-              "LOGS"
-            ],
-            "in": "query",
-            "name": "type",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableListDatasetsResponse"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "Dataset"
-        ]
-      },
-      "post": {
-        "operationId": "CreateDataset",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/configunstableCreateDatasetRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response containing the created Dataset.",
-            "schema": {
-              "$ref": "#/definitions/configunstableCreateDatasetResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot create the Dataset because the request is invalid.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "409": {
-            "description": "Cannot create the Dataset because there is a conflict with an existing Dataset.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "Dataset"
-        ]
-      }
-    },
-    "/api/unstable/config/datasets/{slug}": {
-      "delete": {
-        "operationId": "DeleteDataset",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableDeleteDatasetResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot delete the Dataset because it is in use.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "404": {
-            "description": "Cannot delete the Dataset because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "Dataset"
-        ]
-      },
-      "get": {
-        "operationId": "ReadDataset",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableReadDatasetResponse"
-            }
-          },
-          "404": {
-            "description": "Cannot read the Dataset because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "Dataset"
-        ]
-      },
-      "put": {
-        "operationId": "UpdateDataset",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ConfigUnstableUpdateDatasetBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response containing the updated Dataset.",
-            "schema": {
-              "$ref": "#/definitions/configunstableUpdateDatasetResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot update the Dataset because the request is invalid.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "404": {
-            "description": "Cannot update the Dataset because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "409": {
-            "description": "Cannot update the Dataset because there is a conflict with an existing Dataset.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "Dataset"
         ]
       }
     },
@@ -4927,181 +4350,6 @@
         },
         "tags": [
           "SyncPrometheus"
-        ]
-      }
-    },
-    "/api/unstable/config/trace-behavior-config": {
-      "delete": {
-        "operationId": "DeleteTraceBehaviorConfig",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "dry_run",
-            "type": "boolean"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableDeleteTraceBehaviorConfigResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot delete the TraceBehaviorConfig because it is in use.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "404": {
-            "description": "Cannot delete the TraceBehaviorConfig because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "TraceBehaviorConfig"
-        ]
-      },
-      "get": {
-        "operationId": "ReadTraceBehaviorConfig",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableReadTraceBehaviorConfigResponse"
-            }
-          },
-          "404": {
-            "description": "Cannot read the TraceBehaviorConfig because TraceBehaviorConfig has not been created.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "TraceBehaviorConfig"
-        ]
-      },
-      "post": {
-        "operationId": "CreateTraceBehaviorConfig",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/configunstableCreateTraceBehaviorConfigRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response containing the created TraceBehaviorConfig.",
-            "schema": {
-              "$ref": "#/definitions/configunstableCreateTraceBehaviorConfigResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot create the TraceBehaviorConfig because the request is invalid.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "409": {
-            "description": "Cannot create the TraceBehaviorConfig because there is a conflict with an existing TraceBehaviorConfig.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "TraceBehaviorConfig"
-        ]
-      },
-      "put": {
-        "operationId": "UpdateTraceBehaviorConfig",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/configunstableUpdateTraceBehaviorConfigRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response containing the updated TraceBehaviorConfig.",
-            "schema": {
-              "$ref": "#/definitions/configunstableUpdateTraceBehaviorConfigResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot update the TraceBehaviorConfig because the request is invalid.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "404": {
-            "description": "Cannot update the TraceBehaviorConfig because TraceBehaviorConfig has not been created.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "TraceBehaviorConfig"
         ]
       }
     },

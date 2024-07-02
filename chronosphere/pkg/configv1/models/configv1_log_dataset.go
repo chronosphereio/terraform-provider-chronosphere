@@ -13,17 +13,17 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableTraceDataset configunstable trace dataset
+// Configv1LogDataset configv1 log dataset
 //
-// swagger:model configunstableTraceDataset
-type ConfigunstableTraceDataset struct {
+// swagger:model configv1LogDataset
+type Configv1LogDataset struct {
 
 	// match criteria
-	MatchCriteria *Configv1TraceSearchFilter `json:"match_criteria,omitempty"`
+	MatchCriteria *Configv1LogSearchFilter `json:"match_criteria,omitempty"`
 }
 
-// Validate validates this configunstable trace dataset
-func (m *ConfigunstableTraceDataset) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 log dataset
+func (m *Configv1LogDataset) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateMatchCriteria(formats); err != nil {
@@ -36,7 +36,7 @@ func (m *ConfigunstableTraceDataset) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *ConfigunstableTraceDataset) validateMatchCriteria(formats strfmt.Registry) error {
+func (m *Configv1LogDataset) validateMatchCriteria(formats strfmt.Registry) error {
 	if swag.IsZero(m.MatchCriteria) { // not required
 		return nil
 	}
@@ -55,8 +55,8 @@ func (m *ConfigunstableTraceDataset) validateMatchCriteria(formats strfmt.Regist
 	return nil
 }
 
-// ContextValidate validate this configunstable trace dataset based on the context it is used
-func (m *ConfigunstableTraceDataset) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 log dataset based on the context it is used
+func (m *Configv1LogDataset) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateMatchCriteria(ctx, formats); err != nil {
@@ -69,7 +69,7 @@ func (m *ConfigunstableTraceDataset) ContextValidate(ctx context.Context, format
 	return nil
 }
 
-func (m *ConfigunstableTraceDataset) contextValidateMatchCriteria(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1LogDataset) contextValidateMatchCriteria(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.MatchCriteria != nil {
 		if err := m.MatchCriteria.ContextValidate(ctx, formats); err != nil {
@@ -86,7 +86,7 @@ func (m *ConfigunstableTraceDataset) contextValidateMatchCriteria(ctx context.Co
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableTraceDataset) MarshalBinary() ([]byte, error) {
+func (m *Configv1LogDataset) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -94,8 +94,8 @@ func (m *ConfigunstableTraceDataset) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableTraceDataset) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableTraceDataset
+func (m *Configv1LogDataset) UnmarshalBinary(b []byte) error {
+	var res Configv1LogDataset
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

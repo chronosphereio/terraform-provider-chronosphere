@@ -13,17 +13,23 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableReadTraceBehaviorConfigResponse configunstable read trace behavior config response
+// Configv1UpdateTraceBehaviorConfigRequest configv1 update trace behavior config request
 //
-// swagger:model configunstableReadTraceBehaviorConfigResponse
-type ConfigunstableReadTraceBehaviorConfigResponse struct {
+// swagger:model configv1UpdateTraceBehaviorConfigRequest
+type Configv1UpdateTraceBehaviorConfigRequest struct {
+
+	// If true, the TraceBehaviorConfig will be created if it does not already exist. If false, an error will be returned if the TraceBehaviorConfig does not already exist.
+	CreateIfMissing bool `json:"create_if_missing,omitempty"`
+
+	// If true, the TraceBehaviorConfig will not be created nor updated, and no response TraceBehaviorConfig will be returned. The response will return an error if the given TraceBehaviorConfig is invalid.
+	DryRun bool `json:"dry_run,omitempty"`
 
 	// trace behavior config
-	TraceBehaviorConfig *ConfigunstableTraceBehaviorConfig `json:"trace_behavior_config,omitempty"`
+	TraceBehaviorConfig *Configv1TraceBehaviorConfig `json:"trace_behavior_config,omitempty"`
 }
 
-// Validate validates this configunstable read trace behavior config response
-func (m *ConfigunstableReadTraceBehaviorConfigResponse) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 update trace behavior config request
+func (m *Configv1UpdateTraceBehaviorConfigRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateTraceBehaviorConfig(formats); err != nil {
@@ -36,7 +42,7 @@ func (m *ConfigunstableReadTraceBehaviorConfigResponse) Validate(formats strfmt.
 	return nil
 }
 
-func (m *ConfigunstableReadTraceBehaviorConfigResponse) validateTraceBehaviorConfig(formats strfmt.Registry) error {
+func (m *Configv1UpdateTraceBehaviorConfigRequest) validateTraceBehaviorConfig(formats strfmt.Registry) error {
 	if swag.IsZero(m.TraceBehaviorConfig) { // not required
 		return nil
 	}
@@ -55,8 +61,8 @@ func (m *ConfigunstableReadTraceBehaviorConfigResponse) validateTraceBehaviorCon
 	return nil
 }
 
-// ContextValidate validate this configunstable read trace behavior config response based on the context it is used
-func (m *ConfigunstableReadTraceBehaviorConfigResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 update trace behavior config request based on the context it is used
+func (m *Configv1UpdateTraceBehaviorConfigRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateTraceBehaviorConfig(ctx, formats); err != nil {
@@ -69,7 +75,7 @@ func (m *ConfigunstableReadTraceBehaviorConfigResponse) ContextValidate(ctx cont
 	return nil
 }
 
-func (m *ConfigunstableReadTraceBehaviorConfigResponse) contextValidateTraceBehaviorConfig(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1UpdateTraceBehaviorConfigRequest) contextValidateTraceBehaviorConfig(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.TraceBehaviorConfig != nil {
 		if err := m.TraceBehaviorConfig.ContextValidate(ctx, formats); err != nil {
@@ -86,7 +92,7 @@ func (m *ConfigunstableReadTraceBehaviorConfigResponse) contextValidateTraceBeha
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableReadTraceBehaviorConfigResponse) MarshalBinary() ([]byte, error) {
+func (m *Configv1UpdateTraceBehaviorConfigRequest) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -94,8 +100,8 @@ func (m *ConfigunstableReadTraceBehaviorConfigResponse) MarshalBinary() ([]byte,
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableReadTraceBehaviorConfigResponse) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableReadTraceBehaviorConfigResponse
+func (m *Configv1UpdateTraceBehaviorConfigRequest) UnmarshalBinary(b []byte) error {
+	var res Configv1UpdateTraceBehaviorConfigRequest
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

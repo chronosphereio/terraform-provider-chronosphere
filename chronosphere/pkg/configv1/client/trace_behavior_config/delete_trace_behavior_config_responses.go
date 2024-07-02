@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // DeleteTraceBehaviorConfigReader is a Reader for the DeleteTraceBehaviorConfig structure.
@@ -70,7 +70,7 @@ DeleteTraceBehaviorConfigOK describes a response with status code 200, with defa
 A successful response.
 */
 type DeleteTraceBehaviorConfigOK struct {
-	Payload models.ConfigunstableDeleteTraceBehaviorConfigResponse
+	Payload models.Configv1DeleteTraceBehaviorConfigResponse
 }
 
 // IsSuccess returns true when this delete trace behavior config o k response has a 2xx status code
@@ -104,14 +104,14 @@ func (o *DeleteTraceBehaviorConfigOK) Code() int {
 }
 
 func (o *DeleteTraceBehaviorConfigOK) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/trace-behavior-config][%d] deleteTraceBehaviorConfigOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/trace-behavior-config][%d] deleteTraceBehaviorConfigOK  %+v", 200, o.Payload)
 }
 
 func (o *DeleteTraceBehaviorConfigOK) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/trace-behavior-config][%d] deleteTraceBehaviorConfigOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/trace-behavior-config][%d] deleteTraceBehaviorConfigOK  %+v", 200, o.Payload)
 }
 
-func (o *DeleteTraceBehaviorConfigOK) GetPayload() models.ConfigunstableDeleteTraceBehaviorConfigResponse {
+func (o *DeleteTraceBehaviorConfigOK) GetPayload() models.Configv1DeleteTraceBehaviorConfigResponse {
 	return o.Payload
 }
 
@@ -170,11 +170,11 @@ func (o *DeleteTraceBehaviorConfigBadRequest) Code() int {
 }
 
 func (o *DeleteTraceBehaviorConfigBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/trace-behavior-config][%d] deleteTraceBehaviorConfigBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/trace-behavior-config][%d] deleteTraceBehaviorConfigBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *DeleteTraceBehaviorConfigBadRequest) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/trace-behavior-config][%d] deleteTraceBehaviorConfigBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/trace-behavior-config][%d] deleteTraceBehaviorConfigBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *DeleteTraceBehaviorConfigBadRequest) GetPayload() *models.APIError {
@@ -238,11 +238,11 @@ func (o *DeleteTraceBehaviorConfigNotFound) Code() int {
 }
 
 func (o *DeleteTraceBehaviorConfigNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/trace-behavior-config][%d] deleteTraceBehaviorConfigNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/trace-behavior-config][%d] deleteTraceBehaviorConfigNotFound  %+v", 404, o.Payload)
 }
 
 func (o *DeleteTraceBehaviorConfigNotFound) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/trace-behavior-config][%d] deleteTraceBehaviorConfigNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/trace-behavior-config][%d] deleteTraceBehaviorConfigNotFound  %+v", 404, o.Payload)
 }
 
 func (o *DeleteTraceBehaviorConfigNotFound) GetPayload() *models.APIError {
@@ -306,11 +306,11 @@ func (o *DeleteTraceBehaviorConfigInternalServerError) Code() int {
 }
 
 func (o *DeleteTraceBehaviorConfigInternalServerError) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/trace-behavior-config][%d] deleteTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/trace-behavior-config][%d] deleteTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *DeleteTraceBehaviorConfigInternalServerError) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/trace-behavior-config][%d] deleteTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/trace-behavior-config][%d] deleteTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *DeleteTraceBehaviorConfigInternalServerError) GetPayload() *models.APIError {
@@ -378,11 +378,11 @@ func (o *DeleteTraceBehaviorConfigDefault) Code() int {
 }
 
 func (o *DeleteTraceBehaviorConfigDefault) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/trace-behavior-config][%d] DeleteTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/trace-behavior-config][%d] DeleteTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *DeleteTraceBehaviorConfigDefault) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/trace-behavior-config][%d] DeleteTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/trace-behavior-config][%d] DeleteTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *DeleteTraceBehaviorConfigDefault) GetPayload() models.GenericError {

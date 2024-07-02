@@ -19,27 +19,27 @@ import (
 // swagger:model TraceBehaviorConfigOverrideBehaviorAssignment
 type TraceBehaviorConfigOverrideBehaviorAssignment struct {
 
-	// Slug reference of a TraceBehavior
+	// The slug reference of a TraceBehavior
 	BehaviorSlug string `json:"behavior_slug,omitempty"`
 
 	// created at
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Author/creator of the entry.
+	// The author or creator of the entry.
 	CreatedBy string `json:"created_by,omitempty"`
 
-	// Slug reference of a TraceDataset
+	// The slug reference of a TraceDataset
 	DatasetSlug string `json:"dataset_slug,omitempty"`
 
-	// Description of the entry.
+	// A description of the entry.
 	Description string `json:"description,omitempty"`
 
-	// end time
+	// The ending time of the override.
 	// Format: date-time
 	EndTime strfmt.DateTime `json:"end_time,omitempty"`
 
-	// Start and end time of the override.
+	// The starting time of the override.
 	// Format: date-time
 	StartTime strfmt.DateTime `json:"start_time,omitempty"`
 
