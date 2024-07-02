@@ -357,13 +357,17 @@
         },
         "trace_dataset": {
           "$ref": "#/definitions/configv1TraceDataset"
+        },
+        "log_dataset": {
+          "$ref": "#/definitions/configv1LogDataset"
         }
       },
       "type": "object"
     },
     "DatasetDatasetType": {
       "enum": [
-        "TRACES"
+        "TRACES",
+        "LOGS"
       ],
       "type": "string"
     },
@@ -1458,6 +1462,74 @@
       ],
       "type": "string"
     },
+    "TraceBehaviorConfigMainBehaviorAssignment": {
+      "properties": {
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "dataset_slug": {
+          "description": "The slug reference of a TraceDataset",
+          "type": "string"
+        },
+        "behavior_slug": {
+          "description": "The slug reference of a TraceBehavior",
+          "type": "string"
+        },
+        "created_by": {
+          "description": "The author or creator of the entry.",
+          "type": "string"
+        },
+        "description": {
+          "description": "A description of the entry.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "TraceBehaviorConfigOverrideBehaviorAssignment": {
+      "properties": {
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "dataset_slug": {
+          "description": "The slug reference of a TraceDataset",
+          "type": "string"
+        },
+        "behavior_slug": {
+          "description": "The slug reference of a TraceBehavior",
+          "type": "string"
+        },
+        "start_time": {
+          "description": "The starting time of the override.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "end_time": {
+          "description": "The ending time of the override.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "created_by": {
+          "description": "The author or creator of the entry.",
+          "type": "string"
+        },
+        "description": {
+          "description": "A description of the entry.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "TraceJaegerRemoteSamplingStrategyAppliedStrategy": {
       "properties": {
         "probabilistic_strategy": {
@@ -2197,6 +2269,26 @@
       },
       "type": "object"
     },
+    "configv1CreateTraceBehaviorConfigRequest": {
+      "properties": {
+        "trace_behavior_config": {
+          "$ref": "#/definitions/configv1TraceBehaviorConfig"
+        },
+        "dry_run": {
+          "description": "If true, the TraceBehaviorConfig will not be created, and no response TraceBehaviorConfig will be returned. The response will return an error if the given TraceBehaviorConfig is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "configv1CreateTraceBehaviorConfigResponse": {
+      "properties": {
+        "trace_behavior_config": {
+          "$ref": "#/definitions/configv1TraceBehaviorConfig"
+        }
+      },
+      "type": "object"
+    },
     "configv1CreateTraceJaegerRemoteSamplingStrategyRequest": {
       "properties": {
         "trace_jaeger_remote_sampling_strategy": {
@@ -2406,6 +2498,9 @@
       "type": "object"
     },
     "configv1DeleteTeamResponse": {
+      "type": "object"
+    },
+    "configv1DeleteTraceBehaviorConfigResponse": {
       "type": "object"
     },
     "configv1DeleteTraceJaegerRemoteSamplingStrategyResponse": {
@@ -2995,6 +3090,23 @@
       },
       "type": "object"
     },
+    "configv1LogDataset": {
+      "properties": {
+        "match_criteria": {
+          "$ref": "#/definitions/configv1LogSearchFilter"
+        }
+      },
+      "type": "object"
+    },
+    "configv1LogSearchFilter": {
+      "properties": {
+        "query": {
+          "description": "Returns logs matching the defined query.\nThe query can include only top-level operations and does not support nested clauses.\nAccepts one of `AND` or `OR` as an operator.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "configv1MappingRule": {
       "properties": {
         "slug": {
@@ -3136,6 +3248,10 @@
         },
         "schedule": {
           "$ref": "#/definitions/MonitorSchedule"
+        },
+        "logging_query": {
+          "description": "Logging query. If set, no other queries can be set.",
+          "type": "string"
         }
       },
       "type": "object"
@@ -3489,6 +3605,14 @@
       },
       "type": "object"
     },
+    "configv1ReadTraceBehaviorConfigResponse": {
+      "properties": {
+        "trace_behavior_config": {
+          "$ref": "#/definitions/configv1TraceBehaviorConfig"
+        }
+      },
+      "type": "object"
+    },
     "configv1ReadTraceJaegerRemoteSamplingStrategyResponse": {
       "properties": {
         "trace_jaeger_remote_sampling_strategy": {
@@ -3592,7 +3716,7 @@
           "$ref": "#/definitions/ResourcePoolsDefaultPool"
         },
         "pools": {
-          "description": "Optional pools.",
+          "description": "Optional pools. Cannot set more than 20 pools.",
           "items": {
             "$ref": "#/definitions/ResourcePoolsPool"
           },
@@ -3842,6 +3966,49 @@
         },
         "description": {
           "description": "Optional short description of the team.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "configv1TraceBehaviorConfig": {
+      "description": "TraceBehaviorConfig is a singleton configuration object that specifies the\nconfiguration for trace behaviors.",
+      "properties": {
+        "created_at": {
+          "description": "Timestamp of when the TraceBehaviorConfig was created. Cannot be set by clients.",
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "updated_at": {
+          "description": "Timestamp of when the TraceBehaviorConfig was last updated. Cannot be set by clients.",
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "main_behavior_assignments": {
+          "description": "List of assignments for the main behavior. The referenced datasets are datasets \nto be enrolled in behaviors. The referenced behaviors are the active behaviors\nfor the dataset when there is no override in place. \n* Only one main behavior can be assigned to a dataset.\n* Only one referenced `TraceBehavior` with `type` field set to `TYPE_BASELINE` can\nbe set, which must match the slug referenced by `baseline_behavior_slug`.",
+          "items": {
+            "$ref": "#/definitions/TraceBehaviorConfigMainBehaviorAssignment"
+          },
+          "type": "array"
+        },
+        "override_behavior_assignments": {
+          "description": "List of assignments for the override behavior. OverrideBehaviorAssignments are used to\nspecify the active behavior for a dataset over a specific time range.\n* Only one override behavior can be assigned to a dataset.\n* Only one referenced `TraceBehavior` with `type` field set to `TYPE_BASELINE` can\nbe set, which must match the slug referenced by `baseline_behavior_slug`, and any\nbaseline behavior referenced in `main_behavior_assignments`.",
+          "items": {
+            "$ref": "#/definitions/TraceBehaviorConfigOverrideBehaviorAssignment"
+          },
+          "type": "array"
+        },
+        "dataset_priorities": {
+          "description": "List of dataset priorities. This list specifies the order in which datasets\nare considered when determining the behavior to follow for a trace. Dataset\npriorities are used to break ties when a trace matches more than one dataset\nwith an active behavior.\n* Each entry in this list must refer to the slug of an existing dataset.\n* The order of the list is the order in which the datasets are considered.\n* The list must contain all datasets referenced in either main_behavior_assignments\n  and override_behavior_assignments.\n* The list may contain datasets that are not referenced in either of the above.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "baseline_behavior_slug": {
+          "description": "The baseline behavior to use for behavior assignments and base head sampling rates. Must reference a\nTraceBehavior entity with type: TYPE_BASELINE.",
           "type": "string"
         }
       },
@@ -4193,6 +4360,30 @@
       "properties": {
         "team": {
           "$ref": "#/definitions/configv1Team"
+        }
+      },
+      "type": "object"
+    },
+    "configv1UpdateTraceBehaviorConfigRequest": {
+      "properties": {
+        "trace_behavior_config": {
+          "$ref": "#/definitions/configv1TraceBehaviorConfig"
+        },
+        "create_if_missing": {
+          "description": "If true, the TraceBehaviorConfig will be created if it does not already exist. If false, an error will be returned if the TraceBehaviorConfig does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the TraceBehaviorConfig will not be created nor updated, and no response TraceBehaviorConfig will be returned. The response will return an error if the given TraceBehaviorConfig is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "configv1UpdateTraceBehaviorConfigResponse": {
+      "properties": {
+        "trace_behavior_config": {
+          "$ref": "#/definitions/configv1TraceBehaviorConfig"
         }
       },
       "type": "object"
@@ -9542,6 +9733,181 @@
         },
         "tags": [
           "Team"
+        ]
+      }
+    },
+    "/api/v1/config/trace-behavior-config": {
+      "delete": {
+        "operationId": "DeleteTraceBehaviorConfig",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "dry_run",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1DeleteTraceBehaviorConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot delete the TraceBehaviorConfig because it is in use.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot delete the TraceBehaviorConfig because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "TraceBehaviorConfig"
+        ]
+      },
+      "get": {
+        "operationId": "ReadTraceBehaviorConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1ReadTraceBehaviorConfigResponse"
+            }
+          },
+          "404": {
+            "description": "Cannot read the TraceBehaviorConfig because TraceBehaviorConfig has not been created.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "TraceBehaviorConfig"
+        ]
+      },
+      "post": {
+        "operationId": "CreateTraceBehaviorConfig",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/configv1CreateTraceBehaviorConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the created TraceBehaviorConfig.",
+            "schema": {
+              "$ref": "#/definitions/configv1CreateTraceBehaviorConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot create the TraceBehaviorConfig because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "409": {
+            "description": "Cannot create the TraceBehaviorConfig because there is a conflict with an existing TraceBehaviorConfig.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "TraceBehaviorConfig"
+        ]
+      },
+      "put": {
+        "operationId": "UpdateTraceBehaviorConfig",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/configv1UpdateTraceBehaviorConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the updated TraceBehaviorConfig.",
+            "schema": {
+              "$ref": "#/definitions/configv1UpdateTraceBehaviorConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot update the TraceBehaviorConfig because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot update the TraceBehaviorConfig because TraceBehaviorConfig has not been created.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "TraceBehaviorConfig"
         ]
       }
     },

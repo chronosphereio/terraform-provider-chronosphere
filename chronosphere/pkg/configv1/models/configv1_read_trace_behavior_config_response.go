@@ -13,20 +13,17 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableCreateTraceBehaviorConfigRequest configunstable create trace behavior config request
+// Configv1ReadTraceBehaviorConfigResponse configv1 read trace behavior config response
 //
-// swagger:model configunstableCreateTraceBehaviorConfigRequest
-type ConfigunstableCreateTraceBehaviorConfigRequest struct {
-
-	// If true, the TraceBehaviorConfig will not be created, and no response TraceBehaviorConfig will be returned. The response will return an error if the given TraceBehaviorConfig is invalid.
-	DryRun bool `json:"dry_run,omitempty"`
+// swagger:model configv1ReadTraceBehaviorConfigResponse
+type Configv1ReadTraceBehaviorConfigResponse struct {
 
 	// trace behavior config
-	TraceBehaviorConfig *ConfigunstableTraceBehaviorConfig `json:"trace_behavior_config,omitempty"`
+	TraceBehaviorConfig *Configv1TraceBehaviorConfig `json:"trace_behavior_config,omitempty"`
 }
 
-// Validate validates this configunstable create trace behavior config request
-func (m *ConfigunstableCreateTraceBehaviorConfigRequest) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 read trace behavior config response
+func (m *Configv1ReadTraceBehaviorConfigResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateTraceBehaviorConfig(formats); err != nil {
@@ -39,7 +36,7 @@ func (m *ConfigunstableCreateTraceBehaviorConfigRequest) Validate(formats strfmt
 	return nil
 }
 
-func (m *ConfigunstableCreateTraceBehaviorConfigRequest) validateTraceBehaviorConfig(formats strfmt.Registry) error {
+func (m *Configv1ReadTraceBehaviorConfigResponse) validateTraceBehaviorConfig(formats strfmt.Registry) error {
 	if swag.IsZero(m.TraceBehaviorConfig) { // not required
 		return nil
 	}
@@ -58,8 +55,8 @@ func (m *ConfigunstableCreateTraceBehaviorConfigRequest) validateTraceBehaviorCo
 	return nil
 }
 
-// ContextValidate validate this configunstable create trace behavior config request based on the context it is used
-func (m *ConfigunstableCreateTraceBehaviorConfigRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 read trace behavior config response based on the context it is used
+func (m *Configv1ReadTraceBehaviorConfigResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateTraceBehaviorConfig(ctx, formats); err != nil {
@@ -72,7 +69,7 @@ func (m *ConfigunstableCreateTraceBehaviorConfigRequest) ContextValidate(ctx con
 	return nil
 }
 
-func (m *ConfigunstableCreateTraceBehaviorConfigRequest) contextValidateTraceBehaviorConfig(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ReadTraceBehaviorConfigResponse) contextValidateTraceBehaviorConfig(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.TraceBehaviorConfig != nil {
 		if err := m.TraceBehaviorConfig.ContextValidate(ctx, formats); err != nil {
@@ -89,7 +86,7 @@ func (m *ConfigunstableCreateTraceBehaviorConfigRequest) contextValidateTraceBeh
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableCreateTraceBehaviorConfigRequest) MarshalBinary() ([]byte, error) {
+func (m *Configv1ReadTraceBehaviorConfigResponse) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -97,8 +94,8 @@ func (m *ConfigunstableCreateTraceBehaviorConfigRequest) MarshalBinary() ([]byte
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableCreateTraceBehaviorConfigRequest) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableCreateTraceBehaviorConfigRequest
+func (m *Configv1ReadTraceBehaviorConfigResponse) UnmarshalBinary(b []byte) error {
+	var res Configv1ReadTraceBehaviorConfigResponse
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

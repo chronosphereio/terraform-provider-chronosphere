@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // CreateTraceBehaviorConfigReader is a Reader for the CreateTraceBehaviorConfig structure.
@@ -70,7 +70,7 @@ CreateTraceBehaviorConfigOK describes a response with status code 200, with defa
 A successful response containing the created TraceBehaviorConfig.
 */
 type CreateTraceBehaviorConfigOK struct {
-	Payload *models.ConfigunstableCreateTraceBehaviorConfigResponse
+	Payload *models.Configv1CreateTraceBehaviorConfigResponse
 }
 
 // IsSuccess returns true when this create trace behavior config o k response has a 2xx status code
@@ -104,20 +104,20 @@ func (o *CreateTraceBehaviorConfigOK) Code() int {
 }
 
 func (o *CreateTraceBehaviorConfigOK) Error() string {
-	return fmt.Sprintf("[POST /api/unstable/config/trace-behavior-config][%d] createTraceBehaviorConfigOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/trace-behavior-config][%d] createTraceBehaviorConfigOK  %+v", 200, o.Payload)
 }
 
 func (o *CreateTraceBehaviorConfigOK) String() string {
-	return fmt.Sprintf("[POST /api/unstable/config/trace-behavior-config][%d] createTraceBehaviorConfigOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/trace-behavior-config][%d] createTraceBehaviorConfigOK  %+v", 200, o.Payload)
 }
 
-func (o *CreateTraceBehaviorConfigOK) GetPayload() *models.ConfigunstableCreateTraceBehaviorConfigResponse {
+func (o *CreateTraceBehaviorConfigOK) GetPayload() *models.Configv1CreateTraceBehaviorConfigResponse {
 	return o.Payload
 }
 
 func (o *CreateTraceBehaviorConfigOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.ConfigunstableCreateTraceBehaviorConfigResponse)
+	o.Payload = new(models.Configv1CreateTraceBehaviorConfigResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -172,11 +172,11 @@ func (o *CreateTraceBehaviorConfigBadRequest) Code() int {
 }
 
 func (o *CreateTraceBehaviorConfigBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/unstable/config/trace-behavior-config][%d] createTraceBehaviorConfigBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/trace-behavior-config][%d] createTraceBehaviorConfigBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *CreateTraceBehaviorConfigBadRequest) String() string {
-	return fmt.Sprintf("[POST /api/unstable/config/trace-behavior-config][%d] createTraceBehaviorConfigBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/trace-behavior-config][%d] createTraceBehaviorConfigBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *CreateTraceBehaviorConfigBadRequest) GetPayload() *models.APIError {
@@ -240,11 +240,11 @@ func (o *CreateTraceBehaviorConfigConflict) Code() int {
 }
 
 func (o *CreateTraceBehaviorConfigConflict) Error() string {
-	return fmt.Sprintf("[POST /api/unstable/config/trace-behavior-config][%d] createTraceBehaviorConfigConflict  %+v", 409, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/trace-behavior-config][%d] createTraceBehaviorConfigConflict  %+v", 409, o.Payload)
 }
 
 func (o *CreateTraceBehaviorConfigConflict) String() string {
-	return fmt.Sprintf("[POST /api/unstable/config/trace-behavior-config][%d] createTraceBehaviorConfigConflict  %+v", 409, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/trace-behavior-config][%d] createTraceBehaviorConfigConflict  %+v", 409, o.Payload)
 }
 
 func (o *CreateTraceBehaviorConfigConflict) GetPayload() *models.APIError {
@@ -308,11 +308,11 @@ func (o *CreateTraceBehaviorConfigInternalServerError) Code() int {
 }
 
 func (o *CreateTraceBehaviorConfigInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/unstable/config/trace-behavior-config][%d] createTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/trace-behavior-config][%d] createTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *CreateTraceBehaviorConfigInternalServerError) String() string {
-	return fmt.Sprintf("[POST /api/unstable/config/trace-behavior-config][%d] createTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/trace-behavior-config][%d] createTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *CreateTraceBehaviorConfigInternalServerError) GetPayload() *models.APIError {
@@ -380,11 +380,11 @@ func (o *CreateTraceBehaviorConfigDefault) Code() int {
 }
 
 func (o *CreateTraceBehaviorConfigDefault) Error() string {
-	return fmt.Sprintf("[POST /api/unstable/config/trace-behavior-config][%d] CreateTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/trace-behavior-config][%d] CreateTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *CreateTraceBehaviorConfigDefault) String() string {
-	return fmt.Sprintf("[POST /api/unstable/config/trace-behavior-config][%d] CreateTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/trace-behavior-config][%d] CreateTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *CreateTraceBehaviorConfigDefault) GetPayload() models.GenericError {

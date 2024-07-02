@@ -51,6 +51,9 @@ type Configv1Monitor struct {
 	// and can be used to route alerts with notification overrides.
 	Labels map[string]string `json:"labels,omitempty"`
 
+	// Logging query. If set, no other queries can be set.
+	LoggingQuery string `json:"logging_query,omitempty"`
+
 	// Required name of the Monitor. May be modified after the Monitor is created.
 	Name string `json:"name,omitempty"`
 

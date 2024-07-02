@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // ReadTraceBehaviorConfigReader is a Reader for the ReadTraceBehaviorConfig structure.
@@ -64,7 +64,7 @@ ReadTraceBehaviorConfigOK describes a response with status code 200, with defaul
 A successful response.
 */
 type ReadTraceBehaviorConfigOK struct {
-	Payload *models.ConfigunstableReadTraceBehaviorConfigResponse
+	Payload *models.Configv1ReadTraceBehaviorConfigResponse
 }
 
 // IsSuccess returns true when this read trace behavior config o k response has a 2xx status code
@@ -98,20 +98,20 @@ func (o *ReadTraceBehaviorConfigOK) Code() int {
 }
 
 func (o *ReadTraceBehaviorConfigOK) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/trace-behavior-config][%d] readTraceBehaviorConfigOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/trace-behavior-config][%d] readTraceBehaviorConfigOK  %+v", 200, o.Payload)
 }
 
 func (o *ReadTraceBehaviorConfigOK) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/trace-behavior-config][%d] readTraceBehaviorConfigOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/trace-behavior-config][%d] readTraceBehaviorConfigOK  %+v", 200, o.Payload)
 }
 
-func (o *ReadTraceBehaviorConfigOK) GetPayload() *models.ConfigunstableReadTraceBehaviorConfigResponse {
+func (o *ReadTraceBehaviorConfigOK) GetPayload() *models.Configv1ReadTraceBehaviorConfigResponse {
 	return o.Payload
 }
 
 func (o *ReadTraceBehaviorConfigOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.ConfigunstableReadTraceBehaviorConfigResponse)
+	o.Payload = new(models.Configv1ReadTraceBehaviorConfigResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -166,11 +166,11 @@ func (o *ReadTraceBehaviorConfigNotFound) Code() int {
 }
 
 func (o *ReadTraceBehaviorConfigNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/trace-behavior-config][%d] readTraceBehaviorConfigNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/trace-behavior-config][%d] readTraceBehaviorConfigNotFound  %+v", 404, o.Payload)
 }
 
 func (o *ReadTraceBehaviorConfigNotFound) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/trace-behavior-config][%d] readTraceBehaviorConfigNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/trace-behavior-config][%d] readTraceBehaviorConfigNotFound  %+v", 404, o.Payload)
 }
 
 func (o *ReadTraceBehaviorConfigNotFound) GetPayload() *models.APIError {
@@ -234,11 +234,11 @@ func (o *ReadTraceBehaviorConfigInternalServerError) Code() int {
 }
 
 func (o *ReadTraceBehaviorConfigInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/trace-behavior-config][%d] readTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/trace-behavior-config][%d] readTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ReadTraceBehaviorConfigInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/trace-behavior-config][%d] readTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/trace-behavior-config][%d] readTraceBehaviorConfigInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ReadTraceBehaviorConfigInternalServerError) GetPayload() *models.APIError {
@@ -306,11 +306,11 @@ func (o *ReadTraceBehaviorConfigDefault) Code() int {
 }
 
 func (o *ReadTraceBehaviorConfigDefault) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/trace-behavior-config][%d] ReadTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/trace-behavior-config][%d] ReadTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *ReadTraceBehaviorConfigDefault) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/trace-behavior-config][%d] ReadTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/trace-behavior-config][%d] ReadTraceBehaviorConfig default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *ReadTraceBehaviorConfigDefault) GetPayload() models.GenericError {

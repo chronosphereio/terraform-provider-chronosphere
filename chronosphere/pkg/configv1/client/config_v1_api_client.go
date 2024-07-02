@@ -31,6 +31,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_behavior_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_tail_sampling_rules"
@@ -99,6 +100,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.Service = service.New(transport, formats)
 	cli.ServiceAccount = service_account.New(transport, formats)
 	cli.Team = team.New(transport, formats)
+	cli.TraceBehaviorConfig = trace_behavior_config.New(transport, formats)
 	cli.TraceJaegerRemoteSamplingStrategy = trace_jaeger_remote_sampling_strategy.New(transport, formats)
 	cli.TraceMetricsRule = trace_metrics_rule.New(transport, formats)
 	cli.TraceTailSamplingRules = trace_tail_sampling_rules.New(transport, formats)
@@ -188,6 +190,8 @@ type ConfigV1API struct {
 
 	Team team.ClientService
 
+	TraceBehaviorConfig trace_behavior_config.ClientService
+
 	TraceJaegerRemoteSamplingStrategy trace_jaeger_remote_sampling_strategy.ClientService
 
 	TraceMetricsRule trace_metrics_rule.ClientService
@@ -221,6 +225,7 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.Service.SetTransport(transport)
 	c.ServiceAccount.SetTransport(transport)
 	c.Team.SetTransport(transport)
+	c.TraceBehaviorConfig.SetTransport(transport)
 	c.TraceJaegerRemoteSamplingStrategy.SetTransport(transport)
 	c.TraceMetricsRule.SetTransport(transport)
 	c.TraceTailSamplingRules.SetTransport(transport)
