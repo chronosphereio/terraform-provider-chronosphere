@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 )
@@ -28,13 +27,13 @@ type swaggerEnum interface {
 }
 
 // Enum defines a set of enum values, where a single logical value is
-// represented by multiple acceptable strings (legacy, v1, and an alias).
+// has multiple accepted values: v1, an alias, and an optional legacy alias.
 //
 // Note that Enum will simply parrot back unknown values to ensure forwards
 // compatibilty, for example if an unknown value was read from the server.
 // However, we still rely on schema validation to prevent users from configuring
 // unknown values in their Terraform files.
-type Enum[L, V1 swaggerEnum] interface {
+type Enum[V1 swaggerEnum] interface {
 	// Name returns the type name of the enum.
 	Name() string
 
@@ -47,15 +46,13 @@ type Enum[L, V1 swaggerEnum] interface {
 }
 
 // value defines the possible representations of a single enum value.
-//
-// In general, you should NOT be using when introducing new enums. Legacy
-// mappings are only needed for backwards compatibility for old enums.
-type value[L, V1 swaggerEnum] struct {
-	// legacy is a value for backwards compatibility. Required if isDefault=false.
-	legacy L
-
+type value[V1 swaggerEnum] struct {
 	// v1 is the configv1pb value. Required if isDefault=false.
 	v1 V1
+
+	// legacyAlias is a value for backwards compatibility.
+	// Only use for types that predated the configv1 API.
+	legacyAlias string
 
 	// alias is the user-facing Terraform alias for the value. Required if
 	// isDefault=false.
@@ -67,44 +64,27 @@ type value[L, V1 swaggerEnum] struct {
 	isDefault bool
 }
 
-// v1OnlyValue is a subset of value which configures enums which don't require
-// legacy support.
-//
-// In general, you should be using this when introducing new enums.
-type v1OnlyValue[V1 swaggerEnum] struct {
-	v1        V1
-	alias     string
-	isDefault bool
-}
-
-type enum[L, V1 swaggerEnum] struct {
+type enum[V1 swaggerEnum] struct {
 	name           string
-	values         map[string]value[L, V1]
+	values         map[string]value[V1]
 	displayAliases []string
 }
 
-func newV1OnlyEnum[V1 swaggerEnum](name string, v1Values []v1OnlyValue[V1]) enum[V1, V1] {
-	return newEnum(name, sliceutil.Map(v1Values, func(v v1OnlyValue[V1]) value[V1, V1] {
-		return value[V1, V1]{
-			legacy:    v.v1,
-			v1:        v.v1,
-			alias:     v.alias,
-			isDefault: v.isDefault,
-		}
-	}))
-}
-
-func newEnum[L, V1 swaggerEnum](name string, values []value[L, V1]) enum[L, V1] {
+func newEnum[V1 swaggerEnum](name string, values []value[V1]) enum[V1] {
 	var displayAliases []string
-	m := make(map[string]value[L, V1])
+	m := make(map[string]value[V1])
 	defaultFound := false
 
-	register := func(s string, v value[L, V1]) {
+	register := func(s string, v value[V1], requireUnique bool) {
 		if s == "" && !v.isDefault {
 			panic(fmt.Errorf("%q: missing value in %+v", name, v))
 		}
-		if vv, ok := m[s]; ok && vv != v {
-			panic(fmt.Errorf("%q: duplicate value across indexes: %q", name, s))
+		if vv, ok := m[s]; ok {
+			if requireUnique {
+				panic(fmt.Errorf("%q: duplicate registration: %q", name, s))
+			} else if vv != v {
+				panic(fmt.Errorf("%q: duplicate value across indexes: %q", name, s))
+			}
 		}
 		m[s] = v
 	}
@@ -120,12 +100,11 @@ func newEnum[L, V1 swaggerEnum](name string, values []value[L, V1]) enum[L, V1] 
 			defaultFound = true
 		}
 
-		// legacy is optional now for new enums.
-		if v.legacy != "" {
-			register(string(v.legacy), v)
+		register(string(v.v1), v, true /* requireUnique */)
+		if v.legacyAlias != "" {
+			register(v.legacyAlias, v, true /* requireUnique */)
 		}
-		register(string(v.v1), v)
-		register(v.alias, v)
+		register(v.alias, v, false /* requireUnique */)
 
 		if v.alias != "" {
 			// Don't display empty aliases.
@@ -133,14 +112,14 @@ func newEnum[L, V1 swaggerEnum](name string, values []value[L, V1]) enum[L, V1] 
 		}
 	}
 
-	return enum[L, V1]{name, m, displayAliases}
+	return enum[V1]{name, m, displayAliases}
 }
 
-func (e enum[L, V1]) Name() string {
+func (e enum[V1]) Name() string {
 	return e.name
 }
 
-func (e enum[L, V1]) V1(s string) V1 {
+func (e enum[V1]) V1(s string) V1 {
 	v, ok := e.values[s]
 	if !ok {
 		return V1(s)
@@ -148,7 +127,7 @@ func (e enum[L, V1]) V1(s string) V1 {
 	return v.v1
 }
 
-func (e enum[L, V1]) Validate(v interface{}, _ cty.Path) diag.Diagnostics {
+func (e enum[V1]) Validate(v interface{}, _ cty.Path) diag.Diagnostics {
 	s := v.(string)
 	if s == "" {
 		return nil
@@ -165,20 +144,20 @@ func (e enum[L, V1]) Validate(v interface{}, _ cty.Path) diag.Diagnostics {
 		s, e.name, strings.Join(quotedAliases, ", "))
 }
 
-func (e enum[L, V1]) ToStrings() Enum[string, string] {
-	return stringAdaptor[L, V1]{e}
+func (e enum[V1]) ToStrings() Enum[string] {
+	return stringAdaptor[V1]{e}
 }
 
 // stringAdaptor wraps any enum as a Enum[string, string] so that it can be used
 // in non-generic situations.
-type stringAdaptor[L, V1 swaggerEnum] struct {
-	enum[L, V1]
+type stringAdaptor[V1 swaggerEnum] struct {
+	enum[V1]
 }
 
-func (a stringAdaptor[L, V1]) V1(s string) string {
+func (a stringAdaptor[V1]) V1(s string) string {
 	return string(a.enum.V1(s))
 }
 
-func (a stringAdaptor[L, V1]) Validate(v interface{}, p cty.Path) diag.Diagnostics {
+func (a stringAdaptor[V1]) Validate(v interface{}, p cty.Path) diag.Diagnostics {
 	return a.enum.Validate(v, p)
 }

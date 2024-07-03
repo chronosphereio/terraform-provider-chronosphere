@@ -19,48 +19,37 @@ import (
 )
 
 // LogScaleWebhookActionHTTPMethod is an enum.
-var LogScaleWebhookActionHTTPMethod = newEnum("LogScaleWebhookActionHTTPMethod", []value[
-	string,
-	models.WebhookActionHTTPMethod,
-]{
+var LogScaleWebhookActionHTTPMethod = newEnum("LogScaleWebhookActionHTTPMethod", []value[models.WebhookActionHTTPMethod]{
 	{
-		legacy:    "INVALID",
 		v1:        "INVALID",
 		isDefault: true,
 	},
 	{
-		v1:     models.WebhookActionHTTPMethodGET,
-		legacy: "GET",
-		alias:  "GET",
+		v1:    models.WebhookActionHTTPMethodGET,
+		alias: "GET",
 	},
 	{
-		v1:     models.WebhookActionHTTPMethodPOST,
-		legacy: "POST",
-		alias:  "POST",
+		v1:    models.WebhookActionHTTPMethodPOST,
+		alias: "POST",
 	},
 	{
-		v1:     models.WebhookActionHTTPMethodPUT,
-		legacy: "PUT",
-		alias:  "PUT",
+		v1:    models.WebhookActionHTTPMethodPUT,
+		alias: "PUT",
 	},
 	{
-		v1:     models.WebhookActionHTTPMethodPATCH,
-		legacy: "PATCH",
-		alias:  "PATCH",
+		v1:    models.WebhookActionHTTPMethodPATCH,
+		alias: "PATCH",
 	},
 	{
-		v1:     models.WebhookActionHTTPMethodDELETE,
-		legacy: "DELETE",
-		alias:  "DELETE",
+		v1:    models.WebhookActionHTTPMethodDELETE,
+		alias: "DELETE",
 	},
 	{
-		v1:     models.WebhookActionHTTPMethodHEAD,
-		legacy: "HEAD",
-		alias:  "HEAD",
+		v1:    models.WebhookActionHTTPMethodHEAD,
+		alias: "HEAD",
 	},
 	{
-		v1:     models.WebhookActionHTTPMethodOPTIONS,
-		legacy: "OPTIONS",
-		alias:  "OPTIONS",
+		v1:    models.WebhookActionHTTPMethodOPTIONS,
+		alias: "OPTIONS",
 	},
 })

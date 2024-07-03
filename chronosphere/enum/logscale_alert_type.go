@@ -19,23 +19,17 @@ import (
 )
 
 // LogscaleAlertType is an enum.
-var LogscaleAlertType = newEnum("LogScaleAlertAlertType", []value[
-	string,
-	models.LogScaleAlertAlertType,
-]{
+var LogscaleAlertType = newEnum("LogScaleAlertAlertType", []value[models.LogScaleAlertAlertType]{
 	{
-		legacy:    "INVALID",
 		v1:        "INVALID",
 		isDefault: true,
 	},
 	{
-		v1:     models.LogScaleAlertAlertTypeSTANDARD,
-		legacy: "STANDARD",
-		alias:  "STANDARD",
+		v1:    models.LogScaleAlertAlertTypeSTANDARD,
+		alias: "STANDARD",
 	},
 	{
-		v1:     models.LogScaleAlertAlertTypeFILTER,
-		legacy: "FILTER",
-		alias:  "FILTER",
+		v1:    models.LogScaleAlertAlertTypeFILTER,
+		alias: "FILTER",
 	},
 })

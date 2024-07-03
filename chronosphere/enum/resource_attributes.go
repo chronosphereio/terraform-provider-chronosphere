@@ -19,7 +19,7 @@ import (
 )
 
 // ResourceAttributesFlattenMode is an enum.
-var ResourceAttributesFlattenMode = newV1OnlyEnum("ResourceAttributesFlattenMode", []v1OnlyValue[configunstable.ResourceAttributesFlattenMode]{
+var ResourceAttributesFlattenMode = newEnum("ResourceAttributesFlattenMode", []value[configunstable.ResourceAttributesFlattenMode]{
 	{
 		v1:    configunstable.ResourceAttributesFlattenModeMERGE,
 		alias: "MERGE",
@@ -35,7 +35,7 @@ var ResourceAttributesFlattenMode = newV1OnlyEnum("ResourceAttributesFlattenMode
 })
 
 // ResourceAttributesFilterMode is an enum.
-var ResourceAttributesFilterMode = newV1OnlyEnum("ResourceAttributesFilterMode", []v1OnlyValue[configunstable.ResourceAttributesFilterMode]{
+var ResourceAttributesFilterMode = newEnum("ResourceAttributesFilterMode", []value[configunstable.ResourceAttributesFilterMode]{
 	{
 		v1:    configunstable.ResourceAttributesFilterModeAPPENDDEFAULTEXCLUDEKEYS,
 		alias: "APPEND_DEFAULT_EXCLUDE_KEYS",

@@ -19,52 +19,41 @@ import (
 )
 
 // ConditionOp is an enum.
-var ConditionOp = newEnum("ConditionOp", []value[
-	string,
-	configv1.ConditionOp,
-]{
+var ConditionOp = newEnum("ConditionOp", []value[configv1.ConditionOp]{
 	{
-		legacy:    "INVALID",
-		isDefault: true,
+		isDefault:   true,
+		legacyAlias: "INVALID",
 	},
 	{
-		legacy: "GEQ",
-		v1:     configv1.ConditionOpGEQ,
-		alias:  "GEQ",
+		v1:    configv1.ConditionOpGEQ,
+		alias: "GEQ",
 	},
 	{
-		legacy: "GT",
-		v1:     configv1.ConditionOpGT,
-		alias:  "GT",
+		v1:    configv1.ConditionOpGT,
+		alias: "GT",
 	},
 	{
-		legacy: "LEQ",
-		v1:     configv1.ConditionOpLEQ,
-		alias:  "LEQ",
+		v1:    configv1.ConditionOpLEQ,
+		alias: "LEQ",
 	},
 	{
-		legacy: "LT",
-		v1:     configv1.ConditionOpLT,
-		alias:  "LT",
+		v1:    configv1.ConditionOpLT,
+		alias: "LT",
 	},
 	{
-		legacy: "EQ",
-		v1:     configv1.ConditionOpEQ,
-		alias:  "EQ",
+		v1:    configv1.ConditionOpEQ,
+		alias: "EQ",
 	},
 	{
-		legacy: "NEQ",
-		v1:     configv1.ConditionOpNEQ,
-		alias:  "NEQ",
+		v1:    configv1.ConditionOpNEQ,
+		alias: "NEQ",
 	},
 	{
-		legacy: "EXISTS",
-		v1:     configv1.ConditionOpEXISTS,
-		alias:  "EXISTS",
+		v1:    configv1.ConditionOpEXISTS,
+		alias: "EXISTS",
 	},
 	{
-		legacy: "NOT_EXISTS",
-		v1:     configv1.ConditionOpNOTEXISTS,
-		alias:  "NOT_EXISTS",
+		v1:    configv1.ConditionOpNOTEXISTS,
+		alias: "NOT_EXISTS",
 	},
 })
