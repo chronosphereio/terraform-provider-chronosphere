@@ -26,7 +26,7 @@ type swaggerEnum interface {
 	~string
 }
 
-// Enum defines a set of enum values, where a single logical value is
+// Enum defines a set of enum values, where a single logical value
 // has multiple accepted values: v1, an alias, and an optional legacy alias.
 //
 // Note that Enum will simply parrot back unknown values to ensure forwards
