@@ -83,7 +83,7 @@ func TestAllEnumsValidate(t *testing.T) {
 		legacySwaggerName string
 		v1SwaggerName     string
 		unstable          bool
-		enum              Enum[string, string]
+		enum              Enum[string]
 	}{
 		{
 			legacySwaggerName: "entitiesMatcherType",

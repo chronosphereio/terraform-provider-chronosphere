@@ -19,23 +19,17 @@ import (
 )
 
 // TraceMetricsRuleGroupByType is an enum.
-var TraceMetricsRuleGroupByType = newEnum("TraceMetricsRuleGroupByType", []value[
-	string,
-	models.GroupByKeyGroupByKeyType,
-]{
+var TraceMetricsRuleGroupByType = newEnum("TraceMetricsRuleGroupByType", []value[models.GroupByKeyGroupByKeyType]{
 	{
-		v1:     models.GroupByKeyGroupByKeyTypeTAG,
-		legacy: "TAG",
-		alias:  "TAG",
+		v1:    models.GroupByKeyGroupByKeyTypeTAG,
+		alias: "TAG",
 	},
 	{
-		v1:     models.GroupByKeyGroupByKeyTypeOPERATION,
-		legacy: "OPERATION",
-		alias:  "OPERATION",
+		v1:    models.GroupByKeyGroupByKeyTypeOPERATION,
+		alias: "OPERATION",
 	},
 	{
-		v1:     models.GroupByKeyGroupByKeyTypeSERVICE,
-		legacy: "SERVICE",
-		alias:  "SERVICE",
+		v1:    models.GroupByKeyGroupByKeyTypeSERVICE,
+		alias: "SERVICE",
 	},
 })

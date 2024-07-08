@@ -19,22 +19,19 @@ import (
 )
 
 // MatcherType is an enum.
-var MatcherType = newEnum("MatcherType", []value[
-	string,
-	configv1.Configv1LabelMatcherMatcherType,
-]{
+var MatcherType = newEnum("MatcherType", []value[configv1.Configv1LabelMatcherMatcherType]{
 	{
-		legacy:    "INVALID_MATCHER_TYPE",
-		isDefault: true,
+		isDefault:   true,
+		legacyAlias: "INVALID_MATCHER_TYPE",
 	},
 	{
-		legacy: "EXACT_MATCHER_TYPE",
-		v1:     configv1.Configv1LabelMatcherMatcherTypeEXACT,
-		alias:  "EXACT",
+		v1:          configv1.Configv1LabelMatcherMatcherTypeEXACT,
+		legacyAlias: "EXACT_MATCHER_TYPE",
+		alias:       "EXACT",
 	},
 	{
-		legacy: "REGEXP_MATCHER_TYPE",
-		v1:     configv1.Configv1LabelMatcherMatcherTypeREGEX,
-		alias:  "REGEX",
+		v1:          configv1.Configv1LabelMatcherMatcherTypeREGEX,
+		legacyAlias: "REGEXP_MATCHER_TYPE",
+		alias:       "REGEX",
 	},
 })

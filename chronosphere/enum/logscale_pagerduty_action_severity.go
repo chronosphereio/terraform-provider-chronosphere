@@ -19,33 +19,25 @@ import (
 )
 
 // LogScalePagerDutyActionSeverity is an enum.
-var LogScalePagerDutyActionSeverity = newEnum("LogScaleActionPagerDutyActionSeverity", []value[
-	string,
-	models.LogScaleActionPagerDutyActionSeverity,
-]{
+var LogScalePagerDutyActionSeverity = newEnum("LogScaleActionPagerDutyActionSeverity", []value[models.LogScaleActionPagerDutyActionSeverity]{
 	{
-		legacy:    "INVALID",
 		v1:        "INVALID",
 		isDefault: true,
 	},
 	{
-		v1:     models.LogScaleActionPagerDutyActionSeverityCRITICAL,
-		legacy: "CRITICAL",
-		alias:  "CRITICAL",
+		v1:    models.LogScaleActionPagerDutyActionSeverityCRITICAL,
+		alias: "CRITICAL",
 	},
 	{
-		v1:     models.LogScaleActionPagerDutyActionSeverityERROR,
-		legacy: "ERROR",
-		alias:  "ERROR",
+		v1:    models.LogScaleActionPagerDutyActionSeverityERROR,
+		alias: "ERROR",
 	},
 	{
-		v1:     models.LogScaleActionPagerDutyActionSeverityWARNING,
-		legacy: "WARNING",
-		alias:  "WARNING",
+		v1:    models.LogScaleActionPagerDutyActionSeverityWARNING,
+		alias: "WARNING",
 	},
 	{
-		v1:     models.LogScaleActionPagerDutyActionSeverityINFO,
-		legacy: "INFO",
-		alias:  "INFO",
+		v1:    models.LogScaleActionPagerDutyActionSeverityINFO,
+		alias: "INFO",
 	},
 })
