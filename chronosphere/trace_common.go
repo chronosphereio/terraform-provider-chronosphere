@@ -16,6 +16,7 @@ package chronosphere
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
@@ -185,19 +186,19 @@ func traceSearchFilterFromModel(
 	}
 }
 
-func traceSearchFilterToModel(f intschema.TraceSearchFilter) *models.Configv1TraceSearchFilter {
+func traceSearchFilterToModel(f intschema.TraceSearchFilter) (*models.Configv1TraceSearchFilter, error) {
 	traceFilter, err := traceFilterToModel(f.Trace)
 	if err != nil {
-		return nil
+		return nil, fmt.Errorf("error converting trace filter: %w", err)
 	}
 	spanFilters, err := sliceutil.MapErr(f.Span, spanFilterToModel)
 	if err != nil {
-		return nil
+		return nil, fmt.Errorf("error converting span filters: %w", err)
 	}
 	return &models.Configv1TraceSearchFilter{
 		Span:  spanFilters,
 		Trace: traceFilter,
-	}
+	}, nil
 }
 
 func spanFilterFromModel(
