@@ -60,10 +60,34 @@ var datasetConfigurationSchema = map[string]*schema.Schema{
 			Schema: traceDatasetConfigurationSchema,
 		},
 	},
+	"log_dataset": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: logDatasetConfigurationSchema,
+		},
+	},
 }
 
 var traceDatasetConfigurationSchema = map[string]*schema.Schema{
 	"match_criteria": TraceSearchFilterSchema,
+}
+
+var logDatasetConfigurationSchema = map[string]*schema.Schema{
+	"match_criteria": {
+		Type:     schema.TypeList,
+		Required: true,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"query": {
+					Type:     schema.TypeString,
+					Required: true,
+				},
+			},
+		},
+	},
 }
 
 // diffSuppressDatasetType sanitizes and then diffs two span filter match type payloads.

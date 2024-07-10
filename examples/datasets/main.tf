@@ -85,3 +85,17 @@ resource "chronosphere_dataset" "example_prod_payfe" {
     }
   }
 }
+
+resource "chronosphere_dataset" "example_logs_prod_payfe" {
+  name        = "Production paymentfe Logs"
+  description = "Logs passing through the paymentfe service in production"
+  configuration {
+    type = "LOGS"
+
+    log_dataset {
+      match_criteria {
+        query = "service = 'paymentfe' AND env = 'prod'"
+      }
+    }
+  }
+}

@@ -66,6 +66,7 @@ func Provider() *schema.Provider {
 		"chronosphere_otel_metrics_ingestion":                resourceOtelMetricsIngestion(),
 		"chronosphere_logscale_alert":                        resourceLogscaleAlert(),
 		"chronosphere_logscale_action":                       resourceLogscaleAction(),
+		"chronosphere_log_allocation_config":                 resourceLogAllocationConfig(),
 	}
 
 	// Apply common CRUD wrappers to all resources.

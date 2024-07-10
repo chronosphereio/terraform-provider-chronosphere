@@ -5,6 +5,7 @@ import (
 	"context"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_allocation_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_action"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/otel_metrics_ingestion"
@@ -1669,6 +1670,85 @@ func (generatedTraceTailSamplingRules) delete(
 		Context: ctx,
 	}
 	_, err := clients.ConfigV1.TraceTailSamplingRules.DeleteTraceTailSamplingRules(req)
+	return err
+}
+
+type generatedUnstableLogAllocationConfig struct{}
+
+// LogAllocationConfigID is the static ID of the global LogAllocationConfig singleton.
+const LogAllocationConfigID = "log_allocation_config_singleton"
+
+func (generatedUnstableLogAllocationConfig) slugOf(m *configunstablemodels.ConfigunstableLogAllocationConfig) string {
+	return LogAllocationConfigID
+}
+
+func (generatedUnstableLogAllocationConfig) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableLogAllocationConfig,
+	dryRun bool,
+) (string, error) {
+	req := &log_allocation_config.CreateLogAllocationConfigParams{
+		Context: ctx,
+		Body: &configunstablemodels.ConfigunstableCreateLogAllocationConfigRequest{
+			LogAllocationConfig: m,
+			DryRun:              dryRun,
+		},
+	}
+	resp, err := clients.ConfigUnstable.LogAllocationConfig.CreateLogAllocationConfig(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.LogAllocationConfig
+	if e == nil {
+		return "", nil
+	}
+	return (generatedUnstableLogAllocationConfig{}).slugOf(e), nil
+}
+
+func (generatedUnstableLogAllocationConfig) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configunstablemodels.ConfigunstableLogAllocationConfig, error) {
+	req := &log_allocation_config.ReadLogAllocationConfigParams{
+		Context: ctx,
+	}
+	resp, err := clients.ConfigUnstable.LogAllocationConfig.ReadLogAllocationConfig(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.LogAllocationConfig, nil
+}
+
+func (generatedUnstableLogAllocationConfig) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableLogAllocationConfig,
+	params updateParams,
+) error {
+	req := &log_allocation_config.UpdateLogAllocationConfigParams{
+		Context: ctx,
+
+		Body: &configunstablemodels.ConfigunstableUpdateLogAllocationConfigRequest{
+
+			LogAllocationConfig: m,
+			CreateIfMissing:     params.createIfMissing,
+			DryRun:              params.dryRun,
+		},
+	}
+	_, err := clients.ConfigUnstable.LogAllocationConfig.UpdateLogAllocationConfig(req)
+	return err
+}
+func (generatedUnstableLogAllocationConfig) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &log_allocation_config.DeleteLogAllocationConfigParams{
+		Context: ctx,
+	}
+	_, err := clients.ConfigUnstable.LogAllocationConfig.DeleteLogAllocationConfig(req)
 	return err
 }
 

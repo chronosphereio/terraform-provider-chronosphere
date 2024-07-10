@@ -58,9 +58,18 @@ func (o *Dataset) Ref() tfid.ID {
 
 type DatasetConfiguration struct {
 	Type         string                            `intschema:"type"`
+	LogDataset   *DatasetConfigurationLogDataset   `intschema:"log_dataset,optional,list_encoded_object"`
 	TraceDataset *DatasetConfigurationTraceDataset `intschema:"trace_dataset,optional,list_encoded_object"`
 }
 
 type DatasetConfigurationTraceDataset struct {
 	MatchCriteria TraceSearchFilter `intschema:"match_criteria,list_encoded_object"`
+}
+
+type DatasetConfigurationLogDataset struct {
+	MatchCriteria *DatasetConfigurationLogDatasetMatchCriteria `intschema:"match_criteria,optional,list_encoded_object"`
+}
+
+type DatasetConfigurationLogDatasetMatchCriteria struct {
+	Query string `intschema:"query"`
 }
