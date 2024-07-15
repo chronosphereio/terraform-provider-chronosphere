@@ -17,6 +17,7 @@ GO_BUILD_COMMON_ENV       := CGO_ENABLED=0
 # TODO: this was causing issues with releases. May not be a problem in recent go versions
 GOFLAGS=-buildvcs=false
 INSTRUMENT_PACKAGE        := github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/buildinfo
+GIT_VERSION               := $(shell git describe --tags --abbrev=0 2>/dev/null || echo unknown)
 
 GO_GENERATE=PATH=$(TOOLS_BIN):$(PATH) go generate
 
@@ -132,6 +133,7 @@ endif
 		GO_RELEASER_RELEASE_ARGS="$(GO_RELEASER_RELEASE_ARGS)" \
 		GO_RELEASER_WORKING_DIR=$(GO_RELEASER_WORKING_DIR) \
 		SSH_AUTH_SOCK=$(SSH_AUTH_SOCK) \
+		GIT_VERSION=$(GIT_VERSION) \
 		./scripts/run_goreleaser.sh ${GO_RELEASER_RELEASE_ARGS}
 
 .PHONY: release-snapshot
@@ -139,7 +141,7 @@ release-snapshot:
 	@echo Building binaries with goreleaser
 	# --snapshot mode allows building artifacts w/o release tag present and w/ publishing mode disabled
 	# useful when we want to test whether we can build binaries, but not publish yet.
-	make release SKIP_RELEASE_BRANCH_VALIDATION=true GO_RELEASER_RELEASE_ARGS="--snapshot --rm-dist --skip-publish --skip-sign"
+	make release SKIP_RELEASE_BRANCH_VALIDATION=true GO_RELEASER_RELEASE_ARGS="--snapshot --clean --skip=publish --skip=sign"
 
 .PHONY: fmt
 fmt:
