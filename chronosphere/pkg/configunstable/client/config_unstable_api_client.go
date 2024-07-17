@@ -16,13 +16,13 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_action"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/noop_entity"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/otel_metrics_ingestion"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/saved_trace_search"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/service"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/sync_prometheus"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_behavior"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_tail_sampling_rules"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_top_tag_config"
 )
 
 // Default config unstable API HTTP client.
@@ -73,13 +73,13 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli.LogScaleAction = log_scale_action.New(transport, formats)
 	cli.LogScaleAlert = log_scale_alert.New(transport, formats)
 	cli.NoopEntity = noop_entity.New(transport, formats)
-	cli.OtelMetricsIngestion = otel_metrics_ingestion.New(transport, formats)
 	cli.SavedTraceSearch = saved_trace_search.New(transport, formats)
 	cli.Service = service.New(transport, formats)
 	cli.SyncPrometheus = sync_prometheus.New(transport, formats)
 	cli.TraceBehavior = trace_behavior.New(transport, formats)
 	cli.TraceJaegerRemoteSamplingStrategy = trace_jaeger_remote_sampling_strategy.New(transport, formats)
 	cli.TraceTailSamplingRules = trace_tail_sampling_rules.New(transport, formats)
+	cli.TraceTopTagConfig = trace_top_tag_config.New(transport, formats)
 	return cli
 }
 
@@ -136,8 +136,6 @@ type ConfigUnstableAPI struct {
 
 	NoopEntity noop_entity.ClientService
 
-	OtelMetricsIngestion otel_metrics_ingestion.ClientService
-
 	SavedTraceSearch saved_trace_search.ClientService
 
 	Service service.ClientService
@@ -149,6 +147,8 @@ type ConfigUnstableAPI struct {
 	TraceJaegerRemoteSamplingStrategy trace_jaeger_remote_sampling_strategy.ClientService
 
 	TraceTailSamplingRules trace_tail_sampling_rules.ClientService
+
+	TraceTopTagConfig trace_top_tag_config.ClientService
 
 	Transport runtime.ClientTransport
 }
@@ -162,11 +162,11 @@ func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.LogScaleAction.SetTransport(transport)
 	c.LogScaleAlert.SetTransport(transport)
 	c.NoopEntity.SetTransport(transport)
-	c.OtelMetricsIngestion.SetTransport(transport)
 	c.SavedTraceSearch.SetTransport(transport)
 	c.Service.SetTransport(transport)
 	c.SyncPrometheus.SetTransport(transport)
 	c.TraceBehavior.SetTransport(transport)
 	c.TraceJaegerRemoteSamplingStrategy.SetTransport(transport)
 	c.TraceTailSamplingRules.SetTransport(transport)
+	c.TraceTopTagConfig.SetTransport(transport)
 }

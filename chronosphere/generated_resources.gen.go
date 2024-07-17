@@ -8,7 +8,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_allocation_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_action"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_alert"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/otel_metrics_ingestion"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
@@ -23,6 +22,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notifier"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/otel_metrics_ingestion"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/recording_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/resource_pools"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/rollup_rule"
@@ -1061,6 +1061,85 @@ func (generatedNotifier) delete(
 	return err
 }
 
+type generatedOtelMetricsIngestion struct{}
+
+// OtelMetricsIngestionID is the static ID of the global OtelMetricsIngestion singleton.
+const OtelMetricsIngestionID = "otel_metrics_ingestion_singleton"
+
+func (generatedOtelMetricsIngestion) slugOf(m *configv1models.Configv1OtelMetricsIngestion) string {
+	return OtelMetricsIngestionID
+}
+
+func (generatedOtelMetricsIngestion) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1OtelMetricsIngestion,
+	dryRun bool,
+) (string, error) {
+	req := &otel_metrics_ingestion.CreateOtelMetricsIngestionParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateOtelMetricsIngestionRequest{
+			OtelMetricsIngestion: m,
+			DryRun:               dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.OtelMetricsIngestion.CreateOtelMetricsIngestion(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.OtelMetricsIngestion
+	if e == nil {
+		return "", nil
+	}
+	return (generatedOtelMetricsIngestion{}).slugOf(e), nil
+}
+
+func (generatedOtelMetricsIngestion) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1OtelMetricsIngestion, error) {
+	req := &otel_metrics_ingestion.ReadOtelMetricsIngestionParams{
+		Context: ctx,
+	}
+	resp, err := clients.ConfigV1.OtelMetricsIngestion.ReadOtelMetricsIngestion(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.OtelMetricsIngestion, nil
+}
+
+func (generatedOtelMetricsIngestion) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1OtelMetricsIngestion,
+	params updateParams,
+) error {
+	req := &otel_metrics_ingestion.UpdateOtelMetricsIngestionParams{
+		Context: ctx,
+
+		Body: &configv1models.Configv1UpdateOtelMetricsIngestionRequest{
+
+			OtelMetricsIngestion: m,
+			CreateIfMissing:      params.createIfMissing,
+			DryRun:               params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.OtelMetricsIngestion.UpdateOtelMetricsIngestion(req)
+	return err
+}
+func (generatedOtelMetricsIngestion) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &otel_metrics_ingestion.DeleteOtelMetricsIngestionParams{
+		Context: ctx,
+	}
+	_, err := clients.ConfigV1.OtelMetricsIngestion.DeleteOtelMetricsIngestion(req)
+	return err
+}
+
 type generatedRecordingRule struct{}
 
 func (generatedRecordingRule) slugOf(m *configv1models.Configv1RecordingRule) string {
@@ -1907,84 +1986,5 @@ func (generatedUnstableLogScaleAlert) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigUnstable.LogScaleAlert.DeleteLogScaleAlert(req)
-	return err
-}
-
-type generatedUnstableOtelMetricsIngestion struct{}
-
-// OtelMetricsIngestionID is the static ID of the global OtelMetricsIngestion singleton.
-const OtelMetricsIngestionID = "otel_metrics_ingestion_singleton"
-
-func (generatedUnstableOtelMetricsIngestion) slugOf(m *configunstablemodels.ConfigunstableOtelMetricsIngestion) string {
-	return OtelMetricsIngestionID
-}
-
-func (generatedUnstableOtelMetricsIngestion) create(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configunstablemodels.ConfigunstableOtelMetricsIngestion,
-	dryRun bool,
-) (string, error) {
-	req := &otel_metrics_ingestion.CreateOtelMetricsIngestionParams{
-		Context: ctx,
-		Body: &configunstablemodels.ConfigunstableCreateOtelMetricsIngestionRequest{
-			OtelMetricsIngestion: m,
-			DryRun:               dryRun,
-		},
-	}
-	resp, err := clients.ConfigUnstable.OtelMetricsIngestion.CreateOtelMetricsIngestion(req)
-	if err != nil {
-		return "", err
-	}
-	e := resp.Payload.OtelMetricsIngestion
-	if e == nil {
-		return "", nil
-	}
-	return (generatedUnstableOtelMetricsIngestion{}).slugOf(e), nil
-}
-
-func (generatedUnstableOtelMetricsIngestion) read(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) (*configunstablemodels.ConfigunstableOtelMetricsIngestion, error) {
-	req := &otel_metrics_ingestion.ReadOtelMetricsIngestionParams{
-		Context: ctx,
-	}
-	resp, err := clients.ConfigUnstable.OtelMetricsIngestion.ReadOtelMetricsIngestion(req)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Payload.OtelMetricsIngestion, nil
-}
-
-func (generatedUnstableOtelMetricsIngestion) update(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configunstablemodels.ConfigunstableOtelMetricsIngestion,
-	params updateParams,
-) error {
-	req := &otel_metrics_ingestion.UpdateOtelMetricsIngestionParams{
-		Context: ctx,
-
-		Body: &configunstablemodels.ConfigunstableUpdateOtelMetricsIngestionRequest{
-
-			OtelMetricsIngestion: m,
-			CreateIfMissing:      params.createIfMissing,
-			DryRun:               params.dryRun,
-		},
-	}
-	_, err := clients.ConfigUnstable.OtelMetricsIngestion.UpdateOtelMetricsIngestion(req)
-	return err
-}
-func (generatedUnstableOtelMetricsIngestion) delete(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) error {
-	req := &otel_metrics_ingestion.DeleteOtelMetricsIngestionParams{
-		Context: ctx,
-	}
-	_, err := clients.ConfigUnstable.OtelMetricsIngestion.DeleteOtelMetricsIngestion(req)
 	return err
 }

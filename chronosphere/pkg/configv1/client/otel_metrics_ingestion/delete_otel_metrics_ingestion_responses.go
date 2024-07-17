@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // DeleteOtelMetricsIngestionReader is a Reader for the DeleteOtelMetricsIngestion structure.
@@ -70,7 +70,7 @@ DeleteOtelMetricsIngestionOK describes a response with status code 200, with def
 A successful response.
 */
 type DeleteOtelMetricsIngestionOK struct {
-	Payload models.ConfigunstableDeleteOtelMetricsIngestionResponse
+	Payload models.Configv1DeleteOtelMetricsIngestionResponse
 }
 
 // IsSuccess returns true when this delete otel metrics ingestion o k response has a 2xx status code
@@ -104,14 +104,14 @@ func (o *DeleteOtelMetricsIngestionOK) Code() int {
 }
 
 func (o *DeleteOtelMetricsIngestionOK) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionOK  %+v", 200, o.Payload)
 }
 
 func (o *DeleteOtelMetricsIngestionOK) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionOK  %+v", 200, o.Payload)
 }
 
-func (o *DeleteOtelMetricsIngestionOK) GetPayload() models.ConfigunstableDeleteOtelMetricsIngestionResponse {
+func (o *DeleteOtelMetricsIngestionOK) GetPayload() models.Configv1DeleteOtelMetricsIngestionResponse {
 	return o.Payload
 }
 
@@ -170,11 +170,11 @@ func (o *DeleteOtelMetricsIngestionBadRequest) Code() int {
 }
 
 func (o *DeleteOtelMetricsIngestionBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *DeleteOtelMetricsIngestionBadRequest) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *DeleteOtelMetricsIngestionBadRequest) GetPayload() *models.APIError {
@@ -238,11 +238,11 @@ func (o *DeleteOtelMetricsIngestionNotFound) Code() int {
 }
 
 func (o *DeleteOtelMetricsIngestionNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionNotFound  %+v", 404, o.Payload)
 }
 
 func (o *DeleteOtelMetricsIngestionNotFound) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionNotFound  %+v", 404, o.Payload)
 }
 
 func (o *DeleteOtelMetricsIngestionNotFound) GetPayload() *models.APIError {
@@ -306,11 +306,11 @@ func (o *DeleteOtelMetricsIngestionInternalServerError) Code() int {
 }
 
 func (o *DeleteOtelMetricsIngestionInternalServerError) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *DeleteOtelMetricsIngestionInternalServerError) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/otel-metrics-ingestion][%d] deleteOtelMetricsIngestionInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *DeleteOtelMetricsIngestionInternalServerError) GetPayload() *models.APIError {
@@ -378,11 +378,11 @@ func (o *DeleteOtelMetricsIngestionDefault) Code() int {
 }
 
 func (o *DeleteOtelMetricsIngestionDefault) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/otel-metrics-ingestion][%d] DeleteOtelMetricsIngestion default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/otel-metrics-ingestion][%d] DeleteOtelMetricsIngestion default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *DeleteOtelMetricsIngestionDefault) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/otel-metrics-ingestion][%d] DeleteOtelMetricsIngestion default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/otel-metrics-ingestion][%d] DeleteOtelMetricsIngestion default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *DeleteOtelMetricsIngestionDefault) GetPayload() models.GenericError {

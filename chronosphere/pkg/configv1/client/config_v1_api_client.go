@@ -25,6 +25,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/muting_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notifier"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/otel_metrics_ingestion"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/recording_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/resource_pools"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/rollup_rule"
@@ -94,6 +95,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.MutingRule = muting_rule.New(transport, formats)
 	cli.NotificationPolicy = notification_policy.New(transport, formats)
 	cli.Notifier = notifier.New(transport, formats)
+	cli.OtelMetricsIngestion = otel_metrics_ingestion.New(transport, formats)
 	cli.RecordingRule = recording_rule.New(transport, formats)
 	cli.ResourcePools = resource_pools.New(transport, formats)
 	cli.RollupRule = rollup_rule.New(transport, formats)
@@ -178,6 +180,8 @@ type ConfigV1API struct {
 
 	Notifier notifier.ClientService
 
+	OtelMetricsIngestion otel_metrics_ingestion.ClientService
+
 	RecordingRule recording_rule.ClientService
 
 	ResourcePools resource_pools.ClientService
@@ -219,6 +223,7 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.MutingRule.SetTransport(transport)
 	c.NotificationPolicy.SetTransport(transport)
 	c.Notifier.SetTransport(transport)
+	c.OtelMetricsIngestion.SetTransport(transport)
 	c.RecordingRule.SetTransport(transport)
 	c.ResourcePools.SetTransport(transport)
 	c.RollupRule.SetTransport(transport)

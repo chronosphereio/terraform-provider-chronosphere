@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+* Add `chronosphere_otel_metrics_ingestion` resource.
+
 ## v1.3.0
 
 Added:

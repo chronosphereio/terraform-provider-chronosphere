@@ -113,12 +113,10 @@ func TestAllEnumsValidate(t *testing.T) {
 		{
 			v1SwaggerName: "ResourceAttributesFlattenMode",
 			enum:          ResourceAttributesFlattenMode.ToStrings(),
-			unstable:      true,
 		},
 		{
 			v1SwaggerName: "ResourceAttributesFilterMode",
 			enum:          ResourceAttributesFilterMode.ToStrings(),
-			unstable:      true,
 		},
 		{
 			v1SwaggerName: "LogScaleActionPagerDutyActionSeverity",

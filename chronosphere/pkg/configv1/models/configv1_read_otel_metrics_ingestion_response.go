@@ -13,20 +13,17 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableCreateOtelMetricsIngestionRequest configunstable create otel metrics ingestion request
+// Configv1ReadOtelMetricsIngestionResponse configv1 read otel metrics ingestion response
 //
-// swagger:model configunstableCreateOtelMetricsIngestionRequest
-type ConfigunstableCreateOtelMetricsIngestionRequest struct {
-
-	// If true, the OtelMetricsIngestion will not be created, and no response OtelMetricsIngestion will be returned. The response will return an error if the given OtelMetricsIngestion is invalid.
-	DryRun bool `json:"dry_run,omitempty"`
+// swagger:model configv1ReadOtelMetricsIngestionResponse
+type Configv1ReadOtelMetricsIngestionResponse struct {
 
 	// otel metrics ingestion
-	OtelMetricsIngestion *ConfigunstableOtelMetricsIngestion `json:"otel_metrics_ingestion,omitempty"`
+	OtelMetricsIngestion *Configv1OtelMetricsIngestion `json:"otel_metrics_ingestion,omitempty"`
 }
 
-// Validate validates this configunstable create otel metrics ingestion request
-func (m *ConfigunstableCreateOtelMetricsIngestionRequest) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 read otel metrics ingestion response
+func (m *Configv1ReadOtelMetricsIngestionResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateOtelMetricsIngestion(formats); err != nil {
@@ -39,7 +36,7 @@ func (m *ConfigunstableCreateOtelMetricsIngestionRequest) Validate(formats strfm
 	return nil
 }
 
-func (m *ConfigunstableCreateOtelMetricsIngestionRequest) validateOtelMetricsIngestion(formats strfmt.Registry) error {
+func (m *Configv1ReadOtelMetricsIngestionResponse) validateOtelMetricsIngestion(formats strfmt.Registry) error {
 	if swag.IsZero(m.OtelMetricsIngestion) { // not required
 		return nil
 	}
@@ -58,8 +55,8 @@ func (m *ConfigunstableCreateOtelMetricsIngestionRequest) validateOtelMetricsIng
 	return nil
 }
 
-// ContextValidate validate this configunstable create otel metrics ingestion request based on the context it is used
-func (m *ConfigunstableCreateOtelMetricsIngestionRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 read otel metrics ingestion response based on the context it is used
+func (m *Configv1ReadOtelMetricsIngestionResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateOtelMetricsIngestion(ctx, formats); err != nil {
@@ -72,7 +69,7 @@ func (m *ConfigunstableCreateOtelMetricsIngestionRequest) ContextValidate(ctx co
 	return nil
 }
 
-func (m *ConfigunstableCreateOtelMetricsIngestionRequest) contextValidateOtelMetricsIngestion(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ReadOtelMetricsIngestionResponse) contextValidateOtelMetricsIngestion(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.OtelMetricsIngestion != nil {
 		if err := m.OtelMetricsIngestion.ContextValidate(ctx, formats); err != nil {
@@ -89,7 +86,7 @@ func (m *ConfigunstableCreateOtelMetricsIngestionRequest) contextValidateOtelMet
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableCreateOtelMetricsIngestionRequest) MarshalBinary() ([]byte, error) {
+func (m *Configv1ReadOtelMetricsIngestionResponse) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -97,8 +94,8 @@ func (m *ConfigunstableCreateOtelMetricsIngestionRequest) MarshalBinary() ([]byt
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableCreateOtelMetricsIngestionRequest) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableCreateOtelMetricsIngestionRequest
+func (m *Configv1ReadOtelMetricsIngestionResponse) UnmarshalBinary(b []byte) error {
+	var res Configv1ReadOtelMetricsIngestionResponse
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
