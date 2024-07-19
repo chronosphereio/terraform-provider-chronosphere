@@ -13,17 +13,17 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableUpdateOtelMetricsIngestionResponse configunstable update otel metrics ingestion response
+// Configv1UpdateOtelMetricsIngestionResponse configv1 update otel metrics ingestion response
 //
-// swagger:model configunstableUpdateOtelMetricsIngestionResponse
-type ConfigunstableUpdateOtelMetricsIngestionResponse struct {
+// swagger:model configv1UpdateOtelMetricsIngestionResponse
+type Configv1UpdateOtelMetricsIngestionResponse struct {
 
 	// otel metrics ingestion
-	OtelMetricsIngestion *ConfigunstableOtelMetricsIngestion `json:"otel_metrics_ingestion,omitempty"`
+	OtelMetricsIngestion *Configv1OtelMetricsIngestion `json:"otel_metrics_ingestion,omitempty"`
 }
 
-// Validate validates this configunstable update otel metrics ingestion response
-func (m *ConfigunstableUpdateOtelMetricsIngestionResponse) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 update otel metrics ingestion response
+func (m *Configv1UpdateOtelMetricsIngestionResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateOtelMetricsIngestion(formats); err != nil {
@@ -36,7 +36,7 @@ func (m *ConfigunstableUpdateOtelMetricsIngestionResponse) Validate(formats strf
 	return nil
 }
 
-func (m *ConfigunstableUpdateOtelMetricsIngestionResponse) validateOtelMetricsIngestion(formats strfmt.Registry) error {
+func (m *Configv1UpdateOtelMetricsIngestionResponse) validateOtelMetricsIngestion(formats strfmt.Registry) error {
 	if swag.IsZero(m.OtelMetricsIngestion) { // not required
 		return nil
 	}
@@ -55,8 +55,8 @@ func (m *ConfigunstableUpdateOtelMetricsIngestionResponse) validateOtelMetricsIn
 	return nil
 }
 
-// ContextValidate validate this configunstable update otel metrics ingestion response based on the context it is used
-func (m *ConfigunstableUpdateOtelMetricsIngestionResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 update otel metrics ingestion response based on the context it is used
+func (m *Configv1UpdateOtelMetricsIngestionResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateOtelMetricsIngestion(ctx, formats); err != nil {
@@ -69,7 +69,7 @@ func (m *ConfigunstableUpdateOtelMetricsIngestionResponse) ContextValidate(ctx c
 	return nil
 }
 
-func (m *ConfigunstableUpdateOtelMetricsIngestionResponse) contextValidateOtelMetricsIngestion(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1UpdateOtelMetricsIngestionResponse) contextValidateOtelMetricsIngestion(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.OtelMetricsIngestion != nil {
 		if err := m.OtelMetricsIngestion.ContextValidate(ctx, formats); err != nil {
@@ -86,7 +86,7 @@ func (m *ConfigunstableUpdateOtelMetricsIngestionResponse) contextValidateOtelMe
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableUpdateOtelMetricsIngestionResponse) MarshalBinary() ([]byte, error) {
+func (m *Configv1UpdateOtelMetricsIngestionResponse) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -94,8 +94,8 @@ func (m *ConfigunstableUpdateOtelMetricsIngestionResponse) MarshalBinary() ([]by
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableUpdateOtelMetricsIngestionResponse) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableUpdateOtelMetricsIngestionResponse
+func (m *Configv1UpdateOtelMetricsIngestionResponse) UnmarshalBinary(b []byte) error {
+	var res Configv1UpdateOtelMetricsIngestionResponse
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

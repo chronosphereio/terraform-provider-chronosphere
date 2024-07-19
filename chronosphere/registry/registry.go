@@ -249,7 +249,7 @@ var Resources = mustValidate([]Resource{
 	{
 		Name:        "otel_metrics_ingestion",
 		Entity:      "OtelMetricsIngestion",
-		API:         Unstable,
+		API:         V1,
 		Schema:      tfschema.OtelMetricsIngestion,
 		SingletonID: "otel_metrics_ingestion_singleton",
 	},

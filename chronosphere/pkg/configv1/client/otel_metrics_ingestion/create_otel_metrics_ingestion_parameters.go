@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // NewCreateOtelMetricsIngestionParams creates a new CreateOtelMetricsIngestionParams object,
@@ -64,7 +64,7 @@ CreateOtelMetricsIngestionParams contains all the parameters to send to the API 
 type CreateOtelMetricsIngestionParams struct {
 
 	// Body.
-	Body *models.ConfigunstableCreateOtelMetricsIngestionRequest
+	Body *models.Configv1CreateOtelMetricsIngestionRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -120,13 +120,13 @@ func (o *CreateOtelMetricsIngestionParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the create otel metrics ingestion params
-func (o *CreateOtelMetricsIngestionParams) WithBody(body *models.ConfigunstableCreateOtelMetricsIngestionRequest) *CreateOtelMetricsIngestionParams {
+func (o *CreateOtelMetricsIngestionParams) WithBody(body *models.Configv1CreateOtelMetricsIngestionRequest) *CreateOtelMetricsIngestionParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the create otel metrics ingestion params
-func (o *CreateOtelMetricsIngestionParams) SetBody(body *models.ConfigunstableCreateOtelMetricsIngestionRequest) {
+func (o *CreateOtelMetricsIngestionParams) SetBody(body *models.Configv1CreateOtelMetricsIngestionRequest) {
 	o.Body = body
 }
 

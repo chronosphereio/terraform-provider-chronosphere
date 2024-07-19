@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // ReadOtelMetricsIngestionReader is a Reader for the ReadOtelMetricsIngestion structure.
@@ -64,7 +64,7 @@ ReadOtelMetricsIngestionOK describes a response with status code 200, with defau
 A successful response.
 */
 type ReadOtelMetricsIngestionOK struct {
-	Payload *models.ConfigunstableReadOtelMetricsIngestionResponse
+	Payload *models.Configv1ReadOtelMetricsIngestionResponse
 }
 
 // IsSuccess returns true when this read otel metrics ingestion o k response has a 2xx status code
@@ -98,20 +98,20 @@ func (o *ReadOtelMetricsIngestionOK) Code() int {
 }
 
 func (o *ReadOtelMetricsIngestionOK) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/otel-metrics-ingestion][%d] readOtelMetricsIngestionOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/otel-metrics-ingestion][%d] readOtelMetricsIngestionOK  %+v", 200, o.Payload)
 }
 
 func (o *ReadOtelMetricsIngestionOK) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/otel-metrics-ingestion][%d] readOtelMetricsIngestionOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/otel-metrics-ingestion][%d] readOtelMetricsIngestionOK  %+v", 200, o.Payload)
 }
 
-func (o *ReadOtelMetricsIngestionOK) GetPayload() *models.ConfigunstableReadOtelMetricsIngestionResponse {
+func (o *ReadOtelMetricsIngestionOK) GetPayload() *models.Configv1ReadOtelMetricsIngestionResponse {
 	return o.Payload
 }
 
 func (o *ReadOtelMetricsIngestionOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.ConfigunstableReadOtelMetricsIngestionResponse)
+	o.Payload = new(models.Configv1ReadOtelMetricsIngestionResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -166,11 +166,11 @@ func (o *ReadOtelMetricsIngestionNotFound) Code() int {
 }
 
 func (o *ReadOtelMetricsIngestionNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/otel-metrics-ingestion][%d] readOtelMetricsIngestionNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/otel-metrics-ingestion][%d] readOtelMetricsIngestionNotFound  %+v", 404, o.Payload)
 }
 
 func (o *ReadOtelMetricsIngestionNotFound) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/otel-metrics-ingestion][%d] readOtelMetricsIngestionNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/otel-metrics-ingestion][%d] readOtelMetricsIngestionNotFound  %+v", 404, o.Payload)
 }
 
 func (o *ReadOtelMetricsIngestionNotFound) GetPayload() *models.APIError {
@@ -234,11 +234,11 @@ func (o *ReadOtelMetricsIngestionInternalServerError) Code() int {
 }
 
 func (o *ReadOtelMetricsIngestionInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/otel-metrics-ingestion][%d] readOtelMetricsIngestionInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/otel-metrics-ingestion][%d] readOtelMetricsIngestionInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ReadOtelMetricsIngestionInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/otel-metrics-ingestion][%d] readOtelMetricsIngestionInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/otel-metrics-ingestion][%d] readOtelMetricsIngestionInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ReadOtelMetricsIngestionInternalServerError) GetPayload() *models.APIError {
@@ -306,11 +306,11 @@ func (o *ReadOtelMetricsIngestionDefault) Code() int {
 }
 
 func (o *ReadOtelMetricsIngestionDefault) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/otel-metrics-ingestion][%d] ReadOtelMetricsIngestion default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/otel-metrics-ingestion][%d] ReadOtelMetricsIngestion default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *ReadOtelMetricsIngestionDefault) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/otel-metrics-ingestion][%d] ReadOtelMetricsIngestion default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/otel-metrics-ingestion][%d] ReadOtelMetricsIngestion default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *ReadOtelMetricsIngestionDefault) GetPayload() models.GenericError {

@@ -14,10 +14,10 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// ConfigunstableOtelMetricsIngestion configunstable otel metrics ingestion
+// Configv1OtelMetricsIngestion configv1 otel metrics ingestion
 //
-// swagger:model configunstableOtelMetricsIngestion
-type ConfigunstableOtelMetricsIngestion struct {
+// swagger:model configv1OtelMetricsIngestion
+type Configv1OtelMetricsIngestion struct {
 
 	// Timestamp of when the OtelMetricsIngestion was created. Cannot be set by clients.
 	// Read Only: true
@@ -33,8 +33,8 @@ type ConfigunstableOtelMetricsIngestion struct {
 	UpdatedAt strfmt.DateTime `json:"updated_at,omitempty"`
 }
 
-// Validate validates this configunstable otel metrics ingestion
-func (m *ConfigunstableOtelMetricsIngestion) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 otel metrics ingestion
+func (m *Configv1OtelMetricsIngestion) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCreatedAt(formats); err != nil {
@@ -55,7 +55,7 @@ func (m *ConfigunstableOtelMetricsIngestion) Validate(formats strfmt.Registry) e
 	return nil
 }
 
-func (m *ConfigunstableOtelMetricsIngestion) validateCreatedAt(formats strfmt.Registry) error {
+func (m *Configv1OtelMetricsIngestion) validateCreatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.CreatedAt) { // not required
 		return nil
 	}
@@ -67,7 +67,7 @@ func (m *ConfigunstableOtelMetricsIngestion) validateCreatedAt(formats strfmt.Re
 	return nil
 }
 
-func (m *ConfigunstableOtelMetricsIngestion) validateResourceAttributes(formats strfmt.Registry) error {
+func (m *Configv1OtelMetricsIngestion) validateResourceAttributes(formats strfmt.Registry) error {
 	if swag.IsZero(m.ResourceAttributes) { // not required
 		return nil
 	}
@@ -86,7 +86,7 @@ func (m *ConfigunstableOtelMetricsIngestion) validateResourceAttributes(formats 
 	return nil
 }
 
-func (m *ConfigunstableOtelMetricsIngestion) validateUpdatedAt(formats strfmt.Registry) error {
+func (m *Configv1OtelMetricsIngestion) validateUpdatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.UpdatedAt) { // not required
 		return nil
 	}
@@ -98,8 +98,8 @@ func (m *ConfigunstableOtelMetricsIngestion) validateUpdatedAt(formats strfmt.Re
 	return nil
 }
 
-// ContextValidate validate this configunstable otel metrics ingestion based on the context it is used
-func (m *ConfigunstableOtelMetricsIngestion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 otel metrics ingestion based on the context it is used
+func (m *Configv1OtelMetricsIngestion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
@@ -120,7 +120,7 @@ func (m *ConfigunstableOtelMetricsIngestion) ContextValidate(ctx context.Context
 	return nil
 }
 
-func (m *ConfigunstableOtelMetricsIngestion) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1OtelMetricsIngestion) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
 		return err
@@ -129,7 +129,7 @@ func (m *ConfigunstableOtelMetricsIngestion) contextValidateCreatedAt(ctx contex
 	return nil
 }
 
-func (m *ConfigunstableOtelMetricsIngestion) contextValidateResourceAttributes(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1OtelMetricsIngestion) contextValidateResourceAttributes(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.ResourceAttributes != nil {
 		if err := m.ResourceAttributes.ContextValidate(ctx, formats); err != nil {
@@ -145,7 +145,7 @@ func (m *ConfigunstableOtelMetricsIngestion) contextValidateResourceAttributes(c
 	return nil
 }
 
-func (m *ConfigunstableOtelMetricsIngestion) contextValidateUpdatedAt(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1OtelMetricsIngestion) contextValidateUpdatedAt(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "updated_at", "body", strfmt.DateTime(m.UpdatedAt)); err != nil {
 		return err
@@ -155,7 +155,7 @@ func (m *ConfigunstableOtelMetricsIngestion) contextValidateUpdatedAt(ctx contex
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableOtelMetricsIngestion) MarshalBinary() ([]byte, error) {
+func (m *Configv1OtelMetricsIngestion) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -163,8 +163,8 @@ func (m *ConfigunstableOtelMetricsIngestion) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableOtelMetricsIngestion) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableOtelMetricsIngestion
+func (m *Configv1OtelMetricsIngestion) UnmarshalBinary(b []byte) error {
+	var res Configv1OtelMetricsIngestion
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -20,15 +20,20 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
+
+// OtelMetricsIngestionFromModel maps an API model into an intschema model.
+func OtelMetricsIngestionFromModel(m *models.Configv1OtelMetricsIngestion) (*intschema.OtelMetricsIngestion, error) {
+	return (otelMetricsIngestionConverter{}).fromModel(m)
+}
 
 func resourceOtelMetricsIngestion() *schema.Resource {
 	r := newGenericResource(
 		"otel_metrics_ingestion",
 		otelMetricsIngestionConverter{},
-		generatedUnstableOtelMetricsIngestion{},
+		generatedOtelMetricsIngestion{},
 	)
 	return &schema.Resource{
 		Schema:        tfschema.OtelMetricsIngestion,
@@ -48,8 +53,8 @@ var OtelMetricsIngestionDryRunCount atomic.Int64
 
 type otelMetricsIngestionConverter struct{}
 
-func (otelMetricsIngestionConverter) toModel(in *intschema.OtelMetricsIngestion) (*models.ConfigunstableOtelMetricsIngestion, error) {
-	out := &models.ConfigunstableOtelMetricsIngestion{}
+func (otelMetricsIngestionConverter) toModel(in *intschema.OtelMetricsIngestion) (*models.Configv1OtelMetricsIngestion, error) {
+	out := &models.Configv1OtelMetricsIngestion{}
 	if in.ResourceAttributes != nil {
 		out.ResourceAttributes = &models.OtelMetricsIngestionResourceAttributes{
 			FlattenMode:        enum.ResourceAttributesFlattenMode.V1(in.ResourceAttributes.FlattenMode),
@@ -61,7 +66,7 @@ func (otelMetricsIngestionConverter) toModel(in *intschema.OtelMetricsIngestion)
 	return out, nil
 }
 
-func (otelMetricsIngestionConverter) fromModel(in *models.ConfigunstableOtelMetricsIngestion) (*intschema.OtelMetricsIngestion, error) {
+func (otelMetricsIngestionConverter) fromModel(in *models.Configv1OtelMetricsIngestion) (*intschema.OtelMetricsIngestion, error) {
 	out := &intschema.OtelMetricsIngestion{}
 	if in.ResourceAttributes != nil {
 		out.ResourceAttributes = &intschema.OtelMetricsIngestionResourceAttributes{
