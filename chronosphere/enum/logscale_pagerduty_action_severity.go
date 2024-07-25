@@ -15,29 +15,29 @@
 package enum
 
 import (
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // LogScalePagerDutyActionSeverity is an enum.
-var LogScalePagerDutyActionSeverity = newEnum("LogScaleActionPagerDutyActionSeverity", []value[models.LogScaleActionPagerDutyActionSeverity]{
+var LogScalePagerDutyActionSeverity = newEnum("LogScaleActionPagerDutyActionSeverity", []value[models.PagerDutyActionSeverity]{
 	{
 		v1:        "INVALID",
 		isDefault: true,
 	},
 	{
-		v1:    models.LogScaleActionPagerDutyActionSeverityCRITICAL,
+		v1:    models.PagerDutyActionSeverityCRITICAL,
 		alias: "CRITICAL",
 	},
 	{
-		v1:    models.LogScaleActionPagerDutyActionSeverityERROR,
+		v1:    models.PagerDutyActionSeverityERROR,
 		alias: "ERROR",
 	},
 	{
-		v1:    models.LogScaleActionPagerDutyActionSeverityWARNING,
+		v1:    models.PagerDutyActionSeverityWARNING,
 		alias: "WARNING",
 	},
 	{
-		v1:    models.LogScaleActionPagerDutyActionSeverityINFO,
+		v1:    models.PagerDutyActionSeverityINFO,
 		alias: "INFO",
 	},
 })
