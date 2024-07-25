@@ -330,13 +330,13 @@ var Resources = mustValidate([]Resource{
 	},
 	{
 		Name:   "logscale_alert",
-		Entity: "LogScaleAlert",
+		Entity: "LogscaleAlert",
 		API:    V1,
 		Schema: tfschema.LogscaleAlert,
 	},
 	{
 		Name:   "logscale_action",
-		Entity: "LogScaleAction",
+		Entity: "LogscaleAction",
 		API:    V1,
 		Schema: tfschema.LogscaleAction,
 	},
