@@ -15,7 +15,7 @@
 package enum
 
 import (
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // LogscaleAlertType is an enum.

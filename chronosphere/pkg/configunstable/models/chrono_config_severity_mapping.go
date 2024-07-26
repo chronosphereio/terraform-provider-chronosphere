@@ -19,7 +19,7 @@ import (
 type ChronoConfigSeverityMapping struct {
 
 	// chronosphere severity
-	ChronosphereSeverity ChronoConfigSeverityMappingSeverity `json:"chronosphere_severity,omitempty"`
+	ChronosphereSeverity SeverityMappingSeverity `json:"chronosphere_severity,omitempty"`
 
 	// severity
 	Severity string `json:"severity,omitempty"`

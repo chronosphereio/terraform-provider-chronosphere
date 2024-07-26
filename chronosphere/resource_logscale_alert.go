@@ -15,29 +15,30 @@
 package chronosphere
 
 import (
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"go.uber.org/atomic"
+
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"go.uber.org/atomic"
 )
 
 // LogscaleAlertFromModel maps an API model to the intschema model.
-func LogscaleAlertFromModel(m *models.ConfigunstableLogScaleAlert) (*intschema.LogscaleAlert, error) {
+func LogscaleAlertFromModel(m *models.Configv1LogScaleAlert) (*intschema.LogscaleAlert, error) {
 	return (logscaleAlertConverter{}).fromModel(m)
 }
 
 func resourceLogscaleAlert() *schema.Resource {
 	r := newGenericResource[
-		*models.ConfigunstableLogScaleAlert,
+		*models.Configv1LogScaleAlert,
 		intschema.LogscaleAlert,
 		*intschema.LogscaleAlert,
 	](
 		"logscale_alert",
 		logscaleAlertConverter{},
-		generatedUnstableLogScaleAlert{},
+		generatedLogScaleAlert{},
 	)
 
 	return &schema.Resource{
@@ -49,7 +50,7 @@ func resourceLogscaleAlert() *schema.Resource {
 		CustomizeDiff: r.ValidateDryRunOptions(
 			&LogscaleAlertDryRunCount,
 			// ignore the action_ids field for unknown references check
-			ValidateDryRunOpts[*models.ConfigunstableLogScaleAlert]{
+			ValidateDryRunOpts[*models.Configv1LogScaleAlert]{
 				SetUnknownReferencesSkip: []string{"action_ids.[]"},
 			}),
 		Importer: &schema.ResourceImporter{
@@ -65,7 +66,7 @@ type logscaleAlertConverter struct{}
 
 func (logscaleAlertConverter) toModel(
 	c *intschema.LogscaleAlert,
-) (*models.ConfigunstableLogScaleAlert, error) {
+) (*models.Configv1LogScaleAlert, error) {
 	if c == nil {
 		return nil, nil
 	}
@@ -78,7 +79,7 @@ func (logscaleAlertConverter) toModel(
 	if err != nil {
 		return nil, err
 	}
-	return &models.ConfigunstableLogScaleAlert{
+	return &models.Configv1LogScaleAlert{
 		Name:                c.Name,
 		Slug:                c.Slug,
 		Repository:          c.Repository,
@@ -96,7 +97,7 @@ func (logscaleAlertConverter) toModel(
 }
 
 func (logscaleAlertConverter) fromModel(
-	m *models.ConfigunstableLogScaleAlert,
+	m *models.Configv1LogScaleAlert,
 ) (*intschema.LogscaleAlert, error) {
 	return &intschema.LogscaleAlert{
 		Name:             m.Name,

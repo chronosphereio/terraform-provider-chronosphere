@@ -3,10 +3,6 @@ package pagination
 
 import (
 	"context"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_action"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_scale_alert"
-	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
@@ -18,6 +14,8 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_action"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
@@ -29,7 +27,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
 	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/unstable"
 )
 
 func ListBuckets(
@@ -640,6 +637,144 @@ func ListGrafanaDashboardsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.GrafanaDashboards {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListLogScaleActions(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1LogScaleAction, error) {
+	return ListLogScaleActionsByFilter(ctx, client, Filter{})
+}
+
+func ListLogScaleActionsBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1LogScaleAction, error) {
+	return ListLogScaleActionsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListLogScaleActionsByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1LogScaleAction, error) {
+	return ListLogScaleActionsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListLogScaleActionsByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*log_scale_action.ListLogScaleActionsParams),
+) ([]*configv1models.Configv1LogScaleAction, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1LogScaleAction
+	)
+	for {
+		p := &log_scale_action.ListLogScaleActionsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.LogScaleAction.ListLogScaleActions(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.LogScaleActions {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListLogScaleAlerts(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1LogScaleAlert, error) {
+	return ListLogScaleAlertsByFilter(ctx, client, Filter{})
+}
+
+func ListLogScaleAlertsBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1LogScaleAlert, error) {
+	return ListLogScaleAlertsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListLogScaleAlertsByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1LogScaleAlert, error) {
+	return ListLogScaleAlertsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListLogScaleAlertsByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*log_scale_alert.ListLogScaleAlertsParams),
+) ([]*configv1models.Configv1LogScaleAlert, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1LogScaleAlert
+	)
+	for {
+		p := &log_scale_alert.ListLogScaleAlertsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.LogScaleAlert.ListLogScaleAlerts(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.LogScaleAlerts {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
@@ -1399,150 +1534,6 @@ func ListClassicDashboardsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.ClassicDashboards {
-				result = append(result, v)
-			}
-			if resp.Payload.Page != nil {
-				nextToken = resp.Payload.Page.NextToken
-			}
-		}
-		if nextToken == "" {
-			break
-		}
-	}
-	return result, nil
-}
-
-func ListUnstableLogScaleActions(
-	ctx context.Context,
-	client *configunstable.Client,
-) ([]*configunstablemodels.ConfigunstableLogScaleAction, error) {
-	return ListUnstableLogScaleActionsByFilter(ctx, client, Filter{})
-}
-
-func ListUnstableLogScaleActionsBySlugs(
-	ctx context.Context,
-	client *configunstable.Client,
-	slugs []string,
-) ([]*configunstablemodels.ConfigunstableLogScaleAction, error) {
-	return ListUnstableLogScaleActionsByFilter(ctx, client, Filter{
-		Slugs: slugs,
-	})
-}
-
-func ListUnstableLogScaleActionsByNames(
-	ctx context.Context,
-	client *configunstable.Client,
-	names []string,
-) ([]*configunstablemodels.ConfigunstableLogScaleAction, error) {
-	return ListUnstableLogScaleActionsByFilter(ctx, client, Filter{
-		Names: names,
-	})
-}
-
-func ListUnstableLogScaleActionsByFilter(
-	ctx context.Context,
-	client *configunstable.Client,
-	f Filter,
-	opts ...func(*log_scale_action.ListLogScaleActionsParams),
-) ([]*configunstablemodels.ConfigunstableLogScaleAction, error) {
-	if !unstable.Enabled() {
-		return nil, nil
-	}
-	var (
-		nextToken string
-		result    []*configunstablemodels.ConfigunstableLogScaleAction
-	)
-	for {
-		p := &log_scale_action.ListLogScaleActionsParams{
-			Context:   ctx,
-			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
-		}
-		for _, opt := range opts {
-			opt(p)
-		}
-		resp, err := client.LogScaleAction.ListLogScaleActions(p)
-		if err != nil {
-			return nil, err
-		}
-
-		// If payload or page token aren't set, no next page.
-		nextToken = ""
-		if resp.Payload != nil {
-			for _, v := range resp.Payload.LogScaleActions {
-				result = append(result, v)
-			}
-			if resp.Payload.Page != nil {
-				nextToken = resp.Payload.Page.NextToken
-			}
-		}
-		if nextToken == "" {
-			break
-		}
-	}
-	return result, nil
-}
-
-func ListUnstableLogScaleAlerts(
-	ctx context.Context,
-	client *configunstable.Client,
-) ([]*configunstablemodels.ConfigunstableLogScaleAlert, error) {
-	return ListUnstableLogScaleAlertsByFilter(ctx, client, Filter{})
-}
-
-func ListUnstableLogScaleAlertsBySlugs(
-	ctx context.Context,
-	client *configunstable.Client,
-	slugs []string,
-) ([]*configunstablemodels.ConfigunstableLogScaleAlert, error) {
-	return ListUnstableLogScaleAlertsByFilter(ctx, client, Filter{
-		Slugs: slugs,
-	})
-}
-
-func ListUnstableLogScaleAlertsByNames(
-	ctx context.Context,
-	client *configunstable.Client,
-	names []string,
-) ([]*configunstablemodels.ConfigunstableLogScaleAlert, error) {
-	return ListUnstableLogScaleAlertsByFilter(ctx, client, Filter{
-		Names: names,
-	})
-}
-
-func ListUnstableLogScaleAlertsByFilter(
-	ctx context.Context,
-	client *configunstable.Client,
-	f Filter,
-	opts ...func(*log_scale_alert.ListLogScaleAlertsParams),
-) ([]*configunstablemodels.ConfigunstableLogScaleAlert, error) {
-	if !unstable.Enabled() {
-		return nil, nil
-	}
-	var (
-		nextToken string
-		result    []*configunstablemodels.ConfigunstableLogScaleAlert
-	)
-	for {
-		p := &log_scale_alert.ListLogScaleAlertsParams{
-			Context:   ctx,
-			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
-		}
-		for _, opt := range opts {
-			opt(p)
-		}
-		resp, err := client.LogScaleAlert.ListLogScaleAlerts(p)
-		if err != nil {
-			return nil, err
-		}
-
-		// If payload or page token aren't set, no next page.
-		nextToken = ""
-		if resp.Payload != nil {
-			for _, v := range resp.Payload.LogScaleAlerts {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {

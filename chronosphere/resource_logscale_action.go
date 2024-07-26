@@ -17,27 +17,28 @@ package chronosphere
 import (
 	"errors"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"go.uber.org/atomic"
+
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
 // LogscaleActionFromModel maps an API model to the intschema model.
-func LogscaleActionFromModel(m *models.ConfigunstableLogScaleAction) (*intschema.LogscaleAction, error) {
+func LogscaleActionFromModel(m *models.Configv1LogScaleAction) (*intschema.LogscaleAction, error) {
 	return (logscaleActionConverter{}).fromModel(m)
 }
 
 func resourceLogscaleAction() *schema.Resource {
 	r := newGenericResource[
-		*models.ConfigunstableLogScaleAction,
+		*models.Configv1LogScaleAction,
 		intschema.LogscaleAction,
 		*intschema.LogscaleAction,
 	](
 		"logscale_action",
 		logscaleActionConverter{},
-		generatedUnstableLogScaleAction{},
+		generatedLogScaleAction{},
 	)
 
 	return &schema.Resource{
@@ -60,7 +61,7 @@ type logscaleActionConverter struct{}
 
 func (logscaleActionConverter) toModel(
 	c *intschema.LogscaleAction,
-) (*models.ConfigunstableLogScaleAction, error) {
+) (*models.Configv1LogScaleAction, error) {
 	if c == nil {
 		return nil, nil
 	}
@@ -68,7 +69,7 @@ func (logscaleActionConverter) toModel(
 	if err != nil {
 		return nil, err
 	}
-	return &models.ConfigunstableLogScaleAction{
+	return &models.Configv1LogScaleAction{
 		Name:                   c.Name,
 		Slug:                   c.Slug,
 		Repository:             c.Repository,
@@ -86,7 +87,7 @@ func (logscaleActionConverter) toModel(
 }
 
 func (logscaleActionConverter) fromModel(
-	m *models.ConfigunstableLogScaleAction,
+	m *models.Configv1LogScaleAction,
 ) (*intschema.LogscaleAction, error) {
 	return &intschema.LogscaleAction{
 		Name:                   m.Name,
@@ -201,7 +202,7 @@ func pagerDutyActionToModel(c *intschema.LogscaleActionPagerDutyAction) *models.
 	}
 	return &models.LogScaleActionPagerDutyAction{
 		RoutingKey: c.RoutingKey,
-		Severity:   models.LogScaleActionPagerDutyActionSeverity(c.Severity),
+		Severity:   models.PagerDutyActionSeverity(c.Severity),
 		UseProxy:   c.UseProxy,
 	}
 }
