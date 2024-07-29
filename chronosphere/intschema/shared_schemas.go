@@ -12,15 +12,11 @@ type LogAllocationConfigSchema struct {
 }
 
 type LogPrioritiesSchema struct {
-	HighPriorityFilters []LogPrioritiesSchemaHighPriorityFilters `intschema:"high_priority_filters,optional"`
-	LowPriorityFilters  []LogPrioritiesSchemaLowPriorityFilters  `intschema:"low_priority_filters,optional"`
+	HighPriorityFilter []LogSearchFilterSchema `intschema:"high_priority_filter,optional"`
+	LowPriorityFilter  []LogSearchFilterSchema `intschema:"low_priority_filter,optional"`
 }
 
-type LogPrioritiesSchemaHighPriorityFilters struct {
-	Query string `intschema:"query"`
-}
-
-type LogPrioritiesSchemaLowPriorityFilters struct {
+type LogSearchFilterSchema struct {
 	Query string `intschema:"query"`
 }
 

@@ -77,10 +77,10 @@ var traceDatasetConfigurationSchema = map[string]*schema.Schema{
 var logDatasetConfigurationSchema = map[string]*schema.Schema{
 	"match_criteria": {
 		Type:     schema.TypeList,
-		Required: true,
+		Optional: true,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: LogSearchFilterSchema,
+			Schema: LogSearchSchema,
 		},
 	},
 }

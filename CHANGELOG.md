@@ -3,7 +3,7 @@
 ## Unreleased
 
 Added:
-* Add `high_priority_filters` and `low_priority_filters` to `chronosphere_log_allocation_config`.
+* Add `high_priority_filter` and `low_priority_filter` to unstable `chronosphere_log_allocation_config`.
 
 ## v1.4.0
 

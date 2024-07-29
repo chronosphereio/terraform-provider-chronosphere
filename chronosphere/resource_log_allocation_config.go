@@ -86,17 +86,12 @@ func prioritiesToModel(a *intschema.LogPrioritiesSchema) *models.LogAllocationCo
 		return nil
 	}
 	return &models.LogAllocationConfigHighLowPriorities{
-		HighPriorityFilters: sliceutil.Map(a.HighPriorityFilters, highPriorityToModel),
-		LowPriorityFilters:  sliceutil.Map(a.LowPriorityFilters, lowPriorityToModel),
+		HighPriorityFilters: sliceutil.Map(a.HighPriorityFilter, searchFilterToModel),
+		LowPriorityFilters:  sliceutil.Map(a.LowPriorityFilter, searchFilterToModel),
 	}
 }
 
-func highPriorityToModel(p intschema.LogPrioritiesSchemaHighPriorityFilters,
-) *models.Configv1LogSearchFilter {
-	return &models.Configv1LogSearchFilter{Query: p.Query}
-}
-
-func lowPriorityToModel(p intschema.LogPrioritiesSchemaLowPriorityFilters,
+func searchFilterToModel(p intschema.LogSearchFilterSchema,
 ) *models.Configv1LogSearchFilter {
 	return &models.Configv1LogSearchFilter{Query: p.Query}
 }
@@ -134,17 +129,12 @@ func prioritiesFromModel(a *models.LogAllocationConfigHighLowPriorities) *intsch
 		return nil
 	}
 	return &intschema.LogPrioritiesSchema{
-		HighPriorityFilters: sliceutil.Map(a.HighPriorityFilters, highPriorityFromModel),
-		LowPriorityFilters:  sliceutil.Map(a.LowPriorityFilters, lowPriorityFromModel),
+		HighPriorityFilter: sliceutil.Map(a.HighPriorityFilters, searchFilterFromModel),
+		LowPriorityFilter:  sliceutil.Map(a.LowPriorityFilters, searchFilterFromModel),
 	}
 }
 
-func highPriorityFromModel(p *models.Configv1LogSearchFilter,
-) intschema.LogPrioritiesSchemaHighPriorityFilters {
-	return intschema.LogPrioritiesSchemaHighPriorityFilters{Query: p.Query}
-}
-
-func lowPriorityFromModel(p *models.Configv1LogSearchFilter,
-) intschema.LogPrioritiesSchemaLowPriorityFilters {
-	return intschema.LogPrioritiesSchemaLowPriorityFilters{Query: p.Query}
+func searchFilterFromModel(p *models.Configv1LogSearchFilter,
+) intschema.LogSearchFilterSchema {
+	return intschema.LogSearchFilterSchema{Query: p.Query}
 }

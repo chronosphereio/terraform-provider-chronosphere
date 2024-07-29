@@ -54,20 +54,19 @@ var LogPrioritiesSchema = &schema.Schema{
 	Type: schema.TypeList,
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"high_priority_filters": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Resource{Schema: LogSearchFilterSchema},
-				MinItems: 1,
-				Optional: true,
-			},
-			"low_priority_filters": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Resource{Schema: LogSearchFilterSchema},
-				MinItems: 1,
-				Optional: true,
-			},
+			"high_priority_filter": LogSearchFilterSchema,
+			"low_priority_filter":  LogSearchFilterSchema,
 		},
 	},
 	MaxItems: 1,
+	Optional: true,
+}
+
+var LogSearchFilterSchema = &schema.Schema{
+	Type: schema.TypeList,
+	Elem: &schema.Resource{
+		Schema: LogSearchSchema,
+	},
+	MinItems: 1,
 	Optional: true,
 }
