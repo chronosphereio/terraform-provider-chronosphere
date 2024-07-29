@@ -1,12 +1,12 @@
 # Releases
 
 ## Unreleased
+
+## v1.4.0
 Added:
 * Add v1 `chronosphere_logscale_alert` resource.
 * Add v1 `chronosphere_logscale_action` resource.
-
-Added:
-* Add `chronosphere_otel_metrics_ingestion` resource.
+* Add v1 `chronosphere_otel_metrics_ingestion` resource.
 
 ## v1.3.0
 
