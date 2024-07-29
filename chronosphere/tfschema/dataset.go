@@ -80,12 +80,7 @@ var logDatasetConfigurationSchema = map[string]*schema.Schema{
 		Required: true,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"query": {
-					Type:     schema.TypeString,
-					Required: true,
-				},
-			},
+			Schema: LogSearchFilterSchema,
 		},
 	},
 }
