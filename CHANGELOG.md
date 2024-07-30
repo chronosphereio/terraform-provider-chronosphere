@@ -2,7 +2,11 @@
 
 ## Unreleased
 
+Added:
+* Add `high_priority_filter` and `low_priority_filter` to unstable `chronosphere_log_allocation_config`.
+
 ## v1.4.0
+
 Added:
 * Add v1 `chronosphere_logscale_alert` resource.
 * Add v1 `chronosphere_logscale_action` resource.

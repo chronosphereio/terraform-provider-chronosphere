@@ -10,6 +10,7 @@ var LogAllocationConfig = map[string]*schema.Schema{
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"allocation": LogAllocationConfigSchema,
+				"priorities": LogPrioritiesSchema,
 			},
 			SchemaVersion: 1,
 		},
@@ -21,6 +22,17 @@ var LogAllocationConfig = map[string]*schema.Schema{
 		Elem:     LogDatasetAllocationSchema,
 		Optional: true,
 		MaxItems: maxAllocations,
+	},
+}
+
+var LogDatasetAllocationSchema = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"dataset_slug": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"allocation": LogAllocationConfigSchema,
+		"priorities": LogPrioritiesSchema,
 	},
 }
 
@@ -38,12 +50,23 @@ var LogAllocationConfigSchema = &schema.Schema{
 	Required: true,
 }
 
-var LogDatasetAllocationSchema = &schema.Resource{
-	Schema: map[string]*schema.Schema{
-		"dataset_slug": {
-			Type:     schema.TypeString,
-			Required: true,
+var LogPrioritiesSchema = &schema.Schema{
+	Type: schema.TypeList,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"high_priority_filter": LogSearchFilterSchema,
+			"low_priority_filter":  LogSearchFilterSchema,
 		},
-		"allocation": LogAllocationConfigSchema,
 	},
+	MaxItems: 1,
+	Optional: true,
+}
+
+var LogSearchFilterSchema = &schema.Schema{
+	Type: schema.TypeList,
+	Elem: &schema.Resource{
+		Schema: LogSearchSchema,
+	},
+	MinItems: 1,
+	Optional: true,
 }

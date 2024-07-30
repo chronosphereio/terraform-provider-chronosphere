@@ -59,6 +59,7 @@ func (LogAllocationConfigConverter) toModel(
 	return &models.ConfigunstableLogAllocationConfig{
 		DefaultDataset: &models.LogAllocationConfigDefaultDataset{
 			Allocation: allocationToModel(m.DefaultDataset.Allocation),
+			Priorities: prioritiesToModel(m.DefaultDataset.Priorities),
 		},
 		DatasetAllocations: sliceutil.Map(m.DatasetAllocation, datasetAllocationToModel),
 	}, nil
@@ -70,6 +71,7 @@ func datasetAllocationToModel(
 	return &models.LogAllocationConfigDatasetAllocation{
 		Allocation:  allocationToModel(datasetAllocation.Allocation),
 		DatasetSlug: datasetAllocation.DatasetSlug,
+		Priorities:  prioritiesToModel(datasetAllocation.Priorities),
 	}
 }
 
@@ -79,12 +81,28 @@ func allocationToModel(a *intschema.LogAllocationConfigSchema) *models.LogAlloca
 	}
 }
 
+func prioritiesToModel(a *intschema.LogPrioritiesSchema) *models.LogAllocationConfigHighLowPriorities {
+	if a == nil {
+		return nil
+	}
+	return &models.LogAllocationConfigHighLowPriorities{
+		HighPriorityFilters: sliceutil.Map(a.HighPriorityFilter, searchFilterToModel),
+		LowPriorityFilters:  sliceutil.Map(a.LowPriorityFilter, searchFilterToModel),
+	}
+}
+
+func searchFilterToModel(p intschema.LogSearchFilterSchema,
+) *models.Configv1LogSearchFilter {
+	return &models.Configv1LogSearchFilter{Query: p.Query}
+}
+
 func (LogAllocationConfigConverter) fromModel(
 	m *models.ConfigunstableLogAllocationConfig,
 ) (*intschema.LogAllocationConfig, error) {
 	return &intschema.LogAllocationConfig{
 		DefaultDataset: &intschema.LogAllocationConfigDefaultDataset{
 			Allocation: allocationFromModel(m.DefaultDataset.Allocation),
+			Priorities: prioritiesFromModel(m.DefaultDataset.Priorities),
 		},
 		DatasetAllocation: sliceutil.Map(m.DatasetAllocations, datasetAllocationFromModel),
 	}, nil
@@ -96,6 +114,7 @@ func datasetAllocationFromModel(
 	return intschema.LogAllocationConfigDatasetAllocation{
 		Allocation:  allocationFromModel(datasetAllocation.Allocation),
 		DatasetSlug: datasetAllocation.DatasetSlug,
+		Priorities:  prioritiesFromModel(datasetAllocation.Priorities),
 	}
 }
 
@@ -103,4 +122,19 @@ func allocationFromModel(a *models.LogAllocationConfigAllocation) *intschema.Log
 	return &intschema.LogAllocationConfigSchema{
 		PercentOfLicense: a.PercentOfLicense,
 	}
+}
+
+func prioritiesFromModel(a *models.LogAllocationConfigHighLowPriorities) *intschema.LogPrioritiesSchema {
+	if a == nil {
+		return nil
+	}
+	return &intschema.LogPrioritiesSchema{
+		HighPriorityFilter: sliceutil.Map(a.HighPriorityFilters, searchFilterFromModel),
+		LowPriorityFilter:  sliceutil.Map(a.LowPriorityFilters, searchFilterFromModel),
+	}
+}
+
+func searchFilterFromModel(p *models.Configv1LogSearchFilter,
+) intschema.LogSearchFilterSchema {
+	return intschema.LogSearchFilterSchema{Query: p.Query}
 }

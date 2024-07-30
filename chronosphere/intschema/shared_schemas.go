@@ -11,6 +11,15 @@ type LogAllocationConfigSchema struct {
 	PercentOfLicense float64 `intschema:"percent_of_license"`
 }
 
+type LogPrioritiesSchema struct {
+	HighPriorityFilter []LogSearchFilterSchema `intschema:"high_priority_filter,optional"`
+	LowPriorityFilter  []LogSearchFilterSchema `intschema:"low_priority_filter,optional"`
+}
+
+type LogSearchFilterSchema struct {
+	Query string `intschema:"query"`
+}
+
 type Matcher struct {
 	Name  string `intschema:"name"`
 	Type  string `intschema:"type"`

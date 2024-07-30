@@ -38,12 +38,15 @@ import (
 )
 
 // Add shared schema references here to generate shared types.
+// Insert in sorted order.
 var sharedSchemaTypeNames = map[*schema.Schema]string{
+	tfschema.LogAllocationConfigSchema:    "LogAllocationConfigSchema",
+	tfschema.LogPrioritiesSchema:          "LogPrioritiesSchema",
+	tfschema.LogSearchFilterSchema:        "LogSearchFilterSchema",
 	tfschema.MatcherListSchema:            "Matcher",
 	tfschema.MonitorSeriesConditionSchema: "MonitorSeriesCondition",
 	tfschema.ResourcePoolAllocationSchema: "ResourcePoolAllocationSchema",
 	tfschema.ResourcePoolPrioritiesSchema: "ResourcePoolPrioritiesSchema",
-	tfschema.LogAllocationConfigSchema:    "LogAllocationConfigSchema",
 	tfschema.TraceBoolFilterSchema:        "TraceBoolFilter",
 	tfschema.TraceDurationFilterSchema:    "TraceDurationFilter",
 	tfschema.TraceFilterSchema:            "TraceFilter",

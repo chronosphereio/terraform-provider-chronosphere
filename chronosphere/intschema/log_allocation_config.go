@@ -56,9 +56,11 @@ func (o *LogAllocationConfig) Ref() tfid.ID {
 
 type LogAllocationConfigDefaultDataset struct {
 	Allocation *LogAllocationConfigSchema `intschema:"allocation,optional,list_encoded_object"`
+	Priorities *LogPrioritiesSchema       `intschema:"priorities,optional,list_encoded_object"`
 }
 
 type LogAllocationConfigDatasetAllocation struct {
 	DatasetSlug string                     `intschema:"dataset_slug"`
 	Allocation  *LogAllocationConfigSchema `intschema:"allocation,optional,list_encoded_object"`
+	Priorities  *LogPrioritiesSchema       `intschema:"priorities,optional,list_encoded_object"`
 }
