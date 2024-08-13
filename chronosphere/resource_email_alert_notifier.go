@@ -30,11 +30,7 @@ func EmailAlertNotifierFromModel(
 }
 
 func resourceEmailAlertNotifier() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1Notifier,
-		intschema.EmailAlertNotifier,
-		*intschema.EmailAlertNotifier,
-	](
+	r := newGenericResource(
 		"email_alert_notifier",
 		emailAlertNotifierConverter{},
 		generatedNotifier{},

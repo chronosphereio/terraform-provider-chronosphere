@@ -20,17 +20,21 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_action"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/muting_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notifier"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/otel_metrics_ingestion"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/recording_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/resource_pools"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/rollup_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_behavior_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_tail_sampling_rules"
@@ -88,17 +92,21 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.DropRule = drop_rule.New(transport, formats)
 	cli.GcpMetricsIntegration = gcp_metrics_integration.New(transport, formats)
 	cli.GrafanaDashboard = grafana_dashboard.New(transport, formats)
+	cli.LogScaleAction = log_scale_action.New(transport, formats)
+	cli.LogScaleAlert = log_scale_alert.New(transport, formats)
 	cli.MappingRule = mapping_rule.New(transport, formats)
 	cli.Monitor = monitor.New(transport, formats)
 	cli.MutingRule = muting_rule.New(transport, formats)
 	cli.NotificationPolicy = notification_policy.New(transport, formats)
 	cli.Notifier = notifier.New(transport, formats)
+	cli.OtelMetricsIngestion = otel_metrics_ingestion.New(transport, formats)
 	cli.RecordingRule = recording_rule.New(transport, formats)
 	cli.ResourcePools = resource_pools.New(transport, formats)
 	cli.RollupRule = rollup_rule.New(transport, formats)
 	cli.Service = service.New(transport, formats)
 	cli.ServiceAccount = service_account.New(transport, formats)
 	cli.Team = team.New(transport, formats)
+	cli.TraceBehaviorConfig = trace_behavior_config.New(transport, formats)
 	cli.TraceJaegerRemoteSamplingStrategy = trace_jaeger_remote_sampling_strategy.New(transport, formats)
 	cli.TraceMetricsRule = trace_metrics_rule.New(transport, formats)
 	cli.TraceTailSamplingRules = trace_tail_sampling_rules.New(transport, formats)
@@ -166,6 +174,10 @@ type ConfigV1API struct {
 
 	GrafanaDashboard grafana_dashboard.ClientService
 
+	LogScaleAction log_scale_action.ClientService
+
+	LogScaleAlert log_scale_alert.ClientService
+
 	MappingRule mapping_rule.ClientService
 
 	Monitor monitor.ClientService
@@ -175,6 +187,8 @@ type ConfigV1API struct {
 	NotificationPolicy notification_policy.ClientService
 
 	Notifier notifier.ClientService
+
+	OtelMetricsIngestion otel_metrics_ingestion.ClientService
 
 	RecordingRule recording_rule.ClientService
 
@@ -187,6 +201,8 @@ type ConfigV1API struct {
 	ServiceAccount service_account.ClientService
 
 	Team team.ClientService
+
+	TraceBehaviorConfig trace_behavior_config.ClientService
 
 	TraceJaegerRemoteSamplingStrategy trace_jaeger_remote_sampling_strategy.ClientService
 
@@ -210,17 +226,21 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.DropRule.SetTransport(transport)
 	c.GcpMetricsIntegration.SetTransport(transport)
 	c.GrafanaDashboard.SetTransport(transport)
+	c.LogScaleAction.SetTransport(transport)
+	c.LogScaleAlert.SetTransport(transport)
 	c.MappingRule.SetTransport(transport)
 	c.Monitor.SetTransport(transport)
 	c.MutingRule.SetTransport(transport)
 	c.NotificationPolicy.SetTransport(transport)
 	c.Notifier.SetTransport(transport)
+	c.OtelMetricsIngestion.SetTransport(transport)
 	c.RecordingRule.SetTransport(transport)
 	c.ResourcePools.SetTransport(transport)
 	c.RollupRule.SetTransport(transport)
 	c.Service.SetTransport(transport)
 	c.ServiceAccount.SetTransport(transport)
 	c.Team.SetTransport(transport)
+	c.TraceBehaviorConfig.SetTransport(transport)
 	c.TraceJaegerRemoteSamplingStrategy.SetTransport(transport)
 	c.TraceMetricsRule.SetTransport(transport)
 	c.TraceTailSamplingRules.SetTransport(transport)

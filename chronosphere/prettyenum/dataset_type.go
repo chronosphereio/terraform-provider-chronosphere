@@ -27,17 +27,24 @@ type DatasetType string
 // Supported dataset types.
 const (
 	DatasetDatasetTypeTracesModel = DatasetType(models.DatasetDatasetTypeTRACES)
+	DatasetDatasetTypeLogsModel   = DatasetType(models.DatasetDatasetTypeLOGS)
 )
 
-var DatasetDatasetTypeTracesLower = DatasetType(strings.ToLower(string(DatasetDatasetTypeTracesModel)))
+var (
+	DatasetDatasetTypeTracesLower = DatasetType(strings.ToLower(string(DatasetDatasetTypeTracesModel)))
+	DatasetDatasetTypeLogsLower   = DatasetType(strings.ToLower(string(DatasetDatasetTypeLogsModel)))
+)
 
 var modelFromDatasetType = map[DatasetType]models.DatasetDatasetType{
 	DatasetDatasetTypeTracesModel: models.DatasetDatasetTypeTRACES,
 	DatasetDatasetTypeTracesLower: models.DatasetDatasetTypeTRACES,
+	DatasetDatasetTypeLogsModel:   models.DatasetDatasetTypeLOGS,
+	DatasetDatasetTypeLogsLower:   models.DatasetDatasetTypeLOGS,
 }
 
 var datasetTypeFromModel = map[models.DatasetDatasetType]DatasetType{
 	models.DatasetDatasetTypeTRACES: DatasetDatasetTypeTracesModel,
+	models.DatasetDatasetTypeLOGS:   DatasetDatasetTypeLogsModel,
 }
 
 // ValidateDatasetDatasetType validates the raw dataset type value.

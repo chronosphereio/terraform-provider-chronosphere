@@ -30,11 +30,7 @@ func VictoropsAlertNotifierFromModel(
 }
 
 func resourceVictorOpsAlertNotifier() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1Notifier,
-		intschema.VictoropsAlertNotifier,
-		*intschema.VictoropsAlertNotifier,
-	](
+	r := newGenericResource(
 		"victorops_alert_notifier",
 		victoropsAlertNotifierConverter{},
 		generatedNotifier{},

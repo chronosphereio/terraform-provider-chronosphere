@@ -21,7 +21,7 @@ import (
 
 // Enum defines the parameters of an enum field in a Terraform schema.
 type Enum struct {
-	Value    enum.Enum[string, string]
+	Value    enum.Enum[string]
 	Required bool
 	Optional bool
 	ForceNew bool

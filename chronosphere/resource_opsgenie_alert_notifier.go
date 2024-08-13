@@ -34,11 +34,7 @@ func OpsgenieAlertNotifierFromModel(
 }
 
 func resourceOpsGenieAlertNotifier() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1Notifier,
-		intschema.OpsgenieAlertNotifier,
-		*intschema.OpsgenieAlertNotifier,
-	](
+	r := newGenericResource(
 		"opsgenie_alert_notifier",
 		opsgenieAlertNotifierConverter{},
 		generatedNotifier{},

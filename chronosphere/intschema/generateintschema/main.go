@@ -38,7 +38,11 @@ import (
 )
 
 // Add shared schema references here to generate shared types.
+// Insert in sorted order.
 var sharedSchemaTypeNames = map[*schema.Schema]string{
+	tfschema.LogAllocationConfigSchema:    "LogAllocationConfigSchema",
+	tfschema.LogPrioritiesSchema:          "LogPrioritiesSchema",
+	tfschema.LogSearchFilterSchema:        "LogSearchFilterSchema",
 	tfschema.MatcherListSchema:            "Matcher",
 	tfschema.MonitorSeriesConditionSchema: "MonitorSeriesCondition",
 	tfschema.ResourcePoolAllocationSchema: "ResourcePoolAllocationSchema",
@@ -79,6 +83,7 @@ var fieldIsTFID = map[string]bool{
 	"team_id":                  true,
 	"execution_group":          true,
 	"notification_policy_data": true,
+	"action_ids":               true,
 
 	"callback_id": false,
 	"external_id": false,

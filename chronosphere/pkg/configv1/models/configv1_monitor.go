@@ -39,7 +39,7 @@ type Configv1Monitor struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Graphite query. If set, prometheus_query cannot be set.
+	// Graphite query. If set, no other queries can be set.
 	// Example: sumSeries(stats.timers.*.mean_90)
 	GraphiteQuery string `json:"graphite_query,omitempty"`
 
@@ -51,6 +51,9 @@ type Configv1Monitor struct {
 	// and can be used to route alerts with notification overrides.
 	Labels map[string]string `json:"labels,omitempty"`
 
+	// Logging query. If set, no other queries can be set.
+	LoggingQuery string `json:"logging_query,omitempty"`
+
 	// Required name of the Monitor. May be modified after the Monitor is created.
 	Name string `json:"name,omitempty"`
 
@@ -58,7 +61,7 @@ type Configv1Monitor struct {
 	// If omitted, the notification policy is inherited from the monitor's bucket.
 	NotificationPolicySlug string `json:"notification_policy_slug,omitempty"`
 
-	// PromQL query. If set, graphite_query cannot be set.
+	// PromQL query. If set, no other queries can be set.
 	// Example: up{job=\"prometheus\"} == 0
 	PrometheusQuery string `json:"prometheus_query,omitempty"`
 

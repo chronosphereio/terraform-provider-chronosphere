@@ -19,33 +19,26 @@ import (
 )
 
 // MetricType is an enum.
-var MetricType = newEnum("MetricType", []value[
-	string,
-	configv1.RollupRuleMetricType,
-]{
+var MetricType = newEnum("MetricType", []value[configv1.RollupRuleMetricType]{
 	{
-		legacy:    "UNKNOWN_MT",
-		isDefault: true,
+		isDefault:   true,
+		legacyAlias: "UNKNOWN_MT",
 	},
 	{
-		legacy: "COUNTER",
-		v1:     configv1.RollupRuleMetricTypeCOUNTER,
-		alias:  "COUNTER",
+		v1:    configv1.RollupRuleMetricTypeCOUNTER,
+		alias: "COUNTER",
 	},
 	{
-		legacy: "GAUGE",
-		v1:     configv1.RollupRuleMetricTypeGAUGE,
-		alias:  "GAUGE",
+		v1:    configv1.RollupRuleMetricTypeGAUGE,
+		alias: "GAUGE",
 	},
 	{
-		legacy: "DELTA",
-		v1:     configv1.RollupRuleMetricTypeDELTA,
-		alias:  "DELTA",
+		v1:    configv1.RollupRuleMetricTypeDELTA,
+		alias: "DELTA",
 	},
 	{
-		legacy: "DISTRIBUTION",
-		v1:     configv1.RollupRuleMetricTypeDISTRIBUTION,
-		alias:  "DISTRIBUTION",
+		v1:    configv1.RollupRuleMetricTypeDISTRIBUTION,
+		alias: "DISTRIBUTION",
 	},
 	{
 		v1:    configv1.RollupRuleMetricTypeCUMULATIVEEXPONENTIALHISTOGRAM,

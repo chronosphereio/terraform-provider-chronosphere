@@ -54,6 +54,16 @@ func TestEnumConversions(t *testing.T) {
 
 	// invalid legacy -> v1
 	require.Equal(t, configv1.Configv1LabelMatcherMatcherType(""), MatcherType.V1("INVALID_MATCHER_TYPE"))
+
+	// v1 -> v1
+	require.Equal(t,
+		configv1.PagerDutyActionSeverityERROR,
+		LogScalePagerDutyActionSeverity.V1("ERROR"))
+
+	// v1 -> v1
+	require.Equal(t,
+		configv1.WebhookActionHTTPMethodPOST,
+		LogScaleWebhookActionHTTPMethod.V1("POST"))
 }
 
 func TestEnumValidateError(t *testing.T) {
@@ -72,7 +82,7 @@ func TestAllEnumsValidate(t *testing.T) {
 		legacySwaggerName string
 		v1SwaggerName     string
 		unstable          bool
-		enum              Enum[string, string]
+		enum              Enum[string]
 	}{
 		{
 			legacySwaggerName: "entitiesMatcherType",
@@ -102,12 +112,22 @@ func TestAllEnumsValidate(t *testing.T) {
 		{
 			v1SwaggerName: "ResourceAttributesFlattenMode",
 			enum:          ResourceAttributesFlattenMode.ToStrings(),
-			unstable:      true,
 		},
 		{
 			v1SwaggerName: "ResourceAttributesFilterMode",
 			enum:          ResourceAttributesFilterMode.ToStrings(),
-			unstable:      true,
+		},
+		{
+			v1SwaggerName: "PagerDutyActionSeverity",
+			enum:          LogScalePagerDutyActionSeverity.ToStrings(),
+		},
+		{
+			v1SwaggerName: "WebhookActionHTTPMethod",
+			enum:          LogScaleWebhookActionHTTPMethod.ToStrings(),
+		},
+		{
+			v1SwaggerName: "LogScaleAlertAlertType",
+			enum:          LogscaleAlertType.ToStrings(),
 		},
 	}
 	for _, tt := range tests {

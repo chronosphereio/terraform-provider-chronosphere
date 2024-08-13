@@ -34,11 +34,7 @@ func MappingRuleFromModel(m *models.Configv1MappingRule) (*intschema.MappingRule
 }
 
 func resourceMappingRule() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1MappingRule,
-		intschema.MappingRule,
-		*intschema.MappingRule,
-	](
+	r := newGenericResource(
 		"mapping_rule",
 		mappingRuleConverter{},
 		generatedMappingRule{},
@@ -97,7 +93,7 @@ func (mappingRuleConverter) fromModel(
 	if m.AggregationPolicy != nil {
 		r.Aggregations = aggregationFromModel(m.AggregationPolicy.Aggregation)
 		r.StoragePolicy = mappingStoragePolicyFromModel(m.AggregationPolicy.StoragePolicy)
-		r.DropTimestamp = m.AggregationPolicy.DropTimestamp
+		r.DropTimestamp = m.AggregationPolicy.DropTimestamp //nolint:staticcheck // deprecated field
 		r.Interval = m.AggregationPolicy.Interval
 	}
 	return r, nil

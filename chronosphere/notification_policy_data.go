@@ -48,10 +48,12 @@ type Routes struct {
 }
 
 // RoutesNotifierList is a list of notifiers along with configuration for
-// how when those notifiers should repeat alerting.
+// when those notifiers should repeat alerting and whether they should be grouped
+// by any specific values.
 type RoutesNotifierList struct {
 	Notifiers      []*RoutesNotifierListNotifier `json:"notifiers"`
 	RepeatInterval string                        `json:"repeat_interval,omitempty"`
+	GroupBy        *RoutesNotifierListGroupBy    `json:"group_by,omitempty"`
 }
 
 // RoutesOverride is a set of rules that override the default routes
@@ -64,6 +66,11 @@ type RoutesOverride struct {
 type RoutesNotifierListNotifier struct {
 	Name string `json:"name,omitempty"`
 	Slug string `json:"slug,omitempty"`
+}
+
+// RoutesNotifierListGroupBy is a list of label names by which notifications are grouped.
+type RoutesNotifierListGroupBy struct {
+	LabelNames []string `json:"label_names,omitempty"`
 }
 
 // AlertLabelMatcher represents a matcher for entities
@@ -178,7 +185,18 @@ func notifierListMapToModel(notifierList RoutesNotifierList) (*configmodels.Rout
 	return &configmodels.RoutesNotifierList{
 		NotifierSlugs:      sliceutil.Map(notifierList.Notifiers, func(n *RoutesNotifierListNotifier) string { return n.Slug }),
 		RepeatIntervalSecs: durationInSecs,
+		GroupBy:            notifierListGroupByToModel(notifierList.GroupBy),
 	}, nil
+}
+
+func notifierListGroupByToModel(notifierListGroupBy *RoutesNotifierListGroupBy) *configmodels.NotificationPolicyRoutesGroupBy {
+	if notifierListGroupBy == nil {
+		return nil
+	}
+
+	return &configmodels.NotificationPolicyRoutesGroupBy{
+		LabelNames: notifierListGroupBy.LabelNames,
+	}
 }
 
 func routesFromModel(m *configmodels.NotificationPolicyRoutes) (*Routes, error) {
@@ -245,12 +263,23 @@ func routesNotifierListFromModel(m *configmodels.RoutesNotifierList) RoutesNotif
 	return RoutesNotifierList{
 		Notifiers:      sliceutil.Map(m.NotifierSlugs, routesNotifierListNotifierFromSlug),
 		RepeatInterval: durationFromSecs(m.RepeatIntervalSecs),
+		GroupBy:        routesNotifierListGroupByFromModel(m.GroupBy),
 	}
 }
 
 func routesNotifierListNotifierFromSlug(slug string) *RoutesNotifierListNotifier {
 	return &RoutesNotifierListNotifier{
 		Slug: slug,
+	}
+}
+
+func routesNotifierListGroupByFromModel(m *configmodels.NotificationPolicyRoutesGroupBy) *RoutesNotifierListGroupBy {
+	if m == nil {
+		return nil
+	}
+
+	return &RoutesNotifierListGroupBy{
+		LabelNames: m.LabelNames,
 	}
 }
 

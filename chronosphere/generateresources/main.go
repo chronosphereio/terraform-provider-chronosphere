@@ -48,12 +48,12 @@ func run() error {
 	}
 
 	var entityTypes []entityType
-	for _, e := range registry.StandardEntities(registry.V1) {
+	for _, e := range registry.AllEntities(registry.V1) {
 		entityTypes = append(entityTypes, newEntityType(v1, e))
 	}
 
 	includesUnstable := false
-	for _, e := range registry.StandardEntities(registry.Unstable) {
+	for _, e := range registry.AllEntities(registry.Unstable) {
 		entityTypes = append(entityTypes, newEntityType(unstable, e))
 		includesUnstable = true
 	}
@@ -89,8 +89,10 @@ type entityType struct {
 	FieldName            string
 	SwaggerClient        string
 	SwaggerClientPackage string
-	DryRun               bool
+	DisableDryRun        bool
 	UpdateUnsupported    bool
+	SingletonID          string
+	SingletonIDConst     string
 }
 
 func newEntityType(a api, r registry.Resource) entityType {
@@ -101,8 +103,10 @@ func newEntityType(a api, r registry.Resource) entityType {
 		SwaggerModel:         r.Entity,
 		SwaggerClient:        fmt.Sprintf("%s.%s", a.Client, r.Entity),
 		SwaggerClientPackage: strcase.ToSnake(r.Entity),
-		DryRun:               r.DryRun,
+		DisableDryRun:        r.DisableDryRun,
 		UpdateUnsupported:    r.UpdateUnsupported,
+		SingletonID:          r.SingletonID,
+		SingletonIDConst:     fmt.Sprintf("%sID", r.Entity),
 	}
 
 	// special case for classic dashboards
@@ -123,7 +127,7 @@ package chronosphere
 import (
 	"context"
 	{{ range .EntityTypes }}
-	{{ if not .DryRun }}
+	{{ if .DisableDryRun }}
 	"fmt"
 	{{ break }}
 	{{ end }}
@@ -141,19 +145,28 @@ import (
 
 {{ range .EntityTypes }}
 
-	type {{.GoType}} struct{}
+type {{.GoType}} struct{}
+
+{{ if .SingletonID -}}
+// {{.SingletonIDConst}} is the static ID of the global {{.SwaggerModel}} singleton.
+const {{.SingletonIDConst}} = "{{.SingletonID}}"
+{{- end }}
 
 func ({{.GoType}}) slugOf(m *{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}) string {
+	{{ if .SingletonID -}}
+	return {{.SingletonIDConst}}
+	{{- else -}}
 	return m.Slug
+	{{- end }}
 }
 
 func ({{.GoType}}) create(
 	ctx context.Context,
 	clients apiclients.Clients,
 	m *{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}},
-    dryRun bool,
+	dryRun bool,
 ) (string, error) {
-	{{ if not .DryRun -}}
+	{{ if .DisableDryRun -}}
 	if dryRun {
 		return "", fmt.Errorf("dry run not supported for this entity type")
 	}
@@ -162,7 +175,7 @@ func ({{.GoType}}) create(
 		Context: ctx,
 		Body: &{{.API.Package}}models.{{.API.SwaggerPrefix}}Create{{.SwaggerType}}Request{
 			{{.SwaggerType}}: m,
-			{{ if .DryRun }} DryRun: dryRun, {{ end }}
+			{{ if not .DisableDryRun }} DryRun: dryRun, {{ end }}
 		},
 	}
 	resp, err := clients.{{.SwaggerClient}}.Create{{.SwaggerType}}(req)
@@ -173,7 +186,7 @@ func ({{.GoType}}) create(
 	if e == nil {
 	  return "", nil
 	}
-	return e.Slug, nil
+	return ({{.GoType}}{}).slugOf(e), nil
 }
 
 func ({{.GoType}}) read(
@@ -183,7 +196,9 @@ func ({{.GoType}}) read(
 ) (*{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}, error) {
 	req := &{{.SwaggerClientPackage}}.Read{{.SwaggerType}}Params{
 		Context: ctx,
+		{{ if not .SingletonID -}}
 		Slug:    slug,
+		{{- end }}
 	}
 	resp, err := clients.{{.SwaggerClient}}.Read{{.SwaggerType}}(req)
 	if err != nil {
@@ -199,18 +214,24 @@ func ({{.GoType}}) update(
 	m *{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}},
 	params updateParams,
 ) error {
-	{{ if not .DryRun -}}
+	{{ if .DisableDryRun -}}
 	if params.dryRun {
 		return fmt.Errorf("dry run not supported for this entity type")
 	}
 	{{ end -}}
 	req := &{{.SwaggerClientPackage}}.Update{{.SwaggerType}}Params{
 		Context: ctx,
+		{{ if not .SingletonID -}}
 		Slug:    m.Slug,
-		Body: {{.SwaggerClientPackage}}.Update{{.SwaggerType}}Body{
+		{{- end }}
+		{{ if not .SingletonID }}
+		Body: &{{.API.Package}}models.{{.API.Client}}Update{{.SwaggerType}}Body{
+		{{ else }}
+		Body: &{{.API.Package}}models.{{.API.SwaggerPrefix}}Update{{.SwaggerType}}Request{
+		{{ end }}
 			{{.SwaggerType}}: m,
 			CreateIfMissing: params.createIfMissing,
-			{{ if .DryRun }} DryRun: params.dryRun, {{ end }}
+			{{ if not .DisableDryRun }} DryRun: params.dryRun, {{ end }}
 		},
 	}
 	_, err := clients.{{.SwaggerClient}}.Update{{.SwaggerType}}(req)
@@ -225,7 +246,9 @@ func ({{.GoType}}) delete(
 ) error {
 	req := &{{.SwaggerClientPackage}}.Delete{{.SwaggerType}}Params{
 		Context: ctx,
+		{{ if not .SingletonID -}}
 		Slug:    slug,
+		{{- end }}
 	}
 	_, err := clients.{{.SwaggerClient}}.Delete{{.SwaggerType}}(req)
 	return err

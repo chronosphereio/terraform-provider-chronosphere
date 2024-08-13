@@ -26,10 +26,20 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
-// StandardEntities returns all unique entity names which are registered against
-// the given api, where all resources w/ NonStandardEntity=true are filtered
-// out. Useful for generating standard CRUD+List bindings.
-func StandardEntities(api API) []Resource {
+// AllEntities returns all entities which are registered against the given API.
+// It includes Singletons, and is used for generating CRUD bindings.
+func AllEntities(api API) []Resource {
+	return entities(api, true /* includeSingletons */)
+}
+
+// NamedEntities returns all entities which are registered against the given API.
+// It only includes non-singleton entities and is useful for use-cases that
+// don't make sense for singletons, such as generating List bindings.
+func NamedEntities(api API) []Resource {
+	return entities(api, false /* includeSingletons */)
+}
+
+func entities(api API, includeSingletons bool) []Resource {
 	// Some of our resources share the same underlying entity (i.e. notifier),
 	// so we use a map to remove duplicates.
 	m := make(map[string]Resource)
@@ -37,7 +47,7 @@ func StandardEntities(api API) []Resource {
 		if r.API != api {
 			continue
 		}
-		if r.NonStandardEntity {
+		if r.SingletonID != "" && !includeSingletons {
 			continue
 		}
 		m[r.Entity] = r
@@ -74,13 +84,11 @@ type Resource struct {
 	// Schema is the tfschema which defines the resource.
 	Schema map[string]*schema.Schema
 
-	// If the underlying entity is in the public API and it
-	// does not match the entity spec, then set this field to
-	// skip generating CRUD+List bindings for the entity.
-	NonStandardEntity bool
+	// Only set if the resource is a singleton.
+	SingletonID string
 
-	// DryRun is a flag to indicate whether the resource supports dry run.
-	DryRun bool
+	// DisableDryRun is a flag to disable dry run for a resource.
+	DisableDryRun bool
 
 	// DisableExportImport silently disables all paginated list helpers by
 	// returning no results, thus preventing export-config/import-state from
@@ -115,8 +123,8 @@ func (r Resource) validate() error {
 	if r.Schema == nil {
 		return errors.New("Schema is required")
 	}
-	if r.NonStandardEntity && r.API == Legacy {
-		return errors.New("cannot set NonStandardEntity=true when API=Legacy")
+	if r.SingletonID != "" && r.API == Legacy {
+		return errors.New("cannot set SingletonID when API=Legacy")
 	}
 
 	return nil
@@ -152,91 +160,78 @@ var Resources = mustValidate([]Resource{
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.BlackholeAlertNotifier,
-		DryRun: true,
 	},
 	{
 		Name:   "bucket",
 		Entity: "Bucket",
 		API:    V1,
 		Schema: tfschema.Bucket,
-		DryRun: true,
 	},
 	{
 		Name:   "collection",
 		Entity: "Collection",
 		API:    V1,
 		Schema: tfschema.Collection,
-		DryRun: true,
 	},
 	{
 		Name:   "dashboard",
 		Entity: "Dashboard",
 		API:    V1,
 		Schema: tfschema.Dashboard,
-		DryRun: true,
 	},
 	{
 		Name:   "dataset",
 		Entity: "Dataset",
 		API:    V1,
 		Schema: tfschema.Dataset,
-		DryRun: true,
 	},
 	{
 		Name:   "derived_label",
 		Entity: "DerivedLabel",
 		API:    V1,
 		Schema: tfschema.DerivedLabel,
-		DryRun: true,
 	},
 	{
 		Name:   "derived_metric",
 		Entity: "DerivedMetric",
 		API:    V1,
 		Schema: tfschema.DerivedMetric,
-		DryRun: true,
 	},
 	{
 		Name:   "drop_rule",
 		Entity: "DropRule",
 		API:    V1,
 		Schema: tfschema.DropRule,
-		DryRun: true,
 	},
 	{
 		Name:   "email_alert_notifier",
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.EmailAlertNotifier,
-		DryRun: true,
 	},
 	{
 		Name:   "classic_dashboard",
 		Entity: "GrafanaDashboard",
 		API:    V1,
 		Schema: tfschema.ClassicDashboard,
-		DryRun: true,
 	},
 	{
 		Name:   "gcp_metrics_integration",
 		Entity: "GcpMetricsIntegration",
 		API:    V1,
 		Schema: tfschema.GcpMetricsIntegration,
-		DryRun: true,
 	},
 	{
 		Name:   "mapping_rule",
 		Entity: "MappingRule",
 		API:    V1,
 		Schema: tfschema.MappingRule,
-		DryRun: true,
 	},
 	{
 		Name:   "monitor",
 		Entity: "Monitor",
 		API:    V1,
 		Schema: tfschema.Monitor,
-		DryRun: true,
 	},
 	{
 		Name:   "notification_policy",
@@ -244,56 +239,50 @@ var Resources = mustValidate([]Resource{
 		API:    V1,
 		Schema: tfschema.NotificationPolicy,
 		// N.B. Notification Policies explicitly don't support ownership transfers.
-		DryRun: true,
 	},
 	{
 		Name:   "opsgenie_alert_notifier",
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.OpsgenieAlertNotifier,
-		DryRun: true,
 	},
 	{
-		Name:              "otel_metrics_ingestion",
-		Entity:            "OtelMetricsIngestion",
-		API:               Unstable,
-		Schema:            tfschema.OtelMetricsIngestion,
-		NonStandardEntity: true,
+		Name:        "otel_metrics_ingestion",
+		Entity:      "OtelMetricsIngestion",
+		API:         V1,
+		Schema:      tfschema.OtelMetricsIngestion,
+		SingletonID: "otel_metrics_ingestion_singleton",
 	},
 	{
 		Name:   "pagerduty_alert_notifier",
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.PagerdutyAlertNotifier,
-		DryRun: true,
 	},
 	{
 		Name:   "recording_rule",
 		Entity: "RecordingRule",
 		API:    V1,
 		Schema: tfschema.RecordingRule,
-		DryRun: true,
 	},
 	{
-		Name:              "resource_pools_config",
-		Entity:            "ResourcePoolsConfig",
-		API:               V1,
-		Schema:            tfschema.ResourcePoolsConfig,
-		NonStandardEntity: true,
+		Name:        "resource_pools_config",
+		Entity:      "ResourcePools",
+		API:         V1,
+		Schema:      tfschema.ResourcePoolsConfig,
+		SingletonID: "resource_pool_singleton",
 	},
 	{
 		Name:   "rollup_rule",
 		Entity: "RollupRule",
 		API:    V1,
 		Schema: tfschema.RollupRule,
-		DryRun: true,
 	},
 	{
 		Name:              "service_account",
 		Entity:            "ServiceAccount",
 		API:               V1,
 		Schema:            tfschema.ServiceAccount,
-		DryRun:            true,
 		UpdateUnsupported: true,
 	},
 	{
@@ -301,14 +290,12 @@ var Resources = mustValidate([]Resource{
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.SlackAlertNotifier,
-		DryRun: true,
 	},
 	{
 		Name:   "team",
 		Entity: "Team",
 		API:    V1,
 		Schema: tfschema.Team,
-		DryRun: true,
 	},
 	{
 		Name:   "trace_metrics_rule",
@@ -321,27 +308,43 @@ var Resources = mustValidate([]Resource{
 		Entity: "TraceJaegerRemoteSamplingStrategy",
 		API:    V1,
 		Schema: tfschema.TraceJaegerRemoteSamplingStrategy,
-		DryRun: true,
 	},
 	{
 		Name:   "victorops_alert_notifier",
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.VictoropsAlertNotifier,
-		DryRun: true,
 	},
 	{
 		Name:   "webhook_alert_notifier",
 		Entity: "Notifier",
 		API:    V1,
 		Schema: tfschema.WebhookAlertNotifier,
-		DryRun: true,
 	},
 	{
-		Name:              "trace_tail_sampling_rules",
-		Entity:            "TraceTailSamplingRules",
-		API:               V1,
-		Schema:            tfschema.TraceTailSamplingRules,
-		NonStandardEntity: true,
+		Name:        "trace_tail_sampling_rules",
+		Entity:      "TraceTailSamplingRules",
+		API:         V1,
+		Schema:      tfschema.TraceTailSamplingRules,
+		SingletonID: "trace_tail_sampling_singleton",
+	},
+	{
+		Name:   "logscale_alert",
+		Entity: "LogScaleAlert",
+		API:    V1,
+		Schema: tfschema.LogscaleAlert,
+	},
+	{
+		Name:   "logscale_action",
+		Entity: "LogScaleAction",
+		API:    V1,
+		Schema: tfschema.LogscaleAction,
+	},
+	{
+		Name:        "log_allocation_config",
+		Entity:      "LogAllocationConfig",
+		API:         Unstable,
+		Schema:      tfschema.LogAllocationConfig,
+		SingletonID: "log_allocation_config_singleton",
 	},
 })

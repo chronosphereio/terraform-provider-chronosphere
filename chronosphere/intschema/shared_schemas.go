@@ -7,6 +7,19 @@ import (
 
 var _ tfid.ID // Always use tfid for simplified import generation.
 
+type LogAllocationConfigSchema struct {
+	PercentOfLicense float64 `intschema:"percent_of_license"`
+}
+
+type LogPrioritiesSchema struct {
+	HighPriorityFilter []LogSearchFilterSchema `intschema:"high_priority_filter,optional"`
+	LowPriorityFilter  []LogSearchFilterSchema `intschema:"low_priority_filter,optional"`
+}
+
+type LogSearchFilterSchema struct {
+	Query string `intschema:"query"`
+}
+
 type Matcher struct {
 	Name  string `intschema:"name"`
 	Type  string `intschema:"type"`
@@ -22,9 +35,14 @@ type MonitorSeriesCondition struct {
 }
 
 type NotificationRoute struct {
-	Severity       string    `intschema:"severity"`
-	Notifiers      []tfid.ID `intschema:"notifiers,optional"`
-	RepeatInterval string    `intschema:"repeat_interval,optional"`
+	Severity       string                    `intschema:"severity"`
+	GroupBy        *NotificationRouteGroupBy `intschema:"group_by,optional,list_encoded_object"`
+	Notifiers      []tfid.ID                 `intschema:"notifiers,optional"`
+	RepeatInterval string                    `intschema:"repeat_interval,optional"`
+}
+
+type NotificationRouteGroupBy struct {
+	LabelNames []string `intschema:"label_names,optional"`
 }
 
 type ResourcePoolAllocationSchema struct {

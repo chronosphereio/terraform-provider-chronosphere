@@ -14,6 +14,8 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_action"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
@@ -635,6 +637,144 @@ func ListGrafanaDashboardsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.GrafanaDashboards {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListLogScaleActions(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1LogScaleAction, error) {
+	return ListLogScaleActionsByFilter(ctx, client, Filter{})
+}
+
+func ListLogScaleActionsBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1LogScaleAction, error) {
+	return ListLogScaleActionsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListLogScaleActionsByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1LogScaleAction, error) {
+	return ListLogScaleActionsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListLogScaleActionsByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*log_scale_action.ListLogScaleActionsParams),
+) ([]*configv1models.Configv1LogScaleAction, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1LogScaleAction
+	)
+	for {
+		p := &log_scale_action.ListLogScaleActionsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.LogScaleAction.ListLogScaleActions(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.LogScaleActions {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListLogScaleAlerts(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1LogScaleAlert, error) {
+	return ListLogScaleAlertsByFilter(ctx, client, Filter{})
+}
+
+func ListLogScaleAlertsBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1LogScaleAlert, error) {
+	return ListLogScaleAlertsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListLogScaleAlertsByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1LogScaleAlert, error) {
+	return ListLogScaleAlertsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListLogScaleAlertsByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*log_scale_alert.ListLogScaleAlertsParams),
+) ([]*configv1models.Configv1LogScaleAlert, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1LogScaleAlert
+	)
+	for {
+		p := &log_scale_alert.ListLogScaleAlertsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.LogScaleAlert.ListLogScaleAlerts(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.LogScaleAlerts {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {

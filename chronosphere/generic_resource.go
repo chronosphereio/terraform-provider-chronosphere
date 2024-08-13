@@ -116,20 +116,6 @@ func newGenericResource[M any, SV any, S internalSchemaPtr[SV]](
 	}
 }
 
-type noopConverter[T any] struct{}
-
-func (noopConverter[T]) toModel(v T) (T, error)   { return v, nil }
-func (noopConverter[T]) fromModel(v T) (T, error) { return v, nil }
-
-// newNoConvertResource is used for resources that don't have a consistent model
-// across create/read/update, relying on per-endpoint intschema mapping.
-func newNoConvertResource[SV any, S internalSchemaPtr[SV]](
-	name string,
-	g generatedResource[S],
-) genericResource[S, SV, S] {
-	return newGenericResource[S, SV, S](name, noopConverter[S]{}, g)
-}
-
 // CreateContext implements schema.CreateContextFunc.
 func (r genericResource[M, SV, S]) CreateContext(
 	ctx context.Context, d *schema.ResourceData, meta any,
@@ -202,6 +188,19 @@ func (r genericResource[M, SV, S]) ReadContext(
 	if err != nil {
 		return diag.Errorf(err.Error())
 	}
+
+	type normalizer interface {
+		normalize(schemaCfg, serverCfg S)
+	}
+	if nr, ok := r.converter.(normalizer); ok {
+		// Normalize the server-read value against the value set in config.
+		configured := newInternalSchema[SV, S]()
+		if err := configured.FromResourceData(d); err != nil {
+			return diag.Errorf("cannot read config from schema: %v", err)
+		}
+		nr.normalize(configured, s)
+	}
+
 	return s.ToResourceData(d)
 }
 

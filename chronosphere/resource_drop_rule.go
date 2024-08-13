@@ -30,11 +30,7 @@ func DropRuleFromModel(m *models.Configv1DropRule) (*intschema.DropRule, error) 
 }
 
 func resourceDropRule() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1DropRule,
-		intschema.DropRule,
-		*intschema.DropRule,
-	](
+	r := newGenericResource(
 		"drop_rule",
 		dropRuleConverter{},
 		generatedDropRule{},

@@ -15,33 +15,33 @@
 package enum
 
 import (
-	configunstable "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // ResourceAttributesFlattenMode is an enum.
-var ResourceAttributesFlattenMode = newV1OnlyEnum("ResourceAttributesFlattenMode", []v1OnlyValue[configunstable.ResourceAttributesFlattenMode]{
+var ResourceAttributesFlattenMode = newEnum("ResourceAttributesFlattenMode", []value[models.ResourceAttributesFlattenMode]{
 	{
-		v1:    configunstable.ResourceAttributesFlattenModeMERGE,
+		v1:    models.ResourceAttributesFlattenModeMERGE,
 		alias: "MERGE",
 	},
 	{
-		v1:    configunstable.ResourceAttributesFlattenModeOVERWRITE,
+		v1:    models.ResourceAttributesFlattenModeOVERWRITE,
 		alias: "OVERWRITE",
 	},
 	{
-		v1:    configunstable.ResourceAttributesFlattenModeIGNORE,
+		v1:    models.ResourceAttributesFlattenModeIGNORE,
 		alias: "IGNORE",
 	},
 })
 
 // ResourceAttributesFilterMode is an enum.
-var ResourceAttributesFilterMode = newV1OnlyEnum("ResourceAttributesFilterMode", []v1OnlyValue[configunstable.ResourceAttributesFilterMode]{
+var ResourceAttributesFilterMode = newEnum("ResourceAttributesFilterMode", []value[models.ResourceAttributesFilterMode]{
 	{
-		v1:    configunstable.ResourceAttributesFilterModeAPPENDDEFAULTEXCLUDEKEYS,
+		v1:    models.ResourceAttributesFilterModeAPPENDDEFAULTEXCLUDEKEYS,
 		alias: "APPEND_DEFAULT_EXCLUDE_KEYS",
 	},
 	{
-		v1:    configunstable.ResourceAttributesFilterModeCUSTOMEXCLUDEKEYS,
+		v1:    models.ResourceAttributesFilterModeCUSTOMEXCLUDEKEYS,
 		alias: "CUSTOM_EXCLUDE_KEYS",
 	},
 })
