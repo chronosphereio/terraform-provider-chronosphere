@@ -15,8 +15,6 @@
 package chronosphere
 
 import (
-	"fmt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	"go.uber.org/atomic"
@@ -58,7 +56,7 @@ type datasetConverter struct{}
 func (d datasetConverter) toModel(s *intschema.Dataset) (*models.Configv1Dataset, error) {
 	cfg, err := datasetConfigurationToModel(s.Configuration)
 	if err != nil {
-		return nil, fmt.Errorf("couldn't convert DatasetConfiguration to model: %w", err)
+		return nil, errors.WithStack(err)
 	}
 	return &models.Configv1Dataset{
 		Configuration: cfg,
@@ -79,7 +77,7 @@ func datasetConfigurationToModel(s intschema.DatasetConfiguration) (*models.Data
 		var err error
 		cfg.TraceDataset, err = traceDatasetToModel(s.TraceDataset)
 		if err != nil {
-			return nil, fmt.Errorf("couldn't convert TraceDataset to model: %w", err)
+			return nil, errors.WithStack(err)
 		}
 	case prettyenum.DatasetDatasetTypeLogsModel:
 		cfg.LogDataset = logDatasetToModel(s.LogDataset)
@@ -94,7 +92,7 @@ func traceDatasetToModel(dataset *intschema.DatasetConfigurationTraceDataset) (*
 	}
 	filter, err := traceSearchFilterToModel(dataset.MatchCriteria)
 	if err != nil {
-		return nil, fmt.Errorf("couldn't convert MatchCriteria to model: %w", err)
+		return nil, errors.WithStack(err)
 	}
 	return &models.Configv1TraceDataset{
 		MatchCriteria: filter,
