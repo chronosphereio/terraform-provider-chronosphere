@@ -141,19 +141,15 @@ func durationFilterFromModel(
 
 func durationFilterToModel(
 	d *intschema.TraceDurationFilter,
-) (*models.TraceSearchFilterDurationFilter, error) {
+) *models.TraceSearchFilterDurationFilter {
 	if d == nil {
-		return nil, nil
-	}
-
-	if d.MaxSeconds != 0 || d.MinSeconds != 0 {
-		return nil, errors.New("replace all usage of \"min_seconds\" and \"max_seconds\" with \"min_secs\" and \"max_secs\"")
+		return nil
 	}
 
 	return &models.TraceSearchFilterDurationFilter{
 		MaxSecs: d.MaxSecs,
 		MinSecs: d.MinSecs,
-	}, nil
+	}
 }
 
 func tagFilterFromModel(
@@ -221,15 +217,8 @@ func spanFilterToModel(s intschema.TraceSpanFilter) (*models.TraceSearchFilterSp
 	if err != nil {
 		return nil, err
 	}
-	durFilter, err := durationFilterToModel(s.Duration)
-	if err != nil {
-		return nil, err
-	}
-	if len(s.Tags) > 0 {
-		return nil, errors.New("replace all usage of \"tags\" with \"tag\"")
-	}
 	return &models.TraceSearchFilterSpanFilter{
-		Duration:        durFilter,
+		Duration:        durationFilterToModel(s.Duration),
 		Error:           boolFilterToModel(s.Error),
 		MatchType:       matchType.Model(),
 		Operation:       stringFilterToModel(s.Operation),
@@ -259,12 +248,8 @@ func traceFilterToModel(
 	if t == nil {
 		return nil, nil
 	}
-	duration, err := durationFilterToModel(t.Duration)
-	if err != nil {
-		return nil, err
-	}
 	return &models.TraceSearchFilterTraceFilter{
-		Duration: duration,
+		Duration: durationFilterToModel(t.Duration),
 		Error:    boolFilterToModel(t.Error),
 	}, nil
 }
