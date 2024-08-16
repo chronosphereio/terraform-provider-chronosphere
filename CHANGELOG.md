@@ -5,6 +5,9 @@
 Added:
 * Add `high_priority_filter` and `low_priority_filter` to unstable `chronosphere_log_allocation_config`.
 
+Fixed:
+* Remove invalid fields from `chronosphere_dataset`, `chronosphere_trace_tail_sampling_rules`, `chronosphere_trace_metrics_rule` resources.
+
 ## v1.4.0
 
 Added:
