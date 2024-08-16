@@ -69,7 +69,6 @@ var TraceSpanFilterListSchema = &schema.Schema{
 			"error":            TraceBoolFilterSchema,
 			// Note: this is the preferable form (singular) of this list field.
 			"tag":        TraceTagFilterSchema,
-			"tags":       deprecated(TraceTagFilterSchema, "`tags` is deprecated, use `tag` instead."),
 			"span_count": TraceSpanCountFilterSchema,
 		},
 	},
@@ -128,21 +127,9 @@ var TraceDurationFilterSchema = &schema.Schema{
 				Optional: true,
 				Default:  0.0,
 			},
-			"min_seconds": { // This field is still defined for error messaging to existing users, but is deprecated. Prefer min_secs.
-				Type:       schema.TypeFloat,
-				Optional:   true,
-				Default:    0.0,
-				Deprecated: "use min_secs instead",
-			},
 			"max_secs": {
 				Type:     schema.TypeFloat,
 				Optional: true,
-			},
-			"max_seconds": { // This field is still defined for error messaging to existing users, but is deprecated. Prefer max_secs.
-				Type:       schema.TypeFloat,
-				Optional:   true,
-				Default:    0.0,
-				Deprecated: "use max_secs instead",
 			},
 		},
 	},

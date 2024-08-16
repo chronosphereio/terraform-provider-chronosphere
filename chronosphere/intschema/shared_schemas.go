@@ -67,8 +67,8 @@ type TraceBoolFilter struct {
 }
 
 type TraceDurationFilter struct {
-	MaxSecs    float64 `intschema:"max_secs,optional"`
-	MinSecs    float64 `intschema:"min_secs,optional,default:0"`
+	MaxSecs float64 `intschema:"max_secs,optional"`
+	MinSecs float64 `intschema:"min_secs,optional,default:0"`
 }
 
 type TraceFilter struct {
@@ -101,12 +101,6 @@ type TraceSpanFilter struct {
 	Service         *TraceStringFilter    `intschema:"service,optional,list_encoded_object"`
 	SpanCount       *TraceSpanCountFilter `intschema:"span_count,optional,list_encoded_object"`
 	Tag             []TraceTagFilter      `intschema:"tag,optional"`
-}
-
-type TraceSpanFilterTags struct {
-	Key          string              `intschema:"key,optional"`
-	NumericValue *TraceNumericFilter `intschema:"numeric_value,optional,list_encoded_object"`
-	Value        *TraceStringFilter  `intschema:"value,optional,list_encoded_object"`
 }
 
 type TraceStringFilter struct {
