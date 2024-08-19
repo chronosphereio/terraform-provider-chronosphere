@@ -15,7 +15,7 @@
 package chronosphere
 
 import (
-	"errors"
+	"github.com/pkg/errors"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
@@ -141,19 +141,15 @@ func durationFilterFromModel(
 
 func durationFilterToModel(
 	d *intschema.TraceDurationFilter,
-) (*models.TraceSearchFilterDurationFilter, error) {
+) *models.TraceSearchFilterDurationFilter {
 	if d == nil {
-		return nil, nil
-	}
-
-	if d.MaxSeconds != 0 || d.MinSeconds != 0 {
-		return nil, errors.New("replace all usage of \"min_seconds\" and \"max_seconds\" with \"min_secs\" and \"max_secs\"")
+		return nil
 	}
 
 	return &models.TraceSearchFilterDurationFilter{
 		MaxSecs: d.MaxSecs,
 		MinSecs: d.MinSecs,
-	}, nil
+	}
 }
 
 func tagFilterFromModel(
@@ -185,19 +181,15 @@ func traceSearchFilterFromModel(
 	}
 }
 
-func traceSearchFilterToModel(f intschema.TraceSearchFilter) *models.Configv1TraceSearchFilter {
-	traceFilter, err := traceFilterToModel(f.Trace)
-	if err != nil {
-		return nil
-	}
+func traceSearchFilterToModel(f intschema.TraceSearchFilter) (*models.Configv1TraceSearchFilter, error) {
 	spanFilters, err := sliceutil.MapErr(f.Span, spanFilterToModel)
 	if err != nil {
-		return nil
+		return nil, errors.WithStack(err)
 	}
 	return &models.Configv1TraceSearchFilter{
 		Span:  spanFilters,
-		Trace: traceFilter,
-	}
+		Trace: traceFilterToModel(f.Trace),
+	}, nil
 }
 
 func spanFilterFromModel(
@@ -221,15 +213,8 @@ func spanFilterToModel(s intschema.TraceSpanFilter) (*models.TraceSearchFilterSp
 	if err != nil {
 		return nil, err
 	}
-	durFilter, err := durationFilterToModel(s.Duration)
-	if err != nil {
-		return nil, err
-	}
-	if len(s.Tags) > 0 {
-		return nil, errors.New("replace all usage of \"tags\" with \"tag\"")
-	}
 	return &models.TraceSearchFilterSpanFilter{
-		Duration:        durFilter,
+		Duration:        durationFilterToModel(s.Duration),
 		Error:           boolFilterToModel(s.Error),
 		MatchType:       matchType.Model(),
 		Operation:       stringFilterToModel(s.Operation),
@@ -255,16 +240,12 @@ func traceFilterFromModel(
 
 func traceFilterToModel(
 	t *intschema.TraceFilter,
-) (*models.TraceSearchFilterTraceFilter, error) {
+) *models.TraceSearchFilterTraceFilter {
 	if t == nil {
-		return nil, nil
-	}
-	duration, err := durationFilterToModel(t.Duration)
-	if err != nil {
-		return nil, err
+		return nil
 	}
 	return &models.TraceSearchFilterTraceFilter{
-		Duration: duration,
+		Duration: durationFilterToModel(t.Duration),
 		Error:    boolFilterToModel(t.Error),
-	}, nil
+	}
 }

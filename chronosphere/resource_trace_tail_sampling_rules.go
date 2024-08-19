@@ -16,6 +16,7 @@ package chronosphere
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/pkg/errors"
 	"go.uber.org/atomic"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
@@ -78,10 +79,14 @@ func defaultSampleRateToModel(
 }
 
 func ruleToModel(r intschema.TraceTailSamplingRulesRules) (*models.Configv1TraceTailSamplingRule, error) {
+	filter, err := traceSearchFilterToModel(r.Filter)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
 	return &models.Configv1TraceTailSamplingRule{
 		Name:       r.Name,
 		SystemName: r.SystemName,
-		Filter:     traceSearchFilterToModel(r.Filter),
+		Filter:     filter,
 		SampleRate: r.SampleRate,
 	}, nil
 }

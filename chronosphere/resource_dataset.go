@@ -54,15 +54,19 @@ var DatasetDryRunCount atomic.Int64
 type datasetConverter struct{}
 
 func (d datasetConverter) toModel(s *intschema.Dataset) (*models.Configv1Dataset, error) {
+	cfg, err := datasetConfigurationToModel(s.Configuration)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
 	return &models.Configv1Dataset{
-		Configuration: datasetConfigurationToModel(s.Configuration),
+		Configuration: cfg,
 		Description:   s.Description,
 		Name:          s.Name,
 		Slug:          s.Slug,
 	}, nil
 }
 
-func datasetConfigurationToModel(s intschema.DatasetConfiguration) *models.DatasetDatasetConfiguration {
+func datasetConfigurationToModel(s intschema.DatasetConfiguration) (*models.DatasetDatasetConfiguration, error) {
 	t := prettyenum.DatasetType(s.Type)
 	cfg := &models.DatasetDatasetConfiguration{
 		Type: t.Model(),
@@ -70,21 +74,29 @@ func datasetConfigurationToModel(s intschema.DatasetConfiguration) *models.Datas
 
 	switch t {
 	case prettyenum.DatasetDatasetTypeTracesModel:
-		cfg.TraceDataset = traceDatasetToModel(s.TraceDataset)
+		var err error
+		cfg.TraceDataset, err = traceDatasetToModel(s.TraceDataset)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
 	case prettyenum.DatasetDatasetTypeLogsModel:
 		cfg.LogDataset = logDatasetToModel(s.LogDataset)
 	}
 
-	return cfg
+	return cfg, nil
 }
 
-func traceDatasetToModel(dataset *intschema.DatasetConfigurationTraceDataset) *models.Configv1TraceDataset {
+func traceDatasetToModel(dataset *intschema.DatasetConfigurationTraceDataset) (*models.Configv1TraceDataset, error) {
 	if dataset == nil {
-		return nil
+		return nil, nil
+	}
+	filter, err := traceSearchFilterToModel(dataset.MatchCriteria)
+	if err != nil {
+		return nil, errors.WithStack(err)
 	}
 	return &models.Configv1TraceDataset{
-		MatchCriteria: traceSearchFilterToModel(dataset.MatchCriteria),
-	}
+		MatchCriteria: filter,
+	}, nil
 }
 
 func logDatasetToModel(dataset *intschema.DatasetConfigurationLogDataset) *models.Configv1LogDataset {
