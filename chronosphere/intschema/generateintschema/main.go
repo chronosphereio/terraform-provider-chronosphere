@@ -84,6 +84,7 @@ var fieldIsTFID = map[string]bool{
 	"execution_group":          true,
 	"notification_policy_data": true,
 	"action_ids":               true,
+	"dataset_id":               true,
 
 	"callback_id": false,
 	"external_id": false,
