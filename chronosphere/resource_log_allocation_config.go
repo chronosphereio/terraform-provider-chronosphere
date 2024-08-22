@@ -21,6 +21,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
@@ -41,7 +42,21 @@ func resourceLogAllocationConfig() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
-		CustomizeDiff: r.ValidateDryRun(&LogAllocationConfigDryRunCount),
+		CustomizeDiff: r.ValidateDryRunOptions(
+			&LogAllocationConfigDryRunCount,
+			ValidateDryRunOpts[*models.ConfigunstableLogAllocationConfig]{
+				// Note: We skip dataset_id as it's within a list which is not supported
+				// by setUnknownReferences.
+				// We instead handle them explicitly in ModifyAPIModel.
+				SetUnknownReferencesSkip: []string{"dataset_allocation.[].dataset_id"},
+				ModifyAPIModel: func(cfg *models.ConfigunstableLogAllocationConfig) {
+					for _, alloc := range cfg.DatasetAllocations {
+						if alloc.DatasetSlug == "" {
+							alloc.DatasetSlug = "dummy_value"
+						}
+					}
+				},
+			}),
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -70,7 +85,7 @@ func datasetAllocationToModel(
 ) *models.LogAllocationConfigDatasetAllocation {
 	return &models.LogAllocationConfigDatasetAllocation{
 		Allocation:  allocationToModel(datasetAllocation.Allocation),
-		DatasetSlug: datasetAllocation.DatasetSlug,
+		DatasetSlug: datasetAllocation.DatasetId.Slug(),
 		Priorities:  prioritiesToModel(datasetAllocation.Priorities),
 	}
 }
@@ -112,9 +127,9 @@ func datasetAllocationFromModel(
 	datasetAllocation *models.LogAllocationConfigDatasetAllocation,
 ) intschema.LogAllocationConfigDatasetAllocation {
 	return intschema.LogAllocationConfigDatasetAllocation{
-		Allocation:  allocationFromModel(datasetAllocation.Allocation),
-		DatasetSlug: datasetAllocation.DatasetSlug,
-		Priorities:  prioritiesFromModel(datasetAllocation.Priorities),
+		Allocation: allocationFromModel(datasetAllocation.Allocation),
+		DatasetId:  tfid.Slug(datasetAllocation.DatasetSlug),
+		Priorities: prioritiesFromModel(datasetAllocation.Priorities),
 	}
 }
 

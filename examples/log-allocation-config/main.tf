@@ -14,7 +14,7 @@ resource "chronosphere_log_allocation_config" "my_log_allocation_config" {
   }
 
   dataset_allocation {
-    dataset_slug = chronosphere_dataset.example_logs_dataset.slug
+    dataset_id = chronosphere_dataset.example_logs_dataset.id
     allocation {
       percent_of_license = 9.9
     }

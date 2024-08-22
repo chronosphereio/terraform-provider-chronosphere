@@ -60,7 +60,7 @@ type LogAllocationConfigDefaultDataset struct {
 }
 
 type LogAllocationConfigDatasetAllocation struct {
-	DatasetSlug string                     `intschema:"dataset_slug"`
-	Allocation  *LogAllocationConfigSchema `intschema:"allocation,optional,list_encoded_object"`
-	Priorities  *LogPrioritiesSchema       `intschema:"priorities,optional,list_encoded_object"`
+	DatasetId  tfid.ID                    `intschema:"dataset_id"`
+	Allocation *LogAllocationConfigSchema `intschema:"allocation,optional,list_encoded_object"`
+	Priorities *LogPrioritiesSchema       `intschema:"priorities,optional,list_encoded_object"`
 }

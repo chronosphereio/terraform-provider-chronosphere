@@ -27,7 +27,7 @@ var LogAllocationConfig = map[string]*schema.Schema{
 
 var LogDatasetAllocationSchema = &schema.Resource{
 	Schema: map[string]*schema.Schema{
-		"dataset_slug": {
+		"dataset_id": {
 			Type:     schema.TypeString,
 			Required: true,
 		},
