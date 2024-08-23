@@ -54,7 +54,7 @@ var ResourcePoolDefaultPoolAllocationSchema = &schema.Schema{
 		Schema: map[string]*schema.Schema{
 			"percent_of_license": {
 				Type:     schema.TypeFloat,
-				Required: false,
+				Optional: true,
 			},
 		},
 	},
