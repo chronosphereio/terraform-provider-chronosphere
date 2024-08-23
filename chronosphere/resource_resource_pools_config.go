@@ -16,6 +16,7 @@ package chronosphere
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"go.uber.org/atomic"
@@ -95,12 +96,16 @@ func (resourcePoolsConfigConverter) toModel(
 func (resourcePoolsConfigConverter) fromModel(
 	m *models.Configv1ResourcePools,
 ) (*intschema.ResourcePoolsConfig, error) {
+	pools, err := expandPools(m.Pools)
+	if err != nil {
+		return nil, err
+	}
 	return &intschema.ResourcePoolsConfig{
 		DefaultPool: &intschema.ResourcePoolsConfigDefaultPool{
-			Allocation: expandAllocation(m.DefaultPool.Allocation),
+			Allocation: expandDefaultAllocation(m.DefaultPool.Allocation),
 			Priorities: expandPriorities(m.DefaultPool.Priorities),
 		},
-		Pool: expandPools(m.Pools),
+		Pool: pools,
 	}, nil
 }
 
@@ -145,12 +150,46 @@ func (resourcePoolsConfigConverter) normalize(config, server *intschema.Resource
 	}
 }
 
-func expandAllocation(allocation *apimodels.ResourcePoolsAllocation) *intschema.ResourcePoolAllocationSchema {
+func expandAllocation(allocation *apimodels.ResourcePoolsAllocation) (*intschema.ResourcePoolAllocationSchema, error) {
+	if allocation == nil {
+		return nil, nil
+	}
+
+	fv, err := expandAllocationFixedValues(allocation.FixedValues)
+	if err != nil {
+		return nil, err
+	}
+
+	return &intschema.ResourcePoolAllocationSchema{
+		PercentOfLicense: allocation.PercentOfLicense,
+		FixedValues:      fv,
+	}, nil
+}
+
+func expandAllocationFixedValues(
+	fixedValues []*apimodels.AllocationFixedValue,
+) ([]*intschema.ResourcePoolAllocationSchemaFixedValues, error) {
+	if len(fixedValues) == 0 {
+		return nil, nil
+	}
+	return sliceutil.MapErr(fixedValues, func(f *apimodels.AllocationFixedValue) (*intschema.ResourcePoolAllocationSchemaFixedValues, error) {
+		v, err := strconv.ParseInt(f.Value, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		return &intschema.ResourcePoolAllocationSchemaFixedValues{
+			License: string(f.License),
+			Value:   v,
+		}, nil
+	})
+}
+
+func expandDefaultAllocation(allocation *apimodels.ResourcePoolsAllocation) *intschema.ResourcePoolsConfigDefaultPoolAllocation {
 	if allocation == nil {
 		return nil
 	}
 
-	return &intschema.ResourcePoolAllocationSchema{PercentOfLicense: allocation.PercentOfLicense}
+	return &intschema.ResourcePoolsConfigDefaultPoolAllocation{PercentOfLicense: allocation.PercentOfLicense}
 }
 
 func expandPriorities(priorities *apimodels.ResourcePoolsPriorities) *intschema.ResourcePoolPrioritiesSchema {
@@ -164,15 +203,19 @@ func expandPriorities(priorities *apimodels.ResourcePoolsPriorities) *intschema.
 	}
 }
 
-func expandPools(pools []*apimodels.ResourcePoolsPool) []intschema.ResourcePoolsConfigPool {
-	return sliceutil.Map(pools, func(pool *apimodels.ResourcePoolsPool) intschema.ResourcePoolsConfigPool {
+func expandPools(pools []*apimodels.ResourcePoolsPool) ([]intschema.ResourcePoolsConfigPool, error) {
+	return sliceutil.MapErr(pools, func(pool *apimodels.ResourcePoolsPool) (intschema.ResourcePoolsConfigPool, error) {
 		rules := aggregationfilter.ListFromModel(pool.Filters, aggregationfilter.ResourcePoolsDelimiter)
+		allocation, err := expandAllocation(pool.Allocation)
+		if err != nil {
+			return intschema.ResourcePoolsConfigPool{}, err
+		}
 		return intschema.ResourcePoolsConfigPool{
 			Name:       pool.Name,
 			MatchRules: rules,
-			Allocation: expandAllocation(pool.Allocation),
+			Allocation: allocation,
 			Priorities: expandPriorities(pool.Priorities),
-		}
+		}, nil
 	})
 }
 
@@ -185,7 +228,7 @@ func buildDefaultPool(defaultPool *intschema.ResourcePoolsConfigDefaultPool) (*a
 		return nil, err
 	}
 	return &apimodels.ResourcePoolsDefaultPool{
-		Allocation: buildAllocation(defaultPool.Allocation),
+		Allocation: buildDefaultAllocation(defaultPool.Allocation),
 		Priorities: priorities,
 	}, nil
 }
@@ -219,6 +262,30 @@ func buildPool(pool intschema.ResourcePoolsConfigPool) (*apimodels.ResourcePools
 }
 
 func buildAllocation(allocation *intschema.ResourcePoolAllocationSchema) *apimodels.ResourcePoolsAllocation {
+	if allocation == nil {
+		return nil
+	}
+
+	return &apimodels.ResourcePoolsAllocation{
+		PercentOfLicense: allocation.PercentOfLicense,
+		FixedValues:      buildFixedValues(allocation.FixedValues),
+	}
+}
+
+func buildFixedValues(fixedValues []*intschema.ResourcePoolAllocationSchemaFixedValues) []*apimodels.AllocationFixedValue {
+	if len(fixedValues) == 0 {
+		return nil
+	}
+
+	return sliceutil.Map(fixedValues, func(f *intschema.ResourcePoolAllocationSchemaFixedValues) *apimodels.AllocationFixedValue {
+		return &apimodels.AllocationFixedValue{
+			License: apimodels.ResourcePoolsLicense(f.License),
+			Value:   fmt.Sprint(f.Value),
+		}
+	})
+}
+
+func buildDefaultAllocation(allocation *intschema.ResourcePoolsConfigDefaultPoolAllocation) *apimodels.ResourcePoolsAllocation {
 	if allocation == nil {
 		return nil
 	}
