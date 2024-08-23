@@ -28,7 +28,7 @@ var ResourcePoolsConfig = map[string]*schema.Schema{
 			},
 			SchemaVersion: 1,
 		},
-		Required: true,
+		Optional: true,
 		MaxItems: 1,
 	},
 	"pools": {
@@ -59,7 +59,7 @@ var ResourcePoolDefaultPoolAllocationSchema = &schema.Schema{
 		},
 	},
 	MaxItems:   1,
-	Required:   false,
+	Optional:   true,
 	Deprecated: "default_pool allocation is not required as it can be derived",
 }
 
