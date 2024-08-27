@@ -8,8 +8,6 @@ Added:
 Fixed:
 * Remove invalid fields from `chronosphere_dataset`, `chronosphere_trace_tail_sampling_rules`, `chronosphere_trace_metrics_rule` resources.
 
-* Update link to documentation in mapping rules example file.
-
 ## v1.4.0
 
 Added:
