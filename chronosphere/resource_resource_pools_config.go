@@ -177,9 +177,16 @@ func expandAllocationFixedValues(
 		return nil, nil
 	}
 	return sliceutil.MapErr(fixedValues, func(f *apimodels.AllocationFixedValue) (intschema.ResourcePoolAllocationSchemaFixedValues, error) {
-		v, err := strconv.ParseInt(f.Value, 10, 64)
-		if err != nil {
-			return intschema.ResourcePoolAllocationSchemaFixedValues{}, err
+		var (
+			v   int64
+			err error
+		)
+		if f.Value != "" {
+			// Value of zero treated as empty, so only parse if not empty.
+			v, err = strconv.ParseInt(f.Value, 10, 64)
+			if err != nil {
+				return intschema.ResourcePoolAllocationSchemaFixedValues{}, err
+			}
 		}
 		return intschema.ResourcePoolAllocationSchemaFixedValues{
 			License: string(f.License),
