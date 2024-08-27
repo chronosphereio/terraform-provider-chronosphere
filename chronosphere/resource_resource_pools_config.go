@@ -100,9 +100,13 @@ func (resourcePoolsConfigConverter) fromModel(
 	if err != nil {
 		return nil, err
 	}
+	allocation, err := expandAllocation(m.DefaultPool.Allocation)
+	if err != nil {
+		return nil, err
+	}
 	return &intschema.ResourcePoolsConfig{
 		DefaultPool: &intschema.ResourcePoolsConfigDefaultPool{
-			Allocation: expandDefaultAllocation(m.DefaultPool.Allocation),
+			Allocation: allocation,
 			Priorities: expandPriorities(m.DefaultPool.Priorities),
 		},
 		Pool: pools,
@@ -184,14 +188,6 @@ func expandAllocationFixedValues(
 	})
 }
 
-func expandDefaultAllocation(allocation *apimodels.ResourcePoolsAllocation) *intschema.ResourcePoolsConfigDefaultPoolAllocation {
-	if allocation == nil {
-		return nil
-	}
-
-	return &intschema.ResourcePoolsConfigDefaultPoolAllocation{PercentOfLicense: allocation.PercentOfLicense}
-}
-
 func expandPriorities(priorities *apimodels.ResourcePoolsPriorities) *intschema.ResourcePoolPrioritiesSchema {
 	if priorities == nil {
 		return nil
@@ -228,7 +224,7 @@ func buildDefaultPool(defaultPool *intschema.ResourcePoolsConfigDefaultPool) (*a
 		return nil, err
 	}
 	return &apimodels.ResourcePoolsDefaultPool{
-		Allocation: buildDefaultAllocation(defaultPool.Allocation),
+		Allocation: buildAllocation(defaultPool.Allocation),
 		Priorities: priorities,
 	}, nil
 }
@@ -283,16 +279,6 @@ func buildFixedValues(fixedValues []*intschema.ResourcePoolAllocationSchemaFixed
 			Value:   fmt.Sprint(f.Value),
 		}
 	})
-}
-
-func buildDefaultAllocation(allocation *intschema.ResourcePoolsConfigDefaultPoolAllocation) *apimodels.ResourcePoolsAllocation {
-	if allocation == nil {
-		return nil
-	}
-
-	return &apimodels.ResourcePoolsAllocation{
-		PercentOfLicense: allocation.PercentOfLicense,
-	}
 }
 
 func buildPriorities(priorities *intschema.ResourcePoolPrioritiesSchema) (*apimodels.ResourcePoolsPriorities, error) {

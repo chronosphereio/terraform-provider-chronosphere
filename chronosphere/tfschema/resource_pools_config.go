@@ -23,7 +23,7 @@ var ResourcePoolsConfig = map[string]*schema.Schema{
 		Type: schema.TypeList,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
-				"allocation": ResourcePoolDefaultPoolAllocationSchema,
+				"allocation": ResourcePoolAllocationSchema,
 				"priorities": ResourcePoolPrioritiesSchema,
 			},
 			SchemaVersion: 1,
@@ -48,21 +48,6 @@ var ResourcePoolsConfig = map[string]*schema.Schema{
 	},
 }
 
-var ResourcePoolDefaultPoolAllocationSchema = &schema.Schema{
-	Type: schema.TypeList,
-	Elem: &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"percent_of_license": {
-				Type:     schema.TypeFloat,
-				Optional: true,
-			},
-		},
-	},
-	MaxItems:   1,
-	Optional:   true,
-	Deprecated: "default_pool allocation is not required as it can be derived",
-}
-
 var ResourcePoolAllocationSchema = &schema.Schema{
 	Type: schema.TypeList,
 	Elem: &schema.Resource{
@@ -80,7 +65,7 @@ var ResourcePoolAllocationSchema = &schema.Schema{
 		},
 	},
 	MaxItems: 1,
-	Required: true,
+	Optional: true,
 }
 
 var ResourcePoolAllocationFixedValueSchema = &schema.Schema{

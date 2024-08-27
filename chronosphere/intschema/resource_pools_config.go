@@ -56,10 +56,6 @@ func (o *ResourcePoolsConfig) Ref() tfid.ID {
 }
 
 type ResourcePoolsConfigDefaultPool struct {
-	Allocation *ResourcePoolsConfigDefaultPoolAllocation `intschema:"allocation,optional,list_encoded_object"`
-	Priorities *ResourcePoolPrioritiesSchema             `intschema:"priorities,optional,list_encoded_object"`
-}
-
-type ResourcePoolsConfigDefaultPoolAllocation struct {
-	PercentOfLicense float64 `intschema:"percent_of_license"`
+	Allocation *ResourcePoolAllocationSchema `intschema:"allocation,optional,list_encoded_object"`
+	Priorities *ResourcePoolPrioritiesSchema `intschema:"priorities,optional,list_encoded_object"`
 }
