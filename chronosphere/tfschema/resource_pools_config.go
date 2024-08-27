@@ -68,22 +68,17 @@ var ResourcePoolAllocationSchema = &schema.Schema{
 	Optional: true,
 }
 
-var ResourcePoolAllocationFixedValueSchema = &schema.Schema{
-	Type: schema.TypeList,
-	Elem: &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"license": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"value": {
-				Type:     schema.TypeInt,
-				Required: true,
-			},
+var ResourcePoolAllocationFixedValueSchema = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"license": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"value": {
+			Type:     schema.TypeInt,
+			Required: true,
 		},
 	},
-	MaxItems: 1,
-	Required: true,
 }
 
 var ResourcePoolElemSchema = &schema.Resource{
