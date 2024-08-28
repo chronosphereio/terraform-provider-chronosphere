@@ -166,17 +166,17 @@ func expandAllocation(allocation *apimodels.ResourcePoolsAllocation) (*intschema
 
 	return &intschema.ResourcePoolAllocationSchema{
 		PercentOfLicense: allocation.PercentOfLicense,
-		FixedValues:      fv,
+		FixedValue:       fv,
 	}, nil
 }
 
 func expandAllocationFixedValues(
 	fixedValues []*apimodels.AllocationFixedValue,
-) ([]intschema.ResourcePoolAllocationSchemaFixedValues, error) {
+) ([]intschema.ResourcePoolAllocationSchemaFixedValue, error) {
 	if len(fixedValues) == 0 {
 		return nil, nil
 	}
-	return sliceutil.MapErr(fixedValues, func(f *apimodels.AllocationFixedValue) (intschema.ResourcePoolAllocationSchemaFixedValues, error) {
+	return sliceutil.MapErr(fixedValues, func(f *apimodels.AllocationFixedValue) (intschema.ResourcePoolAllocationSchemaFixedValue, error) {
 		var (
 			v   int64
 			err error
@@ -185,10 +185,10 @@ func expandAllocationFixedValues(
 			// Value of zero treated as empty, so only parse if not empty.
 			v, err = strconv.ParseInt(f.Value, 10, 64)
 			if err != nil {
-				return intschema.ResourcePoolAllocationSchemaFixedValues{}, err
+				return intschema.ResourcePoolAllocationSchemaFixedValue{}, err
 			}
 		}
-		return intschema.ResourcePoolAllocationSchemaFixedValues{
+		return intschema.ResourcePoolAllocationSchemaFixedValue{
 			License: string(f.License),
 			Value:   v,
 		}, nil
@@ -271,16 +271,16 @@ func buildAllocation(allocation *intschema.ResourcePoolAllocationSchema) *apimod
 
 	return &apimodels.ResourcePoolsAllocation{
 		PercentOfLicense: allocation.PercentOfLicense,
-		FixedValues:      buildFixedValues(allocation.FixedValues),
+		FixedValues:      buildFixedValues(allocation.FixedValue),
 	}
 }
 
-func buildFixedValues(fixedValues []intschema.ResourcePoolAllocationSchemaFixedValues) []*apimodels.AllocationFixedValue {
+func buildFixedValues(fixedValues []intschema.ResourcePoolAllocationSchemaFixedValue) []*apimodels.AllocationFixedValue {
 	if len(fixedValues) == 0 {
 		return nil
 	}
 
-	return sliceutil.Map(fixedValues, func(f intschema.ResourcePoolAllocationSchemaFixedValues) *apimodels.AllocationFixedValue {
+	return sliceutil.Map(fixedValues, func(f intschema.ResourcePoolAllocationSchemaFixedValue) *apimodels.AllocationFixedValue {
 		return &apimodels.AllocationFixedValue{
 			License: apimodels.ResourcePoolsLicense(f.License),
 			Value:   fmt.Sprint(f.Value),
