@@ -56,7 +56,7 @@ var ResourcePoolAllocationSchema = &schema.Schema{
 				Type:     schema.TypeFloat,
 				Optional: true,
 			},
-			"fixed_values": {
+			"fixed_value": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem:     ResourcePoolAllocationFixedValueSchema,

@@ -14,12 +14,10 @@ resource "chronosphere_resource_pools_config" "default" {
       percent_of_license = 49.9
       # Allocation specified as a fixed value for a specific license.
       # fixed_values take precedence over percent_of_license.
-      fixed_values = [
-        {
-          license = "PERSISTED_WRITES_STANDARD"
-          value = 1000
-        }
-      ]
+      fixed_value {
+        license = "PERSISTED_WRITES_STANDARD"
+        value = 1000
+      }
     }
 
     # NB: deprecated match_rule is also supported, e.g.
