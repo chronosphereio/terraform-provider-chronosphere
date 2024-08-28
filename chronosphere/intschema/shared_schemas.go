@@ -46,7 +46,13 @@ type NotificationRouteGroupBy struct {
 }
 
 type ResourcePoolAllocationSchema struct {
-	PercentOfLicense float64 `intschema:"percent_of_license"`
+	FixedValue       []ResourcePoolAllocationSchemaFixedValue `intschema:"fixed_value,optional"`
+	PercentOfLicense float64                                  `intschema:"percent_of_license,optional"`
+}
+
+type ResourcePoolAllocationSchemaFixedValue struct {
+	License string `intschema:"license"`
+	Value   int64  `intschema:"value"`
 }
 
 type ResourcePoolPrioritiesSchema struct {

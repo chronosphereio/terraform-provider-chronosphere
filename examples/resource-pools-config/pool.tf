@@ -1,7 +1,8 @@
 resource "chronosphere_resource_pools_config" "default" {
   default_pool {
-    allocation {
-      percent_of_license = 50.1
+    priorities {
+      high_priority_match_rules = ["cluster:production*"]
+      low_priority_match_rules  = ["cluster:test*"]
     }
   }
 
@@ -9,11 +10,23 @@ resource "chronosphere_resource_pools_config" "default" {
   pool {
     name = "first"
     allocation {
+      # Allocation specified as a % of the license.
       percent_of_license = 49.9
+      # Allocation specified as a fixed value for a specific license.
+      # fixed_value take precedence over percent_of_license.
+      fixed_value {
+        license = "PERSISTED_WRITES_STANDARD"
+        value = 1000
+      }
     }
 
     # NB: deprecated match_rule is also supported, e.g.
     # match_rule = "foo:bar"
     match_rules = ["foo:bar", "baz:blah"]
+
+    priorities {
+      high_priority_match_rules = ["cluster:production*"]
+      low_priority_match_rules  = ["cluster:test*"]
+    }
   }
 }

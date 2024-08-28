@@ -28,7 +28,7 @@ var ResourcePoolsConfig = map[string]*schema.Schema{
 			},
 			SchemaVersion: 1,
 		},
-		Required: true,
+		Optional: true,
 		MaxItems: 1,
 	},
 	"pools": {
@@ -54,12 +54,31 @@ var ResourcePoolAllocationSchema = &schema.Schema{
 		Schema: map[string]*schema.Schema{
 			"percent_of_license": {
 				Type:     schema.TypeFloat,
-				Required: true,
+				Optional: true,
+			},
+			"fixed_value": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     ResourcePoolAllocationFixedValueSchema,
+				MinItems: 1,
 			},
 		},
 	},
 	MaxItems: 1,
-	Required: true,
+	Optional: true,
+}
+
+var ResourcePoolAllocationFixedValueSchema = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"license": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"value": {
+			Type:     schema.TypeInt,
+			Required: true,
+		},
+	},
 }
 
 var ResourcePoolElemSchema = &schema.Resource{

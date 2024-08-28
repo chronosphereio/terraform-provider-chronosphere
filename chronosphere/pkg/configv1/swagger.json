@@ -3,6 +3,18 @@
     "application/json"
   ],
   "definitions": {
+    "AllocationFixedValue": {
+      "properties": {
+        "license": {
+          "$ref": "#/definitions/ResourcePoolsLicense"
+        },
+        "value": {
+          "format": "int64",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "ConditionOp": {
       "enum": [
         "GEQ",
@@ -1456,9 +1468,16 @@
     "ResourcePoolsAllocation": {
       "properties": {
         "percent_of_license": {
-          "description": "Percentage of the license to allocate to this pool. Must be between 0\nand 100 inclusive. The percent_of_license values across all pools\n(including the default pool) must add up to exactly 100.",
+          "description": "Percent of the license to allocate to this pool. Must be between 0\nand 100 inclusive. The percent_of_license values across all pools\n(excluding the default pool) must be \u003c= 100. default_pool need not specify\nan allocation, and implicitly receives any remaining allocation. If default_pool does\nexplicitly specify an allocation, the sum of percent_of_license across all pools\n(including the default pool) must exactly equal 100.",
           "format": "double",
           "type": "number"
+        },
+        "fixed_values": {
+          "description": "Fixed values optionally override percent_of_license allocations for specific licenses.\nWhen specifying fixed values for a license, all pools must have an explicit fixed value\nspecification for that given license. Default pool receives all remaining quota left\nwithin the license after subtracting the sum of fixed values across pools for that license.",
+          "items": {
+            "$ref": "#/definitions/AllocationFixedValue"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -1473,6 +1492,15 @@
         }
       },
       "type": "object"
+    },
+    "ResourcePoolsLicense": {
+      "enum": [
+        "PERSISTED_WRITES_STANDARD",
+        "PERSISTED_WRITES_HISTOGRAM",
+        "MATCHED_WRITES_STANDARD",
+        "MATCHED_WRITES_HISTOGRAM"
+      ],
+      "type": "string"
     },
     "ResourcePoolsPool": {
       "properties": {

@@ -4,9 +4,13 @@
 
 Added:
 * Add `high_priority_filter` and `low_priority_filter` to unstable `chronosphere_log_allocation_config`.
+* Add `fixed_value` in v1 `chronosphere_resource_pools_config.pools[].allocation`.
 
 Fixed:
 * Remove invalid fields from `chronosphere_dataset`, `chronosphere_trace_tail_sampling_rules`, `chronosphere_trace_metrics_rule` resources.
+
+Deprecated:
+* `allocation` in v1 `chronosphere_resource_pools_config.default_pool`, as this can be derived instead.
 
 ## v1.4.0
 
