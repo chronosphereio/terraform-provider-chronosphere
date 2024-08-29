@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.5.0
+
 Added:
 * Add `high_priority_filter` and `low_priority_filter` to unstable `chronosphere_log_allocation_config`.
 * Add `fixed_value` in v1 `chronosphere_resource_pools_config.pools[].allocation`.
