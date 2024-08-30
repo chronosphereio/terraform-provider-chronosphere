@@ -22,17 +22,11 @@ VERSION="${VERSION:1}"
 # Replace "." with a space so we can split the version into an array.
 read -r -a VERSION_BITS <<<"${VERSION//./ }"
 
-# Verify that the major version is 0, we will replace this script once we get to version 1.0.0.
 MAJOR_VERSION=${VERSION_BITS[0]}
-if [ "$MAJOR_VERSION" -ne "0" ]; then
-  echo "Can only increment development tags but the major version of the latest tag is not 0."
-  exit 1
-fi
-
 MINOR_VERSION=${VERSION_BITS[1]}
 MINOR_VERSION=$((MINOR_VERSION + 1))
 
-NEW_VERSION="v0.${MINOR_VERSION}.0"
+NEW_VERSION="v${MAJOR_VERSION}.${MINOR_VERSION}.0"
 
 # Get the current hash and see if it already has a tag. We will only create the new tag if the
 # current hash does not already have a tag.
@@ -45,6 +39,6 @@ if [ -n "$NEEDS_TAG" ]; then
 fi
 
 echo "Updating $VERSION to $NEW_VERSION"
-git tag $NEW_VERSION
+# git tag $NEW_VERSION
 echo "Pushing new tag $NEW_VERSION"
-git push origin $NEW_VERSION
+# git push origin $NEW_VERSION
