@@ -6,6 +6,16 @@
 
 set -e
 
+dry_run=false
+for arg in "$@"; do
+  case $arg in
+  --dry-run | -d)
+    dry_run=true
+    shift # Remove --dry-run or -d from the arguments
+    ;;
+  esac
+done
+
 # As a precaution, we only allow tags to be created on clean branches to ensure that any changes
 # the user wants to be included in the tag have been committed.
 if [ -n "$(git status --porcelain)" ]; then
@@ -37,6 +47,14 @@ NEEDS_TAG=$(git describe --contains "$GIT_COMMIT" 2>/dev/null || echo "")
 if [ -n "$NEEDS_TAG" ]; then
   echo "Can only add a new tag to a commit which does not have one, but the latest commit already does."
   exit 1
+fi
+
+if [ "$dry_run" = true ]; then
+  echo "Dry run mode is enabled. Skipping tag creation and push."
+  echo "Would have updated $VERSION to $NEW_VERSION" by running:
+  echo "     git tag $NEW_VERSION"
+  echo "     git push origin $NEW_VERSION"
+  exit 0
 fi
 
 echo "Updating $VERSION to $NEW_VERSION"
