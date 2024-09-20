@@ -23,20 +23,8 @@ if [ -n "$(git status --porcelain)" ]; then
   exit 1
 fi
 
-VERSION=$(git describe --abbrev=0 --tags)
-
-# Remove leading "v" from version tag (for details, see the "Substring Extraction" section of
-# https://www.tldp.org/LDP/abs/html/string-manipulation.html).
-VERSION="${VERSION:1}"
-
-# Replace "." with a space so we can split the version into an array.
-read -r -a VERSION_BITS <<<"${VERSION//./ }"
-
-MAJOR_VERSION=${VERSION_BITS[0]}
-MINOR_VERSION=${VERSION_BITS[1]}
-MINOR_VERSION=$((MINOR_VERSION + 1))
-
-NEW_VERSION="v${MAJOR_VERSION}.${MINOR_VERSION}.0"
+NEXT_VERSION_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/next_version.sh"
+NEW_VERSION=$(bash $NEXT_VERSION_SCRIPT)
 
 # Get the current hash and see if it already has a tag. We will only create the new tag if the
 # current hash does not already have a tag.

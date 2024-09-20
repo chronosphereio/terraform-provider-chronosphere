@@ -3,6 +3,17 @@
 set -euo pipefail
 [[ -z ${DEBUG:-} ]] || set -o xtrace
 
+# allow the script to run goreleaser release or build
+command="release"
+for arg in "$@"; do
+    case $arg in
+    --build)
+        command="build"
+        shift # Remove --build from the arguments
+        ;;
+    esac
+done
+
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 DIR="$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && cd .. && pwd -P)"
 GITCONFIG_VOLUME=${GIT_CONFIG:-"${HOME}/.gitconfig"}
@@ -48,4 +59,4 @@ if [[ "${BUILDKITE:-}" != "true" ]]; then
 fi
 
 # N.B. The GO_RELEASER_DOCKER_IMAGE is expected to be set by CI.
-docker run "${DOCKER_OPTS[@]}" "${GO_RELEASER_DOCKER_IMAGE}" release "$@"
+docker run "${DOCKER_OPTS[@]}" "${GO_RELEASER_DOCKER_IMAGE}" ${command} "$@"

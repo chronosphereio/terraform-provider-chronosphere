@@ -24,6 +24,12 @@ GO_GENERATE=PATH=$(TOOLS_BIN):$(PATH) go generate
 GO_RELEASER_RELEASE_ARGS  ?= --clean
 GO_RELEASER_WORKING_DIR   := /go/src/github.com/chronosphere/terraform-provider-chronosphere
 
+SNAPSHOT_VERSION=$(shell ./scripts/next_version.sh || echo unknown)
+SNAPSHOT_VERSION_NUMBER=$(subst v,,$(SNAPSHOT_VERSION))
+LATEST_GIT_COMMIT=$(shell git rev-parse --short HEAD)
+SNAPSHOT_BINARY=terraform-provider-chronosphere_${SNAPSHOT_VERSION}-SNAPSHOT-${LATEST_GIT_COMMIT}
+LOCAL_SNAPSHOT_VERSION_DIR=${SNAPSHOT_VERSION_NUMBER}-SNAPSHOT-${LATEST_GIT_COMMIT}
+
 INTERNAL_TOOLS := \
   chronosphere/generateresources \
   chronosphere/pagination/generatepagination \
@@ -117,6 +123,7 @@ test-ci: install-tools
 version:
 	@echo "git: $(GIT_VERSION)"
 	@echo "dev: $(DEV_PROVIDER_VERSION)"
+	@echo "snapshot: $(shell ./scripts/next_version.sh || echo unknown)-SNAPSHOT"
 
 # release publishes release artifacts
 .PHONY: release
@@ -136,13 +143,39 @@ endif
 		GIT_VERSION=$(GIT_VERSION) \
 		./scripts/run_goreleaser.sh ${GO_RELEASER_RELEASE_ARGS}
 
-.PHONY: release-snapshot
-release-snapshot:
-	@echo Building binaries with goreleaser
+.PHONY: snapshot
+.IGNORE: snapshot # ignore build errors to make sure the git tag is removed.
+snapshot:
+	@echo "Building snapshot version ${SNAPSHOT_VERSION}-SNAPSHOT with goreleaser"
+	git tag ${SNAPSHOT_VERSION}
 	# --snapshot mode allows building artifacts w/o release tag present and w/ publishing mode disabled
 	# useful when we want to test whether we can build binaries, but not publish yet.
-	make release SKIP_RELEASE_BRANCH_VALIDATION=true GO_RELEASER_RELEASE_ARGS="--snapshot --clean --skip=publish --skip=sign"
+	GO_BUILD_LDFLAGS="$(GO_BUILD_LDFLAGS)" \
+		INSTRUMENT_PACKAGE=$(INSTRUMENT_PACKAGE) \
+		GO_RELEASER_DOCKER_IMAGE=$(GO_RELEASER_DOCKER_IMAGE) \
+		GO_RELEASER_RELEASE_ARGS="$(GO_RELEASER_RELEASE_ARGS)" \
+		GO_RELEASER_WORKING_DIR=$(GO_RELEASER_WORKING_DIR) \
+		SSH_AUTH_SOCK=$(SSH_AUTH_SOCK) \
+		./scripts/run_goreleaser.sh --snapshot --skip=publish --skip=validate ${GO_RELEASER_RELEASE_ARGS}
+	# remove the tag after building the snapshot
+	git tag -d ${SNAPSHOT_VERSION}
 
+.PHONY: install-snapshot
+install-snapshot: snapshot verify-terraform-arch
+	@echo "Installing snapshot version: ${SNAPSHOT_VERSION}-SNAPSHOT-${LATEST_GIT_COMMIT}"
+	@echo "Installing snapshot binary: ${SNAPSHOT_BINARY}"
+	mkdir -p ~/.terraform.d/plugins/${OS_ARCH}
+	cp ./dist/terraform-provider-chronosphere_${OS_ARCH}/${SNAPSHOT_BINARY} ~/.terraform.d/plugins/${OS_ARCH}
+	mkdir -p ~/.terraform.d/plugins/local/chronosphereio/chronosphere/${LOCAL_SNAPSHOT_VERSION_DIR}/${OS_ARCH}/
+	cp ./dist/terraform-provider-chronosphere_${OS_ARCH}/${SNAPSHOT_BINARY} ~/.terraform.d/plugins/local/chronosphereio/chronosphere/${LOCAL_SNAPSHOT_VERSION_DIR}/${OS_ARCH}
+	@echo "Installed snapshot version: ${SNAPSHOT_VERSION}-SNAPSHOT-${LATEST_GIT_COMMIT}"
+	@echo ""
+	@echo "reference this in your terraform code like so:"
+	@echo ""
+	@echo "provider \"chronosphere\" {"
+	@echo "  source = \"local/chronosphereio/chronosphere\""
+	@echo "  version = \"${SNAPSHOT_VERSION_NUMBER}-SNAPSHOT-${LATEST_GIT_COMMIT}\""
+	@echo "}"
 .PHONY: fmt
 fmt:
 	go fmt $(shell go list ./...)
