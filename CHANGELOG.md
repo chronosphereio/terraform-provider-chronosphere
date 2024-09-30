@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Fixed:
+ * Allow creating `chronosphere_slack_notifier` with actions without `action_confirm_text`.
+
 ## v1.5.0
 
 Added:
