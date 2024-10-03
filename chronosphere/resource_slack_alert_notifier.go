@@ -145,21 +145,32 @@ func slackActionsToModel(
 	var out []*models.NotifierSlackConfigAction
 	for _, a := range actions {
 		out = append(out, &models.NotifierSlackConfigAction{
-			ConfirmField: &models.SlackConfigConfirmationField{
-				DismissText: a.ActionConfirmDismissText,
-				OkText:      a.ActionConfirmOkText,
-				Text:        a.ActionConfirmText,
-				Title:       a.ActionConfirmTile,
-			},
-			Name:  a.Name,
-			Style: a.Style,
-			Text:  a.Text,
-			Type:  a.Type,
-			URL:   a.Url,
-			Value: a.Value,
+			ConfirmField: slackConfirmFieldToModel(a),
+			Name:         a.Name,
+			Style:        a.Style,
+			Text:         a.Text,
+			Type:         a.Type,
+			URL:          a.Url,
+			Value:        a.Value,
 		})
 	}
 	return out
+}
+
+func slackConfirmFieldToModel(a intschema.SlackAlertNotifierAction) *models.SlackConfigConfirmationField {
+	cf := models.SlackConfigConfirmationField{
+		DismissText: a.ActionConfirmDismissText,
+		OkText:      a.ActionConfirmOkText,
+		Text:        a.ActionConfirmText,
+		Title:       a.ActionConfirmTile,
+	}
+
+	// Only return a confirmation if there's a non-empty Confirm field.
+	// If none of the confirm fields are set, then don't add a confirmation.
+	if cf != (models.SlackConfigConfirmationField{}) {
+		return &cf
+	}
+	return nil
 }
 
 func slackActionsFromModel(
