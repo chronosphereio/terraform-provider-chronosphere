@@ -24,7 +24,7 @@ type RollupRule struct {
 	ExcludeBy           []string                       `intschema:"exclude_by,optional"`
 	GraphiteLabelPolicy *RollupRuleGraphiteLabelPolicy `intschema:"graphite_label_policy,optional,list_encoded_object"`
 	GroupBy             []string                       `intschema:"group_by,optional"`
-	Interval            string                         `intschema:"interval,optional"`
+	Interval            string                         `intschema:"interval,optional,computed"`
 	MetricTypeTag       bool                           `intschema:"metric_type_tag,optional,default:false"`
 	Mode                string                         `intschema:"mode,optional"`
 	NewMetric           string                         `intschema:"new_metric,optional"`

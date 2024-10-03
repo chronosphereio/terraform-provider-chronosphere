@@ -71,8 +71,10 @@ var RollupRule = map[string]*schema.Schema{
 		Deprecated: "use `interval` instead",
 	},
 	"interval": {
-		Type:          schema.TypeString,
-		Optional:      true,
+		Type:     schema.TypeString,
+		Optional: true,
+		// When no interval is specified, a server-side default is used.
+		Computed:      true,
 		ConflictsWith: []string{"storage_policies"},
 	},
 	"group_by": {

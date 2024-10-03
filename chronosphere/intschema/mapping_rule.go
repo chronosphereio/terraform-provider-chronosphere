@@ -21,7 +21,7 @@ type MappingRule struct {
 	Aggregations  []string                  `intschema:"aggregations,optional"`
 	Drop          bool                      `intschema:"drop,optional,default:false"`
 	DropTimestamp bool                      `intschema:"drop_timestamp,optional,default:false"`
-	Interval      string                    `intschema:"interval,optional"`
+	Interval      string                    `intschema:"interval,optional,computed"`
 	Mode          string                    `intschema:"mode,optional"`
 	StoragePolicy *MappingRuleStoragePolicy `intschema:"storage_policy,optional,list_encoded_object"`
 
