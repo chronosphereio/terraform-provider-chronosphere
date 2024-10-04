@@ -64,6 +64,13 @@ func (mappingRuleConverter) toModel(
 	if err := validateMappingRule(r); err != nil {
 		return nil, fmt.Errorf("invalid mapping rule: %v", err)
 	}
+	// The schema doesn't allow interval and policy to be set together.
+	// However, we receive both because interval is an optional computed field
+	// which will send the last server-returned value even if the user doesn't have it set
+	// in the configuration. Hence we clear it manually to workaround sc-81013.
+	if r.Interval != "" && r.StoragePolicy != nil {
+		r.Interval = ""
+	}
 	filter, err := aggregationfilter.StringToModel(r.Filter, aggregationfilter.MappingRuleDelimiter)
 	if err != nil {
 		return nil, err
@@ -155,23 +162,25 @@ func mappingStoragePolicyFromModel(
 }
 
 func validateMappingRule(rule *intschema.MappingRule) error {
+	hasInterval := rule.Interval != "" || rule.StoragePolicy != nil
+
 	if rule.Drop {
 		if len(rule.Aggregations) > 0 {
 			return fmt.Errorf("cannot set aggregations when drop is true")
 		}
-		if rule.StoragePolicy != nil {
-			return fmt.Errorf("cannot set storage_policy when drop is true")
+		if hasInterval {
+			return fmt.Errorf("cannot set interval or storage_policy when drop is true")
 		}
 		return nil
 	}
 
-	if rule.StoragePolicy == nil && len(rule.Aggregations) == 0 {
-		return fmt.Errorf("must set aggregations and storage_policy when drop is not set")
+	if !hasInterval && len(rule.Aggregations) == 0 {
+		return fmt.Errorf("must set aggregations and interval when drop is not set")
 	}
 
 	// Aggregations and StoragePolicies must be set together.
-	if rule.StoragePolicy != nil && len(rule.Aggregations) == 0 {
-		return fmt.Errorf("must set aggregations")
+	if hasInterval && len(rule.Aggregations) == 0 {
+		return fmt.Errorf("must set aggregations when setting interval")
 	}
 
 	return nil
