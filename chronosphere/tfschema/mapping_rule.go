@@ -78,6 +78,9 @@ var MappingRule = map[string]*schema.Schema{
 	"interval": {
 		Type:     schema.TypeString,
 		Optional: true,
+		// When no interval is specified, a server-side default is used.
+		Computed:      true,
+		ConflictsWith: []string{"storage_policy"},
 	},
 	"mode": Enum{
 		Value:    enum.MappingModeType.ToStrings(),

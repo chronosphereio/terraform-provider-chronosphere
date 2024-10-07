@@ -73,7 +73,7 @@ func (rollupRuleConverter) toModel(
 	// which will send the last server-returned value even if the user doesn't have it set
 	// in the configuration. Hence we clear it manually to workaround sc-81013.
 	if r.Interval != "" && r.StoragePolicies != nil {
-		r.StoragePolicies = nil
+		r.Interval = ""
 	}
 
 	filter, err := aggregationfilter.StringToModel(r.Filter, aggregationfilter.RollupRuleDelimiter)
