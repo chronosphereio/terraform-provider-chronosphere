@@ -179,44 +179,6 @@ func importPolicyModel(id string) (map[string]any, error) {
 }
 
 func (npr *notificationPolicyResourceMeta) resourceNotificationPolicyCustomizeDiff(ctx context.Context, diff *schema.ResourceDiff, meta any) error {
-	// hasSlug uses raw config to determine if the end user is setting slug in their Terraform config.
-	// This is necessary since slug may be set as a computed value invisible to the user, practically meaning
-	// that diff.Get("slug") returns a non-empty value even when the user has not explicitly defined a slug.
-	hasSlug := stringAttrLikelyDefined(diff, "slug")
-
-	// Validate presence of slug w.r.t. other fields
-	hasOwner := stringAttrLikelyDefined(diff, "team_id")
-	if hasSlug && !hasOwner {
-		return fmt.Errorf("cannot set slug for unowned policy, use a notification policy with team_id set")
-	}
-
-	// If the policy became owned or unowned, force new.
-	// Since a policy may have had neither bucket_id nor team_id set before, and therefore may not have had
-	// a lifecycle independently managed by its chronosphere_notification_policy resources,
-	// changes to team_id or bucket_id must force new.
-	// Once at least one of bucket_id or team_id are required, ForceNew can be false here.
-	//
-	// We do this by setting the is_independent field to true if the policy is becoming owned, and false if it's becoming unowned.
-	// This field is marked ForceNew, so if it changes, the resource will be recreated.
-	//
-	// This is done in this diff function since the force new behavior covers both the bucket_id and team_id fields collectively.
-	// Putting ForceNew individually on those fields may cause unnecessary deletes-and-recreates in the case of
-	// an already-owned policy changing ownership (e.g. ownership changes from team X to team Y).
-	oldTeamID, _ := diff.GetChange("team_id")
-	hadOwner := oldTeamID.(string) != ""
-
-	if hadOwner != hasOwner {
-		tflog.Info(ctx, "updating `is_independent` field to ForceNew notification policy", map[string]interface{}{
-			"ownedBefore":    hadOwner,
-			"ownedNow":       hasOwner,
-			"teamIdChanged":  diff.HasChange("team_id"),
-			"is_independent": hasOwner,
-		})
-		if err := diff.SetNew("is_independent", hasOwner); err != nil {
-			return err
-		}
-	}
-
 	// This forces a diff to notification_policy_data if the route list, or ownership changes.
 	// This is not the default terraform behavior, which usually only computes fields on resource creation.
 	if changedKeys := diff.GetChangedKeysPrefix(""); len(changedKeys) > 0 {
@@ -335,16 +297,6 @@ func expandNotificationPolicyRaw(
 
 // expandNotificationPolicy converts a notification policy resource to the corresponding API model type.
 func expandNotificationPolicy(p *intschema.NotificationPolicy) (*NotificationPolicyData, error) {
-	teamSlug := p.TeamId.Slug()
-
-	isInline := teamSlug == ""
-	if p.Slug != "" && isInline {
-		return nil, fmt.Errorf("cannot set slug for unowned policy, can only set slug if policy with team_id set")
-	}
-	if p.Name != "" && isInline {
-		return nil, fmt.Errorf("cannot set name for unowned policy, can only set name if policy with team_id set")
-	}
-
 	notifiers, err := expandNotificationPolicyRoutes(p.Route)
 	if err != nil {
 		return nil, err
