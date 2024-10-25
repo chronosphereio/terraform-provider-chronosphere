@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+* Adds support for labels `chronosphere_dashboard`
+
 ## v1.5.1
 
 Fixed:

@@ -14,11 +14,12 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type Dashboard struct {
-	Name                 string  `intschema:"name,optional"`
-	Slug                 string  `intschema:"slug,optional,computed"`
-	CollectionId         tfid.ID `intschema:"collection_id,optional"`
-	DashboardJson        string  `intschema:"dashboard_json"`
-	HCLFileDashboardJson string  `intschema:"dashboard_json,file"`
+	Name                 string            `intschema:"name,optional"`
+	Slug                 string            `intschema:"slug,optional,computed"`
+	CollectionId         tfid.ID           `intschema:"collection_id,optional"`
+	DashboardJson        string            `intschema:"dashboard_json"`
+	HCLFileDashboardJson string            `intschema:"dashboard_json,file"`
+	Labels               map[string]string `intschema:"labels,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.

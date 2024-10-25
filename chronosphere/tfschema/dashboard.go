@@ -40,6 +40,11 @@ var Dashboard = map[string]*schema.Schema{
 		DiffSuppressFunc:      dashboardJSONDiffSuppress,
 		DiffSuppressOnRefresh: true,
 	},
+	"labels": {
+		Type:     schema.TypeMap,
+		Elem:     &schema.Schema{Type: schema.TypeString},
+		Optional: true,
+	},
 }
 
 // dashboardJSONDiffSuppress sanitizes and then diffs two dashboard JSON payloads.
