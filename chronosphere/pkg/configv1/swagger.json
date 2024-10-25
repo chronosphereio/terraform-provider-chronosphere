@@ -1473,7 +1473,7 @@
           "type": "number"
         },
         "fixed_values": {
-          "description": "Fixed values optionally override percent_of_license allocations for specific licenses.\nWhen specifying fixed values for a license, all pools must have an explicit fixed value\nspecification for that given license. Default pool receives all remaining quota left\nwithin the license after subtracting the sum of fixed values across pools for that license.",
+          "description": "Fixed values optionally override `percent_of_license` allocations for specified licenses.\nWhen defining fixed values for a license, all pools must have an explicit fixed value\nspecification for that given license. The default pool receives all remaining quota left\nwithin the license, after subtracting the sum of fixed values across pools for that license.",
           "items": {
             "$ref": "#/definitions/AllocationFixedValue"
           },
@@ -2754,6 +2754,12 @@
         "dashboard_json": {
           "description": "Required raw JSON of the dashboard.",
           "type": "string"
+        },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
         }
       },
       "type": "object"
