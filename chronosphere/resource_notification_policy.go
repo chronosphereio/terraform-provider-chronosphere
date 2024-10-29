@@ -179,40 +179,25 @@ func importPolicyModel(id string) (map[string]any, error) {
 }
 
 func (npr *notificationPolicyResourceMeta) resourceNotificationPolicyCustomizeDiff(ctx context.Context, diff *schema.ResourceDiff, meta any) error {
-	// hasSlug uses raw config to determine if the end user is setting slug in their Terraform config.
-	// This is necessary since slug may be set as a computed value invisible to the user, practically meaning
-	// that diff.Get("slug") returns a non-empty value even when the user has not explicitly defined a slug.
-	hasSlug := stringAttrLikelyDefined(diff, "slug")
-
-	// Validate presence of slug w.r.t. other fields
-	hasOwner := stringAttrLikelyDefined(diff, "team_id")
-	if hasSlug && !hasOwner {
-		return fmt.Errorf("cannot set slug for unowned policy, use a notification policy with team_id set")
-	}
-
-	// If the policy became owned or unowned, force new.
-	// Since a policy may have had neither bucket_id nor team_id set before, and therefore may not have had
-	// a lifecycle independently managed by its chronosphere_notification_policy resources,
-	// changes to team_id or bucket_id must force new.
-	// Once at least one of bucket_id or team_id are required, ForceNew can be false here.
+	// The policy name is used to determine if a policy is inline or independent. Inline policies must not have a name;
+	// independent policies must have a name. See https://stackoverflowteams.com/c/chronosphere/questions/648 for details.
 	//
-	// We do this by setting the is_independent field to true if the policy is becoming owned, and false if it's becoming unowned.
-	// This field is marked ForceNew, so if it changes, the resource will be recreated.
+	// The is_independent field is set to true if the policy is given a name, and false if its name is removed.
+	// This field is marked ForceNew, so if it changes, the resource is recreated.
 	//
-	// This is done in this diff function since the force new behavior covers both the bucket_id and team_id fields collectively.
-	// Putting ForceNew individually on those fields may cause unnecessary deletes-and-recreates in the case of
-	// an already-owned policy changing ownership (e.g. ownership changes from team X to team Y).
-	oldTeamID, _ := diff.GetChange("team_id")
-	hadOwner := oldTeamID.(string) != ""
-
-	if hadOwner != hasOwner {
+	// This is done in this diff function rather than marking the name field ForceNew to to avoid unnecessary
+	// deletes-and-recreates when an independent policy is renamed.
+	hasName := stringAttrLikelyDefined(diff, "name")
+	oldName, _ := diff.GetChange("name")
+	hadName := oldName.(string) != ""
+	if hadName != hasName {
 		tflog.Info(ctx, "updating `is_independent` field to ForceNew notification policy", map[string]interface{}{
-			"ownedBefore":    hadOwner,
-			"ownedNow":       hasOwner,
-			"teamIdChanged":  diff.HasChange("team_id"),
-			"is_independent": hasOwner,
+			"nameBefore":     hadName,
+			"nameNow":        hasName,
+			"nameChanged":    diff.HasChange("name"),
+			"is_independent": hasName,
 		})
-		if err := diff.SetNew("is_independent", hasOwner); err != nil {
+		if err := diff.SetNew("is_independent", hasName); err != nil {
 			return err
 		}
 	}
@@ -335,16 +320,6 @@ func expandNotificationPolicyRaw(
 
 // expandNotificationPolicy converts a notification policy resource to the corresponding API model type.
 func expandNotificationPolicy(p *intschema.NotificationPolicy) (*NotificationPolicyData, error) {
-	teamSlug := p.TeamId.Slug()
-
-	isInline := teamSlug == ""
-	if p.Slug != "" && isInline {
-		return nil, fmt.Errorf("cannot set slug for unowned policy, can only set slug if policy with team_id set")
-	}
-	if p.Name != "" && isInline {
-		return nil, fmt.Errorf("cannot set name for unowned policy, can only set name if policy with team_id set")
-	}
-
 	notifiers, err := expandNotificationPolicyRoutes(p.Route)
 	if err != nil {
 		return nil, err
@@ -416,8 +391,8 @@ func isNotificationPolicyIndependent(p *intschema.NotificationPolicy) bool {
 		return !localid.IsLocalID(p.StateID)
 	}
 
-	// Otherwise, policy is independent if team_id is set in the TF definition.
-	return p.TeamId.Slug() != ""
+	// Otherwise, policy is independent if name is set in the TF definition.
+	return p.Name != ""
 }
 
 // isNotificationPolicyIndependentForCustomizeDiff is a version of isNotificationPolicyIndependent which is safe

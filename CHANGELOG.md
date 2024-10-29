@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+ * Allow `chronosphere_notification_policy` resources without a `team_id`.
+
 ## v1.5.1
 
 Fixed:
