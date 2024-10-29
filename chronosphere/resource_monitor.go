@@ -46,8 +46,12 @@ func resourceMonitor() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
-		CustomizeDiff: r.ValidateDryRun(&MonitorDryRunCount),
-		Schema:        tfschema.Monitor,
+		CustomizeDiff: r.ValidateDryRunOptions(&MonitorDryRunCount, ValidateDryRunOpts[*models.Configv1Monitor]{
+			DryRunDefaults: map[string]any{
+				"query.[0].prometheus_expr": "dry_run_unknown_query",
+			},
+		}),
+		Schema: tfschema.Monitor,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
