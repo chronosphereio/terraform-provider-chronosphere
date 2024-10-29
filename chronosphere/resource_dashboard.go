@@ -75,6 +75,7 @@ func (dashboardConverter) toModel(
 		CollectionSlug: collSlug,
 		Collection:     collRef,
 		DashboardJSON:  d.DashboardJson,
+		Labels:         d.Labels,
 	}, nil
 }
 
@@ -86,5 +87,6 @@ func (dashboardConverter) fromModel(
 		Slug:          m.Slug,
 		DashboardJson: m.DashboardJSON,
 		CollectionId:  tfid.Slug(collectionIDFromRef(m.CollectionSlug, m.Collection)),
+		Labels:        m.Labels,
 	}, nil
 }
