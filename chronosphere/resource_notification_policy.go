@@ -179,6 +179,16 @@ func importPolicyModel(id string) (map[string]any, error) {
 }
 
 func (npr *notificationPolicyResourceMeta) resourceNotificationPolicyCustomizeDiff(ctx context.Context, diff *schema.ResourceDiff, meta any) error {
+	// hasSlug uses raw config to determine if the end user is setting slug in their Terraform config.
+	// This is necessary since slug may be set as a computed value invisible to the user, practically meaning
+	// that diff.Get("slug") returns a non-empty value even when the user has not explicitly defined a slug.
+	hasSlug := stringAttrLikelyDefined(diff, "slug")
+	// Validate presence of slug w.r.t. other fields
+	hasName := stringAttrLikelyDefined(diff, "name")
+	if hasSlug && !hasName {
+		return fmt.Errorf("cannot set slug for unnamed policy, use a notification policy with name set")
+	}
+
 	// The policy name is used to determine if a policy is inline or independent. Inline policies must not have a name;
 	// independent policies must have a name. See https://stackoverflowteams.com/c/chronosphere/questions/648 for details.
 	//
@@ -187,7 +197,6 @@ func (npr *notificationPolicyResourceMeta) resourceNotificationPolicyCustomizeDi
 	//
 	// This is done in this diff function rather than marking the name field ForceNew to to avoid unnecessary
 	// deletes-and-recreates when an independent policy is renamed.
-	hasName := stringAttrLikelyDefined(diff, "name")
 	oldName, _ := diff.GetChange("name")
 	hadName := oldName.(string) != ""
 	if hadName != hasName {
@@ -320,6 +329,10 @@ func expandNotificationPolicyRaw(
 
 // expandNotificationPolicy converts a notification policy resource to the corresponding API model type.
 func expandNotificationPolicy(p *intschema.NotificationPolicy) (*NotificationPolicyData, error) {
+	isInline := p.Name == ""
+	if p.Slug != "" && isInline {
+		return nil, fmt.Errorf("cannot set slug for unnamed policy, use a notification policy with name set")
+	}
 	notifiers, err := expandNotificationPolicyRoutes(p.Route)
 	if err != nil {
 		return nil, err
