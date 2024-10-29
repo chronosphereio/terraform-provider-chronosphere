@@ -3,7 +3,7 @@
 ## Unreleased
 
 Added:
-* Adds support for labels `chronosphere_dashboard`
+* Adds support for `labels` in `chronosphere_dashboard`
 
 ## v1.5.1
 
