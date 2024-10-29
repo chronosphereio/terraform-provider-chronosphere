@@ -21,10 +21,11 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema/intschematest"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/shared/pkg/container/set"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 )
 
-func TestSetUnknownReferences(t *testing.T) {
+func TestSetUnknown(t *testing.T) {
 	type noTFID struct {
 		Name string `intschema:"name"`
 	}
@@ -52,14 +53,21 @@ func TestSetUnknownReferences(t *testing.T) {
 		MapRefs map[string]tfid.ID `intschema:"map_vals"`
 		RefVal  tfid.ID            `intschema:"ref_val"`
 	}
+	type mapWithName struct {
+		Name string `intschema:"name"`
+	}
+	type mapWithNestedName struct {
+		Nested *mapWithName `intschema:"nested,list_encoded_object"`
+	}
 
 	testCases := []struct {
-		name         string
-		input        any
-		skip         []string
-		rawConfig    cty.Value
-		want         any
-		wantPanicMsg string
+		name           string
+		input          any
+		rawConfig      cty.Value
+		skipIDs        set.Set[string]
+		dryRunDefaults map[string]any
+		want           any
+		wantPanicMsg   string
 	}{
 		{
 			name:  "no tfid values",
@@ -128,7 +136,7 @@ func TestSetUnknownReferences(t *testing.T) {
 					Name: "michael",
 				},
 			},
-			wantPanicMsg: "setUnknownReferences found unsupported tfid in a slice/map at nested.ref_val",
+			wantPanicMsg: "setUnknown found unsupported tfid in a slice/map at nested.ref_val",
 		},
 		{
 			name: "nested tfid skipped",
@@ -141,7 +149,7 @@ func TestSetUnknownReferences(t *testing.T) {
 			rawConfig: cty.ObjectVal(map[string]cty.Value{
 				"ref_val": cty.StringVal("ref_slug"),
 			}),
-			skip: []string{"nested.ref_val"},
+			skipIDs: set.New("nested.ref_val"),
 			want: &nestedTFID{
 				Name:   "michael",
 				RefVal: dummyRef,
@@ -155,7 +163,7 @@ func TestSetUnknownReferences(t *testing.T) {
 			input: &sliceOfRefs{
 				Name: "michael",
 			},
-			wantPanicMsg: "setUnknownReferences found unsupported tfid in a slice/map at ref_vals.[]",
+			wantPanicMsg: "setUnknown found unsupported tfid in a slice/map at ref_vals.[]",
 		},
 		// NOTE: the below behavior does not match the behaviour on unknown notifier references,
 		// which uses an empty list. See the note in resource_notification_policy on dry-run validation.
@@ -165,7 +173,7 @@ func TestSetUnknownReferences(t *testing.T) {
 				Name:    "michael",
 				RefVals: []tfid.ID{tfid.Slug(""), tfid.Slug("")},
 			},
-			wantPanicMsg: "setUnknownReferences found unsupported tfid in a slice/map at ref_vals.[]",
+			wantPanicMsg: "setUnknown found unsupported tfid in a slice/map at ref_vals.[]",
 		},
 		// NOTE: the below behavior does not match the behaviour on unknown notifier references,
 		// which uses an empty list. See the note in resource_notification_policy on dry-run validation.
@@ -178,7 +186,7 @@ func TestSetUnknownReferences(t *testing.T) {
 			rawConfig: cty.ObjectVal(map[string]cty.Value{
 				"ref_val": cty.StringVal("ref_slug"),
 			}),
-			skip: []string{"ref_vals.[]"},
+			skipIDs: set.New("ref_vals.[]"),
 			want: &sliceOfRefs{
 				Name:    "michael",
 				RefVals: []tfid.ID{tfid.Slug(""), tfid.Slug("")},
@@ -193,14 +201,14 @@ func TestSetUnknownReferences(t *testing.T) {
 					"one": tfid.Slug(""),
 				},
 			},
-			wantPanicMsg: "setUnknownReferences found unsupported tfid in a slice/map at map_vals.[]",
+			wantPanicMsg: "setUnknown found unsupported tfid in a slice/map at map_vals.[]",
 		},
 		{
 			name: "top level nil map with tfids without skip panics",
 			input: &mapWithRefs{
 				Name: "michael",
 			},
-			wantPanicMsg: "setUnknownReferences found unsupported tfid in a slice/map at map_vals.[]",
+			wantPanicMsg: "setUnknown found unsupported tfid in a slice/map at map_vals.[]",
 		},
 		{
 			name: "top level empty map with tfids without skip panics",
@@ -208,7 +216,7 @@ func TestSetUnknownReferences(t *testing.T) {
 				Name:    "michael",
 				MapRefs: map[string]tfid.ID{},
 			},
-			wantPanicMsg: "setUnknownReferences found unsupported tfid in a slice/map at map_vals.[]",
+			wantPanicMsg: "setUnknown found unsupported tfid in a slice/map at map_vals.[]",
 		},
 		{
 			name: "top level map with tfids with skip",
@@ -221,7 +229,7 @@ func TestSetUnknownReferences(t *testing.T) {
 			rawConfig: cty.ObjectVal(map[string]cty.Value{
 				"ref_val": cty.StringVal("ref_slug"),
 			}),
-			skip: []string{"map_vals.[]"},
+			skipIDs: set.New("map_vals.[]"),
 			want: &mapWithRefs{
 				Name: "michael",
 				MapRefs: map[string]tfid.ID{
@@ -230,20 +238,60 @@ func TestSetUnknownReferences(t *testing.T) {
 				RefVal: dummyRef,
 			},
 		},
+		{
+			name: "dry run default at top level",
+			input: &mapWithName{
+				Name: "",
+			},
+			rawConfig: cty.ObjectVal(map[string]cty.Value{
+				"name": cty.UnknownVal(cty.String),
+			}),
+			dryRunDefaults: map[string]any{"name": "dry-run-default"},
+			want: &mapWithName{
+				Name: "dry-run-default",
+			},
+		},
+		{
+			name: "dry run default in nested struct",
+			input: &mapWithNestedName{
+				Nested: &mapWithName{
+					Name: "",
+				},
+			},
+			rawConfig: cty.ObjectVal(map[string]cty.Value{
+				"nested": cty.ListVal([]cty.Value{
+					cty.ObjectVal(map[string]cty.Value{
+						"name": cty.UnknownVal(cty.String),
+					}),
+				}),
+			}),
+			dryRunDefaults: map[string]any{"nested.[0].name": "dry-run-default"},
+			want: &mapWithNestedName{
+				Nested: &mapWithName{
+					Name: "dry-run-default",
+				},
+			},
+		},
 	}
+
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
+			p := setUnknownParams{
+				rawConfig:      tt.rawConfig,
+				skipIDs:        tt.skipIDs,
+				dryRunDefaults: tt.dryRunDefaults,
+			}
 			if tt.wantPanicMsg != "" {
 				assert.PanicsWithValue(t, tt.wantPanicMsg,
 					func() {
-						setUnknownReferences(tt.input, tt.rawConfig, nil)
+						setUnknown(tt.input, p)
 					},
 				)
 				return
 			}
 
 			r := intschematest.Clone(tt.input)
-			setUnknownReferences(r, tt.rawConfig, tt.skip)
+			setUnknown(r, p)
 			assert.Equal(t, tt.want, r)
 		})
 	}

@@ -4,6 +4,11 @@
 
 Added:
 * Adds support for `labels` in `chronosphere_dashboard`
+* Allow `chronosphere_notification_policy` resources without a `team_id`.
+
+Fixed:
+ * Support dry-run validation of monitor prometheus queries that contain
+   dynamic expressions that aren't known at plan time.
 
 ## v1.5.1
 

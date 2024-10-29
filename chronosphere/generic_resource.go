@@ -25,7 +25,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/tfresource"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema/overridecreate"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/shared/pkg/container/set"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -34,10 +34,6 @@ import (
 type internalSchema interface {
 	FromResourceData(d convertintschema.ResourceGetter) error
 	ToResourceData(d *schema.ResourceData) diag.Diagnostics
-}
-
-type overrideCreateResource interface {
-	GetOverrideCreateAction() (overridecreate.Action, error)
 }
 
 // internalSchemaPtr defines a pointer to an intschema struct value, where
@@ -132,30 +128,6 @@ func (r genericResource[M, SV, S]) CreateContext(
 	m, err := r.converter.toModel(s)
 	if err != nil {
 		return diag.Errorf(err.Error())
-	}
-
-	if c, ok := any(s).(overrideCreateResource); ok {
-		action, err := c.GetOverrideCreateAction()
-		if err != nil {
-			return diag.Errorf(err.Error())
-		}
-
-		switch action {
-		case overridecreate.ImportOrFail:
-			if err := r.crud.update(ctx, clients, m, updateParams{}); err != nil {
-				return diag.Errorf("unable to create or import %s: %v", r.name, clienterror.Wrap(err))
-			}
-			d.SetId(r.fields.slugOf(m))
-			return nil
-		case overridecreate.ImportIfExists:
-			if err := r.crud.update(ctx, clients, m, updateParams{createIfMissing: true}); err != nil {
-				return diag.Errorf("unable to create or import %s: %v", r.name, clienterror.Wrap(err))
-			}
-			d.SetId(r.fields.slugOf(m))
-			return nil
-		case overridecreate.AlwaysCreate:
-			// no-op
-		}
 	}
 
 	slug, err := r.crud.create(ctx, clients, m, false /* dryRun */)
@@ -258,6 +230,11 @@ type ValidateDryRunOpts[M any] struct {
 	// SetUnknownReferencesSkip is a set of fields to skip when setting unknown references.
 	SetUnknownReferencesSkip []string
 
+	// DryRunDefaults are default values to set during dry-run if the field has a value in config
+	// but not in the "plan" ResourceData. This typically happens due to unknown values.
+	// E.g., interpolating an ID field for a resource that hasn't been created yet.
+	DryRunDefaults map[string]any
+
 	// ModifyAPIModel is used to modify an API model before making the dry-run API call.
 	ModifyAPIModel func(M)
 }
@@ -284,7 +261,12 @@ func (r genericResource[M, SV, S]) ValidateDryRunOptions(dryRunCounter *atomic.I
 		if err := s.FromResourceData(diff); err != nil {
 			return err
 		}
-		setUnknownReferences(s, diff.GetRawConfig(), opts.SetUnknownReferencesSkip)
+
+		setUnknown(s, setUnknownParams{
+			rawConfig:      diff.GetRawConfig(),
+			skipIDs:        set.New(opts.SetUnknownReferencesSkip...),
+			dryRunDefaults: opts.DryRunDefaults,
+		})
 
 		m, err := r.converter.toModel(s)
 		if err != nil {
