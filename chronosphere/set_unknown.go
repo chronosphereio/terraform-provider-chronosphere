@@ -37,7 +37,7 @@ const (
 var dummyRef = tfid.Slug("dummy_value")
 
 type setUnknownParams struct {
-	rawConfig      cty.Value
+	rawConfig      cty.Value // required
 	skipIDs        set.Set[string]
 	dryRunDefaults map[string]any
 }
@@ -50,6 +50,9 @@ type setUnknownParams struct {
 // Populating this dummy value allows entities to pass validations that the field is populated.
 // A database level validation will still trigger for references, but these are errors ignored by the TF provider.
 func setUnknown(v any, p setUnknownParams) {
+	if p.skipIDs == nil {
+		p.skipIDs = set.New[string]()
+	}
 	rv := reflect.ValueOf(v)
 	p.set(rv, nil /* path */)
 }
