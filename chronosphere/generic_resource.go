@@ -25,6 +25,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/tfresource"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/shared/pkg/container/set"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -229,6 +230,11 @@ type ValidateDryRunOpts[M any] struct {
 	// SetUnknownReferencesSkip is a set of fields to skip when setting unknown references.
 	SetUnknownReferencesSkip []string
 
+	// DryRunDefaults are default values to set during dry-run if the field has a value in config
+	// but not in the "plan" ResourceData. This typically happens due to unknown values.
+	// E.g., interpolating an ID field for a resource that hasn't been created yet.
+	DryRunDefaults map[string]any
+
 	// ModifyAPIModel is used to modify an API model before making the dry-run API call.
 	ModifyAPIModel func(M)
 }
@@ -255,7 +261,12 @@ func (r genericResource[M, SV, S]) ValidateDryRunOptions(dryRunCounter *atomic.I
 		if err := s.FromResourceData(diff); err != nil {
 			return err
 		}
-		setUnknownReferences(s, diff.GetRawConfig(), opts.SetUnknownReferencesSkip)
+
+		setUnknown(s, setUnknownParams{
+			rawConfig:      diff.GetRawConfig(),
+			skipIDs:        set.New(opts.SetUnknownReferencesSkip...),
+			dryRunDefaults: opts.DryRunDefaults,
+		})
 
 		m, err := r.converter.toModel(s)
 		if err != nil {

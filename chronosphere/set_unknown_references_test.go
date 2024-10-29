@@ -21,10 +21,11 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema/intschematest"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/shared/pkg/container/set"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 )
 
-func TestSetUnknownReferences(t *testing.T) {
+func TestSetUnknown(t *testing.T) {
 	type noTFID struct {
 		Name string `intschema:"name"`
 	}
@@ -128,7 +129,7 @@ func TestSetUnknownReferences(t *testing.T) {
 					Name: "michael",
 				},
 			},
-			wantPanicMsg: "setUnknownReferences found unsupported tfid in a slice/map at nested.ref_val",
+			wantPanicMsg: "setUnknown found unsupported tfid in a slice/map at nested.ref_val",
 		},
 		{
 			name: "nested tfid skipped",
@@ -155,7 +156,7 @@ func TestSetUnknownReferences(t *testing.T) {
 			input: &sliceOfRefs{
 				Name: "michael",
 			},
-			wantPanicMsg: "setUnknownReferences found unsupported tfid in a slice/map at ref_vals.[]",
+			wantPanicMsg: "setUnknown found unsupported tfid in a slice/map at ref_vals.[]",
 		},
 		// NOTE: the below behavior does not match the behaviour on unknown notifier references,
 		// which uses an empty list. See the note in resource_notification_policy on dry-run validation.
@@ -165,7 +166,7 @@ func TestSetUnknownReferences(t *testing.T) {
 				Name:    "michael",
 				RefVals: []tfid.ID{tfid.Slug(""), tfid.Slug("")},
 			},
-			wantPanicMsg: "setUnknownReferences found unsupported tfid in a slice/map at ref_vals.[]",
+			wantPanicMsg: "setUnknown found unsupported tfid in a slice/map at ref_vals.[]",
 		},
 		// NOTE: the below behavior does not match the behaviour on unknown notifier references,
 		// which uses an empty list. See the note in resource_notification_policy on dry-run validation.
@@ -193,14 +194,14 @@ func TestSetUnknownReferences(t *testing.T) {
 					"one": tfid.Slug(""),
 				},
 			},
-			wantPanicMsg: "setUnknownReferences found unsupported tfid in a slice/map at map_vals.[]",
+			wantPanicMsg: "setUnknown found unsupported tfid in a slice/map at map_vals.[]",
 		},
 		{
 			name: "top level nil map with tfids without skip panics",
 			input: &mapWithRefs{
 				Name: "michael",
 			},
-			wantPanicMsg: "setUnknownReferences found unsupported tfid in a slice/map at map_vals.[]",
+			wantPanicMsg: "setUnknown found unsupported tfid in a slice/map at map_vals.[]",
 		},
 		{
 			name: "top level empty map with tfids without skip panics",
@@ -208,7 +209,7 @@ func TestSetUnknownReferences(t *testing.T) {
 				Name:    "michael",
 				MapRefs: map[string]tfid.ID{},
 			},
-			wantPanicMsg: "setUnknownReferences found unsupported tfid in a slice/map at map_vals.[]",
+			wantPanicMsg: "setUnknown found unsupported tfid in a slice/map at map_vals.[]",
 		},
 		{
 			name: "top level map with tfids with skip",
@@ -233,17 +234,18 @@ func TestSetUnknownReferences(t *testing.T) {
 	}
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
+			p := setUnknownParams{rawConfig: tt.rawConfig, skipIDs: set.New(tt.skip...)}
 			if tt.wantPanicMsg != "" {
 				assert.PanicsWithValue(t, tt.wantPanicMsg,
 					func() {
-						setUnknownReferences(tt.input, tt.rawConfig, nil)
+						setUnknown(tt.input, p)
 					},
 				)
 				return
 			}
 
 			r := intschematest.Clone(tt.input)
-			setUnknownReferences(r, tt.rawConfig, tt.skip)
+			setUnknown(r, p)
 			assert.Equal(t, tt.want, r)
 		})
 	}
