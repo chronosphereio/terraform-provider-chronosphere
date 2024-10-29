@@ -25,7 +25,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/tfresource"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema/overridecreate"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -34,10 +33,6 @@ import (
 type internalSchema interface {
 	FromResourceData(d convertintschema.ResourceGetter) error
 	ToResourceData(d *schema.ResourceData) diag.Diagnostics
-}
-
-type overrideCreateResource interface {
-	GetOverrideCreateAction() (overridecreate.Action, error)
 }
 
 // internalSchemaPtr defines a pointer to an intschema struct value, where
@@ -132,30 +127,6 @@ func (r genericResource[M, SV, S]) CreateContext(
 	m, err := r.converter.toModel(s)
 	if err != nil {
 		return diag.Errorf(err.Error())
-	}
-
-	if c, ok := any(s).(overrideCreateResource); ok {
-		action, err := c.GetOverrideCreateAction()
-		if err != nil {
-			return diag.Errorf(err.Error())
-		}
-
-		switch action {
-		case overridecreate.ImportOrFail:
-			if err := r.crud.update(ctx, clients, m, updateParams{}); err != nil {
-				return diag.Errorf("unable to create or import %s: %v", r.name, clienterror.Wrap(err))
-			}
-			d.SetId(r.fields.slugOf(m))
-			return nil
-		case overridecreate.ImportIfExists:
-			if err := r.crud.update(ctx, clients, m, updateParams{createIfMissing: true}); err != nil {
-				return diag.Errorf("unable to create or import %s: %v", r.name, clienterror.Wrap(err))
-			}
-			d.SetId(r.fields.slugOf(m))
-			return nil
-		case overridecreate.AlwaysCreate:
-			// no-op
-		}
 	}
 
 	slug, err := r.crud.create(ctx, clients, m, false /* dryRun */)
