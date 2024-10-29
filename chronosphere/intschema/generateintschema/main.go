@@ -34,7 +34,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema/intschematag"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/registry"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema/overridecreate"
 )
 
 // Add shared schema references here to generate shared types.
@@ -244,13 +243,6 @@ func newFileData(t schemaType, name string, objSchema map[string]*schema.Schema)
 	r.IsConverter = true
 	r.ResourceName = "chronosphere_" + name
 
-	for _, field := range r.Fields {
-		if field.Tag.TFName == overridecreate.Field {
-			r.IsOverridingCreate = true
-			f.Imports = append(f.Imports, "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema/overridecreate")
-		}
-	}
-
 	r.Fields = append(r.Fields, &field{
 		Name:     intschematag.StateIDField,
 		TypeName: "string",
@@ -410,11 +402,10 @@ func (f *fileData) loadType(
 }
 
 type structDef struct {
-	IsConverter        bool
-	ResourceName       string
-	TypeName           string
-	Fields             []*field
-	IsOverridingCreate bool
+	IsConverter  bool
+	ResourceName string
+	TypeName     string
+	Fields       []*field
 
 	container *schema.Schema
 }
@@ -519,11 +510,6 @@ type {{.TypeName}} struct {
 	{{.Name}} {{.TypeName}} ` + "`" + `{{.Tag.Marshal}}` + "`" + `
 	{{end}}
 }
-{{if .IsOverridingCreate}}
-func (o *{{.TypeName}}) GetOverrideCreateAction() (overridecreate.Action, error) {
-	return overridecreate.ParseAction(o.OverrideCreate)
-}
-{{end}}
 {{if .IsConverter}}
 func (o *{{.TypeName}}) FromResourceData(d convertintschema.ResourceGetter) error {
 	return convertintschema.FromResourceData(tfschema.{{.TypeName}}, d, o)

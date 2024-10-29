@@ -20,7 +20,6 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema/intschematag"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema/overridecreate"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -55,11 +54,7 @@ func unloadStruct(
 		field := v.Field(i)
 		tag := intschematag.Unmarshal(v.Type().Field(i))
 
-		if tag.IgnoreResourceData() ||
-			// NB: Ignore server value for override_create fields. Server will always return an empty value because
-			// override_create is a Terraform concept and will only be present on the manually-defined TF resource.
-			// We don't want to overwrite the value defined in the resource to empty.
-			tag.TFName == overridecreate.Field {
+		if tag.IgnoreResourceData() {
 			if !isEmpty(field) {
 				panic(fmt.Sprintf(
 					"cannot set field %s when calling ToResourceData",
