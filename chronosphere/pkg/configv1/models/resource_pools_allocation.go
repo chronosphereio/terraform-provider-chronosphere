@@ -19,10 +19,10 @@ import (
 // swagger:model ResourcePoolsAllocation
 type ResourcePoolsAllocation struct {
 
-	// Fixed values optionally override percent_of_license allocations for specific licenses.
-	// When specifying fixed values for a license, all pools must have an explicit fixed value
-	// specification for that given license. Default pool receives all remaining quota left
-	// within the license after subtracting the sum of fixed values across pools for that license.
+	// Fixed values optionally override `percent_of_license` allocations for specified licenses.
+	// When defining fixed values for a license, all pools must have an explicit fixed value
+	// specification for that given license. The default pool receives all remaining quota left
+	// within the license, after subtracting the sum of fixed values across pools for that license.
 	FixedValues []*AllocationFixedValue `json:"fixed_values"`
 
 	// Percent of the license to allocate to this pool. Must be between 0

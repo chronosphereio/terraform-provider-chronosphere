@@ -33,6 +33,9 @@ type Configv1Dashboard struct {
 	// Required raw JSON of the dashboard.
 	DashboardJSON string `json:"dashboard_json,omitempty"`
 
+	// labels
+	Labels map[string]string `json:"labels,omitempty"`
+
 	// Required name of the Dashboard. May be modified after the Dashboard is created.
 	Name string `json:"name,omitempty"`
 
