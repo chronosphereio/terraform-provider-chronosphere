@@ -50,7 +50,7 @@ var Monitor = map[string]*schema.Schema{
 		Optional: true,
 		ValidateDiagFunc: func(policyID any, _ cty.Path) diag.Diagnostics {
 			if localid.IsLocalID(policyID.(string)) {
-				return diag.Errorf("cannot directly reference unowned notification policy, use a notifcation policy with team_id set")
+				return diag.Errorf("cannot directly reference unnamed notification policy, use a notification policy with name set")
 			}
 			return nil
 		},

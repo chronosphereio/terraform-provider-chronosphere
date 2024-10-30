@@ -80,6 +80,9 @@ func (independentNotificationPolicyConverter) fromModel(
 	// Note: BucketSlug being set should cause a change to be detected by TF.
 	// Since a policy is either bucket-owned or team-owned, a bucket owned policy
 	// will have no team, so the team will mismatch.
+	// TODO(brian.barnes): Now that policies can be unowned, it is no longer true
+	// that setting a bucket slug outside of terraform will lead to a mismatch, since
+	// team_id is not guaranteed to be set if a policy is not bucket-owned.
 	return &intschema.NotificationPolicy{
 		Name:                   m.Name,
 		Slug:                   m.Slug,

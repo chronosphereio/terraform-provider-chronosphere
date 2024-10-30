@@ -419,7 +419,7 @@ func isNotificationPolicyIndependentForCustomizeDiff(
 		return false
 	}
 
-	return !isRawAttributeNull(diff, "team_id")
+	return !isRawAttributeNull(diff, "name")
 }
 
 func expandMatcherSchema(m intschema.Matcher) *configmodels.Configv1LabelMatcher {
