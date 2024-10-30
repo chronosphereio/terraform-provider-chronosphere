@@ -26,18 +26,18 @@ import (
 const IndependentNotificationPolicyData = "__independent"
 
 var NotificationPolicy = map[string]*schema.Schema{
-	// NB: slug may be set if bucket_id or team_id is set, but cannot be set if bucket_id and team_id are unset.
+	// NB: slug can only be set if name is set, but cannot be set if name is unset, e.g. inline.
 	"slug": {
 		Type:     schema.TypeString,
 		Optional: true,
 		Computed: true,
 		ForceNew: true,
 	},
+	// NB: there is custom name ForceNew behavior in the DiffSuppressFunc.
 	"name": {
 		Type:     schema.TypeString,
 		Optional: true,
 	},
-	// NB: there is custom team_id ForceNew behavior in the DiffSuppressFunc.
 	"team_id": {
 		Type:         schema.TypeString,
 		Optional:     true,
@@ -61,8 +61,8 @@ var NotificationPolicy = map[string]*schema.Schema{
 		DiffSuppressFunc: JSONNotificationPolicyDiffSuppress,
 		ValidateFunc:     ValidateNotificationPolicyData,
 	},
-	// This field is for internal use only. We use it to force new resources when the ownership
-	// of a notification policy changes (from unowned to independent or vice versa)
+	// This field is for internal use only. We use it to force new resources when the name
+	// of a notification policy changes (from inline to independent or vice versa)
 	"is_independent": {
 		Type:     schema.TypeBool,
 		Computed: true,

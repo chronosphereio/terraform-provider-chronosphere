@@ -270,7 +270,7 @@ func reconcileNotificationPolicy(
 	}
 	if independent {
 		// Can only inline policies that are not independent
-		return diag.Errorf("cannot use notification_policy_data of owned policy, use a notification policy without team_id")
+		return diag.Errorf("cannot use notification_policy_data of named policy, use a notification policy without name")
 	}
 
 	// If policy wasn't set before and still isn't, no-op
@@ -405,8 +405,8 @@ func policyModelFromBucket(d *schema.ResourceData) (policy *configmodels.Configv
 }
 
 // When deleting policies, only bucket-owned policies are deleted, deletes of
-// other owned policies are ignored to support migrating from an inline policy
-// to an independent team-owned policy.
+// other policies are ignored to support migrating from an inline policy
+// to an independent policy.
 func policyNotBucketOwned(err error) bool {
 	err = clienterror.Wrap(err)
 
