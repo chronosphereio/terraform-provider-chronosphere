@@ -29,6 +29,8 @@ SNAPSHOT_VERSION_NUMBER=$(subst v,,$(SNAPSHOT_VERSION))
 LATEST_GIT_COMMIT=$(shell git rev-parse --short HEAD)
 SNAPSHOT_BINARY=terraform-provider-chronosphere_${SNAPSHOT_VERSION}-SNAPSHOT-${LATEST_GIT_COMMIT}
 LOCAL_SNAPSHOT_VERSION_DIR=${SNAPSHOT_VERSION_NUMBER}-SNAPSHOT-${LATEST_GIT_COMMIT}
+SNAPSHOT_GO_BUILD_LDFLAGS_CMD      := $(abspath ./scripts/go-build-ldflags.sh --snapshot)
+SNAPSHOT_GO_BUILD_LDFLAGS          := $(shell $(GO_BUILD_LDFLAGS_CMD))
 
 INTERNAL_TOOLS := \
   chronosphere/generateresources \
