@@ -11,13 +11,13 @@ SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 REPO_DIR := $(abspath $(SELF_DIR))
 
 BUILD                     := $(abspath ./bin)
+GIT_VERSION               := $(shell git describe --tags --abbrev=0 2>/dev/null || echo unknown)
 GO_BUILD_LDFLAGS_CMD      := $(abspath ./scripts/go-build-ldflags.sh)
 GO_BUILD_LDFLAGS          := $(shell $(GO_BUILD_LDFLAGS_CMD))
 GO_BUILD_COMMON_ENV       := CGO_ENABLED=0
 # TODO: this was causing issues with releases. May not be a problem in recent go versions
 GOFLAGS=-buildvcs=false
 INSTRUMENT_PACKAGE        := github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/buildinfo
-GIT_VERSION               := $(shell git describe --tags --abbrev=0 2>/dev/null || echo unknown)
 
 GO_GENERATE=PATH=$(TOOLS_BIN):$(PATH) go generate
 
@@ -29,8 +29,6 @@ SNAPSHOT_VERSION_NUMBER=$(subst v,,$(SNAPSHOT_VERSION))
 LATEST_GIT_COMMIT=$(shell git rev-parse --short HEAD)
 SNAPSHOT_BINARY=terraform-provider-chronosphere_${SNAPSHOT_VERSION}-SNAPSHOT-${LATEST_GIT_COMMIT}
 LOCAL_SNAPSHOT_VERSION_DIR=${SNAPSHOT_VERSION_NUMBER}-SNAPSHOT-${LATEST_GIT_COMMIT}
-SNAPSHOT_GO_BUILD_LDFLAGS_CMD      := $(abspath ./scripts/go-build-ldflags.sh --snapshot)
-SNAPSHOT_GO_BUILD_LDFLAGS          := $(shell $(GO_BUILD_LDFLAGS_CMD))
 
 INTERNAL_TOOLS := \
   chronosphere/generateresources \
@@ -152,7 +150,7 @@ snapshot:
 	git tag ${SNAPSHOT_VERSION}
 	# --snapshot mode allows building artifacts w/o release tag present and w/ publishing mode disabled
 	# useful when we want to test whether we can build binaries, but not publish yet.
-	GO_BUILD_LDFLAGS="$(GO_BUILD_LDFLAGS)" \
+	GO_BUILD_LDFLAGS="$(shell $(GO_BUILD_LDFLAGS))" \
 		INSTRUMENT_PACKAGE=$(INSTRUMENT_PACKAGE) \
 		GO_RELEASER_DOCKER_IMAGE=$(GO_RELEASER_DOCKER_IMAGE) \
 		GO_RELEASER_RELEASE_ARGS="$(GO_RELEASER_RELEASE_ARGS)" \
