@@ -68,6 +68,12 @@ type ResourcePoolsConfigPool struct {
 	Priorities *ResourcePoolPrioritiesSchema `intschema:"priorities,optional,list_encoded_object"`
 }
 
+type SLOAdditionalPromQLFilters struct {
+	LabelName string `intschema:"label_name"`
+	Type      string `intschema:"type"`
+	Value     string `intschema:"value"`
+}
+
 type TraceBoolFilter struct {
 	Value bool `intschema:"value"`
 }

@@ -16,6 +16,13 @@ package tfschema
 
 import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
+var (
+	sliTypes                      = []string{"sli.0.custom_indicator", "sli.0.endpoint_availability", "sli.0.endpoint_latency"}
+	querylessSLITypes             = []string{"sli.0.endpoint_availability", "sli.0.endpoint_latency"}
+	customIndicatorQueryTemplates = []string{"sli.0.custom_indicator.0.good_query_template", "sli.0.custom_indicator.0.bad_query_template"}
+	endpointAvailabilityCodes     = []string{"sli.0.endpoint_availability.0.success_codes", "sli.0.endpoint_availability.0.error_codes"}
+)
+
 var Slo = map[string]*schema.Schema{
 	"name": {
 		Type:     schema.TypeString,
@@ -98,7 +105,7 @@ var SLI = map[string]*schema.Schema{
 	"lens_template_indicator": {
 		Type:         schema.TypeString,
 		Optional:     true,
-		RequiredWith: []string{"endpoint_availability", "endpoint_latency"},
+		RequiredWith: querylessSLITypes,
 	},
 	"endpoint_label": {
 		Type:     schema.TypeString,
@@ -108,7 +115,7 @@ var SLI = map[string]*schema.Schema{
 		Type:         schema.TypeList,
 		Optional:     true,
 		MaxItems:     1,
-		ExactlyOneOf: []string{"custom_indicator", "endpoint_availability", "endpoint_latency"},
+		ExactlyOneOf: sliTypes,
 		Elem: &schema.Resource{
 			Schema: SloCustomIndicator,
 		},
@@ -117,7 +124,7 @@ var SLI = map[string]*schema.Schema{
 		Type:         schema.TypeList,
 		Optional:     true,
 		MaxItems:     1,
-		ExactlyOneOf: []string{"custom_indicator", "endpoint_availability", "endpoint_latency"},
+		ExactlyOneOf: sliTypes,
 		Elem: &schema.Resource{
 			Schema: SloEndpointAvailability,
 		},
@@ -126,7 +133,7 @@ var SLI = map[string]*schema.Schema{
 		Type:         schema.TypeList,
 		Optional:     true,
 		MaxItems:     1,
-		ExactlyOneOf: []string{"custom_indicator", "endpoint_availability", "endpoint_latency"},
+		ExactlyOneOf: sliTypes,
 		Elem: &schema.Resource{
 			Schema: SloEndpointLatency,
 		},
@@ -144,7 +151,7 @@ var SloEndpointAvailability = map[string]*schema.Schema{
 	"success_codes": {
 		Type:         schema.TypeSet,
 		Optional:     true,
-		ExactlyOneOf: []string{"success_codes", "error_codes"},
+		ExactlyOneOf: endpointAvailabilityCodes,
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
 		},
@@ -152,31 +159,12 @@ var SloEndpointAvailability = map[string]*schema.Schema{
 	"error_codes": {
 		Type:         schema.TypeSet,
 		Optional:     true,
-		ExactlyOneOf: []string{"success_codes", "error_codes"},
+		ExactlyOneOf: endpointAvailabilityCodes,
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
 		},
 	},
-	"additional_promql_filters": {
-		Type:     schema.TypeSet,
-		Optional: true,
-		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"type": {
-					Type:     schema.TypeString,
-					Required: true,
-				},
-				"label_name": {
-					Type:     schema.TypeString,
-					Required: true,
-				},
-				"value": {
-					Type:     schema.TypeString,
-					Required: true,
-				},
-			},
-		},
-	},
+	"additional_promql_filters": SLOAdditionalPromQLFilters,
 }
 
 var SloEndpointLatency = map[string]*schema.Schema{
@@ -191,41 +179,43 @@ var SloEndpointLatency = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 	},
-	"additional_promql_filters": {
-		Type:     schema.TypeSet,
-		Optional: true,
-		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"type": {
-					Type:     schema.TypeString,
-					Required: true,
-				},
-				"label_name": {
-					Type:     schema.TypeString,
-					Required: true,
-				},
-				"value": {
-					Type:     schema.TypeString,
-					Required: true,
-				},
-			},
-		},
-	},
+	"additional_promql_filters": SLOAdditionalPromQLFilters,
 }
 
 var SloCustomIndicator = map[string]*schema.Schema{
 	"good_query_template": {
 		Type:         schema.TypeString,
 		Optional:     true,
-		ExactlyOneOf: []string{"good_query_template", "bad_query_template"},
+		ExactlyOneOf: customIndicatorQueryTemplates,
 	},
 	"bad_query_template": {
 		Type:         schema.TypeString,
 		Optional:     true,
-		ExactlyOneOf: []string{"good_query_template", "bad_query_template"},
+		ExactlyOneOf: customIndicatorQueryTemplates,
 	},
 	"total_query_template": {
 		Type:     schema.TypeString,
 		Required: true,
+	},
+}
+
+var SLOAdditionalPromQLFilters = &schema.Schema{
+	Type:     schema.TypeSet,
+	Optional: true,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"type": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"label_name": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"value": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+		},
 	},
 }

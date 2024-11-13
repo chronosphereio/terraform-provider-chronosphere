@@ -70,28 +70,16 @@ type SloSli struct {
 }
 
 type SloSliEndpointLatency struct {
-	EndpointsMonitored      []string                                       `intschema:"endpoints_monitored"`
-	LatencyBucket           string                                         `intschema:"latency_bucket"`
-	AdditionalPromqlFilters []SloSliEndpointLatencyAdditionalPromqlFilters `intschema:"additional_promql_filters,optional"`
-}
-
-type SloSliEndpointLatencyAdditionalPromqlFilters struct {
-	LabelName string `intschema:"label_name"`
-	Type      string `intschema:"type"`
-	Value     string `intschema:"value"`
+	EndpointsMonitored      []string                     `intschema:"endpoints_monitored"`
+	LatencyBucket           string                       `intschema:"latency_bucket"`
+	AdditionalPromqlFilters []SLOAdditionalPromQLFilters `intschema:"additional_promql_filters,optional"`
 }
 
 type SloSliEndpointAvailability struct {
-	EndpointsMonitored      []string                                            `intschema:"endpoints_monitored"`
-	AdditionalPromqlFilters []SloSliEndpointAvailabilityAdditionalPromqlFilters `intschema:"additional_promql_filters,optional"`
-	ErrorCodes              []string                                            `intschema:"error_codes,optional"`
-	SuccessCodes            []string                                            `intschema:"success_codes,optional"`
-}
-
-type SloSliEndpointAvailabilityAdditionalPromqlFilters struct {
-	LabelName string `intschema:"label_name"`
-	Type      string `intschema:"type"`
-	Value     string `intschema:"value"`
+	EndpointsMonitored      []string                     `intschema:"endpoints_monitored"`
+	AdditionalPromqlFilters []SLOAdditionalPromQLFilters `intschema:"additional_promql_filters,optional"`
+	ErrorCodes              []string                     `intschema:"error_codes,optional"`
+	SuccessCodes            []string                     `intschema:"success_codes,optional"`
 }
 
 type SloSliCustomIndicator struct {
