@@ -6,6 +6,7 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_allocation_config"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/s_l_o"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
@@ -1986,5 +1987,84 @@ func (generatedUnstableLogAllocationConfig) delete(
 		Context: ctx,
 	}
 	_, err := clients.ConfigUnstable.LogAllocationConfig.DeleteLogAllocationConfig(req)
+	return err
+}
+
+type generatedUnstableSLO struct{}
+
+func (generatedUnstableSLO) slugOf(m *configunstablemodels.ConfigunstableSLO) string {
+	return m.Slug
+}
+
+func (generatedUnstableSLO) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableSLO,
+	dryRun bool,
+) (string, error) {
+	req := &s_l_o.CreateSLOParams{
+		Context: ctx,
+		Body: &configunstablemodels.ConfigunstableCreateSLORequest{
+			Slo:    m,
+			DryRun: dryRun,
+		},
+	}
+	resp, err := clients.ConfigUnstable.Slo.CreateSLO(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.Slo
+	if e == nil {
+		return "", nil
+	}
+	return (generatedUnstableSLO{}).slugOf(e), nil
+}
+
+func (generatedUnstableSLO) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configunstablemodels.ConfigunstableSLO, error) {
+	req := &s_l_o.ReadSLOParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigUnstable.Slo.ReadSLO(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.Slo, nil
+}
+
+func (generatedUnstableSLO) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableSLO,
+	params updateParams,
+) error {
+	req := &s_l_o.UpdateSLOParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configunstablemodels.ConfigUnstableUpdateSLOBody{
+
+			Slo:             m,
+			CreateIfMissing: params.createIfMissing,
+			DryRun:          params.dryRun,
+		},
+	}
+	_, err := clients.ConfigUnstable.Slo.UpdateSLO(req)
+	return err
+}
+func (generatedUnstableSLO) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &s_l_o.DeleteSLOParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigUnstable.Slo.DeleteSLO(req)
 	return err
 }
