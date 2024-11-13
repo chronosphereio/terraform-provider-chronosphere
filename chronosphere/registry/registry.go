@@ -292,6 +292,12 @@ var Resources = mustValidate([]Resource{
 		Schema: tfschema.SlackAlertNotifier,
 	},
 	{
+		Name:   "slo",
+		Entity: "SLO",
+		API:    Unstable,
+		Schema: tfschema.Slo,
+	},
+	{
 		Name:   "team",
 		Entity: "Team",
 		API:    V1,

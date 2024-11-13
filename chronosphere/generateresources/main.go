@@ -85,7 +85,11 @@ type entityType struct {
 	SwaggerType string
 	// SwaggerModel represents the underlying model to use. Will normally be the
 	// same as SwaggerType
-	SwaggerModel         string
+	SwaggerModel string
+	// SwaggerParam is the name of the parameter to use in the swagger client request/response
+	// types. This will normally be the same as SwaggerType, but will be different for the
+	// SLO resource, where it is "Slo" instead of "SLO".
+	SwaggerParam         string
 	FieldName            string
 	SwaggerClient        string
 	SwaggerClientPackage string
@@ -101,6 +105,7 @@ func newEntityType(a api, r registry.Resource) entityType {
 		GoType:               fmt.Sprintf("%s%s", a.GoPrefix, r.Entity),
 		SwaggerType:          r.Entity,
 		SwaggerModel:         r.Entity,
+		SwaggerParam:         r.Entity,
 		SwaggerClient:        fmt.Sprintf("%s.%s", a.Client, r.Entity),
 		SwaggerClientPackage: strcase.ToSnake(r.Entity),
 		DisableDryRun:        r.DisableDryRun,
@@ -112,6 +117,14 @@ func newEntityType(a api, r registry.Resource) entityType {
 	// special case for classic dashboards
 	if r.Name == "classic_dashboard" {
 		et.GoType = fmt.Sprintf("%s%s", a.GoPrefix, "ClassicDashboard")
+	}
+
+	// SLOs are named with all caps so we get some funny business with the swagger generated code
+	// that we have to account for in our generated resources code.
+	if r.Name == "slo" {
+		et.SwaggerClientPackage = "s_l_o"
+		et.SwaggerParam = "Slo"
+		et.SwaggerClient = fmt.Sprintf("%s.%s", a.Client, et.SwaggerParam)
 	}
 	return et
 }
@@ -174,7 +187,7 @@ func ({{.GoType}}) create(
 	req := &{{.SwaggerClientPackage}}.Create{{.SwaggerType}}Params{
 		Context: ctx,
 		Body: &{{.API.Package}}models.{{.API.SwaggerPrefix}}Create{{.SwaggerType}}Request{
-			{{.SwaggerType}}: m,
+			{{.SwaggerParam}}: m,
 			{{ if not .DisableDryRun }} DryRun: dryRun, {{ end }}
 		},
 	}
@@ -182,7 +195,7 @@ func ({{.GoType}}) create(
 	if err != nil {
 		return "", err
 	}
-	e := resp.Payload.{{.SwaggerType}}
+	e := resp.Payload.{{.SwaggerParam}}
 	if e == nil {
 	  return "", nil
 	}
@@ -204,7 +217,7 @@ func ({{.GoType}}) read(
 	if err != nil {
 		return nil, err
 	}
-	return resp.Payload.{{.SwaggerType}}, nil
+	return resp.Payload.{{.SwaggerParam}}, nil
 }
 
 {{ if not .UpdateUnsupported -}}
@@ -229,7 +242,7 @@ func ({{.GoType}}) update(
 		{{ else }}
 		Body: &{{.API.Package}}models.{{.API.SwaggerPrefix}}Update{{.SwaggerType}}Request{
 		{{ end }}
-			{{.SwaggerType}}: m,
+			{{.SwaggerParam}}: m,
 			CreateIfMissing: params.createIfMissing,
 			{{ if not .DisableDryRun }} DryRun: params.dryRun, {{ end }}
 		},

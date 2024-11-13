@@ -3,6 +3,9 @@ package pagination
 
 import (
 	"context"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/s_l_o"
+	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
@@ -27,6 +30,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
 	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/unstable"
 )
 
 func ListBuckets(
@@ -1534,6 +1538,78 @@ func ListClassicDashboardsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.ClassicDashboards {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListUnstableSlos(
+	ctx context.Context,
+	client *configunstable.Client,
+) ([]*configunstablemodels.ConfigunstableSLO, error) {
+	return ListUnstableSlosByFilter(ctx, client, Filter{})
+}
+
+func ListUnstableSlosBySlugs(
+	ctx context.Context,
+	client *configunstable.Client,
+	slugs []string,
+) ([]*configunstablemodels.ConfigunstableSLO, error) {
+	return ListUnstableSlosByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListUnstableSlosByNames(
+	ctx context.Context,
+	client *configunstable.Client,
+	names []string,
+) ([]*configunstablemodels.ConfigunstableSLO, error) {
+	return ListUnstableSlosByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListUnstableSlosByFilter(
+	ctx context.Context,
+	client *configunstable.Client,
+	f Filter,
+	opts ...func(*s_l_o.ListSLOsParams),
+) ([]*configunstablemodels.ConfigunstableSLO, error) {
+	if !unstable.Enabled() {
+		return nil, nil
+	}
+	var (
+		nextToken string
+		result    []*configunstablemodels.ConfigunstableSLO
+	)
+	for {
+		p := &s_l_o.ListSLOsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.Slo.ListSLOs(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.Slos {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
