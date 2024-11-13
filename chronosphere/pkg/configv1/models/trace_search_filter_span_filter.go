@@ -25,6 +25,9 @@ type TraceSearchFilterSpanFilter struct {
 	// error
 	Error *TraceSearchFilterBoolFilter `json:"error,omitempty"`
 
+	// is root span
+	IsRootSpan *TraceSearchFilterBoolFilter `json:"is_root_span,omitempty"`
+
 	// match type
 	MatchType SpanFilterSpanFilterMatchType `json:"match_type,omitempty"`
 
@@ -56,6 +59,10 @@ func (m *TraceSearchFilterSpanFilter) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateError(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIsRootSpan(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -123,6 +130,25 @@ func (m *TraceSearchFilterSpanFilter) validateError(formats strfmt.Registry) err
 				return ve.ValidateName("error")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("error")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *TraceSearchFilterSpanFilter) validateIsRootSpan(formats strfmt.Registry) error {
+	if swag.IsZero(m.IsRootSpan) { // not required
+		return nil
+	}
+
+	if m.IsRootSpan != nil {
+		if err := m.IsRootSpan.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("is_root_span")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("is_root_span")
 			}
 			return err
 		}
@@ -281,6 +307,10 @@ func (m *TraceSearchFilterSpanFilter) ContextValidate(ctx context.Context, forma
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateIsRootSpan(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateMatchType(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -339,6 +369,22 @@ func (m *TraceSearchFilterSpanFilter) contextValidateError(ctx context.Context, 
 				return ve.ValidateName("error")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("error")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *TraceSearchFilterSpanFilter) contextValidateIsRootSpan(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.IsRootSpan != nil {
+		if err := m.IsRootSpan.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("is_root_span")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("is_root_span")
 			}
 			return err
 		}

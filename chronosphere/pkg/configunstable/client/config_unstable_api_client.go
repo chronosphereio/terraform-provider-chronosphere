@@ -16,6 +16,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_control_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/noop_entity"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/object_discovery_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/s_l_o"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/saved_trace_search"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/service"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/sync_prometheus"
@@ -73,6 +74,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli.LogControlConfig = log_control_config.New(transport, formats)
 	cli.NoopEntity = noop_entity.New(transport, formats)
 	cli.ObjectDiscoveryRule = object_discovery_rule.New(transport, formats)
+	cli.Slo = s_l_o.New(transport, formats)
 	cli.SavedTraceSearch = saved_trace_search.New(transport, formats)
 	cli.Service = service.New(transport, formats)
 	cli.SyncPrometheus = sync_prometheus.New(transport, formats)
@@ -136,6 +138,8 @@ type ConfigUnstableAPI struct {
 
 	ObjectDiscoveryRule object_discovery_rule.ClientService
 
+	Slo s_l_o.ClientService
+
 	SavedTraceSearch saved_trace_search.ClientService
 
 	Service service.ClientService
@@ -162,6 +166,7 @@ func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.LogControlConfig.SetTransport(transport)
 	c.NoopEntity.SetTransport(transport)
 	c.ObjectDiscoveryRule.SetTransport(transport)
+	c.Slo.SetTransport(transport)
 	c.SavedTraceSearch.SetTransport(transport)
 	c.Service.SetTransport(transport)
 	c.SyncPrometheus.SetTransport(transport)
