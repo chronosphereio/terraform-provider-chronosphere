@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Fixed:
+* Fix `chronosphere_resource_pools_config` error when default pool is not set.
+
 ## v1.6.0
 
 Added:

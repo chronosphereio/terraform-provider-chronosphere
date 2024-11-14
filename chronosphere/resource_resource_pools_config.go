@@ -100,16 +100,15 @@ func (resourcePoolsConfigConverter) fromModel(
 	if err != nil {
 		return nil, err
 	}
-	allocation, err := expandAllocation(m.DefaultPool.Allocation)
+
+	defaultPool, err := expandDefaultPool(m.DefaultPool)
 	if err != nil {
 		return nil, err
 	}
+
 	return &intschema.ResourcePoolsConfig{
-		DefaultPool: &intschema.ResourcePoolsConfigDefaultPool{
-			Allocation: allocation,
-			Priorities: expandPriorities(m.DefaultPool.Priorities),
-		},
-		Pool: pools,
+		DefaultPool: defaultPool,
+		Pool:        pools,
 	}, nil
 }
 
@@ -220,6 +219,20 @@ func expandPools(pools []*apimodels.ResourcePoolsPool) ([]intschema.ResourcePool
 			Priorities: expandPriorities(pool.Priorities),
 		}, nil
 	})
+}
+
+func expandDefaultPool(d *models.ResourcePoolsDefaultPool) (*intschema.ResourcePoolsConfigDefaultPool, error) {
+	if d == nil {
+		return nil, nil
+	}
+	allocation, err := expandAllocation(d.Allocation)
+	if err != nil {
+		return nil, err
+	}
+	return &intschema.ResourcePoolsConfigDefaultPool{
+		Allocation: allocation,
+		Priorities: expandPriorities(d.Priorities),
+	}, nil
 }
 
 func buildDefaultPool(defaultPool *intschema.ResourcePoolsConfigDefaultPool) (*apimodels.ResourcePoolsDefaultPool, error) {
