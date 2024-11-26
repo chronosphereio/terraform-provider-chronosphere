@@ -75,6 +75,13 @@ var Slo = map[string]*schema.Schema{
 			Type: schema.TypeString,
 		},
 	},
+	"labels": {
+		Type:     schema.TypeMap,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
 }
 
 var SloDefinition = map[string]*schema.Schema{

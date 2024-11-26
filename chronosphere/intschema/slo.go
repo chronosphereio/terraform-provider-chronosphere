@@ -22,6 +22,7 @@ type Slo struct {
 	Sli                  SloSli            `intschema:"sli,list_encoded_object"`
 	Annotations          map[string]string `intschema:"annotations,optional"`
 	Description          string            `intschema:"description,optional"`
+	Labels               map[string]string `intschema:"labels,optional"`
 	SignalGrouping       string            `intschema:"signal_grouping,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().

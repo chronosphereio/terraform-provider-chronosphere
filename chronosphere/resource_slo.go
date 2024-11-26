@@ -112,6 +112,8 @@ func (sloConverter) toModel(s *intschema.Slo) (*models.ConfigunstableSLO, error)
 			EndpointAvailability:  endpointAvailability,
 			EndpointLatency:       endpointLatency,
 		},
+		Annotations: s.Annotations,
+		Labels:      s.Labels,
 	}, nil
 }
 
@@ -172,6 +174,8 @@ func (sloConverter) fromModel(
 			EndpointAvailability:  endpointAvailability,
 			EndpointLatency:       endpointLatency,
 		},
+		Annotations: s.Annotations,
+		Labels:      s.Labels,
 	}, nil
 }
 
