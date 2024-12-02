@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+* Add unstable `chronosphere_slo` resource.
+
 Fixed:
 * Fix `chronosphere_resource_pools_config` error when default pool is not set.
 
