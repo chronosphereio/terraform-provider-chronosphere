@@ -110,9 +110,11 @@ var SloDefinition = map[string]*schema.Schema{
 
 var SLI = map[string]*schema.Schema{
 	"lens_template_indicator": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		RequiredWith: querylessSLITypes,
+		Type:     schema.TypeString,
+		Optional: true,
+		// TODO: figure out how to make this required when queryless is set without TF trying to make you
+		//       set all three.
+		// RequiredWith: querylessSLITypes,
 	},
 	"endpoint_label": {
 		Type:     schema.TypeString,
