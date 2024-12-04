@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.6.1
+
 Added:
 * Add unstable `chronosphere_slo` resource.
 
