@@ -13,7 +13,7 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigUnstableUpdateSLOBody config unstable update s l o body
+// ConfigUnstableUpdateSLOBody config unstable update SLO body
 //
 // swagger:model ConfigUnstableUpdateSLOBody
 type ConfigUnstableUpdateSLOBody struct {
@@ -25,14 +25,14 @@ type ConfigUnstableUpdateSLOBody struct {
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// slo
-	Slo *ConfigunstableSLO `json:"slo,omitempty"`
+	SLO *ConfigunstableSLO `json:"slo,omitempty"`
 }
 
-// Validate validates this config unstable update s l o body
+// Validate validates this config unstable update SLO body
 func (m *ConfigUnstableUpdateSLOBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateSlo(formats); err != nil {
+	if err := m.validateSLO(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -42,13 +42,13 @@ func (m *ConfigUnstableUpdateSLOBody) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *ConfigUnstableUpdateSLOBody) validateSlo(formats strfmt.Registry) error {
-	if swag.IsZero(m.Slo) { // not required
+func (m *ConfigUnstableUpdateSLOBody) validateSLO(formats strfmt.Registry) error {
+	if swag.IsZero(m.SLO) { // not required
 		return nil
 	}
 
-	if m.Slo != nil {
-		if err := m.Slo.Validate(formats); err != nil {
+	if m.SLO != nil {
+		if err := m.SLO.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("slo")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
@@ -61,11 +61,11 @@ func (m *ConfigUnstableUpdateSLOBody) validateSlo(formats strfmt.Registry) error
 	return nil
 }
 
-// ContextValidate validate this config unstable update s l o body based on the context it is used
+// ContextValidate validate this config unstable update SLO body based on the context it is used
 func (m *ConfigUnstableUpdateSLOBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateSlo(ctx, formats); err != nil {
+	if err := m.contextValidateSLO(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -75,10 +75,10 @@ func (m *ConfigUnstableUpdateSLOBody) ContextValidate(ctx context.Context, forma
 	return nil
 }
 
-func (m *ConfigUnstableUpdateSLOBody) contextValidateSlo(ctx context.Context, formats strfmt.Registry) error {
+func (m *ConfigUnstableUpdateSLOBody) contextValidateSLO(ctx context.Context, formats strfmt.Registry) error {
 
-	if m.Slo != nil {
-		if err := m.Slo.ContextValidate(ctx, formats); err != nil {
+	if m.SLO != nil {
+		if err := m.SLO.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("slo")
 			} else if ce, ok := err.(*errors.CompositeError); ok {

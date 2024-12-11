@@ -6,7 +6,7 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_allocation_config"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/s_l_o"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/slo"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
@@ -2002,18 +2002,18 @@ func (generatedUnstableSLO) create(
 	m *configunstablemodels.ConfigunstableSLO,
 	dryRun bool,
 ) (string, error) {
-	req := &s_l_o.CreateSLOParams{
+	req := &slo.CreateSLOParams{
 		Context: ctx,
 		Body: &configunstablemodels.ConfigunstableCreateSLORequest{
-			Slo:    m,
+			SLO:    m,
 			DryRun: dryRun,
 		},
 	}
-	resp, err := clients.ConfigUnstable.Slo.CreateSLO(req)
+	resp, err := clients.ConfigUnstable.SLO.CreateSLO(req)
 	if err != nil {
 		return "", err
 	}
-	e := resp.Payload.Slo
+	e := resp.Payload.SLO
 	if e == nil {
 		return "", nil
 	}
@@ -2025,15 +2025,15 @@ func (generatedUnstableSLO) read(
 	clients apiclients.Clients,
 	slug string,
 ) (*configunstablemodels.ConfigunstableSLO, error) {
-	req := &s_l_o.ReadSLOParams{
+	req := &slo.ReadSLOParams{
 		Context: ctx,
 		Slug:    slug,
 	}
-	resp, err := clients.ConfigUnstable.Slo.ReadSLO(req)
+	resp, err := clients.ConfigUnstable.SLO.ReadSLO(req)
 	if err != nil {
 		return nil, err
 	}
-	return resp.Payload.Slo, nil
+	return resp.Payload.SLO, nil
 }
 
 func (generatedUnstableSLO) update(
@@ -2042,18 +2042,18 @@ func (generatedUnstableSLO) update(
 	m *configunstablemodels.ConfigunstableSLO,
 	params updateParams,
 ) error {
-	req := &s_l_o.UpdateSLOParams{
+	req := &slo.UpdateSLOParams{
 		Context: ctx,
 		Slug:    m.Slug,
 
 		Body: &configunstablemodels.ConfigUnstableUpdateSLOBody{
 
-			Slo:             m,
+			SLO:             m,
 			CreateIfMissing: params.createIfMissing,
 			DryRun:          params.dryRun,
 		},
 	}
-	_, err := clients.ConfigUnstable.Slo.UpdateSLO(req)
+	_, err := clients.ConfigUnstable.SLO.UpdateSLO(req)
 	return err
 }
 func (generatedUnstableSLO) delete(
@@ -2061,10 +2061,10 @@ func (generatedUnstableSLO) delete(
 	clients apiclients.Clients,
 	slug string,
 ) error {
-	req := &s_l_o.DeleteSLOParams{
+	req := &slo.DeleteSLOParams{
 		Context: ctx,
 		Slug:    slug,
 	}
-	_, err := clients.ConfigUnstable.Slo.DeleteSLO(req)
+	_, err := clients.ConfigUnstable.SLO.DeleteSLO(req)
 	return err
 }

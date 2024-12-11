@@ -14,4 +14,4 @@
 
 package configunstable
 
-//go:generate swagger generate client --spec=./swagger.json --target=.
+//go:generate swagger generate client --spec=./swagger.json --target=. --additional-initialism=SLO
