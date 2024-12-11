@@ -82,35 +82,24 @@ type api struct {
 }
 
 type entityType struct {
-	API                    api
-	Singular               string
-	Plural                 string
-	SwaggerAPIMethodPlural string
-	SwaggerClient          string
-	SwaggerClientPackage   string
-	SwaggerModel           string
-	Disable                bool
+	API                  api
+	Singular             string
+	Plural               string
+	SwaggerClient        string
+	SwaggerClientPackage string
+	SwaggerModel         string
+	Disable              bool
 }
 
 func newEntityType(a api, e registry.Resource) entityType {
 	et := entityType{
-		API:                    a,
-		Singular:               e.Entity,
-		Plural:                 plural(e.Entity),
-		SwaggerAPIMethodPlural: plural(e.Entity),
-		SwaggerClientPackage:   strcase.ToSnake(e.Entity),
-		Disable:                e.DisableExportImport,
-		SwaggerModel:           e.Entity,
+		API:                  a,
+		Singular:             e.Entity,
+		Plural:               plural(e.Entity),
+		SwaggerClientPackage: strcase.ToSnake(e.Entity),
+		Disable:              e.DisableExportImport,
+		SwaggerModel:         e.Entity,
 	}
-
-	// SLOs are named with all caps so we get some funny business with the swagger generated code
-	// that we have to account for in our generated resources code.
-	// if e.Entity == "SLO" {
-	// 	et.SwaggerClientPackage = "s_l_o"
-	// 	et.Singular = "Slo"
-	// 	et.Plural = "Slos"
-	// 	et.SwaggerAPIMethodPlural = "SLOs"
-	// }
 
 	return et
 }
@@ -188,7 +177,7 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(
 	ctx context.Context,
 	client *{{.API.Package}}.Client,
 	f Filter,
-	opts... func(*{{.SwaggerClientPackage}}.List{{.SwaggerAPIMethodPlural}}Params),
+	opts... func(*{{.SwaggerClientPackage}}.List{{.Plural}}Params),
 ) ([]*{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}, error) {
 	{{- if .Disable}}
 		return nil, nil
@@ -203,7 +192,7 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(
 		result []*{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}
 	)
 	for {
-		p := &{{.SwaggerClientPackage}}.List{{.SwaggerAPIMethodPlural}}Params{
+		p := &{{.SwaggerClientPackage}}.List{{.Plural}}Params{
 			Context: ctx,
 			PageToken: &nextToken,
 			Slugs: f.Slugs,
@@ -212,7 +201,7 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(
 		for _, opt := range opts {
 			opt(p)
 		}
-		resp, err := client.{{.Singular}}.List{{.SwaggerAPIMethodPlural}}(p)
+		resp, err := client.{{.Singular}}.List{{.Plural}}(p)
 		if err != nil {
 			return nil, err
 		}
