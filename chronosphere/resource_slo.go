@@ -112,8 +112,9 @@ func (sloConverter) toModel(s *intschema.Slo) (*models.ConfigunstableSLO, error)
 			EndpointAvailability:  endpointAvailability,
 			EndpointLatency:       endpointLatency,
 		},
-		Annotations: s.Annotations,
-		Labels:      s.Labels,
+		SignalGrouping: unstableMonitorSignalGroupingToModel(s.SignalGrouping),
+		Annotations:    s.Annotations,
+		Labels:         s.Labels,
 	}, nil
 }
 
@@ -174,8 +175,9 @@ func (sloConverter) fromModel(
 			EndpointAvailability:  endpointAvailability,
 			EndpointLatency:       endpointLatency,
 		},
-		Annotations: s.Annotations,
-		Labels:      s.Labels,
+		SignalGrouping: unstableMonitorSignalGroupingFromModel(s.SignalGrouping),
+		Annotations:    s.Annotations,
+		Labels:         s.Labels,
 	}, nil
 }
 
@@ -221,4 +223,30 @@ func reportingWindowsFromModel(windows []*models.DefinitionTimeWindow) []intsche
 	return sliceutil.Map(windows, func(w *models.DefinitionTimeWindow) intschema.SloDefinitionReportingWindows {
 		return intschema.SloDefinitionReportingWindows{Duration: w.Duration}
 	})
+}
+
+// TODO: once SLOs have been promoted to v1 this can be removed and monitorSignalGroupingToModel can be used.
+func unstableMonitorSignalGroupingToModel(
+	g *intschema.MonitorSignalGrouping,
+) *models.MonitorSignalGrouping {
+	if g == nil {
+		return nil
+	}
+	return &models.MonitorSignalGrouping{
+		LabelNames:      g.LabelNames,
+		SignalPerSeries: g.SignalPerSeries,
+	}
+}
+
+// TODO: once SLOs have been promoted to v1 this can be removed and monitorSignalGroupingFromModel can be used.
+func unstableMonitorSignalGroupingFromModel(
+	g *models.MonitorSignalGrouping,
+) *intschema.MonitorSignalGrouping {
+	if g == nil {
+		return nil
+	}
+	return &intschema.MonitorSignalGrouping{
+		LabelNames:      g.LabelNames,
+		SignalPerSeries: g.SignalPerSeries,
+	}
 }
