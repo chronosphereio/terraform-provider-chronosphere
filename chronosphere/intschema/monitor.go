@@ -64,11 +64,6 @@ func (o *Monitor) Ref() tfid.ID {
 	}.AsID()
 }
 
-type MonitorSignalGrouping struct {
-	LabelNames      []string `intschema:"label_names,optional"`
-	SignalPerSeries bool     `intschema:"signal_per_series,optional"`
-}
-
 type MonitorSeriesConditions struct {
 	Condition []MonitorSeriesCondition          `intschema:"condition"`
 	Override  []MonitorSeriesConditionsOverride `intschema:"override,optional"`

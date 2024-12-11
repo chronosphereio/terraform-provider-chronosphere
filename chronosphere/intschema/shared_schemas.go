@@ -34,6 +34,11 @@ type MonitorSeriesCondition struct {
 	Value          float64 `intschema:"value,optional,default:0"`
 }
 
+type MonitorSignalGrouping struct {
+	LabelNames      []string `intschema:"label_names,optional"`
+	SignalPerSeries bool     `intschema:"signal_per_series,optional"`
+}
+
 type NotificationRoute struct {
 	Severity       string                    `intschema:"severity"`
 	GroupBy        *NotificationRouteGroupBy `intschema:"group_by,optional,list_encoded_object"`

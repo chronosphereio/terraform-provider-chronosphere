@@ -40,3 +40,25 @@ var MatcherListSchema = &schema.Schema{
 		},
 	},
 }
+
+// Used by both Monitor and SLO
+var MonitorSignalGrouping = &schema.Schema{
+	Type:     schema.TypeList,
+	Optional: true,
+	MaxItems: 1,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"label_names": {
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Optional: true,
+			},
+			"signal_per_series": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+		},
+	},
+}

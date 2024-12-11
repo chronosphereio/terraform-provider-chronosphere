@@ -64,10 +64,7 @@ var Slo = map[string]*schema.Schema{
 			Schema: SloDefinition,
 		},
 	},
-	"signal_grouping": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
+	"signal_grouping": MonitorSignalGrouping,
 	"annotations": {
 		Type:     schema.TypeMap,
 		Optional: true,
