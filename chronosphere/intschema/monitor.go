@@ -25,7 +25,7 @@ type Monitor struct {
 	Interval             string                  `intschema:"interval,optional"`
 	Labels               map[string]string       `intschema:"labels,optional"`
 	Schedule             *MonitorSchedule        `intschema:"schedule,optional,list_encoded_object"`
-	SignalGrouping       *MonitorSignalGrouping  `intschema:"signal_grouping,optional,list_encoded_object"`
+	SignalGrouping       *SignalGrouping         `intschema:"signal_grouping,optional,list_encoded_object"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.

@@ -14,16 +14,16 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type Slo struct {
-	Name                 string                 `intschema:"name"`
-	Slug                 string                 `intschema:"slug,optional,computed"`
-	CollectionId         tfid.ID                `intschema:"collection_id"`
-	NotificationPolicyId tfid.ID                `intschema:"notification_policy_id,optional"`
-	Definition           SloDefinition          `intschema:"definition,list_encoded_object"`
-	Sli                  SloSli                 `intschema:"sli,list_encoded_object"`
-	Annotations          map[string]string      `intschema:"annotations,optional"`
-	Description          string                 `intschema:"description,optional"`
-	Labels               map[string]string      `intschema:"labels,optional"`
-	SignalGrouping       *MonitorSignalGrouping `intschema:"signal_grouping,optional,list_encoded_object"`
+	Name                 string            `intschema:"name"`
+	Slug                 string            `intschema:"slug,optional,computed"`
+	CollectionId         tfid.ID           `intschema:"collection_id"`
+	NotificationPolicyId tfid.ID           `intschema:"notification_policy_id,optional"`
+	Definition           SloDefinition     `intschema:"definition,list_encoded_object"`
+	Sli                  SloSli            `intschema:"sli,list_encoded_object"`
+	Annotations          map[string]string `intschema:"annotations,optional"`
+	Description          string            `intschema:"description,optional"`
+	Labels               map[string]string `intschema:"labels,optional"`
+	SignalGrouping       *SignalGrouping   `intschema:"signal_grouping,optional,list_encoded_object"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.

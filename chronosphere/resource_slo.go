@@ -227,7 +227,7 @@ func reportingWindowsFromModel(windows []*models.DefinitionTimeWindow) []intsche
 
 // TODO: once SLOs have been promoted to v1 this can be removed and monitorSignalGroupingToModel can be used.
 func unstableMonitorSignalGroupingToModel(
-	g *intschema.MonitorSignalGrouping,
+	g *intschema.SignalGrouping,
 ) *models.MonitorSignalGrouping {
 	if g == nil {
 		return nil
@@ -241,11 +241,11 @@ func unstableMonitorSignalGroupingToModel(
 // TODO: once SLOs have been promoted to v1 this can be removed and monitorSignalGroupingFromModel can be used.
 func unstableMonitorSignalGroupingFromModel(
 	g *models.MonitorSignalGrouping,
-) *intschema.MonitorSignalGrouping {
+) *intschema.SignalGrouping {
 	if g == nil {
 		return nil
 	}
-	return &intschema.MonitorSignalGrouping{
+	return &intschema.SignalGrouping{
 		LabelNames:      g.LabelNames,
 		SignalPerSeries: g.SignalPerSeries,
 	}

@@ -83,7 +83,7 @@ var Monitor = map[string]*schema.Schema{
 			},
 		},
 	},
-	"signal_grouping": MonitorSignalGrouping,
+	"signal_grouping": SignalGrouping,
 	"series_conditions": {
 		Type:     schema.TypeList,
 		Required: true,

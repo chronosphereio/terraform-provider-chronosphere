@@ -42,7 +42,7 @@ var MatcherListSchema = &schema.Schema{
 }
 
 // Used by both Monitor and SLO
-var MonitorSignalGrouping = &schema.Schema{
+var SignalGrouping = &schema.Schema{
 	Type:     schema.TypeList,
 	Optional: true,
 	MaxItems: 1,

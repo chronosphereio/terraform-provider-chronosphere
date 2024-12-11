@@ -415,7 +415,7 @@ func monitorConditionsFromModel(
 }
 
 func monitorSignalGroupingToModel(
-	g *intschema.MonitorSignalGrouping,
+	g *intschema.SignalGrouping,
 ) *models.MonitorSignalGrouping {
 	if g == nil {
 		return nil
@@ -428,11 +428,11 @@ func monitorSignalGroupingToModel(
 
 func monitorSignalGroupingFromModel(
 	g *models.MonitorSignalGrouping,
-) *intschema.MonitorSignalGrouping {
+) *intschema.SignalGrouping {
 	if g == nil {
 		return nil
 	}
-	return &intschema.MonitorSignalGrouping{
+	return &intschema.SignalGrouping{
 		LabelNames:      g.LabelNames,
 		SignalPerSeries: g.SignalPerSeries,
 	}

@@ -43,14 +43,37 @@ resource "chronosphere_slo" "slo" {
   }
 }
 
-resource "chronosphere_slo" "slo_with_signal_grouping" {
-  name                   = "SLO With Signal Grouping"
+resource "chronosphere_slo" "slo_with_signal_grouping_signal_per_series" {
+  name                   = "SLO With Signal Grouping (Signal per series)"
   collection_id          = chronosphere_collection.c.id
   notification_policy_id = chronosphere_notification_policy.np.id
 
   signal_grouping {
-    label_names       = ["label1", "label2"]
     signal_per_series = true
+  }
+
+  definition {
+    objective = 99.95
+    reporting_windows {
+      duration = "28d"
+    }
+  }
+
+  sli {
+    custom_indicator {
+      bad_query_template   = "sum(rate(http_request_duration_seconds_count{error=\"true\"}[{{ .Window }}]))"
+      total_query_template = "sum(rate(http_request_duration_seconds_count[{{ .Window }}]))"
+    }
+  }
+}
+
+resource "chronosphere_slo" "slo_with_signal_grouping_labels" {
+  name                   = "SLO With Signal Grouping (Labels"
+  collection_id          = chronosphere_collection.c.id
+  notification_policy_id = chronosphere_notification_policy.np.id
+
+  signal_grouping {
+    label_names = ["label1", "label2"]
   }
 
   definition {

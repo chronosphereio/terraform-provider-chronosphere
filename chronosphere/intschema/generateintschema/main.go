@@ -57,7 +57,7 @@ var sharedSchemaTypeNames = map[*schema.Schema]string{
 	tfschema.TraceTagFilterSchema:         "TraceTagFilter",
 	tfschema.ValueMappingsSchema:          "ValueMappings",
 	tfschema.SLOAdditionalPromQLFilters:   "SLOAdditionalPromQLFilters",
-	tfschema.MonitorSignalGrouping:        "MonitorSignalGrouping",
+	tfschema.SignalGrouping:               "SignalGrouping",
 }
 
 // Add shared element references here to generate shared types. Usually we

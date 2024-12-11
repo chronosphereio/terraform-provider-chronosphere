@@ -34,11 +34,6 @@ type MonitorSeriesCondition struct {
 	Value          float64 `intschema:"value,optional,default:0"`
 }
 
-type MonitorSignalGrouping struct {
-	LabelNames      []string `intschema:"label_names,optional"`
-	SignalPerSeries bool     `intschema:"signal_per_series,optional"`
-}
-
 type NotificationRoute struct {
 	Severity       string                    `intschema:"severity"`
 	GroupBy        *NotificationRouteGroupBy `intschema:"group_by,optional,list_encoded_object"`
@@ -77,6 +72,11 @@ type SLOAdditionalPromQLFilters struct {
 	Name  string `intschema:"name"`
 	Type  string `intschema:"type"`
 	Value string `intschema:"value"`
+}
+
+type SignalGrouping struct {
+	LabelNames      []string `intschema:"label_names,optional"`
+	SignalPerSeries bool     `intschema:"signal_per_series,optional"`
 }
 
 type TraceBoolFilter struct {
