@@ -83,26 +83,7 @@ var Monitor = map[string]*schema.Schema{
 			},
 		},
 	},
-	"signal_grouping": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"label_names": {
-					Type: schema.TypeList,
-					Elem: &schema.Schema{
-						Type: schema.TypeString,
-					},
-					Optional: true,
-				},
-				"signal_per_series": {
-					Type:     schema.TypeBool,
-					Optional: true,
-				},
-			},
-		},
-	},
+	"signal_grouping": SignalGrouping,
 	"series_conditions": {
 		Type:     schema.TypeList,
 		Required: true,

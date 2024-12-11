@@ -25,7 +25,7 @@ type Monitor struct {
 	Interval             string                  `intschema:"interval,optional"`
 	Labels               map[string]string       `intschema:"labels,optional"`
 	Schedule             *MonitorSchedule        `intschema:"schedule,optional,list_encoded_object"`
-	SignalGrouping       *MonitorSignalGrouping  `intschema:"signal_grouping,optional,list_encoded_object"`
+	SignalGrouping       *SignalGrouping         `intschema:"signal_grouping,optional,list_encoded_object"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -62,11 +62,6 @@ func (o *Monitor) Ref() tfid.ID {
 		Type: "chronosphere_monitor",
 		ID:   o.HCLID,
 	}.AsID()
-}
-
-type MonitorSignalGrouping struct {
-	LabelNames      []string `intschema:"label_names,optional"`
-	SignalPerSeries bool     `intschema:"signal_per_series,optional"`
 }
 
 type MonitorSeriesConditions struct {

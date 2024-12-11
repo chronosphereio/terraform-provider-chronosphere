@@ -23,7 +23,7 @@ type Slo struct {
 	Annotations          map[string]string `intschema:"annotations,optional"`
 	Description          string            `intschema:"description,optional"`
 	Labels               map[string]string `intschema:"labels,optional"`
-	SignalGrouping       string            `intschema:"signal_grouping,optional"`
+	SignalGrouping       *SignalGrouping   `intschema:"signal_grouping,optional,list_encoded_object"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.

@@ -74,6 +74,11 @@ type SLOAdditionalPromQLFilters struct {
 	Value string `intschema:"value"`
 }
 
+type SignalGrouping struct {
+	LabelNames      []string `intschema:"label_names,optional"`
+	SignalPerSeries bool     `intschema:"signal_per_series,optional"`
+}
+
 type TraceBoolFilter struct {
 	Value bool `intschema:"value"`
 }
