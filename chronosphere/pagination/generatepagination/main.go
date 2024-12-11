@@ -82,9 +82,11 @@ type api struct {
 }
 
 type entityType struct {
-	API                  api
-	Singular             string
-	Plural               string
+	API      api
+	Singular string
+	Plural   string
+	// This will normally be the same as Plural, but some entities have irregular plural forms.
+	PayloadPlural        string
 	SwaggerClient        string
 	SwaggerClientPackage string
 	SwaggerModel         string
@@ -96,9 +98,14 @@ func newEntityType(a api, e registry.Resource) entityType {
 		API:                  a,
 		Singular:             e.Entity,
 		Plural:               plural(e.Entity),
+		PayloadPlural:        plural(e.Entity),
 		SwaggerClientPackage: strcase.ToSnake(e.Entity),
 		Disable:              e.DisableExportImport,
 		SwaggerModel:         e.Entity,
+	}
+
+	if e.Name == "slo" {
+		et.PayloadPlural = "Slos"
 	}
 
 	return et
@@ -209,7 +216,7 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(
 		// If payload or page token aren't set, no next page.
 		nextToken = ""
 		if resp.Payload != nil {
-			for _, v := range resp.Payload.{{.Plural}} {
+			for _, v := range resp.Payload.{{.PayloadPlural}} {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {

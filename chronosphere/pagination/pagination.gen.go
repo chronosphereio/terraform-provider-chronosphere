@@ -1609,7 +1609,7 @@ func ListUnstableSLOsByFilter(
 		// If payload or page token aren't set, no next page.
 		nextToken = ""
 		if resp.Payload != nil {
-			for _, v := range resp.Payload.SLOs {
+			for _, v := range resp.Payload.Slos {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
