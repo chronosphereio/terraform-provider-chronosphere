@@ -14,7 +14,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// ConfigunstableSLO configunstable s l o
+// ConfigunstableSLO configunstable SLO
 //
 // swagger:model configunstableSLO
 type ConfigunstableSLO struct {
@@ -64,7 +64,7 @@ type ConfigunstableSLO struct {
 	UpdatedAt strfmt.DateTime `json:"updated_at,omitempty"`
 }
 
-// Validate validates this configunstable s l o
+// Validate validates this configunstable SLO
 func (m *ConfigunstableSLO) Validate(formats strfmt.Registry) error {
 	var res []error
 
@@ -198,7 +198,7 @@ func (m *ConfigunstableSLO) validateUpdatedAt(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this configunstable s l o based on the context it is used
+// ContextValidate validate this configunstable SLO based on the context it is used
 func (m *ConfigunstableSLO) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 

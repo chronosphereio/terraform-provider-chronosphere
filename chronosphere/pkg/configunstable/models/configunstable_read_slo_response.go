@@ -13,20 +13,20 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableCreateSLOResponse configunstable create s l o response
+// ConfigunstableReadSLOResponse configunstable read SLO response
 //
-// swagger:model configunstableCreateSLOResponse
-type ConfigunstableCreateSLOResponse struct {
+// swagger:model configunstableReadSLOResponse
+type ConfigunstableReadSLOResponse struct {
 
 	// slo
-	Slo *ConfigunstableSLO `json:"slo,omitempty"`
+	SLO *ConfigunstableSLO `json:"slo,omitempty"`
 }
 
-// Validate validates this configunstable create s l o response
-func (m *ConfigunstableCreateSLOResponse) Validate(formats strfmt.Registry) error {
+// Validate validates this configunstable read SLO response
+func (m *ConfigunstableReadSLOResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateSlo(formats); err != nil {
+	if err := m.validateSLO(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -36,13 +36,13 @@ func (m *ConfigunstableCreateSLOResponse) Validate(formats strfmt.Registry) erro
 	return nil
 }
 
-func (m *ConfigunstableCreateSLOResponse) validateSlo(formats strfmt.Registry) error {
-	if swag.IsZero(m.Slo) { // not required
+func (m *ConfigunstableReadSLOResponse) validateSLO(formats strfmt.Registry) error {
+	if swag.IsZero(m.SLO) { // not required
 		return nil
 	}
 
-	if m.Slo != nil {
-		if err := m.Slo.Validate(formats); err != nil {
+	if m.SLO != nil {
+		if err := m.SLO.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("slo")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
@@ -55,11 +55,11 @@ func (m *ConfigunstableCreateSLOResponse) validateSlo(formats strfmt.Registry) e
 	return nil
 }
 
-// ContextValidate validate this configunstable create s l o response based on the context it is used
-func (m *ConfigunstableCreateSLOResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configunstable read SLO response based on the context it is used
+func (m *ConfigunstableReadSLOResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateSlo(ctx, formats); err != nil {
+	if err := m.contextValidateSLO(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -69,10 +69,10 @@ func (m *ConfigunstableCreateSLOResponse) ContextValidate(ctx context.Context, f
 	return nil
 }
 
-func (m *ConfigunstableCreateSLOResponse) contextValidateSlo(ctx context.Context, formats strfmt.Registry) error {
+func (m *ConfigunstableReadSLOResponse) contextValidateSLO(ctx context.Context, formats strfmt.Registry) error {
 
-	if m.Slo != nil {
-		if err := m.Slo.ContextValidate(ctx, formats); err != nil {
+	if m.SLO != nil {
+		if err := m.SLO.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("slo")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
@@ -86,7 +86,7 @@ func (m *ConfigunstableCreateSLOResponse) contextValidateSlo(ctx context.Context
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableCreateSLOResponse) MarshalBinary() ([]byte, error) {
+func (m *ConfigunstableReadSLOResponse) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -94,8 +94,8 @@ func (m *ConfigunstableCreateSLOResponse) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableCreateSLOResponse) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableCreateSLOResponse
+func (m *ConfigunstableReadSLOResponse) UnmarshalBinary(b []byte) error {
+	var res ConfigunstableReadSLOResponse
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

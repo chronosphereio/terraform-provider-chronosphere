@@ -13,7 +13,7 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableCreateSLORequest configunstable create s l o request
+// ConfigunstableCreateSLORequest configunstable create SLO request
 //
 // swagger:model configunstableCreateSLORequest
 type ConfigunstableCreateSLORequest struct {
@@ -22,14 +22,14 @@ type ConfigunstableCreateSLORequest struct {
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// slo
-	Slo *ConfigunstableSLO `json:"slo,omitempty"`
+	SLO *ConfigunstableSLO `json:"slo,omitempty"`
 }
 
-// Validate validates this configunstable create s l o request
+// Validate validates this configunstable create SLO request
 func (m *ConfigunstableCreateSLORequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateSlo(formats); err != nil {
+	if err := m.validateSLO(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -39,13 +39,13 @@ func (m *ConfigunstableCreateSLORequest) Validate(formats strfmt.Registry) error
 	return nil
 }
 
-func (m *ConfigunstableCreateSLORequest) validateSlo(formats strfmt.Registry) error {
-	if swag.IsZero(m.Slo) { // not required
+func (m *ConfigunstableCreateSLORequest) validateSLO(formats strfmt.Registry) error {
+	if swag.IsZero(m.SLO) { // not required
 		return nil
 	}
 
-	if m.Slo != nil {
-		if err := m.Slo.Validate(formats); err != nil {
+	if m.SLO != nil {
+		if err := m.SLO.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("slo")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
@@ -58,11 +58,11 @@ func (m *ConfigunstableCreateSLORequest) validateSlo(formats strfmt.Registry) er
 	return nil
 }
 
-// ContextValidate validate this configunstable create s l o request based on the context it is used
+// ContextValidate validate this configunstable create SLO request based on the context it is used
 func (m *ConfigunstableCreateSLORequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateSlo(ctx, formats); err != nil {
+	if err := m.contextValidateSLO(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -72,10 +72,10 @@ func (m *ConfigunstableCreateSLORequest) ContextValidate(ctx context.Context, fo
 	return nil
 }
 
-func (m *ConfigunstableCreateSLORequest) contextValidateSlo(ctx context.Context, formats strfmt.Registry) error {
+func (m *ConfigunstableCreateSLORequest) contextValidateSLO(ctx context.Context, formats strfmt.Registry) error {
 
-	if m.Slo != nil {
-		if err := m.Slo.ContextValidate(ctx, formats); err != nil {
+	if m.SLO != nil {
+		if err := m.SLO.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("slo")
 			} else if ce, ok := err.(*errors.CompositeError); ok {

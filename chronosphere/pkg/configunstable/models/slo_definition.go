@@ -14,7 +14,7 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// SLODefinition s l o definition
+// SLODefinition SLO definition
 //
 // swagger:model SLODefinition
 type SLODefinition struct {
@@ -31,7 +31,7 @@ type SLODefinition struct {
 	ReportingWindows []*DefinitionTimeWindow `json:"reporting_windows"`
 }
 
-// Validate validates this s l o definition
+// Validate validates this SLO definition
 func (m *SLODefinition) Validate(formats strfmt.Registry) error {
 	var res []error
 
@@ -71,7 +71,7 @@ func (m *SLODefinition) validateReportingWindows(formats strfmt.Registry) error 
 	return nil
 }
 
-// ContextValidate validate this s l o definition based on the context it is used
+// ContextValidate validate this SLO definition based on the context it is used
 func (m *SLODefinition) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 

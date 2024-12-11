@@ -105,12 +105,12 @@ func newEntityType(a api, e registry.Resource) entityType {
 
 	// SLOs are named with all caps so we get some funny business with the swagger generated code
 	// that we have to account for in our generated resources code.
-	if e.Entity == "SLO" {
-		et.SwaggerClientPackage = "s_l_o"
-		et.Singular = "Slo"
-		et.Plural = "Slos"
-		et.SwaggerAPIMethodPlural = "SLOs"
-	}
+	// if e.Entity == "SLO" {
+	// 	et.SwaggerClientPackage = "s_l_o"
+	// 	et.Singular = "Slo"
+	// 	et.Plural = "Slos"
+	// 	et.SwaggerAPIMethodPlural = "SLOs"
+	// }
 
 	return et
 }
