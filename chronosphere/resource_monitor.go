@@ -385,11 +385,9 @@ func monitorConditionsToModel(
 		}
 	}
 
-	crit := load(critical)
-	warn := load(warn)
 	return &models.SeriesConditionsSeverityConditions{
-		Critical: crit,
-		Warn:     warn,
+		Critical: load(critical),
+		Warn:     load(warn),
 	}, nil
 }
 
