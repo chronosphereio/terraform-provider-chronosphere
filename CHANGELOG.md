@@ -5,6 +5,9 @@
 Added:
 - Implemented support for signal grouping in the `chronosphere_slo` resource.
 
+Fixed:
+- Fixed a bug where an empty `chronosphere_monitor` condition stored in state caused failures when applying changes in our Pulumi Provider.
+
 ## v1.6.1
 
 Added:
