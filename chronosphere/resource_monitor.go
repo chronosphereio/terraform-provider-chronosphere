@@ -351,7 +351,11 @@ func monitorConditionsToModel(
 	}
 
 	bySev := make(map[string][]*models.MonitorCondition)
+	var emptyVal intschema.MonitorSeriesCondition
 	for _, c := range conds {
+		if c == emptyVal {
+			continue
+		}
 		if err := checkSeverity(c.Severity); err != nil {
 			return nil, err
 		}
@@ -381,9 +385,11 @@ func monitorConditionsToModel(
 		}
 	}
 
+	crit := load(critical)
+	warn := load(warn)
 	return &models.SeriesConditionsSeverityConditions{
-		Critical: load(critical),
-		Warn:     load(warn),
+		Critical: crit,
+		Warn:     warn,
 	}, nil
 }
 
