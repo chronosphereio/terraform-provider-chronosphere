@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.7.0
+
 Added:
 - Implemented support for signal grouping in the `chronosphere_slo` resource.
 
