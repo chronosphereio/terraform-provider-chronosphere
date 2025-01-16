@@ -87,5 +87,6 @@ type MonitorScheduleRange struct {
 
 type MonitorQuery struct {
 	GraphiteExpr   string `intschema:"graphite_expr,optional"`
+	LoggingExpr    string `intschema:"logging_expr,optional"`
 	PrometheusExpr string `intschema:"prometheus_expr,optional"`
 }

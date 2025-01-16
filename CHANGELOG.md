@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 1.6.3
+- Implemented support for logging query in the `monitorv1` resource.
+
 ## 1.6.2
 
 Added:
