@@ -136,6 +136,7 @@ func (monitorConverter) toModel(
 		SeriesConditions:       seriesConditions,
 		SignalGrouping:         monitorSignalGroupingToModel(m.SignalGrouping),
 		Slug:                   m.Slug,
+		LoggingQuery:           m.Query.LoggingExpr,
 	}, nil
 }
 
@@ -155,6 +156,7 @@ func (monitorConverter) fromModel(
 		Query: intschema.MonitorQuery{
 			GraphiteExpr:   m.GraphiteQuery,
 			PrometheusExpr: m.PrometheusQuery,
+			LoggingExpr:    m.LoggingQuery,
 		},
 		SeriesConditions: monitorSeriesConditionsFromModel(m.SeriesConditions),
 		Annotations:      m.Annotations,

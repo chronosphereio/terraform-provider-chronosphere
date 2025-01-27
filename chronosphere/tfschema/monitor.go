@@ -80,6 +80,10 @@ var Monitor = map[string]*schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
 				},
+				"logging_expr": {
+					Type:     schema.TypeString,
+					Optional: true,
+				},
 			},
 		},
 	},

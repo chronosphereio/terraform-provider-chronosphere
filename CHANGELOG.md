@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 1.7.0
+
+Added:
+* Adds support for logging query in the `chronosphere_monitor` resource.
+
 ## 1.6.2
 
 Added:
