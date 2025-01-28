@@ -19,6 +19,14 @@ import (
 // swagger:model configunstableSLI
 type ConfigunstableSLI struct {
 
+	// Custom dimensions are used to configure additional labels to export from
+	// the underlying queries. This feature provides a logical budget to group
+	// unique combination of dimensions. For example, if you want to track a
+	// budget per endpoint, add the endpoint label as a dimension. These dimensions
+	// are provided on the top-level SLI so that queryful SLOs will receive them
+	// in `.GroupBy`.
+	CustomDimensionLabels []string `json:"custom_dimension_labels"`
+
 	// custom indicator
 	CustomIndicator *SLICustomIndicatorConfig `json:"custom_indicator,omitempty"`
 
