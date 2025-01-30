@@ -349,7 +349,7 @@ var Resources = mustValidate([]Resource{
 	{
 		Name:        "log_allocation_config",
 		Entity:      "LogAllocationConfig",
-		API:         Unstable,
+		API:         V1,
 		Schema:      tfschema.LogAllocationConfig,
 		SingletonID: "log_allocation_config_singleton",
 	},

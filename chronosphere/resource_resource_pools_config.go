@@ -153,7 +153,7 @@ func (resourcePoolsConfigConverter) normalize(config, server *intschema.Resource
 	}
 }
 
-func expandAllocation(allocation *apimodels.ResourcePoolsAllocation) (*intschema.ResourcePoolAllocationSchema, error) {
+func expandAllocation(allocation *apimodels.Configv1ResourcePoolsAllocation) (*intschema.ResourcePoolAllocationSchema, error) {
 	if allocation == nil {
 		return nil, nil
 	}
@@ -277,12 +277,12 @@ func buildPool(pool intschema.ResourcePoolsConfigPool) (*apimodels.ResourcePools
 	}, nil
 }
 
-func buildAllocation(allocation *intschema.ResourcePoolAllocationSchema) *apimodels.ResourcePoolsAllocation {
+func buildAllocation(allocation *intschema.ResourcePoolAllocationSchema) *apimodels.Configv1ResourcePoolsAllocation {
 	if allocation == nil {
 		return nil
 	}
 
-	return &apimodels.ResourcePoolsAllocation{
+	return &apimodels.Configv1ResourcePoolsAllocation{
 		PercentOfLicense: allocation.PercentOfLicense,
 		FixedValues:      buildFixedValues(allocation.FixedValue),
 	}

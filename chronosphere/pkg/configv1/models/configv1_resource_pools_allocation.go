@@ -14,10 +14,10 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ResourcePoolsAllocation resource pools allocation
+// Configv1ResourcePoolsAllocation configv1 resource pools allocation
 //
-// swagger:model ResourcePoolsAllocation
-type ResourcePoolsAllocation struct {
+// swagger:model configv1ResourcePoolsAllocation
+type Configv1ResourcePoolsAllocation struct {
 
 	// Fixed values optionally override `percent_of_license` allocations for specified licenses.
 	// When defining fixed values for a license, all pools must have an explicit fixed value
@@ -34,8 +34,8 @@ type ResourcePoolsAllocation struct {
 	PercentOfLicense float64 `json:"percent_of_license,omitempty"`
 }
 
-// Validate validates this resource pools allocation
-func (m *ResourcePoolsAllocation) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 resource pools allocation
+func (m *Configv1ResourcePoolsAllocation) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateFixedValues(formats); err != nil {
@@ -48,7 +48,7 @@ func (m *ResourcePoolsAllocation) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *ResourcePoolsAllocation) validateFixedValues(formats strfmt.Registry) error {
+func (m *Configv1ResourcePoolsAllocation) validateFixedValues(formats strfmt.Registry) error {
 	if swag.IsZero(m.FixedValues) { // not required
 		return nil
 	}
@@ -74,8 +74,8 @@ func (m *ResourcePoolsAllocation) validateFixedValues(formats strfmt.Registry) e
 	return nil
 }
 
-// ContextValidate validate this resource pools allocation based on the context it is used
-func (m *ResourcePoolsAllocation) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 resource pools allocation based on the context it is used
+func (m *Configv1ResourcePoolsAllocation) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateFixedValues(ctx, formats); err != nil {
@@ -88,7 +88,7 @@ func (m *ResourcePoolsAllocation) ContextValidate(ctx context.Context, formats s
 	return nil
 }
 
-func (m *ResourcePoolsAllocation) contextValidateFixedValues(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ResourcePoolsAllocation) contextValidateFixedValues(ctx context.Context, formats strfmt.Registry) error {
 
 	for i := 0; i < len(m.FixedValues); i++ {
 
@@ -109,7 +109,7 @@ func (m *ResourcePoolsAllocation) contextValidateFixedValues(ctx context.Context
 }
 
 // MarshalBinary interface implementation
-func (m *ResourcePoolsAllocation) MarshalBinary() ([]byte, error) {
+func (m *Configv1ResourcePoolsAllocation) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -117,8 +117,8 @@ func (m *ResourcePoolsAllocation) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *ResourcePoolsAllocation) UnmarshalBinary(b []byte) error {
-	var res ResourcePoolsAllocation
+func (m *Configv1ResourcePoolsAllocation) UnmarshalBinary(b []byte) error {
+	var res Configv1ResourcePoolsAllocation
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

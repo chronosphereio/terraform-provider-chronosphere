@@ -20,7 +20,7 @@ import (
 type ResourcePoolsPool struct {
 
 	// allocation
-	Allocation *ResourcePoolsAllocation `json:"allocation,omitempty"`
+	Allocation *Configv1ResourcePoolsAllocation `json:"allocation,omitempty"`
 
 	// Required filters which define which metrics map to this pool, where any
 	// metric which matches at least one filter will map to the pool.

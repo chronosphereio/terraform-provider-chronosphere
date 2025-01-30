@@ -3,12 +3,9 @@
 ## Unreleased
 
 Added:
-* Adds support for custom dimension labels in the `chronosphere_slo` resource.
-
-## 1.7.0
-
-Added:
 * Adds support for logging query in the `chronosphere_monitor` resource.
+* Adds support for custom dimension labels in the `chronosphere_slo` resource.
+* Add v1 `chronosphere_logging_allocation_config` resource
 
 ## 1.6.2
 
