@@ -23,7 +23,8 @@ type SLIEndpointLatencyConfig struct {
 	// like `cluster!~"dev"`
 	AdditionalPromqlFilters []*ConfigunstablePromQLMatcher `json:"additional_promql_filters"`
 
-	// The endpoints that are monitored by this SLI.
+	// the API endpoints to monitor in the SLO. If this is left empty then all
+	// endpoints will be monitored.
 	EndpointsMonitored []string `json:"endpoints_monitored"`
 
 	// The name of the histogram metric that measures latency.

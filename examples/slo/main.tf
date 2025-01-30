@@ -40,6 +40,7 @@ resource "chronosphere_slo" "slo" {
       bad_query_template   = "sum(rate(http_request_duration_seconds_count{error=\"true\"}[{{ .Window }}]))"
       total_query_template = "sum(rate(http_request_duration_seconds_count[{{ .Window }}]))"
     }
+    custom_dimension_labels = ["label1", "label2"]
   }
 }
 

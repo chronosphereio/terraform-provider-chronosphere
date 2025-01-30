@@ -18,7 +18,7 @@ import (
 type EmitMetricshistogramMetric struct {
 
 	// Buckets specify the buckets to use for the histogram.
-	Buckets []float32 `json:"buckets"`
+	Buckets []float64 `json:"buckets"`
 
 	// Value field is used to specify what field holds the numerical value.
 	ValueField string `json:"value_field,omitempty"`

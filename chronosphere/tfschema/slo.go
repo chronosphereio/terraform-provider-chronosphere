@@ -144,6 +144,11 @@ var SLI = map[string]*schema.Schema{
 			Schema: SloEndpointLatency,
 		},
 	},
+	"custom_dimension_labels": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem:     &schema.Schema{Type: schema.TypeString},
+	},
 }
 
 var SloEndpointAvailability = map[string]*schema.Schema{

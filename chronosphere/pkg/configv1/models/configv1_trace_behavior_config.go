@@ -60,7 +60,7 @@ type Configv1TraceBehaviorConfig struct {
 	// List of assignments for the preview behavior. The
 	// referenced behaviors are in preview mode for the assigned dataset.
 	// You can assign only one preview behavior to a dataset.
-	PreviewBehaviorAssignments []*TraceBehaviorConfigMainBehaviorAssignment `json:"preview_behavior_assignments"`
+	PreviewBehaviorAssignments []*TraceBehaviorConfigOverrideBehaviorAssignment `json:"preview_behavior_assignments"`
 
 	// Timestamp of when the TraceBehaviorConfig was last updated. Cannot be set by clients.
 	// Read Only: true

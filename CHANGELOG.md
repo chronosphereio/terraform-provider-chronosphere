@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+* Adds support for custom dimension labels in the `chronosphere_slo` resource.
+
 ## 1.7.0
 
 Added:

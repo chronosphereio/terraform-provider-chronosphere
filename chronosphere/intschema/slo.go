@@ -63,6 +63,7 @@ func (o *Slo) Ref() tfid.ID {
 }
 
 type SloSli struct {
+	CustomDimensionLabels []string                    `intschema:"custom_dimension_labels,optional"`
 	CustomIndicator       *SloSliCustomIndicator      `intschema:"custom_indicator,optional,list_encoded_object"`
 	EndpointAvailability  *SloSliEndpointAvailability `intschema:"endpoint_availability,optional,list_encoded_object"`
 	EndpointLabel         string                      `intschema:"endpoint_label,optional"`

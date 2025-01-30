@@ -23,7 +23,8 @@ type SLIEndpointAvailabilityConfig struct {
 	// like `cluster!~"dev"`
 	AdditionalPromqlFilters []*ConfigunstablePromQLMatcher `json:"additional_promql_filters"`
 
-	// The endpoints that are monitored by this SLI.
+	// the API endpoints to monitor in the SLO. If this is left empty then all
+	// endpoints will be monitored.
 	EndpointsMonitored []string `json:"endpoints_monitored"`
 
 	// A list of result codes that indicate an unsuccessful event. Either this

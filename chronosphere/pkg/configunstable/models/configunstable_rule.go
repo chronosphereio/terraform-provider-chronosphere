@@ -25,7 +25,7 @@ type ConfigunstableRule struct {
 	DeleteFields *RuleDeleteFields `json:"delete_fields,omitempty"`
 
 	// drop
-	Drop *RuleDrop `json:"drop,omitempty"`
+	Drop RuleDrop `json:"drop,omitempty"`
 
 	// emit metrics
 	EmitMetrics *RuleEmitMetrics `json:"emit_metrics,omitempty"`
@@ -46,10 +46,6 @@ func (m *ConfigunstableRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDeleteFields(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateDrop(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -101,25 +97,6 @@ func (m *ConfigunstableRule) validateDeleteFields(formats strfmt.Registry) error
 				return ve.ValidateName("delete_fields")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("delete_fields")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *ConfigunstableRule) validateDrop(formats strfmt.Registry) error {
-	if swag.IsZero(m.Drop) { // not required
-		return nil
-	}
-
-	if m.Drop != nil {
-		if err := m.Drop.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("drop")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("drop")
 			}
 			return err
 		}
@@ -195,10 +172,6 @@ func (m *ConfigunstableRule) ContextValidate(ctx context.Context, formats strfmt
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateDrop(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.contextValidateEmitMetrics(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -241,22 +214,6 @@ func (m *ConfigunstableRule) contextValidateDeleteFields(ctx context.Context, fo
 				return ve.ValidateName("delete_fields")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("delete_fields")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *ConfigunstableRule) contextValidateDrop(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Drop != nil {
-		if err := m.Drop.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("drop")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("drop")
 			}
 			return err
 		}
