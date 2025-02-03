@@ -19,7 +19,7 @@ import (
 	"go.uber.org/atomic"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
@@ -27,13 +27,13 @@ import (
 
 func resourceLogAllocationConfig() *schema.Resource {
 	r := newGenericResource[
-		*models.ConfigunstableLogAllocationConfig,
+		*models.Configv1LogAllocationConfig,
 		intschema.LogAllocationConfig,
 		*intschema.LogAllocationConfig,
 	](
 		"log_allocation_config",
 		LogAllocationConfigConverter{},
-		generatedUnstableLogAllocationConfig{},
+		generatedLogAllocationConfig{},
 	)
 
 	return &schema.Resource{
@@ -44,12 +44,12 @@ func resourceLogAllocationConfig() *schema.Resource {
 		DeleteContext: r.DeleteContext,
 		CustomizeDiff: r.ValidateDryRunOptions(
 			&LogAllocationConfigDryRunCount,
-			ValidateDryRunOpts[*models.ConfigunstableLogAllocationConfig]{
+			ValidateDryRunOpts[*models.Configv1LogAllocationConfig]{
 				// Note: We skip dataset_id as it's within a list which is not supported
 				// by setUnknownReferences.
 				// We instead handle them explicitly in ModifyAPIModel.
 				SetUnknownReferencesSkip: []string{"dataset_allocation.[].dataset_id"},
-				ModifyAPIModel: func(cfg *models.ConfigunstableLogAllocationConfig) {
+				ModifyAPIModel: func(cfg *models.Configv1LogAllocationConfig) {
 					for _, alloc := range cfg.DatasetAllocations {
 						if alloc.DatasetSlug == "" {
 							alloc.DatasetSlug = "dummy_value"
@@ -70,8 +70,8 @@ type LogAllocationConfigConverter struct{}
 
 func (LogAllocationConfigConverter) toModel(
 	m *intschema.LogAllocationConfig,
-) (*models.ConfigunstableLogAllocationConfig, error) {
-	return &models.ConfigunstableLogAllocationConfig{
+) (*models.Configv1LogAllocationConfig, error) {
+	return &models.Configv1LogAllocationConfig{
 		DefaultDataset: &models.LogAllocationConfigDefaultDataset{
 			Allocation: allocationToModel(m.DefaultDataset.Allocation),
 			Priorities: prioritiesToModel(m.DefaultDataset.Priorities),
@@ -90,8 +90,8 @@ func datasetAllocationToModel(
 	}
 }
 
-func allocationToModel(a *intschema.LogAllocationConfigSchema) *models.LogAllocationConfigAllocation {
-	return &models.LogAllocationConfigAllocation{
+func allocationToModel(a *intschema.LogAllocationConfigSchema) *models.Configv1LogAllocationConfigAllocation {
+	return &models.Configv1LogAllocationConfigAllocation{
 		PercentOfLicense: a.PercentOfLicense,
 	}
 }
@@ -112,7 +112,7 @@ func searchFilterToModel(p intschema.LogSearchFilterSchema,
 }
 
 func (LogAllocationConfigConverter) fromModel(
-	m *models.ConfigunstableLogAllocationConfig,
+	m *models.Configv1LogAllocationConfig,
 ) (*intschema.LogAllocationConfig, error) {
 	return &intschema.LogAllocationConfig{
 		DefaultDataset: &intschema.LogAllocationConfigDefaultDataset{
@@ -133,7 +133,7 @@ func datasetAllocationFromModel(
 	}
 }
 
-func allocationFromModel(a *models.LogAllocationConfigAllocation) *intschema.LogAllocationConfigSchema {
+func allocationFromModel(a *models.Configv1LogAllocationConfigAllocation) *intschema.LogAllocationConfigSchema {
 	return &intschema.LogAllocationConfigSchema{
 		PercentOfLicense: a.PercentOfLicense,
 	}
