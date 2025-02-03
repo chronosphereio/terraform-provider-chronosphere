@@ -111,6 +111,7 @@ type TraceSpanCountFilter struct {
 type TraceSpanFilter struct {
 	Duration        *TraceDurationFilter  `intschema:"duration,optional,list_encoded_object"`
 	Error           *TraceBoolFilter      `intschema:"error,optional,list_encoded_object"`
+	IsRootSpan      *TraceBoolFilter      `intschema:"is_root_span,optional,list_encoded_object"`
 	MatchType       string                `intschema:"match_type,optional,default:include"`
 	Operation       *TraceStringFilter    `intschema:"operation,optional,list_encoded_object"`
 	ParentOperation *TraceStringFilter    `intschema:"parent_operation,optional,list_encoded_object"`

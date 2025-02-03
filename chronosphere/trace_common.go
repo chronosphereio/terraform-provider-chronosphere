@@ -205,6 +205,7 @@ func spanFilterFromModel(
 		Service:         stringFilterFromModel(s.Service),
 		SpanCount:       countFilterFromModel(s.SpanCount),
 		Tag:             sliceutil.Map(s.Tags, tagFilterFromModel),
+		IsRootSpan:      boolFilterFromModel(s.IsRootSpan),
 	}
 }
 
@@ -223,6 +224,7 @@ func spanFilterToModel(s intschema.TraceSpanFilter) (*models.TraceSearchFilterSp
 		Service:         stringFilterToModel(s.Service),
 		SpanCount:       countFilterToModel(s.SpanCount),
 		Tags:            sliceutil.Map(s.Tag, tagFilterToModel),
+		IsRootSpan:      boolFilterToModel(s.IsRootSpan),
 	}, nil
 }
 

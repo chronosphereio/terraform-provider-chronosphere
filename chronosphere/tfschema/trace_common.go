@@ -68,8 +68,9 @@ var TraceSpanFilterListSchema = &schema.Schema{
 			"duration":         TraceDurationFilterSchema,
 			"error":            TraceBoolFilterSchema,
 			// Note: this is the preferable form (singular) of this list field.
-			"tag":        TraceTagFilterSchema,
-			"span_count": TraceSpanCountFilterSchema,
+			"tag":          TraceTagFilterSchema,
+			"span_count":   TraceSpanCountFilterSchema,
+			"is_root_span": TraceBoolFilterSchema,
 		},
 	},
 }
