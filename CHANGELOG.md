@@ -6,11 +6,12 @@ Added:
 * Adds support for logging query in the `chronosphere_monitor` resource.
 * Adds support for custom dimension labels in the `chronosphere_slo` resource.
 * Add v1 `chronosphere_logging_allocation_config` resource
+* Add support for `is_root_span` field in common trace span filter type.
 
 ## 1.6.2
 
 Added:
-- Implemented support for signal grouping in the `chronosphere_slo` resource.
+* Implemented support for signal grouping in the `chronosphere_slo` resource.
 
 ## v1.6.1
 
