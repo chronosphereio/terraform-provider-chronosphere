@@ -242,7 +242,9 @@ type ValidateDryRunOpts[M any] struct {
 // ValidateDryRunOptions is the same as ValidateDryRun but supports additional options, see ValidateDryRunOpts.
 func (r genericResource[M, SV, S]) ValidateDryRunOptions(dryRunCounter *atomic.Int64, opts ValidateDryRunOpts[M]) schema.CustomizeDiffFunc {
 	return func(ctx context.Context, diff *schema.ResourceDiff, meta any) error {
-		if skipDryRun(diff) {
+		clients := meta.(apiclients.Clients)
+
+		if clients.DisableDryRun || skipDryRun(diff) {
 			return nil
 		}
 		// Increment dry run count for testing.
@@ -276,8 +278,6 @@ func (r genericResource[M, SV, S]) ValidateDryRunOptions(dryRunCounter *atomic.I
 		if opts.ModifyAPIModel != nil {
 			opts.ModifyAPIModel(m)
 		}
-
-		clients := meta.(apiclients.Clients)
 
 		if diff.Id() == "" {
 			_, err = r.crud.create(ctx, clients, m, true /* dryRun */)

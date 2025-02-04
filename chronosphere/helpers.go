@@ -16,7 +16,6 @@ package chronosphere
 
 import (
 	"fmt"
-	"os"
 	"sort"
 	"time"
 
@@ -66,10 +65,6 @@ func ParseOptionalDuration(v string) (time.Duration, error) {
 		return 0, nil
 	}
 	return tfschema.ParseDuration(v)
-}
-
-func dryRunValidationDisabled() bool {
-	return os.Getenv("CHRONOSPHERE_DRY_RUN_VALIDATION_DISABLED") == "1"
 }
 
 // isRawAttributeNull returns a bool indicating whether the given attribute is set in the
@@ -134,9 +129,6 @@ func sortedKeys[V any](m map[string]V) []string {
 }
 
 func skipDryRun(diff *schema.ResourceDiff) bool {
-	if dryRunValidationDisabled() {
-		return true
-	}
 	// Get all updated attributes, including nested attributes.
 	updatedKeys := diff.GetChangedKeysPrefix("")
 

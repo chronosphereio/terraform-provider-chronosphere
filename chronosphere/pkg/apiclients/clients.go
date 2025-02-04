@@ -19,8 +19,9 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 )
 
-// Clients groups all the generated API clients used by TF.
+// Clients groups all the generated API clients used by TF, and meta-provider configuration.
 type Clients struct {
+	DisableDryRun  bool
 	ConfigUnstable *configunstable.Client
 	ConfigV1       *configv1.Client
 }
