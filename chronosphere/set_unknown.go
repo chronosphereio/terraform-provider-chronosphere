@@ -32,9 +32,9 @@ const (
 	listEncodedPath = "[0]"
 )
 
-// dummyRef is used in dry run validation to populate fields that reference other entities
-// that don't exist yet.
-var dummyRef = tfid.Slug("dummy_value")
+// dryRunUnknownRef is used as the value for reference fields that are set in config
+// but are not yet known yet as they need to be created for their ID to be known.
+var dryRunUnknownRef = tfid.Slug("dry_run_unknown")
 
 type setUnknownParams struct {
 	rawConfig      cty.Value // required
@@ -135,7 +135,7 @@ func (p setUnknownParams) setID(v reflect.Value, id tfid.ID, path []string) {
 	// same apply operation, so we set the field to a dummy value.
 	hasConfig := !p.lookupRaw(path).IsNull()
 	if id == (tfid.ID{}) && hasConfig {
-		v.Set(reflect.ValueOf(dummyRef))
+		v.Set(reflect.ValueOf(dryRunUnknownRef))
 	}
 }
 

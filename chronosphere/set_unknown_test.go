@@ -84,7 +84,7 @@ func TestSetUnknown(t *testing.T) {
 			}),
 			want: &singleTFID{
 				Name:   "michael",
-				RefVal: dummyRef,
+				RefVal: dryRunUnknownRef,
 			},
 		},
 		{
@@ -124,8 +124,8 @@ func TestSetUnknown(t *testing.T) {
 			}),
 			want: &multipleTFID{
 				Name:    "michael",
-				RefVal:  dummyRef,
-				RefVal2: dummyRef,
+				RefVal:  dryRunUnknownRef,
+				RefVal2: dryRunUnknownRef,
 			},
 		},
 		{
@@ -152,7 +152,7 @@ func TestSetUnknown(t *testing.T) {
 			skipIDs: set.New("nested.ref_val"),
 			want: &nestedTFID{
 				Name:   "michael",
-				RefVal: dummyRef,
+				RefVal: dryRunUnknownRef,
 				Nested: singleTFID{
 					Name: "michael",
 				},
@@ -190,7 +190,7 @@ func TestSetUnknown(t *testing.T) {
 			want: &sliceOfRefs{
 				Name:    "michael",
 				RefVals: []tfid.ID{tfid.Slug(""), tfid.Slug("")},
-				RefVal:  dummyRef,
+				RefVal:  dryRunUnknownRef,
 			},
 		},
 		{
@@ -235,7 +235,7 @@ func TestSetUnknown(t *testing.T) {
 				MapRefs: map[string]tfid.ID{
 					"one": tfid.Slug(""),
 				},
-				RefVal: dummyRef,
+				RefVal: dryRunUnknownRef,
 			},
 		},
 		{
