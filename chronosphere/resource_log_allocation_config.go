@@ -52,7 +52,7 @@ func resourceLogAllocationConfig() *schema.Resource {
 				ModifyAPIModel: func(cfg *models.Configv1LogAllocationConfig) {
 					for _, alloc := range cfg.DatasetAllocations {
 						if alloc.DatasetSlug == "" {
-							alloc.DatasetSlug = "dummy_value"
+							alloc.DatasetSlug = dryRunUnknownRef.Slug()
 						}
 					}
 				},

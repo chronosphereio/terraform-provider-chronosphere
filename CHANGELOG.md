@@ -8,6 +8,9 @@ Added:
 * Add v1 `chronosphere_logging_allocation_config` resource
 * Add support for `is_root_span` field in common trace span filter type.
 
+Fixed:
+* Fix dry-run for `chronosphere_recording_rule` with `bucket_slug` and `execution_group`.
+
 ## 1.6.2
 
 Added:

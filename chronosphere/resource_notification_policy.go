@@ -257,11 +257,11 @@ func (npr *notificationPolicyResourceMeta) resourceNotificationPolicyCustomizeDi
 			if !isNotificationPolicyIndependentForCustomizeDiff(diff, policy) {
 				// If the policy is inline, we want to populate required fields that are inherited from
 				// the bucket normally (name, bucket_slug). Otherwise, the API rejects the missing fields.
-				apiPolicy.BucketSlug = dummyRef.Slug()
-				apiPolicy.Name = dummyRef.Slug()
+				apiPolicy.BucketSlug = dryRunUnknownRef.Slug()
+				apiPolicy.Name = dryRunUnknownRef.Slug()
 
 				// Inline policies don't have a slug, but use a dummy slug since it's required for Update.
-				apiPolicy.Slug = dummyRef.Slug()
+				apiPolicy.Slug = dryRunUnknownRef.Slug()
 			}
 		},
 	}

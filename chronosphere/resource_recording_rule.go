@@ -42,7 +42,16 @@ func resourceRecordingRule() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		Schema:        tfschema.RecordingRule,
-		CustomizeDiff: r.ValidateDryRun(&RecordingRuleDryRunCount),
+		CustomizeDiff: r.ValidateDryRunOptions(&RecordingRuleDryRunCount, ValidateDryRunOpts[*models.Configv1RecordingRule]{
+			ModifyAPIModel: func(rr *models.Configv1RecordingRule) {
+				// If bucket-slug and execution group are set, server validation will require them to match.
+				// However, BucketSlug may not be known at dry-run time, and fallback to the unknown ref value.
+				// This won't match ExecutionGroup, causing dry-run to fail, so set it to match execution group.
+				if rr.BucketSlug == dryRunUnknownRef.Slug() && rr.ExecutionGroup != "" {
+					rr.BucketSlug = rr.ExecutionGroup
+				}
+			},
+		}),
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
