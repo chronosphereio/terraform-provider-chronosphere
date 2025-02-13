@@ -99,6 +99,13 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(cliutil.EntityNamespaceEnvVar, ""),
 			},
+			"disable_dryrun": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				DefaultFunc: func() (any, error) {
+					return os.Getenv("CHRONOSPHERE_DRY_RUN_VALIDATION_DISABLED") == "1", nil
+				},
+			},
 		},
 		ResourcesMap: allResources,
 		DataSourcesMap: map[string]*schema.Resource{
@@ -123,6 +130,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.D
 	apiToken := d.Get("api_token").(string)
 	entityNamespace := d.Get("entity_namespace").(string)
 	unstable.Set(ctx, d.Get("unstable").(bool))
+	disableDryRun := d.Get("disable_dryrun").(bool)
 
 	configUnstableClient, err := configunstable.NewClient(transport.ComponentTerraformUnstableProvider, org, apiToken, entityNamespace)
 	if err != nil {
@@ -135,6 +143,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.D
 	}
 
 	return apiclients.Clients{
+		DisableDryRun:  disableDryRun,
 		ConfigUnstable: configUnstableClient,
 		ConfigV1:       configClient,
 	}, nil
