@@ -10,6 +10,7 @@ Added:
 * Add v1 `chronosphere_logging_allocation_config` resource
 * Add support for `is_root_span` field in common trace span filter type.
 * Allow disabling dry-run via provider configuration `disable_dryrun`.
+* Adds `priority_thresholds` to `chronosphere_resource_pools_config` pools.
 
 Fixed:
 * Fix dry-run for `chronosphere_recording_rule` with `bucket_slug` and `execution_group`.
