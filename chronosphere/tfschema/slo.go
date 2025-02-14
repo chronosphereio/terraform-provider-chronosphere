@@ -99,10 +99,6 @@ var SloDefinition = map[string]*schema.Schema{
 			},
 		},
 	},
-	"low_volume": {
-		Type:     schema.TypeBool,
-		Optional: true,
-	},
 }
 
 var SLI = map[string]*schema.Schema{
