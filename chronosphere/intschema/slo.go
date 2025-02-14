@@ -93,7 +93,6 @@ type SloSliCustomIndicator struct {
 type SloDefinition struct {
 	Objective        float64                         `intschema:"objective"`
 	ReportingWindows []SloDefinitionReportingWindows `intschema:"reporting_windows"`
-	LowVolume        bool                            `intschema:"low_volume,optional"`
 }
 
 type SloDefinitionReportingWindows struct {

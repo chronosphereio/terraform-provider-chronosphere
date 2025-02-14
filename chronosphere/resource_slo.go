@@ -103,7 +103,6 @@ func (sloConverter) toModel(s *intschema.Slo) (*models.ConfigunstableSLO, error)
 		NotificationPolicySlug: s.NotificationPolicyId.Slug(),
 		Definition: &models.SLODefinition{
 			Objective:        s.Definition.Objective,
-			LowVolume:        s.Definition.LowVolume,
 			ReportingWindows: reportingWindowsToModel(s.Definition.ReportingWindows),
 		},
 		Sli: &models.ConfigunstableSLI{
@@ -167,7 +166,6 @@ func (sloConverter) fromModel(
 		Description:          s.Description,
 		Definition: intschema.SloDefinition{
 			Objective:        s.Definition.Objective,
-			LowVolume:        s.Definition.LowVolume,
 			ReportingWindows: reportingWindowsFromModel(s.Definition.ReportingWindows),
 		},
 		Sli: intschema.SloSli{
