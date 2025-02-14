@@ -45,14 +45,27 @@ type NotificationRouteGroupBy struct {
 	LabelNames []string `intschema:"label_names,optional"`
 }
 
+type ResourcePoolAllocationPriorityThresholdSchema struct {
+	FixedValue              int64   `intschema:"fixed_value,optional"`
+	PercentOfPoolAllocation float64 `intschema:"percent_of_pool_allocation,optional"`
+}
+
 type ResourcePoolAllocationSchema struct {
-	FixedValue       []ResourcePoolAllocationSchemaFixedValue `intschema:"fixed_value,optional"`
-	PercentOfLicense float64                                  `intschema:"percent_of_license,optional"`
+	FixedValue         []ResourcePoolAllocationSchemaFixedValue         `intschema:"fixed_value,optional"`
+	PercentOfLicense   float64                                          `intschema:"percent_of_license,optional"`
+	PriorityThresholds []ResourcePoolAllocationSchemaPriorityThresholds `intschema:"priority_thresholds,optional"`
 }
 
 type ResourcePoolAllocationSchemaFixedValue struct {
 	License string `intschema:"license"`
 	Value   int64  `intschema:"value"`
+}
+
+type ResourcePoolAllocationSchemaPriorityThresholds struct {
+	License               string                                         `intschema:"license"`
+	AllPriorities         *ResourcePoolAllocationPriorityThresholdSchema `intschema:"all_priorities,optional,list_encoded_object"`
+	DefaultAndLowPriority *ResourcePoolAllocationPriorityThresholdSchema `intschema:"default_and_low_priority,optional,list_encoded_object"`
+	LowPriority           *ResourcePoolAllocationPriorityThresholdSchema `intschema:"low_priority,optional,list_encoded_object"`
 }
 
 type ResourcePoolPrioritiesSchema struct {

@@ -32,6 +32,12 @@ type Configv1ResourcePoolsAllocation struct {
 	// explicitly specify an allocation, the sum of percent_of_license across all pools
 	// (including the default pool) must exactly equal 100.
 	PercentOfLicense float64 `json:"percent_of_license,omitempty"`
+
+	// Optional. For supported licenses, defines thresholds with strict limits for
+	// when to drop new consumption of the license for a pool. Currently, only
+	// `PERSISTED_CARDINALITY_STANDARD` and `PERSISTED_CARDINALITY_HISTOGRAM` are
+	// supported.
+	PriorityThresholds []*AllocationThresholds `json:"priority_thresholds"`
 }
 
 // Validate validates this configv1 resource pools allocation
@@ -39,6 +45,10 @@ func (m *Configv1ResourcePoolsAllocation) Validate(formats strfmt.Registry) erro
 	var res []error
 
 	if err := m.validateFixedValues(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePriorityThresholds(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -74,11 +84,41 @@ func (m *Configv1ResourcePoolsAllocation) validateFixedValues(formats strfmt.Reg
 	return nil
 }
 
+func (m *Configv1ResourcePoolsAllocation) validatePriorityThresholds(formats strfmt.Registry) error {
+	if swag.IsZero(m.PriorityThresholds) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.PriorityThresholds); i++ {
+		if swag.IsZero(m.PriorityThresholds[i]) { // not required
+			continue
+		}
+
+		if m.PriorityThresholds[i] != nil {
+			if err := m.PriorityThresholds[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("priority_thresholds" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("priority_thresholds" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 // ContextValidate validate this configv1 resource pools allocation based on the context it is used
 func (m *Configv1ResourcePoolsAllocation) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateFixedValues(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidatePriorityThresholds(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -98,6 +138,26 @@ func (m *Configv1ResourcePoolsAllocation) contextValidateFixedValues(ctx context
 					return ve.ValidateName("fixed_values" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("fixed_values" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Configv1ResourcePoolsAllocation) contextValidatePriorityThresholds(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.PriorityThresholds); i++ {
+
+		if m.PriorityThresholds[i] != nil {
+			if err := m.PriorityThresholds[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("priority_thresholds" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("priority_thresholds" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

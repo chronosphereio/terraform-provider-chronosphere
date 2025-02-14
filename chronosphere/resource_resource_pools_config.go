@@ -35,11 +35,7 @@ func ResourcePoolsConfigFromModel(m *apimodels.Configv1ResourcePools) (*intschem
 }
 
 func resourceResourcePoolsConfig() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1ResourcePools,
-		intschema.ResourcePoolsConfig,
-		*intschema.ResourcePoolsConfig,
-	](
+	r := newGenericResource(
 		"resource_pools_config",
 		resourcePoolsConfigConverter{},
 		generatedResourcePools{},
@@ -283,8 +279,9 @@ func buildAllocation(allocation *intschema.ResourcePoolAllocationSchema) *apimod
 	}
 
 	return &apimodels.Configv1ResourcePoolsAllocation{
-		PercentOfLicense: allocation.PercentOfLicense,
-		FixedValues:      buildFixedValues(allocation.FixedValue),
+		PercentOfLicense:   allocation.PercentOfLicense,
+		FixedValues:        buildFixedValues(allocation.FixedValue),
+		PriorityThresholds: buildThresholds(allocation.PriorityThresholds),
 	}
 }
 
@@ -297,6 +294,17 @@ func buildFixedValues(fixedValues []intschema.ResourcePoolAllocationSchemaFixedV
 		return &apimodels.AllocationFixedValue{
 			License: apimodels.ResourcePoolsLicense(f.License),
 			Value:   fmt.Sprint(f.Value),
+		}
+	})
+}
+
+func buildThresholds(thresholds []intschema.ResourcePoolAllocationSchemaPriorityThresholds) []*apimodels.AllocationThresholds {
+	if len(thresholds) == 0 {
+		return nil
+	}
+	return sliceutil.Map(thresholds, func(t intschema.ResourcePoolAllocationSchemaPriorityThresholds) *apimodels.AllocationThresholds {
+		return &apimodels.AllocationThresholds{
+			License: apimodels.ResourcePoolsLicense(t.License),
 		}
 	})
 }

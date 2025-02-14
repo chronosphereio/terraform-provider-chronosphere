@@ -62,6 +62,7 @@ var ResourcePoolAllocationSchema = &schema.Schema{
 				Elem:     ResourcePoolAllocationFixedValueSchema,
 				MinItems: 1,
 			},
+			"priority_thresholds": ResourcePoolAllocationPriorityThresholdsSchema,
 		},
 	},
 	MaxItems: 1,
@@ -124,3 +125,66 @@ var ResourcePoolPrioritiesSchema = &schema.Schema{
 	MaxItems: 1,
 	Optional: true,
 }
+
+var ResourcePoolAllocationPriorityThresholdsSchema = &schema.Schema{
+	Type: schema.TypeList,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"license": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"all_priorities":           ResourcePoolAllocationPriorityThresholdSchema,
+			"default_and_low_priority": ResourcePoolAllocationPriorityThresholdSchema,
+			"low_priority":             ResourcePoolAllocationPriorityThresholdSchema,
+		},
+	},
+	MinItems: 1,
+	Optional: true,
+}
+
+var ResourcePoolAllocationPriorityThresholdSchema = &schema.Schema{
+	Type: schema.TypeList,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"percent_of_pool_allocation": {
+				Type:     schema.TypeFloat,
+				Optional: true,
+			},
+			"fixed_value": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+		},
+	},
+	MaxItems: 1,
+	Optional: true,
+}
+
+// var TraceStringFilterSchema = &schema.Schema{
+// 	Type:     schema.TypeList,
+// 	Optional: true,
+// 	MinItems: 0,
+// 	MaxItems: 1,
+// 	Elem: &schema.Resource{
+// 		Schema: map[string]*schema.Schema{
+// 			"match": {
+// 				Type:             schema.TypeString,
+// 				Optional:         true,
+// 				Default:          prettyenum.StringFilterMatchTypeExact,
+// 				ValidateDiagFunc: validateStringFilterMatchType,
+// 				DiffSuppressFunc: diffSuppressStringFilterMatchType,
+// 			},
+// 			"value": {
+// 				Type:     schema.TypeString,
+// 				Optional: true,
+// 			},
+// 			"in_values": {
+// 				Type:     schema.TypeList,
+// 				Optional: true,
+// 				MinItems: 0,
+// 				Elem:     &schema.Schema{Type: schema.TypeString},
+// 			},
+// 		},
+// 	},
+// }
