@@ -381,22 +381,6 @@
       },
       "type": "object"
     },
-    "ConfigV1UpdateTraceBehaviorBody": {
-      "properties": {
-        "trace_behavior": {
-          "$ref": "#/definitions/configv1TraceBehavior"
-        },
-        "create_if_missing": {
-          "description": "If true, the TraceBehavior will be created if it does not already exist, identified by slug. If false, an error will be returned if the TraceBehavior does not already exist.",
-          "type": "boolean"
-        },
-        "dry_run": {
-          "description": "If true, the TraceBehavior will not be created nor updated, and no response TraceBehavior will be returned. The response will return an error if the given TraceBehavior is invalid.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
     "ConfigV1UpdateTraceJaegerRemoteSamplingStrategyBody": {
       "properties": {
         "trace_jaeger_remote_sampling_strategy": {
@@ -1920,119 +1904,6 @@
       },
       "type": "object"
     },
-    "TraceBehaviorErrorSampleOptions": {
-      "properties": {
-        "sample_rate": {
-          "description": "Sample rate for traces with errors.",
-          "format": "double",
-          "type": "number"
-        },
-        "sampling_type": {
-          "$ref": "#/definitions/TraceBehaviorSamplingType"
-        },
-        "enabled": {
-          "description": "Whether or not to use these options.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "TraceBehaviorFastSampleOptions": {
-      "properties": {
-        "max_duration_seconds": {
-          "description": "Duration in seconds under which traces are sampled\naccording to the given sample rate.",
-          "format": "double",
-          "type": "number"
-        },
-        "sample_rate": {
-          "description": "Sample rate for traces under the given duration.",
-          "format": "double",
-          "type": "number"
-        },
-        "sampling_type": {
-          "$ref": "#/definitions/TraceBehaviorSamplingType"
-        },
-        "enabled": {
-          "description": "Whether or not to use these options.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "TraceBehaviorLargeTraceSampleOptions": {
-      "properties": {
-        "span_count_threshold": {
-          "description": "For N = number of spans in the trace, if N \u003e= span_count_threshold, the trace is sampled according to the\ngiven sample rate.",
-          "format": "int64",
-          "type": "integer"
-        },
-        "sample_rate": {
-          "description": "Sample rate.",
-          "format": "double",
-          "type": "number"
-        },
-        "sampling_type": {
-          "$ref": "#/definitions/TraceBehaviorSamplingType"
-        },
-        "enabled": {
-          "description": "Whether or not to use these options.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "TraceBehaviorSamplingType": {
-      "description": " - LOW_VALUE: Match indicates a low value trace. With multiple low value matches sample at the lowest rate.\n - HIGH_VALUE: Match indicates a high value trace. With multiple high value matches sample at the highest rate.",
-      "enum": [
-        "LOW_VALUE",
-        "HIGH_VALUE"
-      ],
-      "type": "string"
-    },
-    "TraceBehaviorSlowSampleOptions": {
-      "properties": {
-        "min_duration_seconds": {
-          "description": "Duration in seconds over which traces are sampled\naccording to the given sample rate.",
-          "format": "double",
-          "type": "number"
-        },
-        "sample_rate": {
-          "description": "Sample rate.",
-          "format": "double",
-          "type": "number"
-        },
-        "sampling_type": {
-          "$ref": "#/definitions/TraceBehaviorSamplingType"
-        },
-        "enabled": {
-          "description": "Whether or not to use these options.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "TraceBehaviorSmallTraceSampleOptions": {
-      "properties": {
-        "span_count_threshold": {
-          "description": "For N = number of spans in the trace, if N \u003c= span_count_threshold, the trace is sampled according to the\ngiven sample rate.",
-          "format": "int64",
-          "type": "integer"
-        },
-        "sample_rate": {
-          "description": "Sample rate.",
-          "format": "double",
-          "type": "number"
-        },
-        "sampling_type": {
-          "$ref": "#/definitions/TraceBehaviorSamplingType"
-        },
-        "enabled": {
-          "description": "Whether or not to use these options.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
     "TraceJaegerRemoteSamplingStrategyAppliedStrategy": {
       "properties": {
         "probabilistic_strategy": {
@@ -2887,26 +2758,6 @@
       },
       "type": "object"
     },
-    "configv1CreateTraceBehaviorRequest": {
-      "properties": {
-        "trace_behavior": {
-          "$ref": "#/definitions/configv1TraceBehavior"
-        },
-        "dry_run": {
-          "description": "If true, the TraceBehavior will not be created, and no response TraceBehavior will be returned. The response will return an error if the given TraceBehavior is invalid.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "configv1CreateTraceBehaviorResponse": {
-      "properties": {
-        "trace_behavior": {
-          "$ref": "#/definitions/configv1TraceBehavior"
-        }
-      },
-      "type": "object"
-    },
     "configv1CreateTraceJaegerRemoteSamplingStrategyRequest": {
       "properties": {
         "trace_jaeger_remote_sampling_strategy": {
@@ -3137,9 +2988,6 @@
       "type": "object"
     },
     "configv1DeleteTraceBehaviorConfigResponse": {
-      "type": "object"
-    },
-    "configv1DeleteTraceBehaviorResponse": {
       "type": "object"
     },
     "configv1DeleteTraceJaegerRemoteSamplingStrategyResponse": {
@@ -3722,20 +3570,6 @@
         "teams": {
           "items": {
             "$ref": "#/definitions/configv1Team"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "configv1ListTraceBehaviorsResponse": {
-      "properties": {
-        "page": {
-          "$ref": "#/definitions/configv1PageResult"
-        },
-        "trace_behaviors": {
-          "items": {
-            "$ref": "#/definitions/configv1TraceBehavior"
           },
           "type": "array"
         }
@@ -4521,14 +4355,6 @@
       },
       "type": "object"
     },
-    "configv1ReadTraceBehaviorResponse": {
-      "properties": {
-        "trace_behavior": {
-          "$ref": "#/definitions/configv1TraceBehavior"
-        }
-      },
-      "type": "object"
-    },
     "configv1ReadTraceJaegerRemoteSamplingStrategyResponse": {
       "properties": {
         "trace_jaeger_remote_sampling_strategy": {
@@ -4911,59 +4737,6 @@
       },
       "type": "object"
     },
-    "configv1TraceBehavior": {
-      "properties": {
-        "name": {
-          "description": "Required name of the TraceBehavior. May be modified after the TraceBehavior is created.",
-          "type": "string"
-        },
-        "slug": {
-          "description": "Unique identifier of the TraceBehavior. If slug is not provided, one will be generated based of the name field. Cannot be modified after the TraceBehavior is created.",
-          "type": "string"
-        },
-        "created_at": {
-          "description": "Timestamp of when the TraceBehavior was created. Cannot be set by clients.",
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "updated_at": {
-          "description": "Timestamp of when the TraceBehavior was last updated. Cannot be set by clients.",
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "base_tail_sample_rate": {
-          "description": "Sample rate for fully assembled traces that do not apply to the error, fast, slow, large, or small sampling options.",
-          "format": "double",
-          "type": "number"
-        },
-        "base_head_sample_rate": {
-          "description": "Sample rate for head sampling. This applies to all root spans that are enrolled in head sampling,\nbut do not have a specific rule defined for their service.",
-          "format": "double",
-          "type": "number"
-        },
-        "error_sample_options": {
-          "$ref": "#/definitions/TraceBehaviorErrorSampleOptions"
-        },
-        "fast_sample_options": {
-          "$ref": "#/definitions/TraceBehaviorFastSampleOptions"
-        },
-        "slow_sample_options": {
-          "$ref": "#/definitions/TraceBehaviorSlowSampleOptions"
-        },
-        "large_trace_sample_options": {
-          "$ref": "#/definitions/TraceBehaviorLargeTraceSampleOptions"
-        },
-        "small_trace_sample_options": {
-          "$ref": "#/definitions/TraceBehaviorSmallTraceSampleOptions"
-        }
-      },
-      "type": "object"
-    },
     "configv1TraceBehaviorConfig": {
       "description": "TraceBehaviorConfig is a singleton configuration object that specifies the\nconfiguration for trace behaviors.",
       "properties": {
@@ -4980,14 +4753,14 @@
           "type": "string"
         },
         "main_behavior_assignments": {
-          "description": "List of assignments for the main behavior. The referenced datasets are datasets \nto be enrolled in behaviors. The referenced behaviors are the active behaviors\nfor the dataset when there is no override in place. \n* Only one main behavior can be assigned to a dataset.",
+          "description": "List of assignments for the main behavior. The referenced datasets are datasets \nto be enrolled in behaviors. The referenced behaviors are the active behaviors\nfor the dataset when there is no override in place. \n* Only one main behavior can be assigned to a dataset.\n* Only one referenced `TraceBehavior` with `type` field set to `TYPE_BASELINE` can\nbe set, which must match the slug referenced by `baseline_behavior_slug`.",
           "items": {
             "$ref": "#/definitions/TraceBehaviorConfigMainBehaviorAssignment"
           },
           "type": "array"
         },
         "override_behavior_assignments": {
-          "description": "List of assignments for the override behavior. OverrideBehaviorAssignments are used to\nspecify the active behavior for a dataset over a specific time range.\n* Only one override behavior can be assigned to a dataset.",
+          "description": "List of assignments for the override behavior. OverrideBehaviorAssignments are used to\nspecify the active behavior for a dataset over a specific time range.\n* Only one override behavior can be assigned to a dataset.\n* Only one referenced `TraceBehavior` with `type` field set to `TYPE_BASELINE` can\nbe set, which must match the slug referenced by `baseline_behavior_slug`, and any\nbaseline behavior referenced in `main_behavior_assignments`.",
           "items": {
             "$ref": "#/definitions/TraceBehaviorConfigOverrideBehaviorAssignment"
           },
@@ -5001,7 +4774,7 @@
           "type": "array"
         },
         "baseline_behavior_slug": {
-          "description": "The baseline behavior to use for behavior assignments and base head sampling rates.",
+          "description": "The baseline behavior to use for behavior assignments and base head sampling rates. Must reference a\nTraceBehavior entity with type: TYPE_BASELINE.",
           "type": "string"
         },
         "preview_behavior_assignments": {
