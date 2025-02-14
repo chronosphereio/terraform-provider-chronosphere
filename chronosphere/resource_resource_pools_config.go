@@ -159,9 +159,15 @@ func expandAllocation(allocation *apimodels.Configv1ResourcePoolsAllocation) (*i
 		return nil, err
 	}
 
+	thresholds, err := expandThresholds(allocation.PriorityThresholds)
+	if err != nil {
+		return nil, err
+	}
+
 	return &intschema.ResourcePoolAllocationSchema{
-		PercentOfLicense: allocation.PercentOfLicense,
-		FixedValue:       fv,
+		PercentOfLicense:   allocation.PercentOfLicense,
+		FixedValue:         fv,
+		PriorityThresholds: thresholds,
 	}, nil
 }
 
@@ -188,6 +194,56 @@ func expandAllocationFixedValues(
 			Value:   v,
 		}, nil
 	})
+}
+
+func expandThresholds(
+	thresholds []*apimodels.AllocationThresholds,
+) ([]intschema.ResourcePoolAllocationThresholdsSchema, error) {
+	if len(thresholds) == 0 {
+		return nil, nil
+	}
+	return sliceutil.MapErr(thresholds, func(t *apimodels.AllocationThresholds) (intschema.ResourcePoolAllocationThresholdsSchema, error) {
+		all, err := expandThreshold(t.AllPriorities)
+		if err != nil {
+			return intschema.ResourcePoolAllocationThresholdsSchema{}, err
+		}
+		defaultAndLow, err := expandThreshold(t.DefaultAndLowPriority)
+		if err != nil {
+			return intschema.ResourcePoolAllocationThresholdsSchema{}, err
+		}
+		low, err := expandThreshold(t.LowPriority)
+		if err != nil {
+			return intschema.ResourcePoolAllocationThresholdsSchema{}, err
+		}
+		return intschema.ResourcePoolAllocationThresholdsSchema{
+			License:               string(t.License),
+			AllPriorities:         all,
+			DefaultAndLowPriority: defaultAndLow,
+			LowPriority:           low,
+		}, nil
+	})
+}
+
+func expandThreshold(
+	threshold *apimodels.AllocationThreshold,
+) (*intschema.ResourcePoolAllocationThresholdSchema, error) {
+	if threshold == nil {
+		return nil, nil
+	}
+	var (
+		fixed int64
+		err   error
+	)
+	if threshold.FixedValue != "" {
+		fixed, err = strconv.ParseInt(threshold.FixedValue, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &intschema.ResourcePoolAllocationThresholdSchema{
+		FixedValue:              fixed,
+		PercentOfPoolAllocation: threshold.PercentOfPoolAllocation,
+	}, nil
 }
 
 func expandPriorities(priorities *apimodels.ResourcePoolsPriorities) *intschema.ResourcePoolPrioritiesSchema {
@@ -225,9 +281,14 @@ func expandDefaultPool(d *models.ResourcePoolsDefaultPool) (*intschema.ResourceP
 	if err != nil {
 		return nil, err
 	}
+	thresholds, err := expandThresholds(d.PriorityThresholds)
+	if err != nil {
+		return nil, err
+	}
 	return &intschema.ResourcePoolsConfigDefaultPool{
-		Allocation: allocation,
-		Priorities: expandPriorities(d.Priorities),
+		Allocation:         allocation,
+		Priorities:         expandPriorities(d.Priorities),
+		PriorityThresholds: thresholds,
 	}, nil
 }
 
@@ -240,8 +301,9 @@ func buildDefaultPool(defaultPool *intschema.ResourcePoolsConfigDefaultPool) (*a
 		return nil, err
 	}
 	return &apimodels.ResourcePoolsDefaultPool{
-		Allocation: buildAllocation(defaultPool.Allocation),
-		Priorities: priorities,
+		Allocation:         buildAllocation(defaultPool.Allocation),
+		Priorities:         priorities,
+		PriorityThresholds: buildThresholds(defaultPool.PriorityThresholds),
 	}, nil
 }
 
@@ -298,15 +360,28 @@ func buildFixedValues(fixedValues []intschema.ResourcePoolAllocationSchemaFixedV
 	})
 }
 
-func buildThresholds(thresholds []intschema.ResourcePoolAllocationSchemaPriorityThresholds) []*apimodels.AllocationThresholds {
+func buildThresholds(thresholds []intschema.ResourcePoolAllocationThresholdsSchema) []*apimodels.AllocationThresholds {
 	if len(thresholds) == 0 {
 		return nil
 	}
-	return sliceutil.Map(thresholds, func(t intschema.ResourcePoolAllocationSchemaPriorityThresholds) *apimodels.AllocationThresholds {
+	return sliceutil.Map(thresholds, func(t intschema.ResourcePoolAllocationThresholdsSchema) *apimodels.AllocationThresholds {
 		return &apimodels.AllocationThresholds{
-			License: apimodels.ResourcePoolsLicense(t.License),
+			License:               apimodels.ResourcePoolsLicense(t.License),
+			AllPriorities:         buildThreshold(t.AllPriorities),
+			DefaultAndLowPriority: buildThreshold(t.DefaultAndLowPriority),
+			LowPriority:           buildThreshold(t.LowPriority),
 		}
 	})
+}
+
+func buildThreshold(threshold *intschema.ResourcePoolAllocationThresholdSchema) *apimodels.AllocationThreshold {
+	if threshold == nil {
+		return nil
+	}
+	return &apimodels.AllocationThreshold{
+		PercentOfPoolAllocation: threshold.PercentOfPoolAllocation,
+		FixedValue:              fmt.Sprint(threshold.FixedValue),
+	}
 }
 
 func buildPriorities(priorities *intschema.ResourcePoolPrioritiesSchema) (*apimodels.ResourcePoolsPriorities, error) {

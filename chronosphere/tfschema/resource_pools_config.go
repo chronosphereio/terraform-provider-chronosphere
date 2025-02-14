@@ -23,8 +23,9 @@ var ResourcePoolsConfig = map[string]*schema.Schema{
 		Type: schema.TypeList,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
-				"allocation": ResourcePoolAllocationSchema,
-				"priorities": ResourcePoolPrioritiesSchema,
+				"allocation":          ResourcePoolAllocationSchema,
+				"priorities":          ResourcePoolPrioritiesSchema,
+				"priority_thresholds": ResourcePoolAllocationThresholdsSchema,
 			},
 			SchemaVersion: 1,
 		},
@@ -62,7 +63,7 @@ var ResourcePoolAllocationSchema = &schema.Schema{
 				Elem:     ResourcePoolAllocationFixedValueSchema,
 				MinItems: 1,
 			},
-			"priority_thresholds": ResourcePoolAllocationPriorityThresholdsSchema,
+			"priority_thresholds": ResourcePoolAllocationThresholdsSchema,
 		},
 	},
 	MaxItems: 1,
@@ -126,7 +127,7 @@ var ResourcePoolPrioritiesSchema = &schema.Schema{
 	Optional: true,
 }
 
-var ResourcePoolAllocationPriorityThresholdsSchema = &schema.Schema{
+var ResourcePoolAllocationThresholdsSchema = &schema.Schema{
 	Type: schema.TypeList,
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -134,16 +135,16 @@ var ResourcePoolAllocationPriorityThresholdsSchema = &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"all_priorities":           ResourcePoolAllocationPriorityThresholdSchema,
-			"default_and_low_priority": ResourcePoolAllocationPriorityThresholdSchema,
-			"low_priority":             ResourcePoolAllocationPriorityThresholdSchema,
+			"all_priorities":           ResourcePoolAllocationThresholdSchema,
+			"default_and_low_priority": ResourcePoolAllocationThresholdSchema,
+			"low_priority":             ResourcePoolAllocationThresholdSchema,
 		},
 	},
 	MinItems: 1,
 	Optional: true,
 }
 
-var ResourcePoolAllocationPriorityThresholdSchema = &schema.Schema{
+var ResourcePoolAllocationThresholdSchema = &schema.Schema{
 	Type: schema.TypeList,
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -160,31 +161,3 @@ var ResourcePoolAllocationPriorityThresholdSchema = &schema.Schema{
 	MaxItems: 1,
 	Optional: true,
 }
-
-// var TraceStringFilterSchema = &schema.Schema{
-// 	Type:     schema.TypeList,
-// 	Optional: true,
-// 	MinItems: 0,
-// 	MaxItems: 1,
-// 	Elem: &schema.Resource{
-// 		Schema: map[string]*schema.Schema{
-// 			"match": {
-// 				Type:             schema.TypeString,
-// 				Optional:         true,
-// 				Default:          prettyenum.StringFilterMatchTypeExact,
-// 				ValidateDiagFunc: validateStringFilterMatchType,
-// 				DiffSuppressFunc: diffSuppressStringFilterMatchType,
-// 			},
-// 			"value": {
-// 				Type:     schema.TypeString,
-// 				Optional: true,
-// 			},
-// 			"in_values": {
-// 				Type:     schema.TypeList,
-// 				Optional: true,
-// 				MinItems: 0,
-// 				Elem:     &schema.Schema{Type: schema.TypeString},
-// 			},
-// 		},
-// 	},
-// }
