@@ -144,17 +144,21 @@ var ResourcePoolAllocationThresholdsSchema = &schema.Schema{
 	Optional: true,
 }
 
+var thresoldFields = []string{"fixed_value", "percent_of_pool_allocation"}
+
 var ResourcePoolAllocationThresholdSchema = &schema.Schema{
 	Type: schema.TypeList,
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"percent_of_pool_allocation": {
-				Type:     schema.TypeFloat,
-				Optional: true,
+				Type:         schema.TypeFloat,
+				ExactlyOneOf: thresoldFields,
+				Optional:     true,
 			},
 			"fixed_value": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:         schema.TypeInt,
+				ExactlyOneOf: thresoldFields,
+				Optional:     true,
 			},
 		},
 	},
