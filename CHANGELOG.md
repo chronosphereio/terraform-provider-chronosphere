@@ -1,6 +1,8 @@
 # Releases
 
 ## Unreleased
+Removed:
+* Remove deprecated low value field from unstable `chronosphere_slo` resource.
 
 Added:
 * Add `priority_thresholds` to `chronosphere_resource_pools_config` pools.
