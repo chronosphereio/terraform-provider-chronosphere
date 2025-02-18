@@ -56,6 +56,7 @@ func (o *ResourcePoolsConfig) Ref() tfid.ID {
 }
 
 type ResourcePoolsConfigDefaultPool struct {
-	Allocation *ResourcePoolAllocationSchema `intschema:"allocation,optional,list_encoded_object"`
-	Priorities *ResourcePoolPrioritiesSchema `intschema:"priorities,optional,list_encoded_object"`
+	Allocation         *ResourcePoolAllocationSchema            `intschema:"allocation,optional,list_encoded_object"`
+	Priorities         *ResourcePoolPrioritiesSchema            `intschema:"priorities,optional,list_encoded_object"`
+	PriorityThresholds []ResourcePoolAllocationThresholdsSchema `intschema:"priority_thresholds,optional"`
 }

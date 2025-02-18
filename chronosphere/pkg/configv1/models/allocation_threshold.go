@@ -17,6 +17,9 @@ import (
 // swagger:model AllocationThreshold
 type AllocationThreshold struct {
 
+	// Threshold expressed as a fixed value of the license.
+	FixedValue string `json:"fixed_value,omitempty"`
+
 	// Threshold expressed as a percent of the license allocated to a pool.
 	// A value of `100` represents a threshold that is the pool's full allocation.
 	// Values over `100` indicate thresholds that exceed the pool's allocation.

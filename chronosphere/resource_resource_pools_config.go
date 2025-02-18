@@ -35,11 +35,7 @@ func ResourcePoolsConfigFromModel(m *apimodels.Configv1ResourcePools) (*intschem
 }
 
 func resourceResourcePoolsConfig() *schema.Resource {
-	r := newGenericResource[
-		*models.Configv1ResourcePools,
-		intschema.ResourcePoolsConfig,
-		*intschema.ResourcePoolsConfig,
-	](
+	r := newGenericResource(
 		"resource_pools_config",
 		resourcePoolsConfigConverter{},
 		generatedResourcePools{},
@@ -79,11 +75,11 @@ func (resourcePoolsConfigConverter) toModel(
 		resourcePools = r.Pool
 	}
 
-	pools, err := sliceutil.MapErr(resourcePools, buildPool)
+	pools, err := sliceutil.MapErr(resourcePools, poolToModel)
 	if err != nil {
 		return nil, err
 	}
-	defaultPool, err := buildDefaultPool(r.DefaultPool)
+	defaultPool, err := defaultPoolToModel(r.DefaultPool)
 	if err != nil {
 		return nil, err
 	}
@@ -96,12 +92,12 @@ func (resourcePoolsConfigConverter) toModel(
 func (resourcePoolsConfigConverter) fromModel(
 	m *models.Configv1ResourcePools,
 ) (*intschema.ResourcePoolsConfig, error) {
-	pools, err := expandPools(m.Pools)
+	pools, err := poolsFromModel(m.Pools)
 	if err != nil {
 		return nil, err
 	}
 
-	defaultPool, err := expandDefaultPool(m.DefaultPool)
+	defaultPool, err := defaultPoolFromModel(m.DefaultPool)
 	if err != nil {
 		return nil, err
 	}
@@ -153,23 +149,29 @@ func (resourcePoolsConfigConverter) normalize(config, server *intschema.Resource
 	}
 }
 
-func expandAllocation(allocation *apimodels.Configv1ResourcePoolsAllocation) (*intschema.ResourcePoolAllocationSchema, error) {
+func poolAllocationFromModel(allocation *apimodels.Configv1ResourcePoolsAllocation) (*intschema.ResourcePoolAllocationSchema, error) {
 	if allocation == nil {
 		return nil, nil
 	}
 
-	fv, err := expandAllocationFixedValues(allocation.FixedValues)
+	fv, err := allocationFixedValuesFromModel(allocation.FixedValues)
+	if err != nil {
+		return nil, err
+	}
+
+	thresholds, err := thresholdsFromModel(allocation.PriorityThresholds)
 	if err != nil {
 		return nil, err
 	}
 
 	return &intschema.ResourcePoolAllocationSchema{
-		PercentOfLicense: allocation.PercentOfLicense,
-		FixedValue:       fv,
+		PercentOfLicense:   allocation.PercentOfLicense,
+		FixedValue:         fv,
+		PriorityThresholds: thresholds,
 	}, nil
 }
 
-func expandAllocationFixedValues(
+func allocationFixedValuesFromModel(
 	fixedValues []*apimodels.AllocationFixedValue,
 ) ([]intschema.ResourcePoolAllocationSchemaFixedValue, error) {
 	if len(fixedValues) == 0 {
@@ -194,7 +196,57 @@ func expandAllocationFixedValues(
 	})
 }
 
-func expandPriorities(priorities *apimodels.ResourcePoolsPriorities) *intschema.ResourcePoolPrioritiesSchema {
+func thresholdsFromModel(
+	thresholds []*apimodels.AllocationThresholds,
+) ([]intschema.ResourcePoolAllocationThresholdsSchema, error) {
+	if len(thresholds) == 0 {
+		return nil, nil
+	}
+	return sliceutil.MapErr(thresholds, func(t *apimodels.AllocationThresholds) (intschema.ResourcePoolAllocationThresholdsSchema, error) {
+		all, err := thresholdFromModel(t.AllPriorities)
+		if err != nil {
+			return intschema.ResourcePoolAllocationThresholdsSchema{}, err
+		}
+		defaultAndLow, err := thresholdFromModel(t.DefaultAndLowPriority)
+		if err != nil {
+			return intschema.ResourcePoolAllocationThresholdsSchema{}, err
+		}
+		low, err := thresholdFromModel(t.LowPriority)
+		if err != nil {
+			return intschema.ResourcePoolAllocationThresholdsSchema{}, err
+		}
+		return intschema.ResourcePoolAllocationThresholdsSchema{
+			License:               string(t.License),
+			AllPriorities:         all,
+			DefaultAndLowPriority: defaultAndLow,
+			LowPriority:           low,
+		}, nil
+	})
+}
+
+func thresholdFromModel(
+	threshold *apimodels.AllocationThreshold,
+) (*intschema.ResourcePoolAllocationThresholdSchema, error) {
+	if threshold == nil {
+		return nil, nil
+	}
+	var (
+		fixed int64
+		err   error
+	)
+	if threshold.FixedValue != "" {
+		fixed, err = strconv.ParseInt(threshold.FixedValue, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &intschema.ResourcePoolAllocationThresholdSchema{
+		FixedValue:              fixed,
+		PercentOfPoolAllocation: threshold.PercentOfPoolAllocation,
+	}, nil
+}
+
+func poolPrioritiesFromModel(priorities *apimodels.ResourcePoolsPriorities) *intschema.ResourcePoolPrioritiesSchema {
 	if priorities == nil {
 		return nil
 	}
@@ -205,10 +257,10 @@ func expandPriorities(priorities *apimodels.ResourcePoolsPriorities) *intschema.
 	}
 }
 
-func expandPools(pools []*apimodels.ResourcePoolsPool) ([]intschema.ResourcePoolsConfigPool, error) {
+func poolsFromModel(pools []*apimodels.ResourcePoolsPool) ([]intschema.ResourcePoolsConfigPool, error) {
 	return sliceutil.MapErr(pools, func(pool *apimodels.ResourcePoolsPool) (intschema.ResourcePoolsConfigPool, error) {
 		rules := aggregationfilter.ListFromModel(pool.Filters, aggregationfilter.ResourcePoolsDelimiter)
-		allocation, err := expandAllocation(pool.Allocation)
+		allocation, err := poolAllocationFromModel(pool.Allocation)
 		if err != nil {
 			return intschema.ResourcePoolsConfigPool{}, err
 		}
@@ -216,40 +268,46 @@ func expandPools(pools []*apimodels.ResourcePoolsPool) ([]intschema.ResourcePool
 			Name:       pool.Name,
 			MatchRules: rules,
 			Allocation: allocation,
-			Priorities: expandPriorities(pool.Priorities),
+			Priorities: poolPrioritiesFromModel(pool.Priorities),
 		}, nil
 	})
 }
 
-func expandDefaultPool(d *models.ResourcePoolsDefaultPool) (*intschema.ResourcePoolsConfigDefaultPool, error) {
+func defaultPoolFromModel(d *models.ResourcePoolsDefaultPool) (*intschema.ResourcePoolsConfigDefaultPool, error) {
 	if d == nil {
 		return nil, nil
 	}
-	allocation, err := expandAllocation(d.Allocation)
+	allocation, err := poolAllocationFromModel(d.Allocation)
+	if err != nil {
+		return nil, err
+	}
+	thresholds, err := thresholdsFromModel(d.PriorityThresholds)
 	if err != nil {
 		return nil, err
 	}
 	return &intschema.ResourcePoolsConfigDefaultPool{
-		Allocation: allocation,
-		Priorities: expandPriorities(d.Priorities),
+		Allocation:         allocation,
+		Priorities:         poolPrioritiesFromModel(d.Priorities),
+		PriorityThresholds: thresholds,
 	}, nil
 }
 
-func buildDefaultPool(defaultPool *intschema.ResourcePoolsConfigDefaultPool) (*apimodels.ResourcePoolsDefaultPool, error) {
+func defaultPoolToModel(defaultPool *intschema.ResourcePoolsConfigDefaultPool) (*apimodels.ResourcePoolsDefaultPool, error) {
 	if defaultPool == nil {
 		return nil, nil
 	}
-	priorities, err := buildPriorities(defaultPool.Priorities)
+	priorities, err := poolPrioritiesToModel(defaultPool.Priorities)
 	if err != nil {
 		return nil, err
 	}
 	return &apimodels.ResourcePoolsDefaultPool{
-		Allocation: buildAllocation(defaultPool.Allocation),
-		Priorities: priorities,
+		Allocation:         poolAllocationToModel(defaultPool.Allocation),
+		Priorities:         priorities,
+		PriorityThresholds: thresholdsToModel(defaultPool.PriorityThresholds),
 	}, nil
 }
 
-func buildPool(pool intschema.ResourcePoolsConfigPool) (*apimodels.ResourcePoolsPool, error) {
+func poolToModel(pool intschema.ResourcePoolsConfigPool) (*apimodels.ResourcePoolsPool, error) {
 	var (
 		filters []*apimodels.Configv1LabelFilter
 		err     error
@@ -265,30 +323,31 @@ func buildPool(pool intschema.ResourcePoolsConfigPool) (*apimodels.ResourcePools
 			return nil, err
 		}
 	}
-	priorities, err := buildPriorities(pool.Priorities)
+	priorities, err := poolPrioritiesToModel(pool.Priorities)
 	if err != nil {
 		return nil, err
 	}
 	return &apimodels.ResourcePoolsPool{
-		Allocation: buildAllocation(pool.Allocation),
+		Allocation: poolAllocationToModel(pool.Allocation),
 		Priorities: priorities,
 		Filters:    filters,
 		Name:       pool.Name,
 	}, nil
 }
 
-func buildAllocation(allocation *intschema.ResourcePoolAllocationSchema) *apimodels.Configv1ResourcePoolsAllocation {
+func poolAllocationToModel(allocation *intschema.ResourcePoolAllocationSchema) *apimodels.Configv1ResourcePoolsAllocation {
 	if allocation == nil {
 		return nil
 	}
 
 	return &apimodels.Configv1ResourcePoolsAllocation{
-		PercentOfLicense: allocation.PercentOfLicense,
-		FixedValues:      buildFixedValues(allocation.FixedValue),
+		PercentOfLicense:   allocation.PercentOfLicense,
+		FixedValues:        fixedValuesToModel(allocation.FixedValue),
+		PriorityThresholds: thresholdsToModel(allocation.PriorityThresholds),
 	}
 }
 
-func buildFixedValues(fixedValues []intschema.ResourcePoolAllocationSchemaFixedValue) []*apimodels.AllocationFixedValue {
+func fixedValuesToModel(fixedValues []intschema.ResourcePoolAllocationSchemaFixedValue) []*apimodels.AllocationFixedValue {
 	if len(fixedValues) == 0 {
 		return nil
 	}
@@ -301,7 +360,31 @@ func buildFixedValues(fixedValues []intschema.ResourcePoolAllocationSchemaFixedV
 	})
 }
 
-func buildPriorities(priorities *intschema.ResourcePoolPrioritiesSchema) (*apimodels.ResourcePoolsPriorities, error) {
+func thresholdsToModel(thresholds []intschema.ResourcePoolAllocationThresholdsSchema) []*apimodels.AllocationThresholds {
+	if len(thresholds) == 0 {
+		return nil
+	}
+	return sliceutil.Map(thresholds, func(t intschema.ResourcePoolAllocationThresholdsSchema) *apimodels.AllocationThresholds {
+		return &apimodels.AllocationThresholds{
+			License:               apimodels.ResourcePoolsLicense(t.License),
+			AllPriorities:         thresholdToModel(t.AllPriorities),
+			DefaultAndLowPriority: thresholdToModel(t.DefaultAndLowPriority),
+			LowPriority:           thresholdToModel(t.LowPriority),
+		}
+	})
+}
+
+func thresholdToModel(threshold *intschema.ResourcePoolAllocationThresholdSchema) *apimodels.AllocationThreshold {
+	if threshold == nil {
+		return nil
+	}
+	return &apimodels.AllocationThreshold{
+		PercentOfPoolAllocation: threshold.PercentOfPoolAllocation,
+		FixedValue:              fmt.Sprint(threshold.FixedValue),
+	}
+}
+
+func poolPrioritiesToModel(priorities *intschema.ResourcePoolPrioritiesSchema) (*apimodels.ResourcePoolsPriorities, error) {
 	if priorities == nil {
 		return nil, nil
 	}

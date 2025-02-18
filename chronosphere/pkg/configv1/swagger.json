@@ -21,6 +21,11 @@
           "description": "Threshold expressed as a percent of the license allocated to a pool.\nA value of `100` represents a threshold that is the pool's full allocation.\nValues over `100` indicate thresholds that exceed the pool's allocation.\nFor example, a value of `50` represents a threshold that is half the pool's\nallocation and a value of `200` represents a threshold that is double the\npool's allocation.",
           "format": "double",
           "type": "number"
+        },
+        "fixed_value": {
+          "description": "Threshold expressed as a fixed value of the license.",
+          "format": "int64",
+          "type": "string"
         }
       },
       "type": "object"
@@ -1548,6 +1553,13 @@
         },
         "priorities": {
           "$ref": "#/definitions/ResourcePoolsPriorities"
+        },
+        "priority_thresholds": {
+          "description": "Optional. For supported licenses, defines thresholds with strict limits for\nwhen to drop new consumption of the license for a pool. Currently, only\n`PERSISTED_CARDINALITY_STANDARD` and `PERSISTED_CARDINALITY_HISTOGRAM` are\nsupported.",
+          "items": {
+            "$ref": "#/definitions/AllocationThresholds"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -4466,6 +4478,13 @@
           "description": "Fixed values optionally override `percent_of_license` allocations for specified licenses.\nWhen defining fixed values for a license, all pools must have an explicit fixed value\nspecification for that given license. The default pool receives all remaining quota left\nwithin the license, after subtracting the sum of fixed values across pools for that license.",
           "items": {
             "$ref": "#/definitions/AllocationFixedValue"
+          },
+          "type": "array"
+        },
+        "priority_thresholds": {
+          "description": "Optional. For supported licenses, defines thresholds with strict limits for\nwhen to drop new consumption of the license for a pool. Currently, only\n`PERSISTED_CARDINALITY_STANDARD` and `PERSISTED_CARDINALITY_HISTOGRAM` are\nsupported.",
+          "items": {
+            "$ref": "#/definitions/AllocationThresholds"
           },
           "type": "array"
         }

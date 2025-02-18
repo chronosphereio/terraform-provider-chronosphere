@@ -23,8 +23,9 @@ var ResourcePoolsConfig = map[string]*schema.Schema{
 		Type: schema.TypeList,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
-				"allocation": ResourcePoolAllocationSchema,
-				"priorities": ResourcePoolPrioritiesSchema,
+				"allocation":          ResourcePoolAllocationSchema,
+				"priorities":          ResourcePoolPrioritiesSchema,
+				"priority_thresholds": ResourcePoolAllocationThresholdsSchema,
 			},
 			SchemaVersion: 1,
 		},
@@ -62,6 +63,7 @@ var ResourcePoolAllocationSchema = &schema.Schema{
 				Elem:     ResourcePoolAllocationFixedValueSchema,
 				MinItems: 1,
 			},
+			"priority_thresholds": ResourcePoolAllocationThresholdsSchema,
 		},
 	},
 	MaxItems: 1,
@@ -117,6 +119,41 @@ var ResourcePoolPrioritiesSchema = &schema.Schema{
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				MinItems: 1,
+				Optional: true,
+			},
+		},
+	},
+	MaxItems: 1,
+	Optional: true,
+}
+
+var ResourcePoolAllocationThresholdsSchema = &schema.Schema{
+	Type: schema.TypeList,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"license": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"all_priorities":           ResourcePoolAllocationThresholdSchema,
+			"default_and_low_priority": ResourcePoolAllocationThresholdSchema,
+			"low_priority":             ResourcePoolAllocationThresholdSchema,
+		},
+	},
+	MinItems: 1,
+	Optional: true,
+}
+
+var ResourcePoolAllocationThresholdSchema = &schema.Schema{
+	Type: schema.TypeList,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"percent_of_pool_allocation": {
+				Type:     schema.TypeFloat,
+				Optional: true,
+			},
+			"fixed_value": {
+				Type:     schema.TypeInt,
 				Optional: true,
 			},
 		},
