@@ -3,7 +3,7 @@ resource "chronosphere_monitor" "monitor_with_logging_query" {
   collection_id = chronosphere_collection.infra.id
   query {
     logging_expr = <<-EOF
-      service = "nginx" | make-series by chronosphere_namespace
+      service = "nginx" | make-series step 1m by chronosphere_namespace
     EOF
   }
   series_conditions {
