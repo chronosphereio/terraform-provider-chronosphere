@@ -99,6 +99,13 @@ var SloDefinition = map[string]*schema.Schema{
 			},
 		},
 	},
+	"burn_rate_alerting_config": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: BurnRateDefinition,
+		},
+	},
 }
 
 var SLI = map[string]*schema.Schema{
@@ -224,5 +231,25 @@ var SLOAdditionalPromQLFilters = &schema.Schema{
 				Required: true,
 			},
 		},
+	},
+}
+
+var BurnRateDefinition = map[string]*schema.Schema{
+	"window": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"budget": {
+		Type:     schema.TypeFloat,
+		Required: true,
+	},
+	"severity": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"labels": {
+		Type:     schema.TypeMap,
+		Optional: true,
+		Elem:     &schema.Schema{Type: schema.TypeString},
 	},
 }

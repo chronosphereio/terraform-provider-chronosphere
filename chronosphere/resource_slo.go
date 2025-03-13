@@ -102,8 +102,9 @@ func (sloConverter) toModel(s *intschema.Slo) (*models.ConfigunstableSLO, error)
 		CollectionRef:          v1CollectionRefToUnstable(v1CollRef),
 		NotificationPolicySlug: s.NotificationPolicyId.Slug(),
 		Definition: &models.SLODefinition{
-			Objective:        s.Definition.Objective,
-			ReportingWindows: reportingWindowsToModel(s.Definition.ReportingWindows),
+			Objective:              s.Definition.Objective,
+			ReportingWindows:       reportingWindowsToModel(s.Definition.ReportingWindows),
+			BurnRateAlertingConfig: burnRateDefinitionToModel(s.Definition.BurnRateAlertingConfig),
 		},
 		Sli: &models.ConfigunstableSLI{
 			LensTemplateIndicator: s.Sli.LensTemplateIndicator,
@@ -165,8 +166,9 @@ func (sloConverter) fromModel(
 		NotificationPolicyId: tfid.Slug(s.NotificationPolicySlug),
 		Description:          s.Description,
 		Definition: intschema.SloDefinition{
-			Objective:        s.Definition.Objective,
-			ReportingWindows: reportingWindowsFromModel(s.Definition.ReportingWindows),
+			Objective:              s.Definition.Objective,
+			ReportingWindows:       reportingWindowsFromModel(s.Definition.ReportingWindows),
+			BurnRateAlertingConfig: burnRateDefinitionFromModel(s.Definition.BurnRateAlertingConfig),
 		},
 		Sli: intschema.SloSli{
 			LensTemplateIndicator: s.Sli.LensTemplateIndicator,
@@ -222,6 +224,28 @@ func reportingWindowsToModel(windows []intschema.SloDefinitionReportingWindows) 
 func reportingWindowsFromModel(windows []*models.DefinitionTimeWindow) []intschema.SloDefinitionReportingWindows {
 	return sliceutil.Map(windows, func(w *models.DefinitionTimeWindow) intschema.SloDefinitionReportingWindows {
 		return intschema.SloDefinitionReportingWindows{Duration: w.Duration}
+	})
+}
+
+func burnRateDefinitionToModel(defs []intschema.SloDefinitionBurnRateAlertingConfig) []*models.DefinitionBurnRateDefinition {
+	return sliceutil.Map(defs, func(w intschema.SloDefinitionBurnRateAlertingConfig) *models.DefinitionBurnRateDefinition {
+		return &models.DefinitionBurnRateDefinition{
+			Window:   w.Window,
+			Budget:   w.Budget,
+			Severity: w.Severity,
+			Labels:   w.Labels,
+		}
+	})
+}
+
+func burnRateDefinitionFromModel(defs []*models.DefinitionBurnRateDefinition) []intschema.SloDefinitionBurnRateAlertingConfig {
+	return sliceutil.Map(defs, func(w *models.DefinitionBurnRateDefinition) intschema.SloDefinitionBurnRateAlertingConfig {
+		return intschema.SloDefinitionBurnRateAlertingConfig{
+			Window:   w.Window,
+			Budget:   w.Budget,
+			Severity: w.Severity,
+			Labels:   w.Labels,
+		}
 	})
 }
 

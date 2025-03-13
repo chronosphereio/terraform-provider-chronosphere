@@ -58,6 +58,27 @@ resource "chronosphere_slo" "slo_with_signal_grouping_signal_per_series" {
     reporting_windows {
       duration = "28d"
     }
+    burn_rate_alerting_config {
+      window = "1h"
+      budget = 99
+      severity = "critical"
+      labels = {
+        "foo": "bar"
+      }
+    }
+    burn_rate_alerting_config {
+      window = "6h"
+      budget = 99
+      severity = "critical"
+      labels = {
+        "foo": "baz"
+      }
+    }
+    burn_rate_alerting_config {
+      window = "24h"
+      budget = 99
+      severity = "warn"
+    }
   }
 
   sli {
