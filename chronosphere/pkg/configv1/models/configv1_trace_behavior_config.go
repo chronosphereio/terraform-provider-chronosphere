@@ -21,8 +21,7 @@ import (
 // swagger:model configv1TraceBehaviorConfig
 type Configv1TraceBehaviorConfig struct {
 
-	// The baseline behavior to use for behavior assignments and base head sampling rates. Must reference a
-	// TraceBehavior entity with type: TYPE_BASELINE.
+	// The baseline behavior to use for behavior assignments and base head sampling rates.
 	BaselineBehaviorSlug string `json:"baseline_behavior_slug,omitempty"`
 
 	// Timestamp of when the TraceBehaviorConfig was created. Cannot be set by clients.
@@ -45,16 +44,11 @@ type Configv1TraceBehaviorConfig struct {
 	// to be enrolled in behaviors. The referenced behaviors are the active behaviors
 	// for the dataset when there is no override in place.
 	// * Only one main behavior can be assigned to a dataset.
-	// * Only one referenced `TraceBehavior` with `type` field set to `TYPE_BASELINE` can
-	// be set, which must match the slug referenced by `baseline_behavior_slug`.
 	MainBehaviorAssignments []*TraceBehaviorConfigMainBehaviorAssignment `json:"main_behavior_assignments"`
 
 	// List of assignments for the override behavior. OverrideBehaviorAssignments are used to
 	// specify the active behavior for a dataset over a specific time range.
 	// * Only one override behavior can be assigned to a dataset.
-	// * Only one referenced `TraceBehavior` with `type` field set to `TYPE_BASELINE` can
-	// be set, which must match the slug referenced by `baseline_behavior_slug`, and any
-	// baseline behavior referenced in `main_behavior_assignments`.
 	OverrideBehaviorAssignments []*TraceBehaviorConfigOverrideBehaviorAssignment `json:"override_behavior_assignments"`
 
 	// List of assignments for the preview behavior. The

@@ -19,6 +19,10 @@ import (
 // swagger:model SLODefinition
 type SLODefinition struct {
 
+	// Provides the burn rate alert configuration for the SLO. If not provided the
+	// default burn rates will be used.
+	BurnRateAlertingConfig []*DefinitionBurnRateDefinition `json:"burn_rate_alerting_config"`
+
 	// Configured whether this SLO is for a low volume event (< 1/s). This will
 	// adjust the SLI queries to account for the low volume nature of the event.
 	LowVolume bool `json:"low_volume,omitempty"`
@@ -35,6 +39,10 @@ type SLODefinition struct {
 func (m *SLODefinition) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateBurnRateAlertingConfig(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateReportingWindows(formats); err != nil {
 		res = append(res, err)
 	}
@@ -42,6 +50,32 @@ func (m *SLODefinition) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *SLODefinition) validateBurnRateAlertingConfig(formats strfmt.Registry) error {
+	if swag.IsZero(m.BurnRateAlertingConfig) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.BurnRateAlertingConfig); i++ {
+		if swag.IsZero(m.BurnRateAlertingConfig[i]) { // not required
+			continue
+		}
+
+		if m.BurnRateAlertingConfig[i] != nil {
+			if err := m.BurnRateAlertingConfig[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("burn_rate_alerting_config" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("burn_rate_alerting_config" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -75,6 +109,10 @@ func (m *SLODefinition) validateReportingWindows(formats strfmt.Registry) error 
 func (m *SLODefinition) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateBurnRateAlertingConfig(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateReportingWindows(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -82,6 +120,26 @@ func (m *SLODefinition) ContextValidate(ctx context.Context, formats strfmt.Regi
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *SLODefinition) contextValidateBurnRateAlertingConfig(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.BurnRateAlertingConfig); i++ {
+
+		if m.BurnRateAlertingConfig[i] != nil {
+			if err := m.BurnRateAlertingConfig[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("burn_rate_alerting_config" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("burn_rate_alerting_config" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
