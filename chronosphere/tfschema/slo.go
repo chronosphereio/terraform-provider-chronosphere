@@ -101,6 +101,7 @@ var SloDefinition = map[string]*schema.Schema{
 	},
 	"burn_rate_alerting_config": {
 		Type:     schema.TypeList,
+		Computed: true,
 		Optional: true,
 		Elem: &schema.Resource{
 			Schema: BurnRateDefinition,

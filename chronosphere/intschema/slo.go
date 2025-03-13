@@ -93,7 +93,7 @@ type SloSliCustomIndicator struct {
 type SloDefinition struct {
 	Objective              float64                               `intschema:"objective"`
 	ReportingWindows       []SloDefinitionReportingWindows       `intschema:"reporting_windows"`
-	BurnRateAlertingConfig []SloDefinitionBurnRateAlertingConfig `intschema:"burn_rate_alerting_config,optional"`
+	BurnRateAlertingConfig []SloDefinitionBurnRateAlertingConfig `intschema:"burn_rate_alerting_config,optional,computed"`
 }
 
 type SloDefinitionReportingWindows struct {
