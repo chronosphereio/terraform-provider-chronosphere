@@ -21,13 +21,13 @@ import (
 // swagger:model configunstableLogControlConfig
 type ConfigunstableLogControlConfig struct {
 
-	// Control Rules are the ordered list of control rules.
-	ControlRules []*ConfigunstableControlRule `json:"control_rules"`
-
 	// Timestamp of when the LogControlConfig was created. Cannot be set by clients.
 	// Read Only: true
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
+
+	// Control Rules are the ordered list of control rules.
+	Rules []*ConfigunstableLogControlRule `json:"rules"`
 
 	// Timestamp of when the LogControlConfig was last updated. Cannot be set by clients.
 	// Read Only: true
@@ -39,11 +39,11 @@ type ConfigunstableLogControlConfig struct {
 func (m *ConfigunstableLogControlConfig) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateControlRules(formats); err != nil {
+	if err := m.validateCreatedAt(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateCreatedAt(formats); err != nil {
+	if err := m.validateRules(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -57,32 +57,6 @@ func (m *ConfigunstableLogControlConfig) Validate(formats strfmt.Registry) error
 	return nil
 }
 
-func (m *ConfigunstableLogControlConfig) validateControlRules(formats strfmt.Registry) error {
-	if swag.IsZero(m.ControlRules) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.ControlRules); i++ {
-		if swag.IsZero(m.ControlRules[i]) { // not required
-			continue
-		}
-
-		if m.ControlRules[i] != nil {
-			if err := m.ControlRules[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("control_rules" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("control_rules" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
 func (m *ConfigunstableLogControlConfig) validateCreatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.CreatedAt) { // not required
 		return nil
@@ -90,6 +64,32 @@ func (m *ConfigunstableLogControlConfig) validateCreatedAt(formats strfmt.Regist
 
 	if err := validate.FormatOf("created_at", "body", "date-time", m.CreatedAt.String(), formats); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *ConfigunstableLogControlConfig) validateRules(formats strfmt.Registry) error {
+	if swag.IsZero(m.Rules) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Rules); i++ {
+		if swag.IsZero(m.Rules[i]) { // not required
+			continue
+		}
+
+		if m.Rules[i] != nil {
+			if err := m.Rules[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("rules" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("rules" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
@@ -111,11 +111,11 @@ func (m *ConfigunstableLogControlConfig) validateUpdatedAt(formats strfmt.Regist
 func (m *ConfigunstableLogControlConfig) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateControlRules(ctx, formats); err != nil {
+	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
+	if err := m.contextValidateRules(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -129,30 +129,30 @@ func (m *ConfigunstableLogControlConfig) ContextValidate(ctx context.Context, fo
 	return nil
 }
 
-func (m *ConfigunstableLogControlConfig) contextValidateControlRules(ctx context.Context, formats strfmt.Registry) error {
+func (m *ConfigunstableLogControlConfig) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
 
-	for i := 0; i < len(m.ControlRules); i++ {
-
-		if m.ControlRules[i] != nil {
-			if err := m.ControlRules[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("control_rules" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("control_rules" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
+	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func (m *ConfigunstableLogControlConfig) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
+func (m *ConfigunstableLogControlConfig) contextValidateRules(ctx context.Context, formats strfmt.Registry) error {
 
-	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
-		return err
+	for i := 0; i < len(m.Rules); i++ {
+
+		if m.Rules[i] != nil {
+			if err := m.Rules[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("rules" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("rules" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil

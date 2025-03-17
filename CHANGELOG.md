@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+Removed:
+* Remove deprecated low value field from unstable `chronosphere_slo` resource.
+
+Added:
+* Add burn rate configs to the unstable `chronosphere_slo` resource.
+
 ## v1.8.0
 
 Added:

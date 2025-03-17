@@ -91,11 +91,18 @@ type SloSliCustomIndicator struct {
 }
 
 type SloDefinition struct {
-	Objective        float64                         `intschema:"objective"`
-	ReportingWindows []SloDefinitionReportingWindows `intschema:"reporting_windows"`
-	LowVolume        bool                            `intschema:"low_volume,optional"`
+	Objective              float64                               `intschema:"objective"`
+	ReportingWindows       []SloDefinitionReportingWindows       `intschema:"reporting_windows"`
+	BurnRateAlertingConfig []SloDefinitionBurnRateAlertingConfig `intschema:"burn_rate_alerting_config,optional,computed"`
 }
 
 type SloDefinitionReportingWindows struct {
 	Duration string `intschema:"duration"`
+}
+
+type SloDefinitionBurnRateAlertingConfig struct {
+	Budget   float64           `intschema:"budget"`
+	Severity string            `intschema:"severity"`
+	Window   string            `intschema:"window"`
+	Labels   map[string]string `intschema:"labels,optional"`
 }
