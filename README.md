@@ -6,4 +6,4 @@ The Terraform Chronosphere Provider allows [Terraform](https://terraform.io) to 
 
 ## Contact support
 
-[Contact Chronosphere support](https://docs.chronosphere.io/support/contact-support) to ask questions, report bugs, or suggest feature requests.
+[Contact Chronosphere support](https://docs.chronosphere.io/support) to ask questions, report bugs, or suggest feature requests.
