@@ -153,6 +153,7 @@ var SLI = map[string]*schema.Schema{
 		Optional: true,
 		Elem:     &schema.Schema{Type: schema.TypeString},
 	},
+	"additional_promql_filters": SLOAdditionalPromQLFilters,
 }
 
 var SloEndpointAvailability = map[string]*schema.Schema{

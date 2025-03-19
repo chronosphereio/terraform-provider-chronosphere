@@ -112,3 +112,36 @@ resource "chronosphere_slo" "slo_with_signal_grouping_labels" {
     }
   }
 }
+
+resource "chronosphere_slo" "slo_with_filters" {
+  name                   = "SLO with filters"
+  collection_id          = chronosphere_collection.c.id
+  notification_policy_id = chronosphere_notification_policy.np.id
+
+  definition {
+    objective = 99.95
+    reporting_windows {
+      duration = "28d"
+    }
+  }
+
+  sli {
+    custom_indicator {
+      bad_query_template   = "sum(rate(http_request_duration_seconds_count{error=\"true\", {{ .AdditionalFilters }} }[{{ .Window }}]))"
+      total_query_template = "sum(rate(http_request_duration_seconds_count{{{ .AdditionalFilters }}}[{{ .Window }}]))"
+    }
+    custom_dimension_labels = ["label1", "label2"]
+
+    additional_promql_filters{
+      name = "env"
+      type = "MatchEqual"
+      value = "prod"
+    }
+
+    additional_promql_filters{
+        name = "namespace"
+        type = "MatchEqual"
+        value = "foo"
+    }
+  }
+}
