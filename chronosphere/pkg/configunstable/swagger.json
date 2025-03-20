@@ -320,7 +320,7 @@
           "type": "array"
         },
         "additional_promql_filters": {
-          "description": "These are added to _every_ query and are intended to be used for things\nlike `cluster!~\"dev\"`",
+          "description": "These are added to _every_ query and are intended to be used for things\nlike `cluster!~\"dev\"`\ndeprecated: Use the top level SLI field",
           "items": {
             "$ref": "#/definitions/configunstablePromQLMatcher"
           },
@@ -344,7 +344,7 @@
           "type": "string"
         },
         "additional_promql_filters": {
-          "description": "These are added to _every_ query and are intended to be used for things\nlike `cluster!~\"dev\"`",
+          "description": "These are added to _every_ query and are intended to be used for things\nlike `cluster!~\"dev\"`\ndeprecated: Use the top level SLI field",
           "items": {
             "$ref": "#/definitions/configunstablePromQLMatcher"
           },
@@ -1465,6 +1465,13 @@
         },
         "source_service": {
           "$ref": "#/definitions/configv1CollectionReference"
+        },
+        "additional_promql_filters": {
+          "description": "These are added to _every_ query and are intended to be used for things\nlike `cluster!~\"dev\"`",
+          "items": {
+            "$ref": "#/definitions/configunstablePromQLMatcher"
+          },
+          "type": "array"
         }
       },
       "type": "object"
