@@ -4,10 +4,11 @@
 
 Removed:
 * Remove deprecated low value field from unstable `chronosphere_slo` resource.
+* Deprecated other additional_promql_filters in unstable `chronosphere_slo` resource.
 
 Added:
 * Add burn rate configs to the unstable `chronosphere_slo` resource.
-* Updated unstable API spec to latest version.
+* Add SLI level additional_promql_filters to the unstable `chronosphere_slo` resource.
 
 ## v1.8.0
 
