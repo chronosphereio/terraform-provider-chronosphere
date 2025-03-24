@@ -172,11 +172,12 @@ func (sloConverter) fromModel(
 			BurnRateAlertingConfig: burnRateDefinitionFromModel(s.Definition.BurnRateAlertingConfig),
 		},
 		Sli: intschema.SloSli{
-			LensTemplateIndicator: s.Sli.LensTemplateIndicator,
-			CustomIndicator:       customIndicator,
-			EndpointAvailability:  endpointAvailability,
-			EndpointLatency:       endpointLatency,
-			CustomDimensionLabels: s.Sli.CustomDimensionLabels,
+			LensTemplateIndicator:   s.Sli.LensTemplateIndicator,
+			CustomIndicator:         customIndicator,
+			EndpointAvailability:    endpointAvailability,
+			EndpointLatency:         endpointLatency,
+			CustomDimensionLabels:   s.Sli.CustomDimensionLabels,
+			AdditionalPromqlFilters: promFiltersFromModel(s.Sli.AdditionalPromqlFilters),
 		},
 		SignalGrouping: unstableMonitorSignalGroupingFromModel(s.SignalGrouping),
 		Annotations:    s.Annotations,
@@ -202,6 +203,7 @@ func promFiltersToModel(filters []intschema.SLOAdditionalPromQLFilters) []*model
 	return sliceutil.Map(filters, func(f intschema.SLOAdditionalPromQLFilters) *models.ConfigunstablePromQLMatcher {
 		return &models.ConfigunstablePromQLMatcher{
 			Name:  f.Name,
+			Type:  models.ConfigunstablePromQLMatcherType(f.Type),
 			Value: f.Value,
 		}
 	})
@@ -211,6 +213,7 @@ func promFiltersFromModel(filters []*models.ConfigunstablePromQLMatcher) []intsc
 	return sliceutil.Map(filters, func(f *models.ConfigunstablePromQLMatcher) intschema.SLOAdditionalPromQLFilters {
 		return intschema.SLOAdditionalPromQLFilters{
 			Name:  f.Name,
+			Type:  string(f.Type),
 			Value: f.Value,
 		}
 	})
