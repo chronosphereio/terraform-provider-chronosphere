@@ -7,7 +7,6 @@ Removed:
 
 Added:
 * Add burn rate configs to the unstable `chronosphere_slo` resource.
-* Updated unstable API spec to latest version.
 
 ## v1.8.0
 
