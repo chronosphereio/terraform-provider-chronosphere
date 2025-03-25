@@ -14,7 +14,10 @@
 
 package tfschema
 
-import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+import (
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
 
 var (
 	sliTypes                      = []string{"sli.0.custom_indicator", "sli.0.endpoint_availability", "sli.0.endpoint_latency"}
@@ -153,6 +156,7 @@ var SLI = map[string]*schema.Schema{
 		Optional: true,
 		Elem:     &schema.Schema{Type: schema.TypeString},
 	},
+	"additional_promql_filters": SLOAdditionalPromQLFilters,
 }
 
 var SloEndpointAvailability = map[string]*schema.Schema{
@@ -219,10 +223,10 @@ var SLOAdditionalPromQLFilters = &schema.Schema{
 	Optional: true,
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"type": {
-				Type:     schema.TypeString,
+			"type": Enum{
+				Value:    enum.PromQLMatcherType.ToStrings(),
 				Required: true,
-			},
+			}.Schema(),
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
