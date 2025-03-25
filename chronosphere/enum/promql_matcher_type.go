@@ -21,9 +21,6 @@ import (
 // PromQLMatcherType is an enum.
 var PromQLMatcherType = newEnum("PromQLMatcherType", []value[configunstable.ConfigunstablePromQLMatcherType]{
 	{
-		isDefault: true,
-	},
-	{
 		v1:    configunstable.ConfigunstablePromQLMatcherTypeMatchEqual,
 		alias: "MatchEqual",
 	},

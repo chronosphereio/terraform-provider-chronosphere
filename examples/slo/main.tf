@@ -127,8 +127,17 @@ resource "chronosphere_slo" "slo_with_filters" {
 
   sli {
     custom_indicator {
-      bad_query_template   = "sum(rate(http_request_duration_seconds_count{error=\"true\", {{ .AdditionalFilters }} }[{{ .Window }}]))"
-      total_query_template = "sum(rate(http_request_duration_seconds_count{{{ .AdditionalFilters }}}[{{ .Window }}]))"
+      bad_query_template   = <<-EOT
+        sum(rate(http_request_duration_seconds_count{
+            error=\"true\",
+            {{ .AdditionalFilters }}
+        }[{{ .Window }}]))
+      EOT
+      total_query_template = <<-EOT
+        sum(rate(http_request_duration_seconds_count{
+              {{ .AdditionalFilters }}
+        }[{{ .Window }}]))
+      EOT
     }
     custom_dimension_labels = ["label1", "label2"]
 
@@ -140,8 +149,8 @@ resource "chronosphere_slo" "slo_with_filters" {
 
     additional_promql_filters{
         name = "namespace"
-        type = "MatchEqual"
-        value = "foo"
+        type = "MatchRegex"
+        value = "foo.*"
     }
   }
 }
