@@ -1,6 +1,8 @@
 # Releases
 
-## Unreleased
+# Unreleased
+
+## 1.9.0
 
 Removed:
 * Remove deprecated low value field from unstable `chronosphere_slo` resource.
