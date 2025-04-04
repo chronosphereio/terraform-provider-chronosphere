@@ -128,7 +128,7 @@ var SloDefinition = map[string]*schema.Schema{
 	"enable_burn_rate_alerting": {
 		Type:     schema.TypeBool,
 		Optional: true,
-		Computed: true,
+		Computed: true, // This has to be computed as it's being backfilled based on other flags.
 	},
 }
 
