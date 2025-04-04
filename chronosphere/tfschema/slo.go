@@ -103,9 +103,10 @@ var SloDefinition = map[string]*schema.Schema{
 		},
 	},
 	"time_window": {
-		Type:     schema.TypeSet,
+		Type:     schema.TypeList,
 		Optional: true,
 		Computed: true,
+		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
