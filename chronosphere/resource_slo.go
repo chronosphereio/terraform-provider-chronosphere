@@ -236,10 +236,16 @@ func reportingWindowsFromModel(windows []*models.DefinitionTimeWindow) []intsche
 }
 
 func timeWindowToModel(window *intschema.SloDefinitionTimeWindow) *models.DefinitionTimeWindow {
+	if window == nil {
+		return nil
+	}
 	return &models.DefinitionTimeWindow{Duration: window.Duration}
 }
 
 func timeWindowFromModel(window *models.DefinitionTimeWindow) *intschema.SloDefinitionTimeWindow {
+	if window == nil {
+		return nil
+	}
 	return &intschema.SloDefinitionTimeWindow{Duration: window.Duration}
 }
 
