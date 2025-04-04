@@ -211,12 +211,9 @@
       "description": "Sample is the configuration for the sample logs action.",
       "properties": {
         "rate": {
+          "description": "Percentage of matching logs to keep. Must be in the range [0, 1].",
           "format": "double",
           "type": "number"
-        },
-        "window_seconds": {
-          "format": "int32",
-          "type": "integer"
         }
       },
       "type": "object"
@@ -361,22 +358,25 @@
           "type": "number"
         },
         "reporting_windows": {
-          "description": "The reporting windows for this SLO. The SLO is considered breached if the\nerror budget is depleted in any of these windows.",
+          "description": "This is deprecated.",
           "items": {
             "$ref": "#/definitions/DefinitionTimeWindow"
           },
           "type": "array"
         },
-        "low_volume": {
-          "description": "Configured whether this SLO is for a low volume event (\u003c 1/s). This will\nadjust the SLI queries to account for the low volume nature of the event.",
-          "type": "boolean"
+        "time_window": {
+          "$ref": "#/definitions/DefinitionTimeWindow"
         },
         "burn_rate_alerting_config": {
-          "description": "Provides the burn rate alert configuration for the SLO. If not provided the\ndefault burn rates will be used.",
+          "description": "Provides the burn rate alert configuration for the SLO. If not provided the\ndefault burn rates will be used. The configuration is only valid if the\nenable_burn_rate_alerting flag is set to true.",
           "items": {
             "$ref": "#/definitions/DefinitionBurnRateDefinition"
           },
           "type": "array"
+        },
+        "enable_burn_rate_alerting": {
+          "description": "If true enables burn rate alerting.",
+          "type": "boolean"
         }
       },
       "type": "object"
