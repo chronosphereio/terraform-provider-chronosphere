@@ -17,11 +17,8 @@ import (
 // swagger:model LogControlRuleSample
 type LogControlRuleSample struct {
 
-	// rate
+	// Percentage of matching logs to keep. Must be in the range [0, 1].
 	Rate float64 `json:"rate,omitempty"`
-
-	// window seconds
-	WindowSeconds int32 `json:"window_seconds,omitempty"`
 }
 
 // Validate validates this log control rule sample
