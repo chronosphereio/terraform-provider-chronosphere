@@ -102,6 +102,20 @@ var SloDefinition = map[string]*schema.Schema{
 			},
 		},
 	},
+	"time_window": {
+		Type:     schema.TypeSet,
+		Optional: true,
+		Computed: true,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"duration": {
+					Type:     schema.TypeString,
+					Required: true,
+				},
+			},
+		},
+	},
 	"burn_rate_alerting_config": {
 		Type:     schema.TypeList,
 		Computed: true,
@@ -109,6 +123,10 @@ var SloDefinition = map[string]*schema.Schema{
 		Elem: &schema.Resource{
 			Schema: BurnRateDefinition,
 		},
+	},
+	"enable_burn_rate_alerting": {
+		Type:     schema.TypeBool,
+		Required: true,
 	},
 }
 
