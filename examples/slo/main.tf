@@ -123,6 +123,9 @@ resource "chronosphere_slo" "slo_with_filters" {
 
   definition {
     objective = 99.95
+    reporting_windows {
+      duration = "28d"
+    }
     time_window {
       duration = "28d"
     }
@@ -166,6 +169,9 @@ resource "chronosphere_slo" "slo_without_alerting" {
 
   definition {
     objective = 99.95
+    reporting_windows {
+      duration = "28d"
+    }
     time_window {
       duration = "28d"
     }

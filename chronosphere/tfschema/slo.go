@@ -126,7 +126,7 @@ var SloDefinition = map[string]*schema.Schema{
 	},
 	"enable_burn_rate_alerting": {
 		Type:     schema.TypeBool,
-		Required: true,
+		Optional: true,
 	},
 }
 
