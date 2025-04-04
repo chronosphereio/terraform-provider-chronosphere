@@ -1,6 +1,9 @@
 # Releases
 
 # Unreleased
+Added:
+* Add enable burn rate alerting field to the unstable `chronosphere_slo` resource.
+* Add time window to the unstable `chronosphere_slo` resource.
 
 ## 1.9.0
 

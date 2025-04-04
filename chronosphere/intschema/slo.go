@@ -95,6 +95,12 @@ type SloDefinition struct {
 	Objective              float64                               `intschema:"objective"`
 	ReportingWindows       []SloDefinitionReportingWindows       `intschema:"reporting_windows"`
 	BurnRateAlertingConfig []SloDefinitionBurnRateAlertingConfig `intschema:"burn_rate_alerting_config,optional,computed"`
+	EnableBurnRateAlerting bool                                  `intschema:"enable_burn_rate_alerting,optional,computed"`
+	TimeWindow             *SloDefinitionTimeWindow              `intschema:"time_window,optional,computed,list_encoded_object"`
+}
+
+type SloDefinitionTimeWindow struct {
+	Duration string `intschema:"duration"`
 }
 
 type SloDefinitionReportingWindows struct {

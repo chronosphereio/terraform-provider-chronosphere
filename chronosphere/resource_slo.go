@@ -105,6 +105,8 @@ func (sloConverter) toModel(s *intschema.Slo) (*models.ConfigunstableSLO, error)
 			Objective:              s.Definition.Objective,
 			ReportingWindows:       reportingWindowsToModel(s.Definition.ReportingWindows),
 			BurnRateAlertingConfig: burnRateDefinitionToModel(s.Definition.BurnRateAlertingConfig),
+			TimeWindow:             timeWindowToModel(s.Definition.TimeWindow),
+			EnableBurnRateAlerting: s.Definition.EnableBurnRateAlerting,
 		},
 		Sli: &models.ConfigunstableSLI{
 			LensTemplateIndicator:   s.Sli.LensTemplateIndicator,
@@ -169,7 +171,9 @@ func (sloConverter) fromModel(
 		Definition: intschema.SloDefinition{
 			Objective:              s.Definition.Objective,
 			ReportingWindows:       reportingWindowsFromModel(s.Definition.ReportingWindows),
+			TimeWindow:             timeWindowFromModel(s.Definition.TimeWindow),
 			BurnRateAlertingConfig: burnRateDefinitionFromModel(s.Definition.BurnRateAlertingConfig),
+			EnableBurnRateAlerting: s.Definition.EnableBurnRateAlerting,
 		},
 		Sli: intschema.SloSli{
 			LensTemplateIndicator:   s.Sli.LensTemplateIndicator,
@@ -229,6 +233,20 @@ func reportingWindowsFromModel(windows []*models.DefinitionTimeWindow) []intsche
 	return sliceutil.Map(windows, func(w *models.DefinitionTimeWindow) intschema.SloDefinitionReportingWindows {
 		return intschema.SloDefinitionReportingWindows{Duration: w.Duration}
 	})
+}
+
+func timeWindowToModel(window *intschema.SloDefinitionTimeWindow) *models.DefinitionTimeWindow {
+	if window == nil {
+		return nil
+	}
+	return &models.DefinitionTimeWindow{Duration: window.Duration}
+}
+
+func timeWindowFromModel(window *models.DefinitionTimeWindow) *intschema.SloDefinitionTimeWindow {
+	if window == nil {
+		return nil
+	}
+	return &intschema.SloDefinitionTimeWindow{Duration: window.Duration}
 }
 
 func burnRateDefinitionToModel(defs []intschema.SloDefinitionBurnRateAlertingConfig) []*models.DefinitionBurnRateDefinition {
