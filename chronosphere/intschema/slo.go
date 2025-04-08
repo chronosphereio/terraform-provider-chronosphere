@@ -66,23 +66,6 @@ type SloSli struct {
 	AdditionalPromqlFilters []SLOAdditionalPromQLFilters `intschema:"additional_promql_filters,optional"`
 	CustomDimensionLabels   []string                     `intschema:"custom_dimension_labels,optional"`
 	CustomIndicator         *SloSliCustomIndicator       `intschema:"custom_indicator,optional,list_encoded_object"`
-	EndpointAvailability    *SloSliEndpointAvailability  `intschema:"endpoint_availability,optional,list_encoded_object"`
-	EndpointLabel           string                       `intschema:"endpoint_label,optional"`
-	EndpointLatency         *SloSliEndpointLatency       `intschema:"endpoint_latency,optional,list_encoded_object"`
-	LensTemplateIndicator   string                       `intschema:"lens_template_indicator,optional"`
-}
-
-type SloSliEndpointLatency struct {
-	EndpointsMonitored      []string                     `intschema:"endpoints_monitored"`
-	LatencyBucket           string                       `intschema:"latency_bucket"`
-	AdditionalPromqlFilters []SLOAdditionalPromQLFilters `intschema:"additional_promql_filters,optional"`
-}
-
-type SloSliEndpointAvailability struct {
-	EndpointsMonitored      []string                     `intschema:"endpoints_monitored"`
-	AdditionalPromqlFilters []SLOAdditionalPromQLFilters `intschema:"additional_promql_filters,optional"`
-	ErrorCodes              []string                     `intschema:"error_codes,optional"`
-	SuccessCodes            []string                     `intschema:"success_codes,optional"`
 }
 
 type SloSliCustomIndicator struct {

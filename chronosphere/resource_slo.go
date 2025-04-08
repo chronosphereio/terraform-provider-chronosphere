@@ -57,33 +57,13 @@ var SLODryRunCount atomic.Int64
 type sloConverter struct{}
 
 func (sloConverter) toModel(s *intschema.Slo) (*models.ConfigunstableSLO, error) {
-	var (
-		customIndicator      *models.SLICustomIndicatorConfig
-		endpointAvailability *models.SLIEndpointAvailabilityConfig
-		endpointLatency      *models.SLIEndpointLatencyConfig
-	)
+	var customIndicator *models.SLICustomIndicatorConfig
 
 	if s.Sli.CustomIndicator != nil {
 		customIndicator = &models.SLICustomIndicatorConfig{
 			GoodQueryTemplate:  s.Sli.CustomIndicator.GoodQueryTemplate,
 			BadQueryTemplate:   s.Sli.CustomIndicator.BadQueryTemplate,
 			TotalQueryTemplate: s.Sli.CustomIndicator.TotalQueryTemplate,
-		}
-	}
-
-	if s.Sli.EndpointAvailability != nil {
-		endpointAvailability = &models.SLIEndpointAvailabilityConfig{
-			ErrorCodes:              s.Sli.EndpointAvailability.ErrorCodes,
-			AdditionalPromqlFilters: promFiltersToModel(s.Sli.EndpointAvailability.AdditionalPromqlFilters),
-			EndpointsMonitored:      s.Sli.EndpointAvailability.EndpointsMonitored,
-		}
-	}
-
-	if s.Sli.EndpointLatency != nil {
-		endpointLatency = &models.SLIEndpointLatencyConfig{
-			LatencyBucket:           s.Sli.EndpointLatency.LatencyBucket,
-			AdditionalPromqlFilters: promFiltersToModel(s.Sli.EndpointLatency.AdditionalPromqlFilters),
-			EndpointsMonitored:      s.Sli.EndpointLatency.EndpointsMonitored,
 		}
 	}
 
@@ -107,10 +87,7 @@ func (sloConverter) toModel(s *intschema.Slo) (*models.ConfigunstableSLO, error)
 			BurnRateAlertingConfig: burnRateDefinitionToModel(s.Definition.BurnRateAlertingConfig),
 		},
 		Sli: &models.ConfigunstableSLI{
-			LensTemplateIndicator:   s.Sli.LensTemplateIndicator,
 			CustomIndicator:         customIndicator,
-			EndpointAvailability:    endpointAvailability,
-			EndpointLatency:         endpointLatency,
 			CustomDimensionLabels:   s.Sli.CustomDimensionLabels,
 			AdditionalPromqlFilters: promFiltersToModel(s.Sli.AdditionalPromqlFilters),
 		},
@@ -123,27 +100,7 @@ func (sloConverter) toModel(s *intschema.Slo) (*models.ConfigunstableSLO, error)
 func (sloConverter) fromModel(
 	s *models.ConfigunstableSLO,
 ) (*intschema.Slo, error) {
-	var (
-		endpointAvailability *intschema.SloSliEndpointAvailability
-		endpointLatency      *intschema.SloSliEndpointLatency
-		customIndicator      *intschema.SloSliCustomIndicator
-	)
-
-	if s.Sli.EndpointAvailability != nil {
-		endpointAvailability = &intschema.SloSliEndpointAvailability{
-			ErrorCodes:              s.Sli.EndpointAvailability.ErrorCodes,
-			AdditionalPromqlFilters: promFiltersFromModel(s.Sli.EndpointAvailability.AdditionalPromqlFilters),
-			EndpointsMonitored:      s.Sli.EndpointAvailability.EndpointsMonitored,
-		}
-	}
-
-	if s.Sli.EndpointLatency != nil {
-		endpointLatency = &intschema.SloSliEndpointLatency{
-			LatencyBucket:           s.Sli.EndpointLatency.LatencyBucket,
-			AdditionalPromqlFilters: promFiltersFromModel(s.Sli.EndpointLatency.AdditionalPromqlFilters),
-			EndpointsMonitored:      s.Sli.EndpointLatency.EndpointsMonitored,
-		}
-	}
+	var customIndicator *intschema.SloSliCustomIndicator
 
 	if s.Sli.CustomIndicator != nil {
 		customIndicator = &intschema.SloSliCustomIndicator{
@@ -172,10 +129,7 @@ func (sloConverter) fromModel(
 			BurnRateAlertingConfig: burnRateDefinitionFromModel(s.Definition.BurnRateAlertingConfig),
 		},
 		Sli: intschema.SloSli{
-			LensTemplateIndicator:   s.Sli.LensTemplateIndicator,
 			CustomIndicator:         customIndicator,
-			EndpointAvailability:    endpointAvailability,
-			EndpointLatency:         endpointLatency,
 			CustomDimensionLabels:   s.Sli.CustomDimensionLabels,
 			AdditionalPromqlFilters: promFiltersFromModel(s.Sli.AdditionalPromqlFilters),
 		},
