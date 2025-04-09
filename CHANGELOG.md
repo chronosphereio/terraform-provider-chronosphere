@@ -2,6 +2,9 @@
 
 # Unreleased
 
+Removed:
+* Remove query less SLO fields from unstable `chronosphere_slo` resource.
+
 ## 1.9.0
 
 Removed:

@@ -20,10 +20,8 @@ import (
 )
 
 var (
-	sliTypes                      = []string{"sli.0.custom_indicator", "sli.0.endpoint_availability", "sli.0.endpoint_latency"}
-	querylessSLITypes             = []string{"sli.0.endpoint_availability", "sli.0.endpoint_latency"}
+	sliTypes                      = []string{"sli.0.custom_indicator"}
 	customIndicatorQueryTemplates = []string{"sli.0.custom_indicator.0.good_query_template", "sli.0.custom_indicator.0.bad_query_template"}
-	endpointAvailabilityCodes     = []string{"sli.0.endpoint_availability.0.success_codes", "sli.0.endpoint_availability.0.error_codes"}
 )
 
 var Slo = map[string]*schema.Schema{
@@ -113,17 +111,6 @@ var SloDefinition = map[string]*schema.Schema{
 }
 
 var SLI = map[string]*schema.Schema{
-	"lens_template_indicator": {
-		Type:     schema.TypeString,
-		Optional: true,
-		// TODO: figure out how to make this required when queryless is set without TF trying to make you
-		//       set all three.
-		// RequiredWith: querylessSLITypes,
-	},
-	"endpoint_label": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
 	"custom_indicator": {
 		Type:         schema.TypeList,
 		Optional:     true,
@@ -133,70 +120,10 @@ var SLI = map[string]*schema.Schema{
 			Schema: SloCustomIndicator,
 		},
 	},
-	"endpoint_availability": {
-		Type:         schema.TypeList,
-		Optional:     true,
-		MaxItems:     1,
-		ExactlyOneOf: sliTypes,
-		Elem: &schema.Resource{
-			Schema: SloEndpointAvailability,
-		},
-	},
-	"endpoint_latency": {
-		Type:         schema.TypeList,
-		Optional:     true,
-		MaxItems:     1,
-		ExactlyOneOf: sliTypes,
-		Elem: &schema.Resource{
-			Schema: SloEndpointLatency,
-		},
-	},
 	"custom_dimension_labels": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem:     &schema.Schema{Type: schema.TypeString},
-	},
-	"additional_promql_filters": SLOAdditionalPromQLFilters,
-}
-
-var SloEndpointAvailability = map[string]*schema.Schema{
-	"endpoints_monitored": {
-		Type:     schema.TypeSet,
-		Required: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
-	},
-	"success_codes": {
-		Type:         schema.TypeSet,
-		Optional:     true,
-		ExactlyOneOf: endpointAvailabilityCodes,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
-	},
-	"error_codes": {
-		Type:         schema.TypeSet,
-		Optional:     true,
-		ExactlyOneOf: endpointAvailabilityCodes,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
-	},
-	"additional_promql_filters": SLOAdditionalPromQLFilters,
-}
-
-var SloEndpointLatency = map[string]*schema.Schema{
-	"endpoints_monitored": {
-		Type:     schema.TypeSet,
-		Required: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
-	},
-	"latency_bucket": {
-		Type:     schema.TypeString,
-		Required: true,
 	},
 	"additional_promql_filters": SLOAdditionalPromQLFilters,
 }
