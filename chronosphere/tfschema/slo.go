@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	sliTypes                      = []string{"sli.0.custom_indicator", "sli.0.endpoint_availability", "sli.0.endpoint_latency"}
+	sliTypes                      = []string{"sli.0.custom_indicator"}
 	customIndicatorQueryTemplates = []string{"sli.0.custom_indicator.0.good_query_template", "sli.0.custom_indicator.0.bad_query_template"}
 )
 
