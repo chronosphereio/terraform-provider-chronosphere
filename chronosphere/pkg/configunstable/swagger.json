@@ -3,73 +3,6 @@
     "application/json"
   ],
   "definitions": {
-    "BaselineBehaviorOptionsErrorSampleOptions": {
-      "properties": {
-        "sample_rate": {
-          "description": "Sample rate for traces with errors.",
-          "format": "double",
-          "type": "number"
-        }
-      },
-      "type": "object"
-    },
-    "BaselineBehaviorOptionsFastSampleOptions": {
-      "properties": {
-        "max_duration_seconds": {
-          "description": "Duration in seconds under which traces are sampled\naccording to the given sample rate.",
-          "format": "double",
-          "type": "number"
-        },
-        "sample_rate": {
-          "description": "Sample rate for traces under the given duration.",
-          "format": "double",
-          "type": "number"
-        }
-      },
-      "type": "object"
-    },
-    "BaselineBehaviorOptionsLargeTraceSampleOptions": {
-      "properties": {
-        "span_count_threshold": {
-          "description": "For N = number of spans in the trace, if N \u003e= span_count_threshold, the trace is sampled according to the\ngiven sample rate.",
-          "format": "int64",
-          "type": "integer"
-        },
-        "sample_rate": {
-          "format": "double",
-          "type": "number"
-        }
-      },
-      "type": "object"
-    },
-    "BaselineBehaviorOptionsSlowSampleOptions": {
-      "properties": {
-        "min_duration_seconds": {
-          "description": "Duration in seconds over which traces are sampled\naccording to the given sample rate.",
-          "format": "double",
-          "type": "number"
-        },
-        "sample_rate": {
-          "format": "double",
-          "type": "number"
-        }
-      },
-      "type": "object"
-    },
-    "BaselineBehaviorOptionsSmallTraceSampleOptions": {
-      "properties": {
-        "span_count_threshold": {
-          "description": "For N = number of spans in the trace, if N \u003c= span_count_threshold, the trace is sampled according to the\ngiven sample rate.",
-          "format": "int64",
-          "type": "integer"
-        },
-        "sample_rate": {
-          "format": "double",
-          "type": "number"
-        }
-      },
-      "type": "object"
-    },
     "ChronoConfigCollectionsConfig": {
       "properties": {
         "group_teams": {
@@ -149,6 +82,34 @@
       },
       "type": "object"
     },
+    "ConfigUnstableUpdateObjectDiscoveryRuleBody": {
+      "properties": {
+        "object_discovery_rule": {
+          "$ref": "#/definitions/configunstableObjectDiscoveryRule"
+        },
+        "create_if_missing": {
+          "description": "If true, the ObjectDiscoveryRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the ObjectDiscoveryRule does not already exist.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigUnstableUpdateSLOBody": {
+      "properties": {
+        "slo": {
+          "$ref": "#/definitions/configunstableSLO"
+        },
+        "create_if_missing": {
+          "description": "If true, the SLO will be created if it does not already exist, identified by slug. If false, an error will be returned if the SLO does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the SLO will not be created nor updated, and no response SLO will be returned. The response will return an error if the given SLO is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "ConfigUnstableUpdateSavedTraceSearchBody": {
       "properties": {
         "saved_trace_search": {
@@ -177,22 +138,6 @@
       },
       "type": "object"
     },
-    "ConfigUnstableUpdateTraceBehaviorBody": {
-      "properties": {
-        "trace_behavior": {
-          "$ref": "#/definitions/configunstableTraceBehavior"
-        },
-        "create_if_missing": {
-          "description": "If true, the TraceBehavior will be created if it does not already exist, identified by slug. If false, an error will be returned if the TraceBehavior does not already exist.",
-          "type": "boolean"
-        },
-        "dry_run": {
-          "description": "If true, the TraceBehavior will not be created nor updated, and no response TraceBehavior will be returned. The response will return an error if the given TraceBehavior is invalid.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
     "ConfigUnstableUpdateTraceJaegerRemoteSamplingStrategyBody": {
       "properties": {
         "trace_jaeger_remote_sampling_strategy": {
@@ -209,59 +154,91 @@
       },
       "type": "object"
     },
-    "LogAllocationConfigAllocation": {
-      "description": "Configuration for allocating resources to a dataset.",
+    "DefinitionBurnRateDefinition": {
       "properties": {
-        "percent_of_license": {
+        "window": {
+          "type": "string"
+        },
+        "budget": {
+          "description": "budget defines the amount of errors that are allowed during a given\ntime window. It is a value between 0.0 and 100.0 exclusive.",
+          "format": "double",
+          "type": "number"
+        },
+        "severity": {
+          "description": "Severity may only be one of: critical, warn.\nThis is also a string in the monitor schema",
+          "type": "string"
+        },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "labels to attach to the burn rate alerts.",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "DefinitionTimeWindow": {
+      "properties": {
+        "duration": {
+          "description": "duration as a string in the format \"28d\" or \"24h\", etc.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "LogControlRuleDrop": {
+      "description": "Drop is the configuration for a drop logs action.",
+      "type": "object"
+    },
+    "LogControlRuleDropField": {
+      "description": "DropField is the configuration for a drop field action.",
+      "properties": {
+        "field_regex": {
+          "description": "Regular expression to match the field(s) to drop.",
+          "type": "string"
+        },
+        "parent_path": {
+          "description": "Fully specified path to the the field(s) to drop.\nIf empty, the field(s) to drop are at the root level of the log.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "LogControlRuleMode": {
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ],
+      "type": "string"
+    },
+    "LogControlRuleSample": {
+      "description": "Sample is the configuration for the sample logs action.",
+      "properties": {
+        "rate": {
+          "description": "Percentage of matching logs to keep. Must be in the range [0, 1].",
           "format": "double",
           "type": "number"
         }
       },
       "type": "object"
     },
-    "LogAllocationConfigDatasetAllocation": {
+    "MonitorSignalGrouping": {
+      "description": "SignalGrouping defines how the set of series from the query are split into signals.",
       "properties": {
-        "dataset_slug": {
-          "description": "Slug of the dataset.",
-          "type": "string"
-        },
-        "allocation": {
-          "$ref": "#/definitions/LogAllocationConfigAllocation"
-        },
-        "priorities": {
-          "$ref": "#/definitions/LogAllocationConfigHighLowPriorities"
-        }
-      },
-      "type": "object"
-    },
-    "LogAllocationConfigDefaultDataset": {
-      "description": "Configuration for default dataset.",
-      "properties": {
-        "allocation": {
-          "$ref": "#/definitions/LogAllocationConfigAllocation"
-        },
-        "priorities": {
-          "$ref": "#/definitions/LogAllocationConfigHighLowPriorities"
-        }
-      },
-      "type": "object"
-    },
-    "LogAllocationConfigHighLowPriorities": {
-      "description": "HighLowPriorities defines explicit high and low priority match criteria to define which logs\nshould be dropped first (low) and dropped last (high). Anything not matched by either set of rules\nis considered default priority and thus dropped after low but before high.",
-      "properties": {
-        "high_priority_filters": {
-          "description": "A list of search filters defining which logs are considered high priority in this dataset.\nThe filters are ORed together so only one given filter needs to match.",
+        "label_names": {
+          "description": "Set of labels names used to split series into signals.\nEach unique combination of labels will result in its own signal.\nFor example, if label_names is [\"service\", \"code\"] then all series including labels {service=\"foo\",code=\"404\"}\nwill be grouped together in the same signal.\n\nCannot be used if graphite_query is set.",
           "items": {
-            "$ref": "#/definitions/configv1LogSearchFilter"
+            "type": "string"
           },
           "type": "array"
         },
-        "low_priority_filters": {
-          "description": "A list of search filters defining which logs are considered low priority in this dataset.\nThe filters are ORed together so only one given filter needs to match.",
-          "items": {
-            "$ref": "#/definitions/configv1LogSearchFilter"
-          },
-          "type": "array"
+        "signal_per_series": {
+          "description": "If this is true, each series will have its own signal.\nIf this is true then label_names cannot be set.",
+          "type": "boolean"
         }
       },
       "type": "object"
@@ -283,6 +260,23 @@
       ],
       "type": "string"
     },
+    "ObjectDiscoveryRuleMetricRule": {
+      "properties": {
+        "expr": {
+          "type": "string"
+        },
+        "objectLabels": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "objectMappingLabel": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "PerOperationSamplingStrategiesPerOperationSamplingStrategy": {
       "properties": {
         "operation": {
@@ -291,6 +285,106 @@
         },
         "probabilistic_sampling_strategy": {
           "$ref": "#/definitions/TraceJaegerRemoteSamplingStrategyProbabilisticStrategy"
+        }
+      },
+      "type": "object"
+    },
+    "SLICustomIndicatorConfig": {
+      "properties": {
+        "good_query_template": {
+          "description": "A PromQL query that measures the number of \"good\" events for this SLI.\nEither this or the bad_query_template must be set.",
+          "type": "string"
+        },
+        "bad_query_template": {
+          "description": "A PromQL query that measures the number of \"bad\" events for this SLI.\nEither this or the good_query_template must be set.",
+          "type": "string"
+        },
+        "total_query_template": {
+          "description": "A PromQL query that measures the total number of events for this SLI.\nThis is required for all advanced SLIs.",
+          "type": "string"
+        }
+      },
+      "title": "CustomIndicatorConfig is for SLIs that are not associated with Chronosphere\nLens supported SLO types. They are provided with several variables that can\nbe used in the template to generate the query:\n- Window (required)\n- GroupBy (required)\n- LensService (optional)",
+      "type": "object"
+    },
+    "SLIEndpointAvailabilityConfig": {
+      "description": "Configuration for an endpoint availability SLI.",
+      "properties": {
+        "endpoints_monitored": {
+          "description": "the API endpoints to monitor in the SLO. If this is left empty then all\nendpoints will be monitored.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "error_codes": {
+          "description": "A list of result codes that indicate an unsuccessful event. Either this\nor success_codes must be set.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "additional_promql_filters": {
+          "description": "These are added to _every_ query and are intended to be used for things\nlike `cluster!~\"dev\"`\ndeprecated: Use the top level SLI field",
+          "items": {
+            "$ref": "#/definitions/configunstablePromQLMatcher"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "SLIEndpointLatencyConfig": {
+      "description": "Configuration for an endpoint latency SLI.",
+      "properties": {
+        "endpoints_monitored": {
+          "description": "the API endpoints to monitor in the SLO. If this is left empty then all\nendpoints will be monitored.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "latency_bucket": {
+          "description": "The name of the histogram metric that measures latency.",
+          "type": "string"
+        },
+        "additional_promql_filters": {
+          "description": "These are added to _every_ query and are intended to be used for things\nlike `cluster!~\"dev\"`\ndeprecated: Use the top level SLI field",
+          "items": {
+            "$ref": "#/definitions/configunstablePromQLMatcher"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "SLODefinition": {
+      "properties": {
+        "objective": {
+          "description": "The SLO objective",
+          "format": "double",
+          "type": "number"
+        },
+        "reporting_windows": {
+          "description": "This is deprecated.",
+          "items": {
+            "$ref": "#/definitions/DefinitionTimeWindow"
+          },
+          "type": "array"
+        },
+        "time_window": {
+          "$ref": "#/definitions/DefinitionTimeWindow"
+        },
+        "burn_rate_alerting_config": {
+          "description": "Provides the burn rate alert configuration for the SLO. If not provided the\ndefault burn rates will be used. The configuration is only valid if the\nenable_burn_rate_alerting flag is set to true.",
+          "items": {
+            "$ref": "#/definitions/DefinitionBurnRateDefinition"
+          },
+          "type": "array"
+        },
+        "enable_burn_rate_alerting": {
+          "description": "If true enables burn rate alerting.",
+          "type": "boolean"
         }
       },
       "type": "object"
@@ -474,45 +568,6 @@
       "title": "TODO: confirm naming with InfoModel team",
       "type": "string"
     },
-    "TraceBehaviorBaselineBehaviorOptions": {
-      "properties": {
-        "base_tail_sample_rate": {
-          "description": "Sample rate for fully assembled traces that do not apply to the error, fast, slow, large, or small sampling options.\nIf they do apply to one or more of these options, the smallest sample rate is used.",
-          "format": "double",
-          "type": "number"
-        },
-        "base_head_sample_rate": {
-          "description": "Sample rate for head sampling. This applies to all root spans that are enrolled in head sampling,\nbut do not have a specific rule defined for their service.",
-          "format": "double",
-          "type": "number"
-        },
-        "error_sample_options": {
-          "$ref": "#/definitions/BaselineBehaviorOptionsErrorSampleOptions"
-        },
-        "fast_sample_options": {
-          "$ref": "#/definitions/BaselineBehaviorOptionsFastSampleOptions"
-        },
-        "slow_sample_options": {
-          "$ref": "#/definitions/BaselineBehaviorOptionsSlowSampleOptions"
-        },
-        "large_trace_sample_options": {
-          "$ref": "#/definitions/BaselineBehaviorOptionsLargeTraceSampleOptions"
-        },
-        "small_trace_sample_options": {
-          "$ref": "#/definitions/BaselineBehaviorOptionsSmallTraceSampleOptions"
-        }
-      },
-      "type": "object"
-    },
-    "TraceBehaviorTraceBehaviorType": {
-      "description": " - TYPE_KEEP_ALL: Keep all traces.\n - TYPE_DROP_ALL: Drop all traces.\n - TYPE_BASELINE: Keep traces based on a default sample rate and additional sample rates for fast, slow, and error traces.",
-      "enum": [
-        "TYPE_KEEP_ALL",
-        "TYPE_DROP_ALL",
-        "TYPE_BASELINE"
-      ],
-      "type": "string"
-    },
     "TraceJaegerRemoteSamplingStrategyAppliedStrategy": {
       "properties": {
         "probabilistic_strategy": {
@@ -658,6 +713,9 @@
         },
         "span_count": {
           "$ref": "#/definitions/TraceSearchFilterCountFilter"
+        },
+        "is_root_span": {
+          "$ref": "#/definitions/TraceSearchFilterBoolFilter"
         }
       },
       "type": "object"
@@ -770,22 +828,42 @@
       },
       "type": "object"
     },
-    "configunstableCreateLogAllocationConfigRequest": {
+    "configunstableCreateLogControlConfigRequest": {
       "properties": {
-        "log_allocation_config": {
-          "$ref": "#/definitions/configunstableLogAllocationConfig"
+        "log_control_config": {
+          "$ref": "#/definitions/configunstableLogControlConfig"
         },
         "dry_run": {
-          "description": "If true, the LogAllocationConfig will not be created, and no response LogAllocationConfig will be returned. The response will return an error if the given LogAllocationConfig is invalid.",
+          "description": "If true, the LogControlConfig will not be created, and no response LogControlConfig will be returned. The response will return an error if the given LogControlConfig is invalid.",
           "type": "boolean"
         }
       },
       "type": "object"
     },
-    "configunstableCreateLogAllocationConfigResponse": {
+    "configunstableCreateLogControlConfigResponse": {
       "properties": {
-        "log_allocation_config": {
-          "$ref": "#/definitions/configunstableLogAllocationConfig"
+        "log_control_config": {
+          "$ref": "#/definitions/configunstableLogControlConfig"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableCreateLogParserConfigRequest": {
+      "properties": {
+        "log_parser_config": {
+          "$ref": "#/definitions/configunstableLogParserConfig"
+        },
+        "dry_run": {
+          "description": "If true, the LogParserConfig will not be created, and no response LogParserConfig will be returned. The response will return an error if the given LogParserConfig is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableCreateLogParserConfigResponse": {
+      "properties": {
+        "log_parser_config": {
+          "$ref": "#/definitions/configunstableLogParserConfig"
         }
       },
       "type": "object"
@@ -802,6 +880,42 @@
       "properties": {
         "noop_entity": {
           "$ref": "#/definitions/configunstableNoopEntity"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableCreateObjectDiscoveryRuleRequest": {
+      "properties": {
+        "object_discovery_rule": {
+          "$ref": "#/definitions/configunstableObjectDiscoveryRule"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableCreateObjectDiscoveryRuleResponse": {
+      "properties": {
+        "object_discovery_rule": {
+          "$ref": "#/definitions/configunstableObjectDiscoveryRule"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableCreateSLORequest": {
+      "properties": {
+        "slo": {
+          "$ref": "#/definitions/configunstableSLO"
+        },
+        "dry_run": {
+          "description": "If true, the SLO will not be created, and no response SLO will be returned. The response will return an error if the given SLO is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableCreateSLOResponse": {
+      "properties": {
+        "slo": {
+          "$ref": "#/definitions/configunstableSLO"
         }
       },
       "type": "object"
@@ -838,26 +952,6 @@
       "properties": {
         "service": {
           "$ref": "#/definitions/configunstableService"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableCreateTraceBehaviorRequest": {
-      "properties": {
-        "trace_behavior": {
-          "$ref": "#/definitions/configunstableTraceBehavior"
-        },
-        "dry_run": {
-          "description": "If true, the TraceBehavior will not be created, and no response TraceBehavior will be returned. The response will return an error if the given TraceBehavior is invalid.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableCreateTraceBehaviorResponse": {
-      "properties": {
-        "trace_behavior": {
-          "$ref": "#/definitions/configunstableTraceBehavior"
         }
       },
       "type": "object"
@@ -975,7 +1069,10 @@
     "configunstableDeleteLinkTemplateResponse": {
       "type": "object"
     },
-    "configunstableDeleteLogAllocationConfigResponse": {
+    "configunstableDeleteLogControlConfigResponse": {
+      "type": "object"
+    },
+    "configunstableDeleteLogParserConfigResponse": {
       "type": "object"
     },
     "configunstableDeleteNoopEntityResponse": {
@@ -986,13 +1083,16 @@
       },
       "type": "object"
     },
+    "configunstableDeleteObjectDiscoveryRuleResponse": {
+      "type": "object"
+    },
+    "configunstableDeleteSLOResponse": {
+      "type": "object"
+    },
     "configunstableDeleteSavedTraceSearchResponse": {
       "type": "object"
     },
     "configunstableDeleteServiceResponse": {
-      "type": "object"
-    },
-    "configunstableDeleteTraceBehaviorResponse": {
       "type": "object"
     },
     "configunstableDeleteTraceJaegerRemoteSamplingStrategyResponse": {
@@ -1079,6 +1179,34 @@
       },
       "type": "object"
     },
+    "configunstableListObjectDiscoveryRulesResponse": {
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/configv1PageResult"
+        },
+        "object_discovery_rules": {
+          "items": {
+            "$ref": "#/definitions/configunstableObjectDiscoveryRule"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableListSLOsResponse": {
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/configv1PageResult"
+        },
+        "slos": {
+          "items": {
+            "$ref": "#/definitions/configunstableSLO"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "configunstableListSavedTraceSearchesResponse": {
       "properties": {
         "page": {
@@ -1108,20 +1236,6 @@
       },
       "type": "object"
     },
-    "configunstableListTraceBehaviorsResponse": {
-      "properties": {
-        "page": {
-          "$ref": "#/definitions/configv1PageResult"
-        },
-        "trace_behaviors": {
-          "items": {
-            "$ref": "#/definitions/configunstableTraceBehavior"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
     "configunstableListTraceJaegerRemoteSamplingStrategiesResponse": {
       "properties": {
         "page": {
@@ -1136,28 +1250,89 @@
       },
       "type": "object"
     },
-    "configunstableLogAllocationConfig": {
-      "description": "LogAllocationConfig is a singleton configuration object that specifies the\nconfiguration for Log budget allocations.",
+    "configunstableLogControlConfig": {
+      "description": "LogControlConfig is a singleton configuration object that specifies the\nconfiguration for log control.",
       "properties": {
         "created_at": {
-          "description": "Timestamp of when the LogAllocationConfig was created. Cannot be set by clients.",
+          "description": "Timestamp of when the LogControlConfig was created. Cannot be set by clients.",
           "format": "date-time",
           "readOnly": true,
           "type": "string"
         },
         "updated_at": {
-          "description": "Timestamp of when the LogAllocationConfig was last updated. Cannot be set by clients.",
+          "description": "Timestamp of when the LogControlConfig was last updated. Cannot be set by clients.",
           "format": "date-time",
           "readOnly": true,
           "type": "string"
         },
-        "default_dataset": {
-          "$ref": "#/definitions/LogAllocationConfigDefaultDataset"
-        },
-        "dataset_allocations": {
-          "description": "Defines datasets and budget allocations. Datasets are evaluated in order.",
+        "rules": {
+          "description": "Control Rules are the ordered list of control rules.",
           "items": {
-            "$ref": "#/definitions/LogAllocationConfigDatasetAllocation"
+            "$ref": "#/definitions/configunstableLogControlRule"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableLogControlRule": {
+      "description": "LogControlRule is the configuration for a log control rule.",
+      "properties": {
+        "name": {
+          "description": "Name is the name of the control rule.",
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/definitions/LogControlRuleMode"
+        },
+        "filter": {
+          "description": "LogQL query to select logs. Only matching logs will have control action applied.",
+          "type": "string"
+        },
+        "drop": {
+          "$ref": "#/definitions/LogControlRuleDrop"
+        },
+        "sample": {
+          "$ref": "#/definitions/LogControlRuleSample"
+        },
+        "drop_field": {
+          "$ref": "#/definitions/LogControlRuleDropField"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableLogParser": {
+      "properties": {
+        "name": {
+          "description": "Name is the name of the parser.",
+          "type": "string"
+        },
+        "regex": {
+          "description": "Regex is the Re2 regex pattern to apply to incoming logs.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableLogParserConfig": {
+      "description": "LogParserConfig specifies the parsers to run on inputted logs.",
+      "properties": {
+        "created_at": {
+          "description": "Timestamp of when the LogParserConfig was created. Cannot be set by clients.",
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "updated_at": {
+          "description": "Timestamp of when the LogParserConfig was last updated. Cannot be set by clients.",
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "parsers": {
+          "description": "The list of parsers to run in order. The first parser which matches the log is used.",
+          "items": {
+            "$ref": "#/definitions/configunstableLogParser"
           },
           "type": "array"
         }
@@ -1201,6 +1376,47 @@
       ],
       "type": "string"
     },
+    "configunstableObjectDiscoveryRule": {
+      "properties": {
+        "slug": {
+          "description": "Unique identifier of the ObjectDiscoveryRule. If slug is not provided, one will be generated based of the name field. Cannot be modified after the ObjectDiscoveryRule is created.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Required name of the ObjectDiscoveryRule. May be modified after the ObjectDiscoveryRule is created.",
+          "type": "string"
+        },
+        "metric": {
+          "$ref": "#/definitions/ObjectDiscoveryRuleMetricRule"
+        }
+      },
+      "type": "object"
+    },
+    "configunstablePromQLMatcher": {
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/configunstablePromQLMatcherType"
+        },
+        "name": {
+          "description": "Prometheus label name for the matcher",
+          "type": "string"
+        },
+        "value": {
+          "description": "Prometheus label value for the matcher",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "configunstablePromQLMatcherType": {
+      "enum": [
+        "MatchEqual",
+        "MatchRegexp",
+        "MatchNotEqual",
+        "MatchNotRegexp"
+      ],
+      "type": "string"
+    },
     "configunstableReadDashboardResponse": {
       "properties": {
         "dashboard": {
@@ -1217,10 +1433,18 @@
       },
       "type": "object"
     },
-    "configunstableReadLogAllocationConfigResponse": {
+    "configunstableReadLogControlConfigResponse": {
       "properties": {
-        "log_allocation_config": {
-          "$ref": "#/definitions/configunstableLogAllocationConfig"
+        "log_control_config": {
+          "$ref": "#/definitions/configunstableLogControlConfig"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableReadLogParserConfigResponse": {
+      "properties": {
+        "log_parser_config": {
+          "$ref": "#/definitions/configunstableLogParserConfig"
         }
       },
       "type": "object"
@@ -1229,6 +1453,22 @@
       "properties": {
         "noop_entity": {
           "$ref": "#/definitions/configunstableNoopEntity"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableReadObjectDiscoveryRuleResponse": {
+      "properties": {
+        "object_discovery_rule": {
+          "$ref": "#/definitions/configunstableObjectDiscoveryRule"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableReadSLOResponse": {
+      "properties": {
+        "slo": {
+          "$ref": "#/definitions/configunstableSLO"
         }
       },
       "type": "object"
@@ -1245,14 +1485,6 @@
       "properties": {
         "service": {
           "$ref": "#/definitions/configunstableService"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableReadTraceBehaviorResponse": {
-      "properties": {
-        "trace_behavior": {
-          "$ref": "#/definitions/configunstableTraceBehavior"
         }
       },
       "type": "object"
@@ -1277,6 +1509,104 @@
       "properties": {
         "trace_top_tag_config": {
           "$ref": "#/definitions/configunstableTraceTopTagConfig"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableSLI": {
+      "description": "SLI is a service level indicator. The contents of this proto are intended to\nbe used to generate queries necessary to measure SLOs.",
+      "properties": {
+        "lens_template_indicator": {
+          "description": "Indicates which Chronosphere service discovery template is used to build\nthe SLI queries",
+          "type": "string"
+        },
+        "endpoint_label": {
+          "description": "This overrides the equivalent ComponentDiscovery.MetricMetadata field as it\nis common to change",
+          "type": "string"
+        },
+        "custom_indicator": {
+          "$ref": "#/definitions/SLICustomIndicatorConfig"
+        },
+        "endpoint_availability": {
+          "$ref": "#/definitions/SLIEndpointAvailabilityConfig"
+        },
+        "endpoint_latency": {
+          "$ref": "#/definitions/SLIEndpointLatencyConfig"
+        },
+        "custom_dimension_labels": {
+          "description": "Custom dimensions are used to configure additional labels to export from\nthe underlying queries. This feature provides a logical budget to group\nunique combination of dimensions. For example, if you want to track a\nbudget per endpoint, add the endpoint label as a dimension. These dimensions\nare provided on the top-level SLI so that queryful SLOs will receive them\nin `.GroupBy`.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "source_service": {
+          "$ref": "#/definitions/configv1CollectionReference"
+        },
+        "additional_promql_filters": {
+          "description": "These are added to _every_ query and are intended to be used for things\nlike `cluster!~\"dev\"`",
+          "items": {
+            "$ref": "#/definitions/configunstablePromQLMatcher"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableSLO": {
+      "properties": {
+        "slug": {
+          "description": "Unique identifier of the SLO. If slug is not provided, one will be generated based of the name field. Cannot be modified after the SLO is created.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Required name of the SLO. May be modified after the SLO is created.",
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "created_at": {
+          "description": "Timestamp of when the SLO was created. Cannot be set by clients.",
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "updated_at": {
+          "description": "Timestamp of when the SLO was last updated. Cannot be set by clients.",
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "collection_ref": {
+          "$ref": "#/definitions/configv1CollectionReference"
+        },
+        "notification_policy_slug": {
+          "description": "Optional notification policy to explicitly apply to the generated monitors.\nIf this is not set then the team this SLO will belong to must have a\ndefault notification policy",
+          "type": "string"
+        },
+        "sli": {
+          "$ref": "#/definitions/configunstableSLI"
+        },
+        "definition": {
+          "$ref": "#/definitions/SLODefinition"
+        },
+        "signal_grouping": {
+          "$ref": "#/definitions/MonitorSignalGrouping"
+        },
+        "annotations": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Annotations are visible in notifications generated by this SLO\nThey can be be templated with labels from notifications.",
+          "type": "object"
+        },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Labels are visible in notifications generated by this SLO,\nand can be used to route alerts with notification overrides.",
+          "type": "object"
         }
       },
       "type": "object"
@@ -1385,37 +1715,6 @@
             "$ref": "#/definitions/SyncPrometheusChangeLog"
           },
           "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableTraceBehavior": {
-      "properties": {
-        "name": {
-          "description": "Required name of the TraceBehavior. May be modified after the TraceBehavior is created.",
-          "type": "string"
-        },
-        "slug": {
-          "description": "Unique identifier of the TraceBehavior. If slug is not provided, one will be generated based of the name field. Cannot be modified after the TraceBehavior is created.",
-          "type": "string"
-        },
-        "created_at": {
-          "description": "Timestamp of when the TraceBehavior was created. Cannot be set by clients.",
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "updated_at": {
-          "description": "Timestamp of when the TraceBehavior was last updated. Cannot be set by clients.",
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "type": {
-          "$ref": "#/definitions/TraceBehaviorTraceBehaviorType"
-        },
-        "baseline_behavior_options": {
-          "$ref": "#/definitions/TraceBehaviorBaselineBehaviorOptions"
         }
       },
       "type": "object"
@@ -1559,26 +1858,50 @@
       },
       "type": "object"
     },
-    "configunstableUpdateLogAllocationConfigRequest": {
+    "configunstableUpdateLogControlConfigRequest": {
       "properties": {
-        "log_allocation_config": {
-          "$ref": "#/definitions/configunstableLogAllocationConfig"
+        "log_control_config": {
+          "$ref": "#/definitions/configunstableLogControlConfig"
         },
         "create_if_missing": {
-          "description": "If true, the LogAllocationConfig will be created if it does not already exist. If false, an error will be returned if the LogAllocationConfig does not already exist.",
+          "description": "If true, the LogControlConfig will be created if it does not already exist. If false, an error will be returned if the LogControlConfig does not already exist.",
           "type": "boolean"
         },
         "dry_run": {
-          "description": "If true, the LogAllocationConfig will not be created nor updated, and no response LogAllocationConfig will be returned. The response will return an error if the given LogAllocationConfig is invalid.",
+          "description": "If true, the LogControlConfig will not be created nor updated, and no response LogControlConfig will be returned. The response will return an error if the given LogControlConfig is invalid.",
           "type": "boolean"
         }
       },
       "type": "object"
     },
-    "configunstableUpdateLogAllocationConfigResponse": {
+    "configunstableUpdateLogControlConfigResponse": {
       "properties": {
-        "log_allocation_config": {
-          "$ref": "#/definitions/configunstableLogAllocationConfig"
+        "log_control_config": {
+          "$ref": "#/definitions/configunstableLogControlConfig"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableUpdateLogParserConfigRequest": {
+      "properties": {
+        "log_parser_config": {
+          "$ref": "#/definitions/configunstableLogParserConfig"
+        },
+        "create_if_missing": {
+          "description": "If true, the LogParserConfig will be created if it does not already exist. If false, an error will be returned if the LogParserConfig does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If true, the LogParserConfig will not be created nor updated, and no response LogParserConfig will be returned. The response will return an error if the given LogParserConfig is invalid.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableUpdateLogParserConfigResponse": {
+      "properties": {
+        "log_parser_config": {
+          "$ref": "#/definitions/configunstableLogParserConfig"
         }
       },
       "type": "object"
@@ -1587,6 +1910,22 @@
       "properties": {
         "noop_entity": {
           "$ref": "#/definitions/configunstableNoopEntity"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableUpdateObjectDiscoveryRuleResponse": {
+      "properties": {
+        "object_discovery_rule": {
+          "$ref": "#/definitions/configunstableObjectDiscoveryRule"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableUpdateSLOResponse": {
+      "properties": {
+        "slo": {
+          "$ref": "#/definitions/configunstableSLO"
         }
       },
       "type": "object"
@@ -1603,14 +1942,6 @@
       "properties": {
         "service": {
           "$ref": "#/definitions/configunstableService"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableUpdateTraceBehaviorResponse": {
-      "properties": {
-        "trace_behavior": {
-          "$ref": "#/definitions/configunstableTraceBehavior"
         }
       },
       "type": "object"
@@ -1671,14 +2002,24 @@
       },
       "type": "object"
     },
-    "configv1LogSearchFilter": {
+    "configv1CollectionReference": {
       "properties": {
-        "query": {
-          "description": "Matches logs which match this query.\nQuery may only include top level operations (no nested clauses).\nOnly one type of operator AND/OR is allowed.",
+        "type": {
+          "$ref": "#/definitions/configv1CollectionReferenceType"
+        },
+        "slug": {
           "type": "string"
         }
       },
       "type": "object"
+    },
+    "configv1CollectionReferenceType": {
+      "description": "Type values must match entitiespb.Collection.CollectionType.",
+      "enum": [
+        "SIMPLE",
+        "SERVICE"
+      ],
+      "type": "string"
     },
     "configv1PageParams": {
       "properties": {
@@ -2282,31 +2623,24 @@
         ]
       }
     },
-    "/api/unstable/config/log-allocation-config": {
+    "/api/unstable/config/log-control-config": {
       "delete": {
-        "operationId": "DeleteLogAllocationConfig",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "dry_run",
-            "type": "boolean"
-          }
-        ],
+        "operationId": "DeleteLogControlConfig",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configunstableDeleteLogAllocationConfigResponse"
+              "$ref": "#/definitions/configunstableDeleteLogControlConfigResponse"
             }
           },
           "400": {
-            "description": "Cannot delete the LogAllocationConfig because it is in use.",
+            "description": "Cannot delete the LogControlConfig because it is in use.",
             "schema": {
               "$ref": "#/definitions/apiError"
             }
           },
           "404": {
-            "description": "Cannot delete the LogAllocationConfig because the slug does not exist.",
+            "description": "Cannot delete the LogControlConfig because the slug does not exist.",
             "schema": {
               "$ref": "#/definitions/apiError"
             }
@@ -2325,20 +2659,20 @@
           }
         },
         "tags": [
-          "LogAllocationConfig"
+          "LogControlConfig"
         ]
       },
       "get": {
-        "operationId": "ReadLogAllocationConfig",
+        "operationId": "ReadLogControlConfig",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configunstableReadLogAllocationConfigResponse"
+              "$ref": "#/definitions/configunstableReadLogControlConfigResponse"
             }
           },
           "404": {
-            "description": "Cannot read the LogAllocationConfig because LogAllocationConfig has not been created.",
+            "description": "Cannot read the LogControlConfig because LogControlConfig has not been created.",
             "schema": {
               "$ref": "#/definitions/apiError"
             }
@@ -2357,36 +2691,36 @@
           }
         },
         "tags": [
-          "LogAllocationConfig"
+          "LogControlConfig"
         ]
       },
       "post": {
-        "operationId": "CreateLogAllocationConfig",
+        "operationId": "CreateLogControlConfig",
         "parameters": [
           {
             "in": "body",
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/configunstableCreateLogAllocationConfigRequest"
+              "$ref": "#/definitions/configunstableCreateLogControlConfigRequest"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "A successful response containing the created LogAllocationConfig.",
+            "description": "A successful response containing the created LogControlConfig.",
             "schema": {
-              "$ref": "#/definitions/configunstableCreateLogAllocationConfigResponse"
+              "$ref": "#/definitions/configunstableCreateLogControlConfigResponse"
             }
           },
           "400": {
-            "description": "Cannot create the LogAllocationConfig because the request is invalid.",
+            "description": "Cannot create the LogControlConfig because the request is invalid.",
             "schema": {
               "$ref": "#/definitions/apiError"
             }
           },
           "409": {
-            "description": "Cannot create the LogAllocationConfig because there is a conflict with an existing LogAllocationConfig.",
+            "description": "Cannot create the LogControlConfig because there is a conflict with an existing LogControlConfig.",
             "schema": {
               "$ref": "#/definitions/apiError"
             }
@@ -2405,36 +2739,36 @@
           }
         },
         "tags": [
-          "LogAllocationConfig"
+          "LogControlConfig"
         ]
       },
       "put": {
-        "operationId": "UpdateLogAllocationConfig",
+        "operationId": "UpdateLogControlConfig",
         "parameters": [
           {
             "in": "body",
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/configunstableUpdateLogAllocationConfigRequest"
+              "$ref": "#/definitions/configunstableUpdateLogControlConfigRequest"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "A successful response containing the updated LogAllocationConfig.",
+            "description": "A successful response containing the updated LogControlConfig.",
             "schema": {
-              "$ref": "#/definitions/configunstableUpdateLogAllocationConfigResponse"
+              "$ref": "#/definitions/configunstableUpdateLogControlConfigResponse"
             }
           },
           "400": {
-            "description": "Cannot update the LogAllocationConfig because the request is invalid.",
+            "description": "Cannot update the LogControlConfig because the request is invalid.",
             "schema": {
               "$ref": "#/definitions/apiError"
             }
           },
           "404": {
-            "description": "Cannot update the LogAllocationConfig because LogAllocationConfig has not been created.",
+            "description": "Cannot update the LogControlConfig because LogControlConfig has not been created.",
             "schema": {
               "$ref": "#/definitions/apiError"
             }
@@ -2453,7 +2787,175 @@
           }
         },
         "tags": [
-          "LogAllocationConfig"
+          "LogControlConfig"
+        ]
+      }
+    },
+    "/api/unstable/config/log-parser-config": {
+      "delete": {
+        "operationId": "DeleteLogParserConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configunstableDeleteLogParserConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot delete the LogParserConfig because it is in use.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot delete the LogParserConfig because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "LogParserConfig"
+        ]
+      },
+      "get": {
+        "operationId": "ReadLogParserConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configunstableReadLogParserConfigResponse"
+            }
+          },
+          "404": {
+            "description": "Cannot read the LogParserConfig because LogParserConfig has not been created.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "LogParserConfig"
+        ]
+      },
+      "post": {
+        "operationId": "CreateLogParserConfig",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/configunstableCreateLogParserConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the created LogParserConfig.",
+            "schema": {
+              "$ref": "#/definitions/configunstableCreateLogParserConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot create the LogParserConfig because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "409": {
+            "description": "Cannot create the LogParserConfig because there is a conflict with an existing LogParserConfig.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "LogParserConfig"
+        ]
+      },
+      "put": {
+        "operationId": "UpdateLogParserConfig",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/configunstableUpdateLogParserConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the updated LogParserConfig.",
+            "schema": {
+              "$ref": "#/definitions/configunstableUpdateLogParserConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot update the LogParserConfig because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot update the LogParserConfig because LogParserConfig has not been created.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "LogParserConfig"
         ]
       }
     },
@@ -2652,6 +3154,245 @@
         },
         "tags": [
           "NoopEntity"
+        ]
+      }
+    },
+    "/api/unstable/config/object-discovery-rules": {
+      "get": {
+        "operationId": "ListObjectDiscoveryRule",
+        "parameters": [
+          {
+            "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
+            "format": "int64",
+            "in": "query",
+            "name": "page.max_size",
+            "type": "integer"
+          },
+          {
+            "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
+            "in": "query",
+            "name": "page.token",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configunstableListObjectDiscoveryRulesResponse"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "ObjectDiscoveryRule"
+        ]
+      },
+      "post": {
+        "operationId": "CreateObjectDiscoveryRule",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/configunstableCreateObjectDiscoveryRuleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the created ObjectDiscoveryRule.",
+            "schema": {
+              "$ref": "#/definitions/configunstableCreateObjectDiscoveryRuleResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot create the ObjectDiscoveryRule because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "409": {
+            "description": "Cannot create the ObjectDiscoveryRule because there is a conflict with an existing ObjectDiscoveryRule.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "ObjectDiscoveryRule"
+        ]
+      }
+    },
+    "/api/unstable/config/object-discovery-rules/{slug}": {
+      "delete": {
+        "operationId": "DeleteObjectDiscoveryRule",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configunstableDeleteObjectDiscoveryRuleResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot delete the ObjectDiscoveryRule because it is in use.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot delete the ObjectDiscoveryRule because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "ObjectDiscoveryRule"
+        ]
+      },
+      "get": {
+        "operationId": "ReadObjectDiscoveryRule",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configunstableReadObjectDiscoveryRuleResponse"
+            }
+          },
+          "404": {
+            "description": "Cannot read the ObjectDiscoveryRule because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "ObjectDiscoveryRule"
+        ]
+      },
+      "put": {
+        "operationId": "UpdateObjectDiscoveryRule",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConfigUnstableUpdateObjectDiscoveryRuleBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the updated ObjectDiscoveryRule.",
+            "schema": {
+              "$ref": "#/definitions/configunstableUpdateObjectDiscoveryRuleResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot update the ObjectDiscoveryRule because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot update the ObjectDiscoveryRule because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "409": {
+            "description": "Cannot update the ObjectDiscoveryRule because there is a conflict with an existing ObjectDiscoveryRule.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "ObjectDiscoveryRule"
         ]
       }
     },
@@ -3200,6 +3941,283 @@
         ]
       }
     },
+    "/api/unstable/config/slos": {
+      "get": {
+        "operationId": "ListSLOs",
+        "parameters": [
+          {
+            "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
+            "format": "int64",
+            "in": "query",
+            "name": "page.max_size",
+            "type": "integer"
+          },
+          {
+            "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
+            "in": "query",
+            "name": "page.token",
+            "type": "string"
+          },
+          {
+            "collectionFormat": "multi",
+            "description": "Filters results by slug, where any SLO with a matching slug in the given list (and matches all other filters) is returned.",
+            "in": "query",
+            "items": {
+              "type": "string"
+            },
+            "name": "slugs",
+            "type": "array"
+          },
+          {
+            "collectionFormat": "multi",
+            "description": "Filters results by name, where any SLO with a matching name in the given list (and matches all other filters) is returned.",
+            "in": "query",
+            "items": {
+              "type": "string"
+            },
+            "name": "names",
+            "type": "array"
+          },
+          {
+            "collectionFormat": "multi",
+            "in": "query",
+            "items": {
+              "type": "string"
+            },
+            "name": "collection_slugs",
+            "type": "array"
+          },
+          {
+            "collectionFormat": "multi",
+            "in": "query",
+            "items": {
+              "type": "string"
+            },
+            "name": "service_slugs",
+            "type": "array"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configunstableListSLOsResponse"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "SLO"
+        ]
+      },
+      "post": {
+        "operationId": "CreateSLO",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/configunstableCreateSLORequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the created SLO.",
+            "schema": {
+              "$ref": "#/definitions/configunstableCreateSLOResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot create the SLO because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "409": {
+            "description": "Cannot create the SLO because there is a conflict with an existing SLO.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "SLO"
+        ]
+      }
+    },
+    "/api/unstable/config/slos/{slug}": {
+      "delete": {
+        "operationId": "DeleteSLO",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configunstableDeleteSLOResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot delete the SLO because it is in use.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot delete the SLO because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "SLO"
+        ]
+      },
+      "get": {
+        "operationId": "ReadSLO",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configunstableReadSLOResponse"
+            }
+          },
+          "404": {
+            "description": "Cannot read the SLO because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "SLO"
+        ]
+      },
+      "put": {
+        "operationId": "UpdateSLO",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConfigUnstableUpdateSLOBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the updated SLO.",
+            "schema": {
+              "$ref": "#/definitions/configunstableUpdateSLOResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot update the SLO because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot update the SLO because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "409": {
+            "description": "Cannot update the SLO because there is a conflict with an existing SLO.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "SLO"
+        ]
+      }
+    },
     "/api/unstable/config/sync-prometheus": {
       "post": {
         "description": "***\nSync Prometheus Configuration\n***",
@@ -3230,265 +4248,6 @@
         },
         "tags": [
           "SyncPrometheus"
-        ]
-      }
-    },
-    "/api/unstable/config/trace-behaviors": {
-      "get": {
-        "operationId": "ListTraceBehaviors",
-        "parameters": [
-          {
-            "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
-            "format": "int64",
-            "in": "query",
-            "name": "page.max_size",
-            "type": "integer"
-          },
-          {
-            "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
-            "in": "query",
-            "name": "page.token",
-            "type": "string"
-          },
-          {
-            "collectionFormat": "multi",
-            "description": "Filters results by slug, where any TraceBehavior with a matching slug in the given list (and matches all other filters) is returned.",
-            "in": "query",
-            "items": {
-              "type": "string"
-            },
-            "name": "slugs",
-            "type": "array"
-          },
-          {
-            "collectionFormat": "multi",
-            "description": "Filters results by name, where any TraceBehavior with a matching name in the given list (and matches all other filters) is returned.",
-            "in": "query",
-            "items": {
-              "type": "string"
-            },
-            "name": "names",
-            "type": "array"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableListTraceBehaviorsResponse"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "TraceBehavior"
-        ]
-      },
-      "post": {
-        "operationId": "CreateTraceBehavior",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/configunstableCreateTraceBehaviorRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response containing the created TraceBehavior.",
-            "schema": {
-              "$ref": "#/definitions/configunstableCreateTraceBehaviorResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot create the TraceBehavior because the request is invalid.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "409": {
-            "description": "Cannot create the TraceBehavior because there is a conflict with an existing TraceBehavior.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "TraceBehavior"
-        ]
-      }
-    },
-    "/api/unstable/config/trace-behaviors/{slug}": {
-      "delete": {
-        "operationId": "DeleteTraceBehavior",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableDeleteTraceBehaviorResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot delete the TraceBehavior because it is in use.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "404": {
-            "description": "Cannot delete the TraceBehavior because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "TraceBehavior"
-        ]
-      },
-      "get": {
-        "operationId": "ReadTraceBehavior",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableReadTraceBehaviorResponse"
-            }
-          },
-          "404": {
-            "description": "Cannot read the TraceBehavior because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "TraceBehavior"
-        ]
-      },
-      "put": {
-        "operationId": "UpdateTraceBehavior",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ConfigUnstableUpdateTraceBehaviorBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response containing the updated TraceBehavior.",
-            "schema": {
-              "$ref": "#/definitions/configunstableUpdateTraceBehaviorResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot update the TraceBehavior because the request is invalid.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "404": {
-            "description": "Cannot update the TraceBehavior because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "409": {
-            "description": "Cannot update the TraceBehavior because there is a conflict with an existing TraceBehavior.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "TraceBehavior"
         ]
       }
     },

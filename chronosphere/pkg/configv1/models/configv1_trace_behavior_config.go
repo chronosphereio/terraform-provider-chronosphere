@@ -21,8 +21,7 @@ import (
 // swagger:model configv1TraceBehaviorConfig
 type Configv1TraceBehaviorConfig struct {
 
-	// The baseline behavior to use for behavior assignments and base head sampling rates. Must reference a
-	// TraceBehavior entity with type: TYPE_BASELINE.
+	// The baseline behavior to use for behavior assignments and base head sampling rates.
 	BaselineBehaviorSlug string `json:"baseline_behavior_slug,omitempty"`
 
 	// Timestamp of when the TraceBehaviorConfig was created. Cannot be set by clients.
@@ -45,17 +44,17 @@ type Configv1TraceBehaviorConfig struct {
 	// to be enrolled in behaviors. The referenced behaviors are the active behaviors
 	// for the dataset when there is no override in place.
 	// * Only one main behavior can be assigned to a dataset.
-	// * Only one referenced `TraceBehavior` with `type` field set to `TYPE_BASELINE` can
-	// be set, which must match the slug referenced by `baseline_behavior_slug`.
 	MainBehaviorAssignments []*TraceBehaviorConfigMainBehaviorAssignment `json:"main_behavior_assignments"`
 
 	// List of assignments for the override behavior. OverrideBehaviorAssignments are used to
 	// specify the active behavior for a dataset over a specific time range.
 	// * Only one override behavior can be assigned to a dataset.
-	// * Only one referenced `TraceBehavior` with `type` field set to `TYPE_BASELINE` can
-	// be set, which must match the slug referenced by `baseline_behavior_slug`, and any
-	// baseline behavior referenced in `main_behavior_assignments`.
 	OverrideBehaviorAssignments []*TraceBehaviorConfigOverrideBehaviorAssignment `json:"override_behavior_assignments"`
+
+	// List of assignments for the preview behavior. The
+	// referenced behaviors are in preview mode for the assigned dataset.
+	// You can assign only one preview behavior to a dataset.
+	PreviewBehaviorAssignments []*TraceBehaviorConfigOverrideBehaviorAssignment `json:"preview_behavior_assignments"`
 
 	// Timestamp of when the TraceBehaviorConfig was last updated. Cannot be set by clients.
 	// Read Only: true
@@ -76,6 +75,10 @@ func (m *Configv1TraceBehaviorConfig) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateOverrideBehaviorAssignments(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePreviewBehaviorAssignments(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -153,6 +156,32 @@ func (m *Configv1TraceBehaviorConfig) validateOverrideBehaviorAssignments(format
 	return nil
 }
 
+func (m *Configv1TraceBehaviorConfig) validatePreviewBehaviorAssignments(formats strfmt.Registry) error {
+	if swag.IsZero(m.PreviewBehaviorAssignments) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.PreviewBehaviorAssignments); i++ {
+		if swag.IsZero(m.PreviewBehaviorAssignments[i]) { // not required
+			continue
+		}
+
+		if m.PreviewBehaviorAssignments[i] != nil {
+			if err := m.PreviewBehaviorAssignments[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("preview_behavior_assignments" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("preview_behavior_assignments" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 func (m *Configv1TraceBehaviorConfig) validateUpdatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.UpdatedAt) { // not required
 		return nil
@@ -178,6 +207,10 @@ func (m *Configv1TraceBehaviorConfig) ContextValidate(ctx context.Context, forma
 	}
 
 	if err := m.contextValidateOverrideBehaviorAssignments(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidatePreviewBehaviorAssignments(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -230,6 +263,26 @@ func (m *Configv1TraceBehaviorConfig) contextValidateOverrideBehaviorAssignments
 					return ve.ValidateName("override_behavior_assignments" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("override_behavior_assignments" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Configv1TraceBehaviorConfig) contextValidatePreviewBehaviorAssignments(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.PreviewBehaviorAssignments); i++ {
+
+		if m.PreviewBehaviorAssignments[i] != nil {
+			if err := m.PreviewBehaviorAssignments[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("preview_behavior_assignments" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("preview_behavior_assignments" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

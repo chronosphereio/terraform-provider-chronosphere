@@ -20,6 +20,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_allocation_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_action"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
@@ -34,6 +35,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_behavior"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_behavior_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
@@ -92,6 +94,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.DropRule = drop_rule.New(transport, formats)
 	cli.GcpMetricsIntegration = gcp_metrics_integration.New(transport, formats)
 	cli.GrafanaDashboard = grafana_dashboard.New(transport, formats)
+	cli.LogAllocationConfig = log_allocation_config.New(transport, formats)
 	cli.LogScaleAction = log_scale_action.New(transport, formats)
 	cli.LogScaleAlert = log_scale_alert.New(transport, formats)
 	cli.MappingRule = mapping_rule.New(transport, formats)
@@ -106,6 +109,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.Service = service.New(transport, formats)
 	cli.ServiceAccount = service_account.New(transport, formats)
 	cli.Team = team.New(transport, formats)
+	cli.TraceBehavior = trace_behavior.New(transport, formats)
 	cli.TraceBehaviorConfig = trace_behavior_config.New(transport, formats)
 	cli.TraceJaegerRemoteSamplingStrategy = trace_jaeger_remote_sampling_strategy.New(transport, formats)
 	cli.TraceMetricsRule = trace_metrics_rule.New(transport, formats)
@@ -174,6 +178,8 @@ type ConfigV1API struct {
 
 	GrafanaDashboard grafana_dashboard.ClientService
 
+	LogAllocationConfig log_allocation_config.ClientService
+
 	LogScaleAction log_scale_action.ClientService
 
 	LogScaleAlert log_scale_alert.ClientService
@@ -202,6 +208,8 @@ type ConfigV1API struct {
 
 	Team team.ClientService
 
+	TraceBehavior trace_behavior.ClientService
+
 	TraceBehaviorConfig trace_behavior_config.ClientService
 
 	TraceJaegerRemoteSamplingStrategy trace_jaeger_remote_sampling_strategy.ClientService
@@ -226,6 +234,7 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.DropRule.SetTransport(transport)
 	c.GcpMetricsIntegration.SetTransport(transport)
 	c.GrafanaDashboard.SetTransport(transport)
+	c.LogAllocationConfig.SetTransport(transport)
 	c.LogScaleAction.SetTransport(transport)
 	c.LogScaleAlert.SetTransport(transport)
 	c.MappingRule.SetTransport(transport)
@@ -240,6 +249,7 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.Service.SetTransport(transport)
 	c.ServiceAccount.SetTransport(transport)
 	c.Team.SetTransport(transport)
+	c.TraceBehavior.SetTransport(transport)
 	c.TraceBehaviorConfig.SetTransport(transport)
 	c.TraceJaegerRemoteSamplingStrategy.SetTransport(transport)
 	c.TraceMetricsRule.SetTransport(transport)
