@@ -87,10 +87,12 @@ var SloDefinition = map[string]*schema.Schema{
 		Type:     schema.TypeFloat,
 		Required: true,
 	},
-	"reporting_windows": {
-		Type:     schema.TypeSet,
-		Required: true,
+	"time_window": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Computed: true,
 		MinItems: 1,
+		MaxItems: 1,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"duration": {
@@ -107,6 +109,11 @@ var SloDefinition = map[string]*schema.Schema{
 		Elem: &schema.Resource{
 			Schema: BurnRateDefinition,
 		},
+	},
+	"enable_burn_rate_alerting": {
+		Type:     schema.TypeBool,
+		Optional: true,
+		Computed: true, // This has to be computed as it's being backfilled based on other flags.
 	},
 }
 

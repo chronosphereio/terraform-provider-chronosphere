@@ -30,9 +30,10 @@ resource "chronosphere_slo" "slo" {
 
   definition {
     objective = 99.95
-    reporting_windows {
+    time_window {
       duration = "28d"
     }
+    enable_burn_rate_alerting = true
   }
 
   sli {
@@ -55,7 +56,7 @@ resource "chronosphere_slo" "slo_with_signal_grouping_signal_per_series" {
 
   definition {
     objective = 99.95
-    reporting_windows {
+    time_window {
       duration = "28d"
     }
     burn_rate_alerting_config {
@@ -79,6 +80,7 @@ resource "chronosphere_slo" "slo_with_signal_grouping_signal_per_series" {
       budget = 99
       severity = "warn"
     }
+    enable_burn_rate_alerting = true
   }
 
   sli {
@@ -100,9 +102,10 @@ resource "chronosphere_slo" "slo_with_signal_grouping_labels" {
 
   definition {
     objective = 99.95
-    reporting_windows {
+    time_window {
       duration = "28d"
     }
+    enable_burn_rate_alerting = true
   }
 
   sli {
@@ -120,16 +123,17 @@ resource "chronosphere_slo" "slo_with_filters" {
 
   definition {
     objective = 99.95
-    reporting_windows {
+    time_window {
       duration = "28d"
     }
+    enable_burn_rate_alerting = true
   }
 
   sli {
     custom_indicator {
       bad_query_template   = <<-EOT
         sum(rate(http_request_duration_seconds_count{
-            error=\"true\",
+            error="true",
             {{ .AdditionalFilters }}
         }[{{ .Window }}]))
       EOT
@@ -148,9 +152,30 @@ resource "chronosphere_slo" "slo_with_filters" {
     }
 
     additional_promql_filters{
-        name = "namespace"
-        type = "MatchRegex"
-        value = "foo.*"
+      name = "namespace"
+      type = "MatchRegexp"
+      value = "foo.*"
     }
+  }
+}
+
+resource "chronosphere_slo" "slo_without_alerting" {
+  name                   = "SLO Without Alerting"
+  collection_id          = chronosphere_collection.c.id
+  notification_policy_id = chronosphere_notification_policy.np.id
+
+  definition {
+    objective = 99.95
+    time_window {
+      duration = "28d"
+    }
+  }
+
+  sli {
+    custom_indicator {
+      bad_query_template   = "sum(rate(http_request_duration_seconds_count{error=\"true\"}[{{ .Window }}]))"
+      total_query_template = "sum(rate(http_request_duration_seconds_count[{{ .Window }}]))"
+    }
+    custom_dimension_labels = ["label1", "label2"]
   }
 }
