@@ -8217,13 +8217,6 @@
     "/api/v1/config/log-allocation-config": {
       "delete": {
         "operationId": "DeleteLogAllocationConfig",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "dry_run",
-            "type": "boolean"
-          }
-        ],
         "responses": {
           "200": {
             "description": "A successful response.",
