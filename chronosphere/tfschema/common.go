@@ -41,7 +41,7 @@ var MatcherListSchema = &schema.Schema{
 	},
 }
 
-// Used by both Monitor and SLO
+// SignalGrouping is used by both Monitor and SLO
 var SignalGrouping = &schema.Schema{
 	Type:     schema.TypeList,
 	Optional: true,

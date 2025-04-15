@@ -3,9 +3,6 @@ package pagination
 
 import (
 	"context"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/slo"
-	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
@@ -26,11 +23,11 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/recording_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/rollup_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/slo"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
 	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/unstable"
 )
 
 func ListBuckets(
@@ -1206,6 +1203,75 @@ func ListRollupRulesByFilter(
 	return result, nil
 }
 
+func ListSLOs(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1SLO, error) {
+	return ListSLOsByFilter(ctx, client, Filter{})
+}
+
+func ListSLOsBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1SLO, error) {
+	return ListSLOsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListSLOsByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1SLO, error) {
+	return ListSLOsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListSLOsByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*slo.ListSLOsParams),
+) ([]*configv1models.Configv1SLO, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1SLO
+	)
+	for {
+		p := &slo.ListSLOsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.SLO.ListSLOs(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.Slos {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
 func ListServiceAccounts(
 	ctx context.Context,
 	client *configv1.Client,
@@ -1538,78 +1604,6 @@ func ListClassicDashboardsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.ClassicDashboards {
-				result = append(result, v)
-			}
-			if resp.Payload.Page != nil {
-				nextToken = resp.Payload.Page.NextToken
-			}
-		}
-		if nextToken == "" {
-			break
-		}
-	}
-	return result, nil
-}
-
-func ListUnstableSLOs(
-	ctx context.Context,
-	client *configunstable.Client,
-) ([]*configunstablemodels.ConfigunstableSLO, error) {
-	return ListUnstableSLOsByFilter(ctx, client, Filter{})
-}
-
-func ListUnstableSLOsBySlugs(
-	ctx context.Context,
-	client *configunstable.Client,
-	slugs []string,
-) ([]*configunstablemodels.ConfigunstableSLO, error) {
-	return ListUnstableSLOsByFilter(ctx, client, Filter{
-		Slugs: slugs,
-	})
-}
-
-func ListUnstableSLOsByNames(
-	ctx context.Context,
-	client *configunstable.Client,
-	names []string,
-) ([]*configunstablemodels.ConfigunstableSLO, error) {
-	return ListUnstableSLOsByFilter(ctx, client, Filter{
-		Names: names,
-	})
-}
-
-func ListUnstableSLOsByFilter(
-	ctx context.Context,
-	client *configunstable.Client,
-	f Filter,
-	opts ...func(*slo.ListSLOsParams),
-) ([]*configunstablemodels.ConfigunstableSLO, error) {
-	if !unstable.Enabled() {
-		return nil, nil
-	}
-	var (
-		nextToken string
-		result    []*configunstablemodels.ConfigunstableSLO
-	)
-	for {
-		p := &slo.ListSLOsParams{
-			Context:   ctx,
-			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
-		}
-		for _, opt := range opts {
-			opt(p)
-		}
-		resp, err := client.SLO.ListSLOs(p)
-		if err != nil {
-			return nil, err
-		}
-
-		// If payload or page token aren't set, no next page.
-		nextToken = ""
-		if resp.Payload != nil {
-			for _, v := range resp.Payload.Slos {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {

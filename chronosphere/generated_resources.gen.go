@@ -5,8 +5,6 @@ import (
 	"context"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/slo"
-	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
@@ -28,6 +26,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/resource_pools"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/rollup_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/slo"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
@@ -1615,6 +1614,85 @@ func (generatedRollupRule) delete(
 	return err
 }
 
+type generatedSLO struct{}
+
+func (generatedSLO) slugOf(m *configv1models.Configv1SLO) string {
+	return m.Slug
+}
+
+func (generatedSLO) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1SLO,
+	dryRun bool,
+) (string, error) {
+	req := &slo.CreateSLOParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateSLORequest{
+			SLO:    m,
+			DryRun: dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.SLO.CreateSLO(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.SLO
+	if e == nil {
+		return "", nil
+	}
+	return (generatedSLO{}).slugOf(e), nil
+}
+
+func (generatedSLO) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1SLO, error) {
+	req := &slo.ReadSLOParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigV1.SLO.ReadSLO(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.SLO, nil
+}
+
+func (generatedSLO) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1SLO,
+	params updateParams,
+) error {
+	req := &slo.UpdateSLOParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configv1models.ConfigV1UpdateSLOBody{
+
+			SLO:             m,
+			CreateIfMissing: params.createIfMissing,
+			DryRun:          params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.SLO.UpdateSLO(req)
+	return err
+}
+func (generatedSLO) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &slo.DeleteSLOParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigV1.SLO.DeleteSLO(req)
+	return err
+}
+
 type generatedServiceAccount struct{}
 
 func (generatedServiceAccount) slugOf(m *configv1models.Configv1ServiceAccount) string {
@@ -1987,84 +2065,5 @@ func (generatedTraceTailSamplingRules) delete(
 		Context: ctx,
 	}
 	_, err := clients.ConfigV1.TraceTailSamplingRules.DeleteTraceTailSamplingRules(req)
-	return err
-}
-
-type generatedUnstableSLO struct{}
-
-func (generatedUnstableSLO) slugOf(m *configunstablemodels.ConfigunstableSLO) string {
-	return m.Slug
-}
-
-func (generatedUnstableSLO) create(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configunstablemodels.ConfigunstableSLO,
-	dryRun bool,
-) (string, error) {
-	req := &slo.CreateSLOParams{
-		Context: ctx,
-		Body: &configunstablemodels.ConfigunstableCreateSLORequest{
-			SLO:    m,
-			DryRun: dryRun,
-		},
-	}
-	resp, err := clients.ConfigUnstable.SLO.CreateSLO(req)
-	if err != nil {
-		return "", err
-	}
-	e := resp.Payload.SLO
-	if e == nil {
-		return "", nil
-	}
-	return (generatedUnstableSLO{}).slugOf(e), nil
-}
-
-func (generatedUnstableSLO) read(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) (*configunstablemodels.ConfigunstableSLO, error) {
-	req := &slo.ReadSLOParams{
-		Context: ctx,
-		Slug:    slug,
-	}
-	resp, err := clients.ConfigUnstable.SLO.ReadSLO(req)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Payload.SLO, nil
-}
-
-func (generatedUnstableSLO) update(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configunstablemodels.ConfigunstableSLO,
-	params updateParams,
-) error {
-	req := &slo.UpdateSLOParams{
-		Context: ctx,
-		Slug:    m.Slug,
-
-		Body: &configunstablemodels.ConfigUnstableUpdateSLOBody{
-
-			SLO:             m,
-			CreateIfMissing: params.createIfMissing,
-			DryRun:          params.dryRun,
-		},
-	}
-	_, err := clients.ConfigUnstable.SLO.UpdateSLO(req)
-	return err
-}
-func (generatedUnstableSLO) delete(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) error {
-	req := &slo.DeleteSLOParams{
-		Context: ctx,
-		Slug:    slug,
-	}
-	_, err := clients.ConfigUnstable.SLO.DeleteSLO(req)
 	return err
 }
