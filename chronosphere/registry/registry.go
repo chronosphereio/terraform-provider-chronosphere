@@ -293,7 +293,7 @@ var Resources = mustValidate([]Resource{
 	},
 	{
 		Name:   "slo",
-		Entity: "Slo",
+		Entity: "SLO",
 		API:    V1,
 		Schema: tfschema.Slo,
 	},
