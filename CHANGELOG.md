@@ -4,6 +4,7 @@
 Added:
 * Add enable burn rate alerting field to the unstable `chronosphere_slo` resource.
 * Add time window to the unstable `chronosphere_slo` resource.
+* Moved `chronosphere_slo` resource from stable to v1 API.
 
 Removed:
 * Remove query less SLO fields from unstable `chronosphere_slo` resource.

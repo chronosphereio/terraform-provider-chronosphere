@@ -19,15 +19,14 @@ import (
 	"go.uber.org/atomic"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
-	v1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
 // SLOFromModel maps an API model to the intschema model.
-func SLOFromModel(m *models.ConfigunstableSLO) (*intschema.Slo, error) {
+func SLOFromModel(m *models.Configv1SLO) (*intschema.Slo, error) {
 	return sloConverter{}.fromModel(m)
 }
 
@@ -35,7 +34,7 @@ func resourceSLO() *schema.Resource {
 	r := newGenericResource(
 		"slo",
 		sloConverter{},
-		generatedUnstableSLO{},
+		generatedSLO{},
 	)
 
 	return &schema.Resource{
@@ -56,7 +55,7 @@ var SLODryRunCount atomic.Int64
 
 type sloConverter struct{}
 
-func (sloConverter) toModel(s *intschema.Slo) (*models.ConfigunstableSLO, error) {
+func (sloConverter) toModel(s *intschema.Slo) (*models.Configv1SLO, error) {
 	var customIndicator *models.SLICustomIndicatorConfig
 
 	if s.Sli.CustomIndicator != nil {
@@ -69,13 +68,13 @@ func (sloConverter) toModel(s *intschema.Slo) (*models.ConfigunstableSLO, error)
 
 	collSlug, v1CollRef := collectionRefFromID(s.CollectionId.Slug())
 	if v1CollRef == nil {
-		v1CollRef = &v1models.Configv1CollectionReference{
-			Type: v1models.Configv1CollectionReferenceTypeSIMPLE,
+		v1CollRef = &models.Configv1CollectionReference{
+			Type: models.Configv1CollectionReferenceTypeSIMPLE,
 			Slug: collSlug,
 		}
 	}
 
-	return &models.ConfigunstableSLO{
+	return &models.Configv1SLO{
 		Name:                   s.Name,
 		Slug:                   s.Slug,
 		Description:            s.Description,
@@ -87,19 +86,19 @@ func (sloConverter) toModel(s *intschema.Slo) (*models.ConfigunstableSLO, error)
 			TimeWindow:             timeWindowToModel(s.Definition.TimeWindow),
 			EnableBurnRateAlerting: s.Definition.EnableBurnRateAlerting,
 		},
-		Sli: &models.ConfigunstableSLI{
+		Sli: &models.Configv1SLI{
 			CustomIndicator:         customIndicator,
 			CustomDimensionLabels:   s.Sli.CustomDimensionLabels,
 			AdditionalPromqlFilters: promFiltersToModel(s.Sli.AdditionalPromqlFilters),
 		},
-		SignalGrouping: unstableMonitorSignalGroupingToModel(s.SignalGrouping),
+		SignalGrouping: monitorSignalGroupingToModel(s.SignalGrouping),
 		Annotations:    s.Annotations,
 		Labels:         s.Labels,
 	}, nil
 }
 
 func (sloConverter) fromModel(
-	s *models.ConfigunstableSLO,
+	s *models.Configv1SLO,
 ) (*intschema.Slo, error) {
 	var customIndicator *intschema.SloSliCustomIndicator
 
@@ -135,38 +134,38 @@ func (sloConverter) fromModel(
 			CustomDimensionLabels:   s.Sli.CustomDimensionLabels,
 			AdditionalPromqlFilters: promFiltersFromModel(s.Sli.AdditionalPromqlFilters),
 		},
-		SignalGrouping: unstableMonitorSignalGroupingFromModel(s.SignalGrouping),
+		SignalGrouping: monitorSignalGroupingFromModel(s.SignalGrouping),
 		Annotations:    s.Annotations,
 		Labels:         s.Labels,
 	}, nil
 }
 
-func unstableRefToV1(ref *models.Configv1CollectionReference) *v1models.Configv1CollectionReference {
-	return &v1models.Configv1CollectionReference{
-		Type: v1models.Configv1CollectionReferenceType(ref.Type),
+func unstableRefToV1(ref *models.Configv1CollectionReference) *models.Configv1CollectionReference {
+	return &models.Configv1CollectionReference{
+		Type: ref.Type,
 		Slug: ref.Slug,
 	}
 }
 
-func v1CollectionRefToUnstable(ref *v1models.Configv1CollectionReference) *models.Configv1CollectionReference {
+func v1CollectionRefToUnstable(ref *models.Configv1CollectionReference) *models.Configv1CollectionReference {
 	return &models.Configv1CollectionReference{
 		Type: models.Configv1CollectionReferenceType(ref.Type),
 		Slug: ref.Slug,
 	}
 }
 
-func promFiltersToModel(filters []intschema.SLOAdditionalPromQLFilters) []*models.ConfigunstablePromQLMatcher {
-	return sliceutil.Map(filters, func(f intschema.SLOAdditionalPromQLFilters) *models.ConfigunstablePromQLMatcher {
-		return &models.ConfigunstablePromQLMatcher{
+func promFiltersToModel(filters []intschema.SLOAdditionalPromQLFilters) []*models.Configv1PromQLMatcher {
+	return sliceutil.Map(filters, func(f intschema.SLOAdditionalPromQLFilters) *models.Configv1PromQLMatcher {
+		return &models.Configv1PromQLMatcher{
 			Name:  f.Name,
-			Type:  models.ConfigunstablePromQLMatcherType(f.Type),
+			Type:  models.Configv1PromQLMatcherType(f.Type),
 			Value: f.Value,
 		}
 	})
 }
 
-func promFiltersFromModel(filters []*models.ConfigunstablePromQLMatcher) []intschema.SLOAdditionalPromQLFilters {
-	return sliceutil.Map(filters, func(f *models.ConfigunstablePromQLMatcher) intschema.SLOAdditionalPromQLFilters {
+func promFiltersFromModel(filters []*models.Configv1PromQLMatcher) []intschema.SLOAdditionalPromQLFilters {
+	return sliceutil.Map(filters, func(f *models.Configv1PromQLMatcher) intschema.SLOAdditionalPromQLFilters {
 		return intschema.SLOAdditionalPromQLFilters{
 			Name:  f.Name,
 			Type:  string(f.Type),
@@ -209,30 +208,4 @@ func burnRateDefinitionFromModel(defs []*models.DefinitionBurnRateDefinition) []
 			Labels:   w.Labels,
 		}
 	})
-}
-
-// TODO: once SLOs have been promoted to v1 this can be removed and monitorSignalGroupingToModel can be used.
-func unstableMonitorSignalGroupingToModel(
-	g *intschema.SignalGrouping,
-) *models.MonitorSignalGrouping {
-	if g == nil {
-		return nil
-	}
-	return &models.MonitorSignalGrouping{
-		LabelNames:      g.LabelNames,
-		SignalPerSeries: g.SignalPerSeries,
-	}
-}
-
-// TODO: once SLOs have been promoted to v1 this can be removed and monitorSignalGroupingFromModel can be used.
-func unstableMonitorSignalGroupingFromModel(
-	g *models.MonitorSignalGrouping,
-) *intschema.SignalGrouping {
-	if g == nil {
-		return nil
-	}
-	return &intschema.SignalGrouping{
-		LabelNames:      g.LabelNames,
-		SignalPerSeries: g.SignalPerSeries,
-	}
 }
