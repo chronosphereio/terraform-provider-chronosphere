@@ -25,6 +25,10 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
+func LogAllocationConfigFromModel(m *models.Configv1LogAllocationConfig) (*intschema.LogAllocationConfig, error) {
+	return LogAllocationConfigConverter{}.fromModel(m)
+}
+
 func resourceLogAllocationConfig() *schema.Resource {
 	r := newGenericResource[
 		*models.Configv1LogAllocationConfig,
