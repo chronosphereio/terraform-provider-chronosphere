@@ -6,6 +6,7 @@ Added:
 * Add time window to the unstable `chronosphere_slo` resource.
 * Moved `chronosphere_slo` resource from stable to v1 API.
 * Add `log_allocation_config` from model conversion
+* Add `chronosphere_ingest_config` resource.
 
 Removed:
 * Remove query less SLO fields from unstable `chronosphere_slo` resource.

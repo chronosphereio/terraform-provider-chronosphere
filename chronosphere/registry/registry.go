@@ -353,4 +353,11 @@ var Resources = mustValidate([]Resource{
 		Schema:      tfschema.LogAllocationConfig,
 		SingletonID: "log_allocation_config_singleton",
 	},
+	{
+		Name:        "log_ingest_config",
+		Entity:      "LogIngestConfig",
+		API:         V1,
+		Schema:      tfschema.LogIngestConfig,
+		SingletonID: "log_ingest_config_singleton",
+	},
 })
