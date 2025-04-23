@@ -25,6 +25,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
+// LogAllocationConfigConverter is a converter for LogAllocationConfig
 func LogAllocationConfigFromModel(m *models.Configv1LogAllocationConfig) (*intschema.LogAllocationConfig, error) {
 	return LogAllocationConfigConverter{}.fromModel(m)
 }
