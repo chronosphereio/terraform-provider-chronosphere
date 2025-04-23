@@ -34,6 +34,9 @@ type Configv1SLI struct {
 
 	// custom indicator
 	CustomIndicator *SLICustomIndicatorConfig `json:"custom_indicator,omitempty"`
+
+	// templated indicator
+	TemplatedIndicator *SLITemplatedIndicatorConfig `json:"templated_indicator,omitempty"`
 }
 
 // Validate validates this configv1 s l i
@@ -45,6 +48,10 @@ func (m *Configv1SLI) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCustomIndicator(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTemplatedIndicator(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -99,6 +106,25 @@ func (m *Configv1SLI) validateCustomIndicator(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Configv1SLI) validateTemplatedIndicator(formats strfmt.Registry) error {
+	if swag.IsZero(m.TemplatedIndicator) { // not required
+		return nil
+	}
+
+	if m.TemplatedIndicator != nil {
+		if err := m.TemplatedIndicator.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("templated_indicator")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("templated_indicator")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 // ContextValidate validate this configv1 s l i based on the context it is used
 func (m *Configv1SLI) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
@@ -108,6 +134,10 @@ func (m *Configv1SLI) ContextValidate(ctx context.Context, formats strfmt.Regist
 	}
 
 	if err := m.contextValidateCustomIndicator(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTemplatedIndicator(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -145,6 +175,22 @@ func (m *Configv1SLI) contextValidateCustomIndicator(ctx context.Context, format
 				return ve.ValidateName("custom_indicator")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("custom_indicator")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1SLI) contextValidateTemplatedIndicator(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.TemplatedIndicator != nil {
+		if err := m.TemplatedIndicator.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("templated_indicator")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("templated_indicator")
 			}
 			return err
 		}

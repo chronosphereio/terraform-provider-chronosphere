@@ -21,6 +21,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_allocation_config"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_ingest_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_action"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
@@ -96,6 +97,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.GcpMetricsIntegration = gcp_metrics_integration.New(transport, formats)
 	cli.GrafanaDashboard = grafana_dashboard.New(transport, formats)
 	cli.LogAllocationConfig = log_allocation_config.New(transport, formats)
+	cli.LogIngestConfig = log_ingest_config.New(transport, formats)
 	cli.LogScaleAction = log_scale_action.New(transport, formats)
 	cli.LogScaleAlert = log_scale_alert.New(transport, formats)
 	cli.MappingRule = mapping_rule.New(transport, formats)
@@ -182,6 +184,8 @@ type ConfigV1API struct {
 
 	LogAllocationConfig log_allocation_config.ClientService
 
+	LogIngestConfig log_ingest_config.ClientService
+
 	LogScaleAction log_scale_action.ClientService
 
 	LogScaleAlert log_scale_alert.ClientService
@@ -239,6 +243,7 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.GcpMetricsIntegration.SetTransport(transport)
 	c.GrafanaDashboard.SetTransport(transport)
 	c.LogAllocationConfig.SetTransport(transport)
+	c.LogIngestConfig.SetTransport(transport)
 	c.LogScaleAction.SetTransport(transport)
 	c.LogScaleAlert.SetTransport(transport)
 	c.MappingRule.SetTransport(transport)
