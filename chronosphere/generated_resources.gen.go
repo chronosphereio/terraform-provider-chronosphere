@@ -15,6 +15,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_allocation_config"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_ingest_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_action"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
@@ -821,6 +822,85 @@ func (generatedLogAllocationConfig) delete(
 		Context: ctx,
 	}
 	_, err := clients.ConfigV1.LogAllocationConfig.DeleteLogAllocationConfig(req)
+	return err
+}
+
+type generatedLogIngestConfig struct{}
+
+// LogIngestConfigID is the static ID of the global LogIngestConfig singleton.
+const LogIngestConfigID = "log_ingest_config_singleton"
+
+func (generatedLogIngestConfig) slugOf(m *configv1models.Configv1LogIngestConfig) string {
+	return LogIngestConfigID
+}
+
+func (generatedLogIngestConfig) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1LogIngestConfig,
+	dryRun bool,
+) (string, error) {
+	req := &log_ingest_config.CreateLogIngestConfigParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateLogIngestConfigRequest{
+			LogIngestConfig: m,
+			DryRun:          dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.LogIngestConfig.CreateLogIngestConfig(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.LogIngestConfig
+	if e == nil {
+		return "", nil
+	}
+	return (generatedLogIngestConfig{}).slugOf(e), nil
+}
+
+func (generatedLogIngestConfig) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1LogIngestConfig, error) {
+	req := &log_ingest_config.ReadLogIngestConfigParams{
+		Context: ctx,
+	}
+	resp, err := clients.ConfigV1.LogIngestConfig.ReadLogIngestConfig(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.LogIngestConfig, nil
+}
+
+func (generatedLogIngestConfig) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1LogIngestConfig,
+	params updateParams,
+) error {
+	req := &log_ingest_config.UpdateLogIngestConfigParams{
+		Context: ctx,
+
+		Body: &configv1models.Configv1UpdateLogIngestConfigRequest{
+
+			LogIngestConfig: m,
+			CreateIfMissing: params.createIfMissing,
+			DryRun:          params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.LogIngestConfig.UpdateLogIngestConfig(req)
+	return err
+}
+func (generatedLogIngestConfig) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &log_ingest_config.DeleteLogIngestConfigParams{
+		Context: ctx,
+	}
+	_, err := clients.ConfigV1.LogIngestConfig.DeleteLogIngestConfig(req)
 	return err
 }
 
