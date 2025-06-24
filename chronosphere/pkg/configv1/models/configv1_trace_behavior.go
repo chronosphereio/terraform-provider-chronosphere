@@ -43,13 +43,13 @@ type Configv1TraceBehavior struct {
 	// large trace sample options
 	LargeTraceSampleOptions *TraceBehaviorLargeTraceSampleOptions `json:"large_trace_sample_options,omitempty"`
 
-	// Required name of the TraceBehavior. May be modified after the TraceBehavior is created.
+	// Required. Name of the TraceBehavior. You can modify this value after the TraceBehavior is created.
 	Name string `json:"name,omitempty"`
 
 	// slow sample options
 	SlowSampleOptions *TraceBehaviorSlowSampleOptions `json:"slow_sample_options,omitempty"`
 
-	// Unique identifier of the TraceBehavior. If slug is not provided, one will be generated based of the name field. Cannot be modified after the TraceBehavior is created.
+	// Unique identifier of the TraceBehavior. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the TraceBehavior is created.
 	Slug string `json:"slug,omitempty"`
 
 	// small trace sample options

@@ -27,7 +27,7 @@ type SLODefinition struct {
 	// If true enables burn rate alerting.
 	EnableBurnRateAlerting bool `json:"enable_burn_rate_alerting,omitempty"`
 
-	// The SLO objective
+	// objective
 	Objective float64 `json:"objective,omitempty"`
 
 	// time window

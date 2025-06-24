@@ -51,7 +51,7 @@ type Configv1LogScaleAction struct {
 	// slack post message action
 	SlackPostMessageAction *LogScaleActionSlackPostMessageAction `json:"slack_post_message_action,omitempty"`
 
-	// Unique identifier of the LogScaleAction. If slug is not provided, one will be generated based of the name field. Cannot be modified after the LogScaleAction is created.
+	// Unique identifier of the LogScaleAction. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the LogScaleAction is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the LogScaleAction was last updated. Cannot be set by clients.

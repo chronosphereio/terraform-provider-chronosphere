@@ -18,7 +18,7 @@ import (
 // swagger:model configv1CreateNotificationPolicyRequest
 type Configv1CreateNotificationPolicyRequest struct {
 
-	// If true, the NotificationPolicy will not be created, and no response NotificationPolicy will be returned. The response will return an error if the given NotificationPolicy is invalid.
+	// If true, the NotificationPolicy isn't created, and no response NotificationPolicy will be returned. The response will return an error if the given NotificationPolicy is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// notification policy

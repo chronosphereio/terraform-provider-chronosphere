@@ -27,7 +27,7 @@ type Configv1Service struct {
 	// Optional description of the service collection.
 	Description string `json:"description,omitempty"`
 
-	// Required name of the Service. May be modified after the Service is created.
+	// Required. Name of the Service. You can modify this value after the Service is created.
 	Name string `json:"name,omitempty"`
 
 	// Slug of the notification policy used by default for monitors in this service collection.
@@ -35,7 +35,7 @@ type Configv1Service struct {
 	// This does not override the policy used when a monitor explicitly references a policy.
 	NotificationPolicySlug string `json:"notification_policy_slug,omitempty"`
 
-	// Unique identifier of the Service. If slug is not provided, one will be generated based of the name field. Cannot be modified after the Service is created.
+	// Unique identifier of the Service. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the Service is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Required slug of the team the service collection belongs to.

@@ -18,7 +18,7 @@ import (
 // swagger:model configunstableCreateLinkTemplateRequest
 type ConfigunstableCreateLinkTemplateRequest struct {
 
-	// If true, the LinkTemplate will not be created, and no response LinkTemplate will be returned. The response will return an error if the given LinkTemplate is invalid.
+	// If true, the LinkTemplate isn't created, and no response LinkTemplate will be returned. The response will return an error if the given LinkTemplate is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// link template

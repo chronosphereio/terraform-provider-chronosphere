@@ -27,7 +27,7 @@ type Configv1Collection struct {
 	// Optional description of the collection.
 	Description string `json:"description,omitempty"`
 
-	// Required name of the Collection. May be modified after the Collection is created.
+	// Required. Name of the Collection. You can modify this value after the Collection is created.
 	Name string `json:"name,omitempty"`
 
 	// Slug of the notification policy used by default for monitors in this collection.
@@ -35,7 +35,7 @@ type Configv1Collection struct {
 	// This does not override the policy used when a monitor explicitly references a policy.
 	NotificationPolicySlug string `json:"notification_policy_slug,omitempty"`
 
-	// Unique identifier of the Collection. If slug is not provided, one will be generated based of the name field. Cannot be modified after the Collection is created.
+	// Unique identifier of the Collection. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the Collection is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Required slug of the team the collection belongs to.

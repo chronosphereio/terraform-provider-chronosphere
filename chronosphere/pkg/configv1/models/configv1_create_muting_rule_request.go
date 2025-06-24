@@ -18,7 +18,7 @@ import (
 // swagger:model configv1CreateMutingRuleRequest
 type Configv1CreateMutingRuleRequest struct {
 
-	// If true, the MutingRule will not be created, and no response MutingRule will be returned. The response will return an error if the given MutingRule is invalid.
+	// If true, the MutingRule isn't created, and no response MutingRule will be returned. The response will return an error if the given MutingRule is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// muting rule

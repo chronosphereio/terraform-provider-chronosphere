@@ -50,7 +50,7 @@ type Configv1LogScaleAlert struct {
 	// Email of the user that the alert runs on behalf of. Required.
 	RunAsUser string `json:"run_as_user,omitempty"`
 
-	// Unique identifier of the LogScaleAlert. If slug is not provided, one will be generated based of the name field. Cannot be modified after the LogScaleAlert is created.
+	// Unique identifier of the LogScaleAlert. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the LogScaleAlert is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Tags attached to the alert.

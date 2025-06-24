@@ -32,10 +32,10 @@ type Configv1ServiceAccount struct {
 	// metrics restriction
 	MetricsRestriction *ServiceAccountMetricsRestriction `json:"metrics_restriction,omitempty"`
 
-	// Required name of the ServiceAccount. May be modified after the ServiceAccount is created.
+	// Required. Name of the ServiceAccount. You can modify this value after the ServiceAccount is created.
 	Name string `json:"name,omitempty"`
 
-	// Unique identifier of the ServiceAccount. If slug is not provided, one will be generated based of the name field. Cannot be modified after the ServiceAccount is created.
+	// Unique identifier of the ServiceAccount. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the ServiceAccount is created.
 	Slug string `json:"slug,omitempty"`
 
 	// token is the generated API token of the service account. Cannot be set by

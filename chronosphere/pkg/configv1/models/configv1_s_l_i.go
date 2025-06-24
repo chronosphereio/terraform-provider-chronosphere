@@ -14,17 +14,16 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Configv1SLI SLI is a service level indicator. The contents of this proto are intended to
-// be used to generate queries necessary to measure SLOs.
+// Configv1SLI configv1 s l i
 //
 // swagger:model configv1SLI
 type Configv1SLI struct {
 
-	// These are added to _every_ query and are intended to be used for things
+	// These are made available to the SLO queries and are intended to be used for things
 	// like `cluster!~"dev"`
-	AdditionalPromqlFilters []*Configv1PromQLMatcher `json:"additional_promql_filters"`
+	AdditionalPromqlFilters []*CommonPromQLMatcher `json:"additional_promql_filters"`
 
-	// Custom dimensions are used to configure additional labels to export from
+	// Used to configure additional labels to export from
 	// the underlying queries. This feature provides a logical budget to group
 	// unique combination of dimensions. For example, if you want to track a
 	// budget per endpoint, add the endpoint label as a dimension. These dimensions
@@ -35,8 +34,8 @@ type Configv1SLI struct {
 	// custom indicator
 	CustomIndicator *SLICustomIndicatorConfig `json:"custom_indicator,omitempty"`
 
-	// templated indicator
-	TemplatedIndicator *SLITemplatedIndicatorConfig `json:"templated_indicator,omitempty"`
+	// custom timeslice indicator
+	CustomTimesliceIndicator *SLICustomTimeSliceIndicatorConfig `json:"custom_timeslice_indicator,omitempty"`
 }
 
 // Validate validates this configv1 s l i
@@ -51,7 +50,7 @@ func (m *Configv1SLI) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateTemplatedIndicator(formats); err != nil {
+	if err := m.validateCustomTimesliceIndicator(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -106,17 +105,17 @@ func (m *Configv1SLI) validateCustomIndicator(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1SLI) validateTemplatedIndicator(formats strfmt.Registry) error {
-	if swag.IsZero(m.TemplatedIndicator) { // not required
+func (m *Configv1SLI) validateCustomTimesliceIndicator(formats strfmt.Registry) error {
+	if swag.IsZero(m.CustomTimesliceIndicator) { // not required
 		return nil
 	}
 
-	if m.TemplatedIndicator != nil {
-		if err := m.TemplatedIndicator.Validate(formats); err != nil {
+	if m.CustomTimesliceIndicator != nil {
+		if err := m.CustomTimesliceIndicator.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("templated_indicator")
+				return ve.ValidateName("custom_timeslice_indicator")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("templated_indicator")
+				return ce.ValidateName("custom_timeslice_indicator")
 			}
 			return err
 		}
@@ -137,7 +136,7 @@ func (m *Configv1SLI) ContextValidate(ctx context.Context, formats strfmt.Regist
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateTemplatedIndicator(ctx, formats); err != nil {
+	if err := m.contextValidateCustomTimesliceIndicator(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -183,14 +182,14 @@ func (m *Configv1SLI) contextValidateCustomIndicator(ctx context.Context, format
 	return nil
 }
 
-func (m *Configv1SLI) contextValidateTemplatedIndicator(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1SLI) contextValidateCustomTimesliceIndicator(ctx context.Context, formats strfmt.Registry) error {
 
-	if m.TemplatedIndicator != nil {
-		if err := m.TemplatedIndicator.ContextValidate(ctx, formats); err != nil {
+	if m.CustomTimesliceIndicator != nil {
+		if err := m.CustomTimesliceIndicator.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("templated_indicator")
+				return ve.ValidateName("custom_timeslice_indicator")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("templated_indicator")
+				return ce.ValidateName("custom_timeslice_indicator")
 			}
 			return err
 		}

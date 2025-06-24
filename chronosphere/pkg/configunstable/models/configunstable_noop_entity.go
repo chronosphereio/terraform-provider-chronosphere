@@ -27,13 +27,13 @@ type ConfigunstableNoopEntity struct {
 	// enum
 	Enum ConfigunstableNoopEnum `json:"enum,omitempty"`
 
-	// Required name of the NoopEntity. May be modified after the NoopEntity is created.
+	// Required. Name of the NoopEntity. You can modify this value after the NoopEntity is created.
 	Name string `json:"name,omitempty"`
 
 	// nested enum
 	NestedEnum NoopEntityNestedEnum `json:"nested_enum,omitempty"`
 
-	// Unique identifier of the NoopEntity. If slug is not provided, one will be generated based of the name field. Cannot be modified after the NoopEntity is created.
+	// Unique identifier of the NoopEntity. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the NoopEntity is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the NoopEntity was last updated. Cannot be set by clients.

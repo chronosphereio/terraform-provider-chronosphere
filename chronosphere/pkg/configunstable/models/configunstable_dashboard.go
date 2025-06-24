@@ -30,10 +30,10 @@ type ConfigunstableDashboard struct {
 	// Required raw JSON of the dashboard.
 	DashboardJSON string `json:"dashboard_json,omitempty"`
 
-	// Required name of the Dashboard. May be modified after the Dashboard is created.
+	// Required. Name of the Dashboard. You can modify this value after the Dashboard is created.
 	Name string `json:"name,omitempty"`
 
-	// Unique identifier of the Dashboard. If slug is not provided, one will be generated based of the name field. Cannot be modified after the Dashboard is created.
+	// Unique identifier of the Dashboard. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the Dashboard is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the Dashboard was last updated. Cannot be set by clients.

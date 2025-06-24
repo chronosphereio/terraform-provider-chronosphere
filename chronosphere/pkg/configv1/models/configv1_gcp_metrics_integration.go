@@ -28,13 +28,13 @@ type Configv1GcpMetricsIntegration struct {
 	// Metric groups to be ingested for this integration.
 	MetricGroups []*GcpMetricsIntegrationMetricGroup `json:"metric_groups"`
 
-	// Required name of the GcpMetricsIntegration. May be modified after the GcpMetricsIntegration is created.
+	// Required. Name of the GcpMetricsIntegration. You can modify this value after the GcpMetricsIntegration is created.
 	Name string `json:"name,omitempty"`
 
 	// service account
 	ServiceAccount *Configv1GcpMetricsIntegrationServiceAccount `json:"service_account,omitempty"`
 
-	// Unique identifier of the GcpMetricsIntegration. If slug is not provided, one will be generated based of the name field. Cannot be modified after the GcpMetricsIntegration is created.
+	// Unique identifier of the GcpMetricsIntegration. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the GcpMetricsIntegration is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the GcpMetricsIntegration was last updated. Cannot be set by clients.
