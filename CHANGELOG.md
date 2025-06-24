@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+* Add timeslice indicator support to `chronosphere_slo` resource with `custom_timeslice_indicator` field.
+
 ## v1.10.0
 
 Added:

@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	sliTypes                      = []string{"sli.0.custom_indicator"}
+	sliTypes                      = []string{"sli.0.custom_indicator", "sli.0.custom_timeslice_indicator"}
 	customIndicatorQueryTemplates = []string{"sli.0.custom_indicator.0.good_query_template", "sli.0.custom_indicator.0.bad_query_template"}
 )
 
@@ -127,6 +127,15 @@ var SLI = map[string]*schema.Schema{
 			Schema: SloCustomIndicator,
 		},
 	},
+	"custom_timeslice_indicator": {
+		Type:         schema.TypeList,
+		Optional:     true,
+		MaxItems:     1,
+		ExactlyOneOf: sliTypes,
+		Elem: &schema.Resource{
+			Schema: SloCustomTimesliceIndicator,
+		},
+	},
 	"custom_dimension_labels": {
 		Type:     schema.TypeList,
 		Optional: true,
@@ -168,6 +177,35 @@ var SLOAdditionalPromQLFilters = &schema.Schema{
 			"value": {
 				Type:     schema.TypeString,
 				Required: true,
+			},
+		},
+	},
+}
+
+var SloCustomTimesliceIndicator = map[string]*schema.Schema{
+	"query_template": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"timeslice_size": Enum{
+		Value:    enum.SLITimeSliceSize.ToStrings(),
+		Required: true,
+	}.Schema(),
+	"condition": {
+		Type:     schema.TypeList,
+		Required: true,
+		MaxItems: 1,
+		MinItems: 1,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"op": Enum{
+					Value:    enum.ConditionOp.ToStrings(),
+					Required: true,
+				}.Schema(),
+				"value": {
+					Type:     schema.TypeFloat,
+					Required: true,
+				},
 			},
 		},
 	},

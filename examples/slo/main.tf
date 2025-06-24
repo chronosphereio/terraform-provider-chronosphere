@@ -179,3 +179,72 @@ resource "chronosphere_slo" "slo_without_alerting" {
     custom_dimension_labels = ["label1", "label2"]
   }
 }
+
+resource "chronosphere_slo" "slo_with_timeslice_availability" {
+  name                   = "SLO With Timeslice Availability"
+  collection_id          = chronosphere_collection.c.id
+  notification_policy_id = chronosphere_notification_policy.np.id
+
+  definition {
+    objective = 99.95
+    time_window {
+      duration = "28d"
+    }
+    enable_burn_rate_alerting = true
+  }
+
+  sli {
+    custom_timeslice_indicator {
+      query_template = <<-EOT
+        sum(rate(http_requests_total{
+          status!~"5..",
+          {{ .AdditionalFilters }}
+        }[{{ .TimeSlice }}])) / sum(rate(http_requests_total{
+          {{ .AdditionalFilters }}
+        }[{{ .TimeSlice }}]))
+      EOT
+      timeslice_size = "ONE_MINUTE"
+      condition {
+        op    = "GEQ"
+        value = 0.99
+      }
+    }
+    custom_dimension_labels = ["service", "endpoint"]
+    
+    additional_promql_filters {
+      name  = "env"
+      type  = "MatchEqual"
+      value = "prod"
+    }
+  }
+}
+
+resource "chronosphere_slo" "slo_with_timeslice_latency" {
+  name                   = "SLO With Timeslice Latency"
+  collection_id          = chronosphere_collection.c.id
+  notification_policy_id = chronosphere_notification_policy.np.id
+
+  definition {
+    objective = 95.0
+    time_window {
+      duration = "7d"
+    }
+    enable_burn_rate_alerting = true
+  }
+
+  sli {
+    custom_timeslice_indicator {
+      query_template = <<-EOT
+        histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{
+          {{ .AdditionalFilters }}
+        }[{{ .TimeSlice }}])) by (le, {{ .GroupBy }}))
+      EOT
+      timeslice_size = "FIVE_MINUTES"
+      condition {
+        op    = "LEQ"
+        value = 0.5
+      }
+    }
+    custom_dimension_labels = ["service"]
+  }
+}
