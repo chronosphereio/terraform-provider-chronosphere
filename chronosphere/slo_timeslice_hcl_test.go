@@ -61,13 +61,13 @@ resource "chronosphere_slo" "test" {
 
   sli {
     custom_timeslice_indicator {
-      query_template = "sum(rate(http_requests_total{status!~\"5..\"}[{{.TimeSlice}}])) / sum(rate(http_requests_total[{{.TimeSlice}}]))"
-      timeslice_size = "ONE_MINUTE"
-
       condition {
         op    = "GEQ"
         value = 0.99
       }
+
+      query_template = "sum(rate(http_requests_total{status!~\"5..\"}[{{.TimeSlice}}])) / sum(rate(http_requests_total[{{.TimeSlice}}]))"
+      timeslice_size = "ONE_MINUTE"
     }
   }
 }
@@ -104,13 +104,13 @@ resource "chronosphere_slo" "latency" {
 
   sli {
     custom_timeslice_indicator {
-      query_template = "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[{{.TimeSlice}}])) by (le))"
-      timeslice_size = "FIVE_MINUTES"
-
       condition {
         op    = "LEQ"
         value = 0.5
       }
+
+      query_template = "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[{{.TimeSlice}}])) by (le))"
+      timeslice_size = "FIVE_MINUTES"
     }
   }
 }

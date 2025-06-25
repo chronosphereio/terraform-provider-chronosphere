@@ -18,6 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"go.uber.org/atomic"
 
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
@@ -57,12 +58,24 @@ type sloConverter struct{}
 
 func (sloConverter) toModel(s *intschema.Slo) (*models.Configv1SLO, error) {
 	var customIndicator *models.SLICustomIndicatorConfig
+	var customTimesliceIndicator *models.SLICustomTimeSliceIndicatorConfig
 
 	if s.Sli.CustomIndicator != nil {
 		customIndicator = &models.SLICustomIndicatorConfig{
 			GoodQueryTemplate:  s.Sli.CustomIndicator.GoodQueryTemplate,
 			BadQueryTemplate:   s.Sli.CustomIndicator.BadQueryTemplate,
 			TotalQueryTemplate: s.Sli.CustomIndicator.TotalQueryTemplate,
+		}
+	}
+
+	if s.Sli.CustomTimesliceIndicator != nil {
+		customTimesliceIndicator = &models.SLICustomTimeSliceIndicatorConfig{
+			QueryTemplate: s.Sli.CustomTimesliceIndicator.QueryTemplate,
+			TimesliceSize: enum.SLITimeSliceSize.V1(s.Sli.CustomTimesliceIndicator.TimesliceSize),
+			Condition: &models.SLITimeSliceCondition{
+				Op:    enum.ConditionOp.V1(s.Sli.CustomTimesliceIndicator.Condition.Op),
+				Value: s.Sli.CustomTimesliceIndicator.Condition.Value,
+			},
 		}
 	}
 
@@ -87,9 +100,10 @@ func (sloConverter) toModel(s *intschema.Slo) (*models.Configv1SLO, error) {
 			EnableBurnRateAlerting: s.Definition.EnableBurnRateAlerting,
 		},
 		Sli: &models.Configv1SLI{
-			CustomIndicator:         customIndicator,
-			CustomDimensionLabels:   s.Sli.CustomDimensionLabels,
-			AdditionalPromqlFilters: promFiltersToModel(s.Sli.AdditionalPromqlFilters),
+			CustomIndicator:          customIndicator,
+			CustomTimesliceIndicator: customTimesliceIndicator,
+			CustomDimensionLabels:    s.Sli.CustomDimensionLabels,
+			AdditionalPromqlFilters:  promFiltersToModel(s.Sli.AdditionalPromqlFilters),
 		},
 		SignalGrouping: monitorSignalGroupingToModel(s.SignalGrouping),
 		Annotations:    s.Annotations,
@@ -101,12 +115,50 @@ func (sloConverter) fromModel(
 	s *models.Configv1SLO,
 ) (*intschema.Slo, error) {
 	var customIndicator *intschema.SloSliCustomIndicator
+	var customTimesliceIndicator *intschema.SloSliCustomTimesliceIndicator
 
 	if s.Sli.CustomIndicator != nil {
 		customIndicator = &intschema.SloSliCustomIndicator{
 			GoodQueryTemplate:  s.Sli.CustomIndicator.GoodQueryTemplate,
 			BadQueryTemplate:   s.Sli.CustomIndicator.BadQueryTemplate,
 			TotalQueryTemplate: s.Sli.CustomIndicator.TotalQueryTemplate,
+		}
+	}
+
+	if s.Sli.CustomTimesliceIndicator != nil {
+		// Convert the enum values back to their user-facing aliases
+		timesliceSize := "ONE_MINUTE" // default
+		if s.Sli.CustomTimesliceIndicator.TimesliceSize == models.SLITimeSliceSizeTIMESLICESIZEFIVEMINUTES {
+			timesliceSize = "FIVE_MINUTES"
+		}
+
+		conditionOp := "GEQ" // default
+		switch s.Sli.CustomTimesliceIndicator.Condition.Op {
+		case models.ConditionOpGEQ:
+			conditionOp = "GEQ"
+		case models.ConditionOpGT:
+			conditionOp = "GT"
+		case models.ConditionOpLEQ:
+			conditionOp = "LEQ"
+		case models.ConditionOpLT:
+			conditionOp = "LT"
+		case models.ConditionOpEQ:
+			conditionOp = "EQ"
+		case models.ConditionOpNEQ:
+			conditionOp = "NEQ"
+		case models.ConditionOpEXISTS:
+			conditionOp = "EXISTS"
+		case models.ConditionOpNOTEXISTS:
+			conditionOp = "NOT_EXISTS"
+		}
+
+		customTimesliceIndicator = &intschema.SloSliCustomTimesliceIndicator{
+			QueryTemplate: s.Sli.CustomTimesliceIndicator.QueryTemplate,
+			TimesliceSize: timesliceSize,
+			Condition: intschema.SloSliCustomTimesliceIndicatorCondition{
+				Op:    conditionOp,
+				Value: s.Sli.CustomTimesliceIndicator.Condition.Value,
+			},
 		}
 	}
 
@@ -130,9 +182,10 @@ func (sloConverter) fromModel(
 			EnableBurnRateAlerting: s.Definition.EnableBurnRateAlerting,
 		},
 		Sli: intschema.SloSli{
-			CustomIndicator:         customIndicator,
-			CustomDimensionLabels:   s.Sli.CustomDimensionLabels,
-			AdditionalPromqlFilters: promFiltersFromModel(s.Sli.AdditionalPromqlFilters),
+			CustomIndicator:          customIndicator,
+			CustomTimesliceIndicator: customTimesliceIndicator,
+			CustomDimensionLabels:    s.Sli.CustomDimensionLabels,
+			AdditionalPromqlFilters:  promFiltersFromModel(s.Sli.AdditionalPromqlFilters),
 		},
 		SignalGrouping: monitorSignalGroupingFromModel(s.SignalGrouping),
 		Annotations:    s.Annotations,
