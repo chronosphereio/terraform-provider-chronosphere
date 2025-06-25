@@ -87,9 +87,9 @@ type SloDefinitionTimeWindow struct {
 }
 
 type SloSliCustomTimesliceIndicator struct {
-	QueryTemplate   string                                    `intschema:"query_template"`
-	TimesliceSize   string                                    `intschema:"timeslice_size"`
-	Condition       *SloSliCustomTimesliceIndicatorCondition `intschema:"condition,list_encoded_object"`
+	QueryTemplate   string                                   `intschema:"query_template"`
+	TimesliceSize   string                                   `intschema:"timeslice_size"`
+	Condition       SloSliCustomTimesliceIndicatorCondition `intschema:"condition,list_encoded_object"`
 }
 
 type SloSliCustomTimesliceIndicatorCondition struct {
