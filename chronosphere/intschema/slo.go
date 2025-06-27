@@ -63,9 +63,21 @@ func (o *Slo) Ref() tfid.ID {
 }
 
 type SloSli struct {
-	AdditionalPromqlFilters []SLOAdditionalPromQLFilters `intschema:"additional_promql_filters,optional"`
-	CustomDimensionLabels   []string                     `intschema:"custom_dimension_labels,optional"`
-	CustomIndicator         *SloSliCustomIndicator       `intschema:"custom_indicator,optional,list_encoded_object"`
+	AdditionalPromqlFilters  []SLOAdditionalPromQLFilters    `intschema:"additional_promql_filters,optional"`
+	CustomDimensionLabels    []string                        `intschema:"custom_dimension_labels,optional"`
+	CustomIndicator          *SloSliCustomIndicator          `intschema:"custom_indicator,optional,list_encoded_object"`
+	CustomTimesliceIndicator *SloSliCustomTimesliceIndicator `intschema:"custom_timeslice_indicator,optional,list_encoded_object"`
+}
+
+type SloSliCustomTimesliceIndicator struct {
+	Condition     SloSliCustomTimesliceIndicatorCondition `intschema:"condition,list_encoded_object"`
+	QueryTemplate string                                  `intschema:"query_template"`
+	TimesliceSize string                                  `intschema:"timeslice_size"`
+}
+
+type SloSliCustomTimesliceIndicatorCondition struct {
+	Op    string  `intschema:"op"`
+	Value float64 `intschema:"value"`
 }
 
 type SloSliCustomIndicator struct {
