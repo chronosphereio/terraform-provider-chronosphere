@@ -132,31 +132,11 @@ func (sloConverter) fromModel(
 			timesliceSize = "FIVE_MINUTES"
 		}
 
-		conditionOp := "GEQ" // default
-		switch s.Sli.CustomTimesliceIndicator.Condition.Op {
-		case models.ConditionOpGEQ:
-			conditionOp = "GEQ"
-		case models.ConditionOpGT:
-			conditionOp = "GT"
-		case models.ConditionOpLEQ:
-			conditionOp = "LEQ"
-		case models.ConditionOpLT:
-			conditionOp = "LT"
-		case models.ConditionOpEQ:
-			conditionOp = "EQ"
-		case models.ConditionOpNEQ:
-			conditionOp = "NEQ"
-		case models.ConditionOpEXISTS:
-			conditionOp = "EXISTS"
-		case models.ConditionOpNOTEXISTS:
-			conditionOp = "NOT_EXISTS"
-		}
-
 		customTimesliceIndicator = &intschema.SloSliCustomTimesliceIndicator{
 			QueryTemplate: s.Sli.CustomTimesliceIndicator.QueryTemplate,
 			TimesliceSize: timesliceSize,
 			Condition: intschema.SloSliCustomTimesliceIndicatorCondition{
-				Op:    conditionOp,
+				Op:    string(s.Sli.CustomTimesliceIndicator.Condition.Op),
 				Value: s.Sli.CustomTimesliceIndicator.Condition.Value,
 			},
 		}

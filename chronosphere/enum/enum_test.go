@@ -134,6 +134,10 @@ func TestAllEnumsValidate(t *testing.T) {
 			v1SwaggerName: "LogScaleAlertAlertType",
 			enum:          LogscaleAlertType.ToStrings(),
 		},
+		{
+			v1SwaggerName: "SLITimeSliceSize",
+			enum:          SLITimeSliceSize.ToStrings(),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.enum.Name(), func(t *testing.T) {
