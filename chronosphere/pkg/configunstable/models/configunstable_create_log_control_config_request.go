@@ -18,7 +18,7 @@ import (
 // swagger:model configunstableCreateLogControlConfigRequest
 type ConfigunstableCreateLogControlConfigRequest struct {
 
-	// If true, the LogControlConfig will not be created, and no response LogControlConfig will be returned. The response will return an error if the given LogControlConfig is invalid.
+	// If true, the LogControlConfig isn't created, and no response LogControlConfig will be returned. The response will return an error if the given LogControlConfig is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// log control config

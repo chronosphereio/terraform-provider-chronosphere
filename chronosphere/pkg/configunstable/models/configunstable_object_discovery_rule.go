@@ -21,10 +21,10 @@ type ConfigunstableObjectDiscoveryRule struct {
 	// metric
 	Metric *ObjectDiscoveryRuleMetricRule `json:"metric,omitempty"`
 
-	// Required name of the ObjectDiscoveryRule. May be modified after the ObjectDiscoveryRule is created.
+	// Required. Name of the ObjectDiscoveryRule. You can modify this value after the ObjectDiscoveryRule is created.
 	Name string `json:"name,omitempty"`
 
-	// Unique identifier of the ObjectDiscoveryRule. If slug is not provided, one will be generated based of the name field. Cannot be modified after the ObjectDiscoveryRule is created.
+	// Unique identifier of the ObjectDiscoveryRule. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the ObjectDiscoveryRule is created.
 	Slug string `json:"slug,omitempty"`
 }
 

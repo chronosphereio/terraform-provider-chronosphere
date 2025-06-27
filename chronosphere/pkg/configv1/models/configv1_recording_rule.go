@@ -41,7 +41,7 @@ type Configv1RecordingRule struct {
 	// metric name.
 	MetricName string `json:"metric_name,omitempty"`
 
-	// Required name of the RecordingRule. May be modified after the RecordingRule is created.
+	// Required. Name of the RecordingRule. You can modify this value after the RecordingRule is created.
 	Name string `json:"name,omitempty"`
 
 	// The PromQL expression to evaluate at the time of each evaluation cycle.
@@ -49,7 +49,7 @@ type Configv1RecordingRule struct {
 	// defined by the metric_name (or name) field.
 	PrometheusExpr string `json:"prometheus_expr,omitempty"`
 
-	// Unique identifier of the RecordingRule. If slug is not provided, one will be generated based of the name field. Cannot be modified after the RecordingRule is created.
+	// Unique identifier of the RecordingRule. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the RecordingRule is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the RecordingRule was last updated. Cannot be set by clients.

@@ -18,7 +18,7 @@ import (
 // swagger:model configv1CreateLogScaleAlertRequest
 type Configv1CreateLogScaleAlertRequest struct {
 
-	// If true, the LogScaleAlert will not be created, and no response LogScaleAlert will be returned. The response will return an error if the given LogScaleAlert is invalid.
+	// If true, the LogScaleAlert isn't created, and no response LogScaleAlert will be returned. The response will return an error if the given LogScaleAlert is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// log scale alert

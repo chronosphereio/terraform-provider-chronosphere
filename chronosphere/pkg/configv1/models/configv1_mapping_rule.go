@@ -23,7 +23,7 @@ type Configv1MappingRule struct {
 	// aggregation policy
 	AggregationPolicy *MappingRuleAggregationPolicy `json:"aggregation_policy,omitempty"`
 
-	// Required slug of the bucket the MappingRule belongs to.
+	// Required. Slug of the bucket the MappingRule belongs to.
 	BucketSlug string `json:"bucket_slug,omitempty"`
 
 	// Timestamp of when the MappingRule was created. Cannot be set by clients.
@@ -41,10 +41,10 @@ type Configv1MappingRule struct {
 	// mode
 	Mode Configv1MappingRuleMode `json:"mode,omitempty"`
 
-	// Required name of the MappingRule. May be modified after the MappingRule is created.
+	// Required. Name of the MappingRule. You can modify this value after the MappingRule is created.
 	Name string `json:"name,omitempty"`
 
-	// Unique identifier of the MappingRule. If slug is not provided, one will be generated based of the name field. Cannot be modified after the MappingRule is created.
+	// Unique identifier of the MappingRule. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the MappingRule is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the MappingRule was last updated. Cannot be set by clients.

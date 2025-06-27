@@ -19,7 +19,6 @@ import (
 	"os"
 	"testing"
 
-	configunstable "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	configv1 "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 
 	"github.com/getkin/kin-openapi/openapi2"
@@ -68,7 +67,7 @@ func TestEnumConversions(t *testing.T) {
 
 	// v1 -> v1
 	require.Equal(t,
-		configunstable.ConfigunstablePromQLMatcherTypeMatchEqual,
+		configv1.CommonPromQLMatcherTypeMatchEqual,
 		PromQLMatcherType.V1("MatchEqual"))
 }
 

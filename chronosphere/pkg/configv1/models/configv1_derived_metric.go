@@ -32,13 +32,13 @@ type Configv1DerivedMetric struct {
 	// Example: cpu_usage:instance
 	MetricName string `json:"metric_name,omitempty"`
 
-	// Required name of the DerivedMetric. May be modified after the DerivedMetric is created.
+	// Required. Name of the DerivedMetric. You can modify this value after the DerivedMetric is created.
 	Name string `json:"name,omitempty"`
 
 	// Required queries that the derived metric can map to.
 	Queries []*DerivedMetricSelectorQuery `json:"queries"`
 
-	// Unique identifier of the DerivedMetric. If slug is not provided, one will be generated based of the name field. Cannot be modified after the DerivedMetric is created.
+	// Unique identifier of the DerivedMetric. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the DerivedMetric is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the DerivedMetric was last updated. Cannot be set by clients.

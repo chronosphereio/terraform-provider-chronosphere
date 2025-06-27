@@ -154,18 +154,18 @@ func v1CollectionRefToUnstable(ref *models.Configv1CollectionReference) *models.
 	}
 }
 
-func promFiltersToModel(filters []intschema.SLOAdditionalPromQLFilters) []*models.Configv1PromQLMatcher {
-	return sliceutil.Map(filters, func(f intschema.SLOAdditionalPromQLFilters) *models.Configv1PromQLMatcher {
-		return &models.Configv1PromQLMatcher{
+func promFiltersToModel(filters []intschema.SLOAdditionalPromQLFilters) []*models.CommonPromQLMatcher {
+	return sliceutil.Map(filters, func(f intschema.SLOAdditionalPromQLFilters) *models.CommonPromQLMatcher {
+		return &models.CommonPromQLMatcher{
 			Name:  f.Name,
-			Type:  models.Configv1PromQLMatcherType(f.Type),
+			Type:  models.CommonPromQLMatcherType(f.Type),
 			Value: f.Value,
 		}
 	})
 }
 
-func promFiltersFromModel(filters []*models.Configv1PromQLMatcher) []intschema.SLOAdditionalPromQLFilters {
-	return sliceutil.Map(filters, func(f *models.Configv1PromQLMatcher) intschema.SLOAdditionalPromQLFilters {
+func promFiltersFromModel(filters []*models.CommonPromQLMatcher) []intschema.SLOAdditionalPromQLFilters {
+	return sliceutil.Map(filters, func(f *models.CommonPromQLMatcher) intschema.SLOAdditionalPromQLFilters {
 		return intschema.SLOAdditionalPromQLFilters{
 			Name:  f.Name,
 			Type:  string(f.Type),

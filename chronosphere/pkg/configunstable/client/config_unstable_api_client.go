@@ -10,15 +10,14 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/budget_control"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/link_template"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_budget"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_control_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/noop_entity"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/object_discovery_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/saved_trace_search"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/service"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/slo"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/sync_prometheus"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_tail_sampling_rules"
@@ -67,15 +66,14 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 
 	cli := new(ConfigUnstableAPI)
 	cli.Transport = transport
-	cli.BudgetControl = budget_control.New(transport, formats)
 	cli.Dashboard = dashboard.New(transport, formats)
 	cli.LinkTemplate = link_template.New(transport, formats)
+	cli.LogBudget = log_budget.New(transport, formats)
 	cli.LogControlConfig = log_control_config.New(transport, formats)
 	cli.NoopEntity = noop_entity.New(transport, formats)
 	cli.ObjectDiscoveryRule = object_discovery_rule.New(transport, formats)
 	cli.SavedTraceSearch = saved_trace_search.New(transport, formats)
 	cli.Service = service.New(transport, formats)
-	cli.SLO = slo.New(transport, formats)
 	cli.SyncPrometheus = sync_prometheus.New(transport, formats)
 	cli.TraceJaegerRemoteSamplingStrategy = trace_jaeger_remote_sampling_strategy.New(transport, formats)
 	cli.TraceTailSamplingRules = trace_tail_sampling_rules.New(transport, formats)
@@ -124,11 +122,11 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // ConfigUnstableAPI is a client for config unstable API
 type ConfigUnstableAPI struct {
-	BudgetControl budget_control.ClientService
-
 	Dashboard dashboard.ClientService
 
 	LinkTemplate link_template.ClientService
+
+	LogBudget log_budget.ClientService
 
 	LogControlConfig log_control_config.ClientService
 
@@ -139,8 +137,6 @@ type ConfigUnstableAPI struct {
 	SavedTraceSearch saved_trace_search.ClientService
 
 	Service service.ClientService
-
-	SLO slo.ClientService
 
 	SyncPrometheus sync_prometheus.ClientService
 
@@ -156,15 +152,14 @@ type ConfigUnstableAPI struct {
 // SetTransport changes the transport on the client and all its subresources
 func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
-	c.BudgetControl.SetTransport(transport)
 	c.Dashboard.SetTransport(transport)
 	c.LinkTemplate.SetTransport(transport)
+	c.LogBudget.SetTransport(transport)
 	c.LogControlConfig.SetTransport(transport)
 	c.NoopEntity.SetTransport(transport)
 	c.ObjectDiscoveryRule.SetTransport(transport)
 	c.SavedTraceSearch.SetTransport(transport)
 	c.Service.SetTransport(transport)
-	c.SLO.SetTransport(transport)
 	c.SyncPrometheus.SetTransport(transport)
 	c.TraceJaegerRemoteSamplingStrategy.SetTransport(transport)
 	c.TraceTailSamplingRules.SetTransport(transport)

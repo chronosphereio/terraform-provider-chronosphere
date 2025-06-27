@@ -15,25 +15,25 @@
 package enum
 
 import (
-	configunstable "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	configv1 "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // PromQLMatcherType is an enum.
-var PromQLMatcherType = newEnum("PromQLMatcherType", []value[configunstable.ConfigunstablePromQLMatcherType]{
+var PromQLMatcherType = newEnum("PromQLMatcherType", []value[configv1.CommonPromQLMatcherType]{
 	{
-		v1:    configunstable.ConfigunstablePromQLMatcherTypeMatchEqual,
+		v1:    configv1.CommonPromQLMatcherTypeMatchEqual,
 		alias: "MatchEqual",
 	},
 	{
-		v1:    configunstable.ConfigunstablePromQLMatcherTypeMatchNotEqual,
+		v1:    configv1.CommonPromQLMatcherTypeMatchNotEqual,
 		alias: "MatchNotEqual",
 	},
 	{
-		v1:    configunstable.ConfigunstablePromQLMatcherTypeMatchRegexp,
+		v1:    configv1.CommonPromQLMatcherTypeMatchRegexp,
 		alias: "MatchRegex",
 	},
 	{
-		v1:    configunstable.ConfigunstablePromQLMatcherTypeMatchNotRegexp,
+		v1:    configv1.CommonPromQLMatcherTypeMatchNotRegexp,
 		alias: "MatchNotRegex",
 	},
 })

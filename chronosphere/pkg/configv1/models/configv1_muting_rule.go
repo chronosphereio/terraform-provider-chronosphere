@@ -20,7 +20,7 @@ import (
 // swagger:model configv1MutingRule
 type Configv1MutingRule struct {
 
-	// Optional comment that explains why the muting rule was created.
+	// Descriptive comment that explains why the muting rule was created.
 	Comment string `json:"comment,omitempty"`
 
 	// Timestamp of when the MutingRule was created. Cannot be set by clients.
@@ -28,23 +28,23 @@ type Configv1MutingRule struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Timestamp of when the muting rule stops being active.
+	// Required. Timestamp of when the muting rule stops being active.
 	// Format: date-time
 	EndsAt strfmt.DateTime `json:"ends_at,omitempty"`
 
-	// Specify which series are silenced by the muting rule. Alerting series must
-	// match all muting rule matchers to be silenced.
-	// This value cannot be updated. Updates must specify the original value.
+	// Required. Specifies which series are silenced by the muting rule. Alerting
+	// series must match all muting rule matchers to be silenced. You can't update this
+	// value. Updates must specify the original value.
 	LabelMatchers []*Configv1MutingRuleLabelMatcher `json:"label_matchers"`
 
-	// Required name of the MutingRule. May be modified after the MutingRule is created.
+	// Required. Name of the MutingRule. You can modify this value after the MutingRule is created.
 	Name string `json:"name,omitempty"`
 
-	// Unique identifier of the MutingRule. If slug is not provided, one will be generated based of the name field. Cannot be modified after the MutingRule is created.
+	// Unique identifier of the MutingRule. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the MutingRule is created.
 	Slug string `json:"slug,omitempty"`
 
-	// Timestamp of when the muting rule becomes active.
-	// This value cannot be updated. Updates must specify the original value.
+	// Required. Timestamp of when the muting rule becomes active. You can't update
+	// this value. Updates must specify the original value.
 	// Format: date-time
 	StartsAt strfmt.DateTime `json:"starts_at,omitempty"`
 

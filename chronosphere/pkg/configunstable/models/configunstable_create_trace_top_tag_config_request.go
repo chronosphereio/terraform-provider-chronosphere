@@ -18,7 +18,7 @@ import (
 // swagger:model configunstableCreateTraceTopTagConfigRequest
 type ConfigunstableCreateTraceTopTagConfigRequest struct {
 
-	// If true, the TraceTopTagConfig will not be created, and no response TraceTopTagConfig will be returned. The response will return an error if the given TraceTopTagConfig is invalid.
+	// If true, the TraceTopTagConfig isn't created, and no response TraceTopTagConfig will be returned. The response will return an error if the given TraceTopTagConfig is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// trace top tag config

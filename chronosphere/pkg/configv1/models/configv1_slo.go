@@ -41,12 +41,13 @@ type Configv1SLO struct {
 	// and can be used to route alerts with notification overrides.
 	Labels map[string]string `json:"labels,omitempty"`
 
-	// Required name of the SLO. May be modified after the SLO is created.
+	// Required. Name of the SLO. You can modify this value after the SLO is created.
 	Name string `json:"name,omitempty"`
 
 	// Optional notification policy to explicitly apply to the generated monitors.
-	// If this is not set then the team this SLO will belong to must have a
-	// default notification policy
+	// Slug of the notification policy to use for the SLO. If you don't specify a value,
+	// then the collection or service this SLO belongs to must have a notification
+	// policy.
 	NotificationPolicySlug string `json:"notification_policy_slug,omitempty"`
 
 	// signal grouping
@@ -55,7 +56,7 @@ type Configv1SLO struct {
 	// sli
 	Sli *Configv1SLI `json:"sli,omitempty"`
 
-	// Unique identifier of the SLO. If slug is not provided, one will be generated based of the name field. Cannot be modified after the SLO is created.
+	// Unique identifier of the SLO. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the SLO is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the SLO was last updated. Cannot be set by clients.
