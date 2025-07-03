@@ -7,6 +7,9 @@
 Added:
 * Add timeslice indicator support to `chronosphere_slo` resource with `custom_timeslice_indicator` field.
 
+Deprecated:
+* Deprecate `permissive` in `chronosphere_rollup_rule`.
+
 ## v1.10.0
 
 Added:
