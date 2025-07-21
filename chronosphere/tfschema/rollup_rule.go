@@ -100,9 +100,10 @@ var RollupRule = map[string]*schema.Schema{
 		Default:  false,
 	},
 	"permissive": {
-		Type:     schema.TypeBool,
-		Optional: true,
-		Default:  false,
+		Type:       schema.TypeBool,
+		Optional:   true,
+		Default:    false,
+		Deprecated: "permissive is no longer supported",
 	},
 	"mode": Enum{
 		Value:    enum.RollupModeType.ToStrings(),
