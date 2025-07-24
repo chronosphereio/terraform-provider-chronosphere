@@ -18,7 +18,7 @@ import (
 // swagger:model configv1CreateOtelMetricsIngestionRequest
 type Configv1CreateOtelMetricsIngestionRequest struct {
 
-	// If true, the OtelMetricsIngestion isn't created, and no response OtelMetricsIngestion will be returned. The response will return an error if the given OtelMetricsIngestion is invalid.
+	// If `true`, the OtelMetricsIngestion isn't created, and no response OtelMetricsIngestion will be returned. The response will return an error if the given OtelMetricsIngestion is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// otel metrics ingestion

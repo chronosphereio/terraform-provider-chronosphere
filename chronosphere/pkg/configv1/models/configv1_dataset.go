@@ -30,7 +30,7 @@ type Configv1Dataset struct {
 	// Required. Description of the dataset.
 	Description string `json:"description,omitempty"`
 
-	// Required. Name of the Dataset. You can modify this value after the Dataset is created.
+	// Name of the Dataset. You can modify this value after the Dataset is created.
 	Name string `json:"name,omitempty"`
 
 	// Unique identifier of the Dataset. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the Dataset is created.

@@ -18,7 +18,7 @@ import (
 // swagger:model configunstableCreateTraceJaegerRemoteSamplingStrategyRequest
 type ConfigunstableCreateTraceJaegerRemoteSamplingStrategyRequest struct {
 
-	// If true, the TraceJaegerRemoteSamplingStrategy isn't created, and no response TraceJaegerRemoteSamplingStrategy will be returned. The response will return an error if the given TraceJaegerRemoteSamplingStrategy is invalid.
+	// If `true`, the TraceJaegerRemoteSamplingStrategy isn't created, and no response TraceJaegerRemoteSamplingStrategy will be returned. The response will return an error if the given TraceJaegerRemoteSamplingStrategy is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// trace jaeger remote sampling strategy

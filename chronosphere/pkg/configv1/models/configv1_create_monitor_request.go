@@ -18,7 +18,7 @@ import (
 // swagger:model configv1CreateMonitorRequest
 type Configv1CreateMonitorRequest struct {
 
-	// If true, the Monitor isn't created, and no response Monitor will be returned. The response will return an error if the given Monitor is invalid.
+	// If `true`, the Monitor isn't created, and no response Monitor will be returned. The response will return an error if the given Monitor is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// monitor

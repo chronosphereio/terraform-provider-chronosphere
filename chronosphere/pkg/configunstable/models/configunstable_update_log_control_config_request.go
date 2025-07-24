@@ -18,10 +18,10 @@ import (
 // swagger:model configunstableUpdateLogControlConfigRequest
 type ConfigunstableUpdateLogControlConfigRequest struct {
 
-	// If true, the LogControlConfig will be created if it does not already exist. If false, an error will be returned if the LogControlConfig does not already exist.
+	// If `true`, the LogControlConfig will be created if it does not already exist. If `false`, an error will be returned if the LogControlConfig does not already exist.
 	CreateIfMissing bool `json:"create_if_missing,omitempty"`
 
-	// If true, the LogControlConfig isn't created or updated, and no response LogControlConfig will be returned. The response will return an error if the given LogControlConfig is invalid.
+	// If `true`, the LogControlConfig isn't created or updated, and no response LogControlConfig will be returned. The response will return an error if the given LogControlConfig is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// log control config

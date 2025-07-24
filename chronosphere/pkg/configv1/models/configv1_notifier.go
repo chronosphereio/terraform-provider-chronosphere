@@ -31,7 +31,7 @@ type Configv1Notifier struct {
 	// email
 	Email *NotifierEmailConfig `json:"email,omitempty"`
 
-	// Required. Name of the Notifier. You can modify this value after the Notifier is created.
+	// Name of the Notifier. You can modify this value after the Notifier is created.
 	Name string `json:"name,omitempty"`
 
 	// ops genie

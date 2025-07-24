@@ -28,7 +28,7 @@ type Configv1NotificationPolicy struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Required. Name of the NotificationPolicy. You can modify this value after the NotificationPolicy is created.
+	// Name of the NotificationPolicy. You can modify this value after the NotificationPolicy is created.
 	Name string `json:"name,omitempty"`
 
 	// routes
