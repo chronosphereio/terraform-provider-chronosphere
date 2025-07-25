@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+* Add unstable `chronosphere_consumption_config` resource.
+
 ## v1.11.0
 
 Added:

@@ -360,4 +360,11 @@ var Resources = mustValidate([]Resource{
 		Schema:      tfschema.LogIngestConfig,
 		SingletonID: "log_ingest_config_singleton",
 	},
+	{
+		Name:        "consumption_config",
+		Entity:      "ConsumptionConfig",
+		API:         Unstable,
+		Schema:      tfschema.ConsumptionConfig,
+		SingletonID: "consumption_config_singleton",
+	},
 })
