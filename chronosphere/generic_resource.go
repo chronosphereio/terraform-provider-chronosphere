@@ -122,12 +122,12 @@ func (r genericResource[M, SV, S]) CreateContext(
 
 	s := newInternalSchema[SV, S]()
 	if err := s.FromResourceData(d); err != nil {
-		return diag.Errorf(err.Error())
+		return diag.Errorf("%s", err.Error())
 	}
 
 	m, err := r.converter.toModel(s)
 	if err != nil {
-		return diag.Errorf(err.Error())
+		return diag.Errorf("%s", err.Error())
 	}
 
 	slug, err := r.crud.create(ctx, clients, m, false /* dryRun */)
@@ -158,7 +158,7 @@ func (r genericResource[M, SV, S]) ReadContext(
 
 	s, err := r.converter.fromModel(m)
 	if err != nil {
-		return diag.Errorf(err.Error())
+		return diag.Errorf("%s", err.Error())
 	}
 
 	type normalizer interface {
@@ -184,12 +184,12 @@ func (r genericResource[M, SV, S]) UpdateContext(
 
 	s := newInternalSchema[SV, S]()
 	if err := s.FromResourceData(d); err != nil {
-		return diag.Errorf(err.Error())
+		return diag.Errorf("%s", err.Error())
 	}
 
 	m, err := r.converter.toModel(s)
 	if err != nil {
-		return diag.Errorf(err.Error())
+		return diag.Errorf("%s", err.Error())
 	}
 	slug := r.fields.slugOf(m)
 	if slug != d.Id() {

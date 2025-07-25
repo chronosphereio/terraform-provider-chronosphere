@@ -64,7 +64,7 @@ func npInlineOrIndependent[F resourceFunc](funcName string, inlineFunc, independ
 	return func(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
 		np := &intschema.NotificationPolicy{}
 		if err := np.FromResourceData(d); err != nil {
-			return diag.Errorf(err.Error())
+			return diag.Errorf("%s", err.Error())
 		}
 		if isNotificationPolicyIndependent(np) {
 			tflog.Info(ctx, "calling independent policy resource", map[string]any{
@@ -318,11 +318,11 @@ func expandNotificationPolicyRaw(
 ) (*NotificationPolicyData, diag.Diagnostics) {
 	p := &intschema.NotificationPolicy{}
 	if err := p.FromResourceData(d); err != nil {
-		return nil, diag.Errorf(err.Error())
+		return nil, diag.Errorf("%s", err.Error())
 	}
 	m, err := expandNotificationPolicy(p)
 	if err != nil {
-		return nil, diag.Errorf(err.Error())
+		return nil, diag.Errorf("%s", err.Error())
 	}
 	return m, nil
 }
