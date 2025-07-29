@@ -18,7 +18,7 @@ import (
 // swagger:model configv1CreateNotifierRequest
 type Configv1CreateNotifierRequest struct {
 
-	// If true, the Notifier isn't created, and no response Notifier will be returned. The response will return an error if the given Notifier is invalid.
+	// If `true`, the Notifier isn't created, and no response Notifier will be returned. The response will return an error if the given Notifier is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// notifier

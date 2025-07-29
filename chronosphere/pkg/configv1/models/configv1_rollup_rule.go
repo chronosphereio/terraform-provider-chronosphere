@@ -26,7 +26,7 @@ type Configv1RollupRule struct {
 	// aggregation
 	Aggregation Configv1AggregationType `json:"aggregation,omitempty"`
 
-	// Required. Slug of the bucket the RollupRule belongs to.
+	// Slug of the bucket the RollupRule belongs to.
 	BucketSlug string `json:"bucket_slug,omitempty"`
 
 	// Timestamp of when the RollupRule was created. Cannot be set by clients.
@@ -38,6 +38,7 @@ type Configv1RollupRule struct {
 	// Set to `true` to remove raw metrics that match this rollup rule. Default: `false`.
 	DropRaw bool `json:"drop_raw,omitempty"`
 
+	// DEPRECATED.
 	// A series matches and aggregates only if each label defined by filters and
 	// `label_policy.keep` or `graphite_label_policy.replace` (respectively) exist in
 	// the series. Setting `expansive_match=true` removes this restriction. Default:
@@ -104,7 +105,7 @@ type Configv1RollupRule struct {
 	// mode
 	Mode Configv1RollupRuleMode `json:"mode,omitempty"`
 
-	// Required. Name of the RollupRule. You can modify this value after the RollupRule is created.
+	// Name of the RollupRule. You can modify this value after the RollupRule is created.
 	Name string `json:"name,omitempty"`
 
 	// Unique identifier of the RollupRule. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the RollupRule is created.

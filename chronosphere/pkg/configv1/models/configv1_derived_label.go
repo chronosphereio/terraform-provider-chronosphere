@@ -36,7 +36,7 @@ type Configv1DerivedLabel struct {
 	// metric label
 	MetricLabel *DerivedLabelMetricLabel `json:"metric_label,omitempty"`
 
-	// Required. Name of the DerivedLabel. You can modify this value after the DerivedLabel is created.
+	// Name of the DerivedLabel. You can modify this value after the DerivedLabel is created.
 	Name string `json:"name,omitempty"`
 
 	// Unique identifier of the DerivedLabel. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the DerivedLabel is created.

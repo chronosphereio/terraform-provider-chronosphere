@@ -27,7 +27,7 @@ type Configv1Service struct {
 	// Optional description of the service collection.
 	Description string `json:"description,omitempty"`
 
-	// Required. Name of the Service. You can modify this value after the Service is created.
+	// Name of the Service. You can modify this value after the Service is created.
 	Name string `json:"name,omitempty"`
 
 	// Slug of the notification policy used by default for monitors in this service collection.

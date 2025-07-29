@@ -32,7 +32,7 @@ type Configv1DerivedMetric struct {
 	// Example: cpu_usage:instance
 	MetricName string `json:"metric_name,omitempty"`
 
-	// Required. Name of the DerivedMetric. You can modify this value after the DerivedMetric is created.
+	// Name of the DerivedMetric. You can modify this value after the DerivedMetric is created.
 	Name string `json:"name,omitempty"`
 
 	// Required queries that the derived metric can map to.

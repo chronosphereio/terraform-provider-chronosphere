@@ -18,7 +18,7 @@ import (
 // swagger:model configv1CreateLogIngestConfigRequest
 type Configv1CreateLogIngestConfigRequest struct {
 
-	// If true, the LogIngestConfig isn't created, and no response LogIngestConfig will be returned. The response will return an error if the given LogIngestConfig is invalid.
+	// If `true`, the LogIngestConfig isn't created, and no response LogIngestConfig will be returned. The response will return an error if the given LogIngestConfig is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// log ingest config

@@ -28,16 +28,22 @@ type Configv1DropRule struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Drops datapoints if datapoint values are NaN.
+	// Drops data points if values are Not a Number (NaN). If set to true, Chronosphere
+	// drops NaN data points, along with any published staleness markers. See the
+	// [drop rules
+	// documentation](https://docs.chronosphere.io/control/shaping/rules/drop-rules#define-a-value-based-drop-rule)
+	// for more information.
 	DropNanValue bool `json:"drop_nan_value,omitempty"`
 
-	// Series that match this filter are dropped.
+	// Defines the conditions that determine whether to drop a metric. Drop rules can
+	// have multiple filter conditions on different labels, making it possible to drop
+	// a subset of the series matching a particular metric name.
 	Filters []*Configv1LabelFilter `json:"filters"`
 
 	// mode
 	Mode Configv1DropRuleMode `json:"mode,omitempty"`
 
-	// Required. Name of the DropRule. You can modify this value after the DropRule is created.
+	// Name of the DropRule. You can modify this value after the DropRule is created.
 	Name string `json:"name,omitempty"`
 
 	// Unique identifier of the DropRule. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the DropRule is created.

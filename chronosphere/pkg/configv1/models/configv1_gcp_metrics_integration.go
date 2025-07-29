@@ -28,7 +28,7 @@ type Configv1GcpMetricsIntegration struct {
 	// Metric groups to be ingested for this integration.
 	MetricGroups []*GcpMetricsIntegrationMetricGroup `json:"metric_groups"`
 
-	// Required. Name of the GcpMetricsIntegration. You can modify this value after the GcpMetricsIntegration is created.
+	// Name of the GcpMetricsIntegration. You can modify this value after the GcpMetricsIntegration is created.
 	Name string `json:"name,omitempty"`
 
 	// service account

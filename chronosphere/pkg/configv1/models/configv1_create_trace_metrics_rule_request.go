@@ -18,7 +18,7 @@ import (
 // swagger:model configv1CreateTraceMetricsRuleRequest
 type Configv1CreateTraceMetricsRuleRequest struct {
 
-	// If true, the TraceMetricsRule isn't created, and no response TraceMetricsRule will be returned. The response will return an error if the given TraceMetricsRule is invalid.
+	// If `true`, the TraceMetricsRule isn't created, and no response TraceMetricsRule will be returned. The response will return an error if the given TraceMetricsRule is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// trace metrics rule

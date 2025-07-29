@@ -18,7 +18,7 @@ import (
 // swagger:model configv1CreateLogScaleActionRequest
 type Configv1CreateLogScaleActionRequest struct {
 
-	// If true, the LogScaleAction isn't created, and no response LogScaleAction will be returned. The response will return an error if the given LogScaleAction is invalid.
+	// If `true`, the LogScaleAction isn't created, and no response LogScaleAction will be returned. The response will return an error if the given LogScaleAction is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// log scale action

@@ -10,9 +10,10 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/consumption_budget"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/consumption_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/link_template"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_budget"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_control_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/noop_entity"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/object_discovery_rule"
@@ -66,9 +67,10 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 
 	cli := new(ConfigUnstableAPI)
 	cli.Transport = transport
+	cli.ConsumptionBudget = consumption_budget.New(transport, formats)
+	cli.ConsumptionConfig = consumption_config.New(transport, formats)
 	cli.Dashboard = dashboard.New(transport, formats)
 	cli.LinkTemplate = link_template.New(transport, formats)
-	cli.LogBudget = log_budget.New(transport, formats)
 	cli.LogControlConfig = log_control_config.New(transport, formats)
 	cli.NoopEntity = noop_entity.New(transport, formats)
 	cli.ObjectDiscoveryRule = object_discovery_rule.New(transport, formats)
@@ -122,11 +124,13 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // ConfigUnstableAPI is a client for config unstable API
 type ConfigUnstableAPI struct {
+	ConsumptionBudget consumption_budget.ClientService
+
+	ConsumptionConfig consumption_config.ClientService
+
 	Dashboard dashboard.ClientService
 
 	LinkTemplate link_template.ClientService
-
-	LogBudget log_budget.ClientService
 
 	LogControlConfig log_control_config.ClientService
 
@@ -152,9 +156,10 @@ type ConfigUnstableAPI struct {
 // SetTransport changes the transport on the client and all its subresources
 func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
+	c.ConsumptionBudget.SetTransport(transport)
+	c.ConsumptionConfig.SetTransport(transport)
 	c.Dashboard.SetTransport(transport)
 	c.LinkTemplate.SetTransport(transport)
-	c.LogBudget.SetTransport(transport)
 	c.LogControlConfig.SetTransport(transport)
 	c.NoopEntity.SetTransport(transport)
 	c.ObjectDiscoveryRule.SetTransport(transport)
