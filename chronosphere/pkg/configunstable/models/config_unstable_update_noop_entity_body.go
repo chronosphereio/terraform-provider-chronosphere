@@ -18,7 +18,7 @@ import (
 // swagger:model ConfigUnstableUpdateNoopEntityBody
 type ConfigUnstableUpdateNoopEntityBody struct {
 
-	// If true, the NoopEntity will be created if it does not already exist, identified by slug. If false, an error will be returned if the NoopEntity does not already exist.
+	// If `true`, the NoopEntity will be created if it does not already exist, identified by `slug`. If `false`, an error will be returned if the NoopEntity does not already exist.
 	CreateIfMissing bool `json:"create_if_missing,omitempty"`
 
 	// noop entity

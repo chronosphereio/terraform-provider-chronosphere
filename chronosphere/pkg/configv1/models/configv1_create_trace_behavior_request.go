@@ -18,7 +18,7 @@ import (
 // swagger:model configv1CreateTraceBehaviorRequest
 type Configv1CreateTraceBehaviorRequest struct {
 
-	// If true, the TraceBehavior isn't created, and no response TraceBehavior will be returned. The response will return an error if the given TraceBehavior is invalid.
+	// If `true`, the TraceBehavior isn't created, and no response TraceBehavior will be returned. The response will return an error if the given TraceBehavior is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// trace behavior

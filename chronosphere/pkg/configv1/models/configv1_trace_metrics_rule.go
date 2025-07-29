@@ -25,7 +25,7 @@ type Configv1TraceMetricsRule struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Add labels to the resultant metrics based on these specified GroupBy messages.
+	// Add labels to the resultant metrics based on the specified key:value pairs.
 	GroupBy []*Configv1TraceMetricsRuleGroupBy `json:"group_by"`
 
 	// Histogram bucket values, in seconds, for generated duration metrics.
@@ -37,7 +37,7 @@ type Configv1TraceMetricsRule struct {
 	// The name of the generated trace metrics.
 	MetricName string `json:"metric_name,omitempty"`
 
-	// Required. Name of the TraceMetricsRule. You can modify this value after the TraceMetricsRule is created.
+	// Name of the TraceMetricsRule. You can modify this value after the TraceMetricsRule is created.
 	Name string `json:"name,omitempty"`
 
 	// Unique identifier of the TraceMetricsRule. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the TraceMetricsRule is created.

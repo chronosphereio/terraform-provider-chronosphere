@@ -18,10 +18,10 @@ import (
 // swagger:model ConfigV1UpdateMappingRuleBody
 type ConfigV1UpdateMappingRuleBody struct {
 
-	// If true, the MappingRule will be created if it does not already exist, identified by slug. If false, an error will be returned if the MappingRule does not already exist.
+	// If `true`, the MappingRule will be created if it does not already exist, identified by `slug`. If `false`, an error will be returned if the MappingRule does not already exist.
 	CreateIfMissing bool `json:"create_if_missing,omitempty"`
 
-	// If true, the MappingRule isn't created or updated, and no response MappingRule will be returned. The response will return an error if the given MappingRule is invalid.
+	// If `true`, the MappingRule isn't created or updated, and no response MappingRule will be returned. The response will return an error if the given MappingRule is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// mapping rule

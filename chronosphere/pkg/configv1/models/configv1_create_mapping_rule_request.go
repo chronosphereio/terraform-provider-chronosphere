@@ -18,7 +18,7 @@ import (
 // swagger:model configv1CreateMappingRuleRequest
 type Configv1CreateMappingRuleRequest struct {
 
-	// If true, the MappingRule isn't created, and no response MappingRule will be returned. The response will return an error if the given MappingRule is invalid.
+	// If `true`, the MappingRule isn't created, and no response MappingRule will be returned. The response will return an error if the given MappingRule is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// mapping rule

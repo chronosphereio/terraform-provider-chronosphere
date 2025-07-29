@@ -30,7 +30,7 @@ type Configv1Bucket struct {
 	// Optional labels marking the bucket.
 	Labels map[string]string `json:"labels,omitempty"`
 
-	// Required. Name of the Bucket. You can modify this value after the Bucket is created.
+	// Name of the Bucket. You can modify this value after the Bucket is created.
 	Name string `json:"name,omitempty"`
 
 	// Slug of the notification policy used by default for monitors in this bucket.

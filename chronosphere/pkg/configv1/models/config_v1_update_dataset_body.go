@@ -18,13 +18,13 @@ import (
 // swagger:model ConfigV1UpdateDatasetBody
 type ConfigV1UpdateDatasetBody struct {
 
-	// If true, the Dataset will be created if it does not already exist, identified by slug. If false, an error will be returned if the Dataset does not already exist.
+	// If `true`, the Dataset will be created if it does not already exist, identified by `slug`. If `false`, an error will be returned if the Dataset does not already exist.
 	CreateIfMissing bool `json:"create_if_missing,omitempty"`
 
 	// dataset
 	Dataset *Configv1Dataset `json:"dataset,omitempty"`
 
-	// If true, the Dataset isn't created or updated, and no response Dataset will be returned. The response will return an error if the given Dataset is invalid.
+	// If `true`, the Dataset isn't created or updated, and no response Dataset will be returned. The response will return an error if the given Dataset is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 }
 

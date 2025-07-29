@@ -38,7 +38,7 @@ type Configv1GrafanaDashboard struct {
 	// Required raw JSON of the Grafana dashboard.
 	DashboardJSON string `json:"dashboard_json,omitempty"`
 
-	// Required. Name of the GrafanaDashboard. You can modify this value after the GrafanaDashboard is created.
+	// Name of the GrafanaDashboard. You can modify this value after the GrafanaDashboard is created.
 	Name string `json:"name,omitempty"`
 
 	// Unique identifier of the GrafanaDashboard. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the GrafanaDashboard is created.

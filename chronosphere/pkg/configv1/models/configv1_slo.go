@@ -41,7 +41,7 @@ type Configv1SLO struct {
 	// and can be used to route alerts with notification overrides.
 	Labels map[string]string `json:"labels,omitempty"`
 
-	// Required. Name of the SLO. You can modify this value after the SLO is created.
+	// Name of the SLO. You can modify this value after the SLO is created.
 	Name string `json:"name,omitempty"`
 
 	// Optional notification policy to explicitly apply to the generated monitors.

@@ -18,10 +18,10 @@ import (
 // swagger:model ConfigV1UpdateNotifierBody
 type ConfigV1UpdateNotifierBody struct {
 
-	// If true, the Notifier will be created if it does not already exist, identified by slug. If false, an error will be returned if the Notifier does not already exist.
+	// If `true`, the Notifier will be created if it does not already exist, identified by `slug`. If `false`, an error will be returned if the Notifier does not already exist.
 	CreateIfMissing bool `json:"create_if_missing,omitempty"`
 
-	// If true, the Notifier isn't created or updated, and no response Notifier will be returned. The response will return an error if the given Notifier is invalid.
+	// If `true`, the Notifier isn't created or updated, and no response Notifier will be returned. The response will return an error if the given Notifier is invalid.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// notifier
