@@ -7,6 +7,15 @@ import (
 
 var _ tfid.ID // Always use tfid for simplified import generation.
 
+type DatasetFilter struct {
+	Dataset  []DatasetFilterDataset `intschema:"dataset,optional"`
+	Operator string                 `intschema:"operator,optional"`
+}
+
+type DatasetFilterDataset struct {
+	DatasetId tfid.ID `intschema:"dataset_id,optional"`
+}
+
 type LogAllocationConfigSchema struct {
 	PercentOfLicense float64 `intschema:"percent_of_license"`
 }

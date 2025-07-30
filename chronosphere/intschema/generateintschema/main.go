@@ -60,6 +60,7 @@ var sharedSchemaTypeNames = map[*schema.Schema]string{
 	tfschema.ValueMappingsSchema:                    "ValueMappings",
 	tfschema.SLOAdditionalPromQLFilters:             "SLOAdditionalPromQLFilters",
 	tfschema.SignalGrouping:                         "SignalGrouping",
+	tfschema.DatasetFilterSchema:                    "DatasetFilter",
 }
 
 // Add shared element references here to generate shared types. Usually we
@@ -103,6 +104,16 @@ var fieldAddFile = map[string]bool{
 // Unlike fieldIsTFID, it only matches set/list fields.
 var listFieldIsTFID = map[*schema.Schema]bool{
 	mustLookup(tfschema.NotificationRouteSchema.Elem.(*schema.Resource).Schema, "notifiers"): true,
+}
+
+// List of fields which are associated with recursive container types.
+// Terraform does not support recursive schemas, but our API does, so the
+// Terraform schema is implemented with a max depth (see makeRecursiveResource
+// in tfschema), and then mapped to a proper recursive intschema type to make
+// TF<->API mapping easy. The server is responsible for enforcing <= max depth
+// that the Terraform provider uses, else import state will fail.
+var recursiveFields = map[string]*schema.Schema{
+	"partition": tfschema.ConsumptionConfig["partition"],
 }
 
 func main() {
@@ -174,10 +185,10 @@ func newSharedFile() *fileData {
 		filename: "shared_schemas.go",
 	}
 	for s, typeName := range sharedSchemaTypeNames {
-		f.newStructDef(typeName, s.Elem.(*schema.Resource).Schema, nil /* container */)
+		f.newRootStructDef(typeName, s.Elem.(*schema.Resource).Schema)
 	}
 	for e, typeName := range sharedElemTypeNames {
-		f.newStructDef(typeName, e.Schema, nil /* container */)
+		f.newRootStructDef(typeName, e.Schema)
 	}
 
 	// Above map iterations are non-deterministic and we can't use sortedKeys
@@ -237,7 +248,7 @@ func newFileData(t schemaType, name string, objSchema map[string]*schema.Schema)
 		Type:     t,
 		filename: t.filename(name),
 	}
-	f.newStructDef(t.structName(name), objSchema, nil /* container */)
+	f.newRootStructDef(t.structName(name), objSchema)
 
 	// The newStructDef recursion will always push the main resource struct to
 	// the last element, so we reverse to ensure it shows up first for
@@ -289,8 +300,13 @@ func (f *fileData) writeFile() error {
 	return os.WriteFile(f.filename, formatted, 0o644)
 }
 
+func (f *fileData) newRootStructDef(typeName string, objSchema map[string]*schema.Schema) {
+	f.newStructDef(typeName, objSchema, nil /* container */, "" /* inRecursiveField */)
+}
+
 func (f *fileData) newStructDef(
 	typeName string, objSchema map[string]*schema.Schema, container *schema.Schema,
+	inRecursiveField string,
 ) {
 	d := &structDef{
 		TypeName:  typeName,
@@ -303,7 +319,7 @@ func (f *fileData) newStructDef(
 	// - Optional fields
 	for _, name := range sortedKeys(objSchema) {
 		fieldName := upperCamelCase(name)
-		typeInfo := f.loadType(typeName, fieldName, name, objSchema[name], nil /* container */)
+		typeInfo := f.loadType(typeName, fieldName, name, objSchema[name], nil /* container */, inRecursiveField)
 		tag := intschematag.Tag{
 			TFName:            name,
 			Optional:          objSchema[name].Optional || typeInfo.optionalListEncodedObject,
@@ -344,7 +360,8 @@ type typeInfo struct {
 
 func (f *fileData) loadType(
 	parentTypeName, fieldName, tfName string, fieldMeta any, container *schema.Schema,
-) typeInfo {
+	inRecursiveField string,
+) (result typeInfo) {
 	if typeName, ok := sharedSchemaTypeNames[container]; ok {
 		return typeInfo{name: typeName}
 	}
@@ -353,7 +370,8 @@ func (f *fileData) loadType(
 		switch t.Type {
 		case schema.TypeList, schema.TypeSet:
 			if tfschema.IsListEncodedObject(t) {
-				typeName := f.loadType(parentTypeName, fieldName, tfName, t.Elem, t).name
+				typeName := f.loadType(
+					parentTypeName, fieldName, tfName, t.Elem, t, inRecursiveField).name
 				optional := false
 				if t.Optional || t.MinItems == 0 {
 					// Optional nested objects are wrapped in pointers to ensure
@@ -371,12 +389,14 @@ func (f *fileData) loadType(
 				return typeInfo{name: "[]tfid.ID"}
 			} else {
 				return typeInfo{
-					name: "[]" + f.loadType(parentTypeName, fieldName, tfName, t.Elem, t).name,
+					name: "[]" + f.loadType(
+						parentTypeName, fieldName, tfName, t.Elem, t, inRecursiveField).name,
 				}
 			}
 		case schema.TypeMap:
 			return typeInfo{
-				name: "map[string]" + f.loadType(parentTypeName, fieldName, tfName, t.Elem, t).name,
+				name: "map[string]" + f.loadType(
+					parentTypeName, fieldName, tfName, t.Elem, t, inRecursiveField).name,
 			}
 		case schema.TypeString:
 			typeName := "string"
@@ -397,8 +417,25 @@ func (f *fileData) loadType(
 		if typeName, ok := sharedElemTypeNames[t]; ok {
 			return typeInfo{name: typeName}
 		}
+		if startContainer, ok := recursiveFields[tfName]; ok {
+			if inRecursiveField == "" {
+				if startContainer == container {
+					// Begin recursive type.
+					inRecursiveField = tfName
+				}
+			} else {
+				if tfName == inRecursiveField {
+					// End recursive type.
+					return typeInfo{name: parentTypeName}
+				}
+				// TODO: while building inRecursiveField, we encountered a new
+				// recursive field (tfName). This is an artificial limitation of
+				// this code which can be removed.
+				panic("recursive types cannot contain other recursive types")
+			}
+		}
 		typeName := parentTypeName + fieldName
-		f.newStructDef(typeName, t.Schema, container)
+		f.newStructDef(typeName, t.Schema, container, inRecursiveField)
 		return typeInfo{name: typeName}
 	default:
 		panic(fmt.Sprintf("unhandled meta type: %T", fieldMeta))
