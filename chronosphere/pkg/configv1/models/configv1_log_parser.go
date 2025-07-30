@@ -8,6 +8,7 @@ package models
 import (
 	"context"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -17,20 +18,161 @@ import (
 // swagger:model configv1LogParser
 type Configv1LogParser struct {
 
-	// Name is the name of the parser.
-	Name string `json:"name,omitempty"`
+	// json parser
+	JSONParser LogParserJSONParser `json:"json_parser,omitempty"`
 
-	// Regex is the Re2 regex parser pattern to apply. Named capturing groups become named fields in the extracted log.
-	Regex string `json:"regex,omitempty"`
+	// key value parser
+	KeyValueParser *LogParserKeyValueParser `json:"key_value_parser,omitempty"`
+
+	// parser type
+	ParserType LogParserParserType `json:"parser_type,omitempty"`
+
+	// regex parser
+	RegexParser *LogParserRegexParser `json:"regex_parser,omitempty"`
 }
 
 // Validate validates this configv1 log parser
 func (m *Configv1LogParser) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateKeyValueParser(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateParserType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRegexParser(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 
-// ContextValidate validates this configv1 log parser based on context it is used
+func (m *Configv1LogParser) validateKeyValueParser(formats strfmt.Registry) error {
+	if swag.IsZero(m.KeyValueParser) { // not required
+		return nil
+	}
+
+	if m.KeyValueParser != nil {
+		if err := m.KeyValueParser.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("key_value_parser")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("key_value_parser")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1LogParser) validateParserType(formats strfmt.Registry) error {
+	if swag.IsZero(m.ParserType) { // not required
+		return nil
+	}
+
+	if err := m.ParserType.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("parser_type")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("parser_type")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1LogParser) validateRegexParser(formats strfmt.Registry) error {
+	if swag.IsZero(m.RegexParser) { // not required
+		return nil
+	}
+
+	if m.RegexParser != nil {
+		if err := m.RegexParser.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("regex_parser")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("regex_parser")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this configv1 log parser based on the context it is used
 func (m *Configv1LogParser) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateKeyValueParser(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateParserType(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateRegexParser(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Configv1LogParser) contextValidateKeyValueParser(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.KeyValueParser != nil {
+		if err := m.KeyValueParser.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("key_value_parser")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("key_value_parser")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1LogParser) contextValidateParserType(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.ParserType.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("parser_type")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("parser_type")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1LogParser) contextValidateRegexParser(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.RegexParser != nil {
+		if err := m.RegexParser.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("regex_parser")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("regex_parser")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

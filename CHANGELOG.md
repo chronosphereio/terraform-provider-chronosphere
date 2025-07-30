@@ -5,6 +5,7 @@
 Added:
 * Add unstable `chronosphere_consumption_config` resource.
 * Add unstable `chronosphere_consumption_budget` resource.
+* Update parser support in LogIngestConfig.
 
 ## v1.11.0
 

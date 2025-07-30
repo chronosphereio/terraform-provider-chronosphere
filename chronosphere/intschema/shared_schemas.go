@@ -16,8 +16,28 @@ type DatasetFilterDataset struct {
 	DatasetId tfid.ID `intschema:"dataset_id,optional"`
 }
 
+type JSONParser struct {
+}
+
+type KeyValueParser struct {
+	Delimiter     string `intschema:"delimiter"`
+	PairSeparator string `intschema:"pair_separator"`
+	TrimSet       string `intschema:"trim_set,optional"`
+}
+
 type LogAllocationConfigSchema struct {
 	PercentOfLicense float64 `intschema:"percent_of_license"`
+}
+
+type LogFieldPath struct {
+	Selector string `intschema:"selector"`
+}
+
+type LogParser struct {
+	ParserType     string          `intschema:"parser_type"`
+	JsonParser     *JSONParser     `intschema:"json_parser,optional,list_encoded_object"`
+	KeyValueParser *KeyValueParser `intschema:"key_value_parser,optional,list_encoded_object"`
+	RegexParser    *RegexParser    `intschema:"regex_parser,optional,list_encoded_object"`
 }
 
 type LogPrioritiesSchema struct {
@@ -52,6 +72,10 @@ type NotificationRoute struct {
 
 type NotificationRouteGroupBy struct {
 	LabelNames []string `intschema:"label_names,optional"`
+}
+
+type RegexParser struct {
+	Regex string `intschema:"regex"`
 }
 
 type ResourcePoolAllocationSchema struct {

@@ -1,4 +1,4 @@
-// Copyright 2024 Chronosphere Inc.
+// Copyright 2025 Chronosphere Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,24 +64,103 @@ func (logIngestConfigConverter) toModel(
 	m *intschema.LogIngestConfig,
 ) (*models.Configv1LogIngestConfig, error) {
 	return &models.Configv1LogIngestConfig{
-		Parsers: sliceutil.Map(m.Parser, func(p intschema.LogIngestConfigParser) *models.Configv1LogParser {
-			return &models.Configv1LogParser{
-				Name:  p.Name,
-				Regex: p.Regex,
+		PlaintextParsers: sliceutil.Map(m.PlaintextParser, func(p intschema.LogIngestConfigPlaintextParser) *models.Configv1PlaintextParser {
+			return &models.Configv1PlaintextParser{
+				Name:         p.Name,
+				Mode:         models.Configv1PlaintextParserMode(p.Mode),
+				Parser:       convertLogParserToModel(p.Parser),
+				DropOriginal: p.DropOriginal,
+			}
+		}),
+		FieldParsers: sliceutil.Map(m.FieldParser, func(p intschema.LogIngestConfigFieldParser) *models.Configv1LogFieldParser {
+			return &models.Configv1LogFieldParser{
+				Mode:        models.Configv1LogFieldParserMode(p.Mode),
+				Source:      &models.Configv1LogFieldPath{Selector: p.Source.Selector},
+				Destination: &models.Configv1LogFieldPath{Selector: p.Destination.Selector},
+				Parser:      convertLogParserToModel(p.Parser),
 			}
 		}),
 	}, nil
+}
+
+func convertLogParserToModel(p *intschema.LogParser) *models.Configv1LogParser {
+	if p == nil {
+		return nil
+	}
+	result := &models.Configv1LogParser{
+		ParserType: models.LogParserParserType(p.ParserType),
+	}
+
+	if p.JsonParser != nil {
+		result.JSONParser = struct{}{}
+	}
+
+	if p.RegexParser != nil {
+		result.RegexParser = &models.LogParserRegexParser{
+			Regex: p.RegexParser.Regex,
+		}
+	}
+
+	if p.KeyValueParser != nil {
+		result.KeyValueParser = &models.LogParserKeyValueParser{
+			PairSeparator: p.KeyValueParser.PairSeparator,
+			Delimiter:     p.KeyValueParser.Delimiter,
+			TrimSet:       p.KeyValueParser.TrimSet,
+		}
+	}
+
+	return result
 }
 
 func (logIngestConfigConverter) fromModel(
 	m *models.Configv1LogIngestConfig,
 ) (*intschema.LogIngestConfig, error) {
 	return &intschema.LogIngestConfig{
-		Parser: sliceutil.Map(m.Parsers, func(p *models.Configv1LogParser) intschema.LogIngestConfigParser {
-			return intschema.LogIngestConfigParser{
-				Name:  p.Name,
-				Regex: p.Regex,
+		PlaintextParser: sliceutil.Map(m.PlaintextParsers, func(p *models.Configv1PlaintextParser) intschema.LogIngestConfigPlaintextParser {
+			return intschema.LogIngestConfigPlaintextParser{
+				Name:         p.Name,
+				Mode:         string(p.Mode),
+				Parser:       convertLogParserFromModel(p.Parser),
+				DropOriginal: p.DropOriginal,
+			}
+		}),
+		FieldParser: sliceutil.Map(m.FieldParsers, func(p *models.Configv1LogFieldParser) intschema.LogIngestConfigFieldParser {
+			return intschema.LogIngestConfigFieldParser{
+				Mode: string(p.Mode),
+				Source: &intschema.LogFieldPath{
+					Selector: p.Source.Selector,
+				},
+				Destination: &intschema.LogFieldPath{
+					Selector: p.Destination.Selector,
+				},
+				Parser: convertLogParserFromModel(p.Parser),
 			}
 		}),
 	}, nil
+}
+
+func convertLogParserFromModel(p *models.Configv1LogParser) *intschema.LogParser {
+	result := &intschema.LogParser{
+		ParserType: string(p.ParserType),
+	}
+
+	if p.JSONParser != nil {
+		result.JsonParser = &intschema.JSONParser{}
+	}
+
+	if p.RegexParser != nil {
+		result.RegexParser = &intschema.RegexParser{
+			Regex: p.RegexParser.Regex,
+		}
+	}
+
+	if p.KeyValueParser != nil {
+		result.KeyValueParser = &intschema.KeyValueParser{
+			PairSeparator: p.KeyValueParser.PairSeparator,
+			Delimiter:     p.KeyValueParser.Delimiter,
+			TrimSet:       p.KeyValueParser.TrimSet,
+		}
+	}
+
+	return result
 }
