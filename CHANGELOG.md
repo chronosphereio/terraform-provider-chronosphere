@@ -4,6 +4,7 @@
 
 Added:
 * Add unstable `chronosphere_consumption_config` resource.
+* Add unstable `chronosphere_consumption_budget` resource.
 
 ## v1.11.0
 

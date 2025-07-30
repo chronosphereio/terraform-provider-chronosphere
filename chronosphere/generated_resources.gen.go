@@ -5,6 +5,7 @@ import (
 	"context"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/consumption_budget"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/consumption_config"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
@@ -2147,6 +2148,85 @@ func (generatedTraceTailSamplingRules) delete(
 		Context: ctx,
 	}
 	_, err := clients.ConfigV1.TraceTailSamplingRules.DeleteTraceTailSamplingRules(req)
+	return err
+}
+
+type generatedUnstableConsumptionBudget struct{}
+
+func (generatedUnstableConsumptionBudget) slugOf(m *configunstablemodels.ConfigunstableConsumptionBudget) string {
+	return m.Slug
+}
+
+func (generatedUnstableConsumptionBudget) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableConsumptionBudget,
+	dryRun bool,
+) (string, error) {
+	req := &consumption_budget.CreateConsumptionBudgetParams{
+		Context: ctx,
+		Body: &configunstablemodels.ConfigunstableCreateConsumptionBudgetRequest{
+			ConsumptionBudget: m,
+			DryRun:            dryRun,
+		},
+	}
+	resp, err := clients.ConfigUnstable.ConsumptionBudget.CreateConsumptionBudget(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.ConsumptionBudget
+	if e == nil {
+		return "", nil
+	}
+	return (generatedUnstableConsumptionBudget{}).slugOf(e), nil
+}
+
+func (generatedUnstableConsumptionBudget) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configunstablemodels.ConfigunstableConsumptionBudget, error) {
+	req := &consumption_budget.ReadConsumptionBudgetParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigUnstable.ConsumptionBudget.ReadConsumptionBudget(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.ConsumptionBudget, nil
+}
+
+func (generatedUnstableConsumptionBudget) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableConsumptionBudget,
+	params updateParams,
+) error {
+	req := &consumption_budget.UpdateConsumptionBudgetParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configunstablemodels.ConfigUnstableUpdateConsumptionBudgetBody{
+
+			ConsumptionBudget: m,
+			CreateIfMissing:   params.createIfMissing,
+			DryRun:            params.dryRun,
+		},
+	}
+	_, err := clients.ConfigUnstable.ConsumptionBudget.UpdateConsumptionBudget(req)
+	return err
+}
+func (generatedUnstableConsumptionBudget) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &consumption_budget.DeleteConsumptionBudgetParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigUnstable.ConsumptionBudget.DeleteConsumptionBudget(req)
 	return err
 }
 

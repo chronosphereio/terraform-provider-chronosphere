@@ -367,4 +367,10 @@ var Resources = mustValidate([]Resource{
 		Schema:      tfschema.ConsumptionConfig,
 		SingletonID: "consumption_config_singleton",
 	},
+	{
+		Name:   "consumption_budget",
+		Entity: "ConsumptionBudget",
+		API:    Unstable,
+		Schema: tfschema.ConsumptionBudget,
+	},
 })
