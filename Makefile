@@ -105,7 +105,7 @@ install: build verify-terraform-arch
 	cp bin/${BINARY} ~/.terraform.d/plugins/${OS_ARCH}
 	# Copy the provider to the local terraform plugin directory for terraform >= 0.13
 	mkdir -p ~/.terraform.d/plugins/local/chronosphereio/chronosphere/$(DEV_PROVIDER_VERSION)/${OS_ARCH}/
-	mv bin/${BINARY} ~/.terraform.d/plugins/local/chronosphereio/chronosphere/$(DEV_PROVIDER_VERSION)/${OS_ARCH}
+	mv bin/${BINARY} ~/.terraform.d/plugins/local/chronosphereio/chronosphere/$(DEV_PROVIDER_VERSION)/${OS_ARCH}/
 
 .PHONY: verify-terraform-arch
 verify-terraform-arch:
