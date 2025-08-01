@@ -19,25 +19,25 @@ import (
 )
 
 // PlaintextParserMode is an enum.
-var PlaintextParserMode = newEnum("PlaintextParserMode", []value[configv1.Configv1PlaintextParserMode]{
+var PlaintextParserMode = newEnum("PlaintextParserMode", []value[configv1.LogIngestConfigPlaintextParserMode]{
 	{
-		v1:        configv1.Configv1PlaintextParserModeENABLED,
+		v1:        configv1.LogIngestConfigPlaintextParserModeENABLED,
 		isDefault: true,
 	},
 	{
-		v1:    configv1.Configv1PlaintextParserModeDISABLED,
+		v1:    configv1.LogIngestConfigPlaintextParserModeDISABLED,
 		alias: "DISABLED",
 	},
 })
 
 // LogFieldParserMode is an enum.
-var LogFieldParserMode = newEnum("LogFieldParserMode", []value[configv1.Configv1LogFieldParserMode]{
+var LogFieldParserMode = newEnum("LogFieldParserMode", []value[configv1.LogIngestConfigLogFieldParserMode]{
 	{
-		v1:        configv1.Configv1LogFieldParserModeENABLED,
+		v1:        configv1.LogIngestConfigLogFieldParserModeENABLED,
 		isDefault: true,
 	},
 	{
-		v1:    configv1.Configv1LogFieldParserModeDISABLED,
+		v1:    configv1.LogIngestConfigLogFieldParserModeDISABLED,
 		alias: "DISABLED",
 	},
 })

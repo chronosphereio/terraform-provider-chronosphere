@@ -62,8 +62,16 @@ type LogIngestConfigPlaintextParser struct {
 }
 
 type LogIngestConfigFieldParser struct {
-	Destination *LogFieldPath `intschema:"destination,optional,list_encoded_object"`
-	Mode        string        `intschema:"mode,optional"`
-	Parser      *LogParser    `intschema:"parser,optional,list_encoded_object"`
-	Source      *LogFieldPath `intschema:"source,optional,list_encoded_object"`
+	Destination *LogIngestConfigFieldParserDestination `intschema:"destination,optional,list_encoded_object"`
+	Mode        string                                 `intschema:"mode,optional"`
+	Parser      *LogParser                             `intschema:"parser,optional,list_encoded_object"`
+	Source      *LogIngestConfigFieldParserSource      `intschema:"source,optional,list_encoded_object"`
+}
+
+type LogIngestConfigFieldParserSource struct {
+	Selector string `intschema:"selector"`
+}
+
+type LogIngestConfigFieldParserDestination struct {
+	Selector string `intschema:"selector"`
 }

@@ -13,27 +13,27 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Configv1PlaintextParser configv1 plaintext parser
+// LogIngestConfigPlaintextParser log ingest config plaintext parser
 //
-// swagger:model configv1PlaintextParser
-type Configv1PlaintextParser struct {
+// swagger:model LogIngestConfigPlaintextParser
+type LogIngestConfigPlaintextParser struct {
 
 	// If true, the original log will be dropped after parsing.
 	// Otherwise the original log is stored under the key "plaintext_log".
 	DropOriginal bool `json:"drop_original,omitempty"`
 
 	// mode
-	Mode Configv1PlaintextParserMode `json:"mode,omitempty"`
+	Mode LogIngestConfigPlaintextParserMode `json:"mode,omitempty"`
 
 	// The name of the parser. Must be unique within the configuration.
 	Name string `json:"name,omitempty"`
 
 	// parser
-	Parser *Configv1LogParser `json:"parser,omitempty"`
+	Parser *LogIngestConfigLogParser `json:"parser,omitempty"`
 }
 
-// Validate validates this configv1 plaintext parser
-func (m *Configv1PlaintextParser) Validate(formats strfmt.Registry) error {
+// Validate validates this log ingest config plaintext parser
+func (m *LogIngestConfigPlaintextParser) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateMode(formats); err != nil {
@@ -50,7 +50,7 @@ func (m *Configv1PlaintextParser) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1PlaintextParser) validateMode(formats strfmt.Registry) error {
+func (m *LogIngestConfigPlaintextParser) validateMode(formats strfmt.Registry) error {
 	if swag.IsZero(m.Mode) { // not required
 		return nil
 	}
@@ -67,7 +67,7 @@ func (m *Configv1PlaintextParser) validateMode(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1PlaintextParser) validateParser(formats strfmt.Registry) error {
+func (m *LogIngestConfigPlaintextParser) validateParser(formats strfmt.Registry) error {
 	if swag.IsZero(m.Parser) { // not required
 		return nil
 	}
@@ -86,8 +86,8 @@ func (m *Configv1PlaintextParser) validateParser(formats strfmt.Registry) error 
 	return nil
 }
 
-// ContextValidate validate this configv1 plaintext parser based on the context it is used
-func (m *Configv1PlaintextParser) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this log ingest config plaintext parser based on the context it is used
+func (m *LogIngestConfigPlaintextParser) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateMode(ctx, formats); err != nil {
@@ -104,7 +104,7 @@ func (m *Configv1PlaintextParser) ContextValidate(ctx context.Context, formats s
 	return nil
 }
 
-func (m *Configv1PlaintextParser) contextValidateMode(ctx context.Context, formats strfmt.Registry) error {
+func (m *LogIngestConfigPlaintextParser) contextValidateMode(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := m.Mode.ContextValidate(ctx, formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
@@ -118,7 +118,7 @@ func (m *Configv1PlaintextParser) contextValidateMode(ctx context.Context, forma
 	return nil
 }
 
-func (m *Configv1PlaintextParser) contextValidateParser(ctx context.Context, formats strfmt.Registry) error {
+func (m *LogIngestConfigPlaintextParser) contextValidateParser(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Parser != nil {
 		if err := m.Parser.ContextValidate(ctx, formats); err != nil {
@@ -135,7 +135,7 @@ func (m *Configv1PlaintextParser) contextValidateParser(ctx context.Context, for
 }
 
 // MarshalBinary interface implementation
-func (m *Configv1PlaintextParser) MarshalBinary() ([]byte, error) {
+func (m *LogIngestConfigPlaintextParser) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -143,8 +143,8 @@ func (m *Configv1PlaintextParser) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Configv1PlaintextParser) UnmarshalBinary(b []byte) error {
-	var res Configv1PlaintextParser
+func (m *LogIngestConfigPlaintextParser) UnmarshalBinary(b []byte) error {
+	var res LogIngestConfigPlaintextParser
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

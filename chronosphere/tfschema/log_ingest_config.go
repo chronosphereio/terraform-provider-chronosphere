@@ -6,24 +6,20 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 )
 
-const maxLogParsers = 10
-
 var LogIngestConfig = map[string]*schema.Schema{
 	"plaintext_parser": {
 		Type:     schema.TypeList,
-		Elem:     PlaintextParserSchema,
+		Elem:     plaintextParserResource,
 		Optional: true,
-		MaxItems: maxLogParsers,
 	},
 	"field_parser": {
 		Type:     schema.TypeList,
-		Elem:     LogFieldParserSchema,
+		Elem:     logFieldParserResource,
 		Optional: true,
-		MaxItems: maxLogParsers,
 	},
 }
 
-var PlaintextParserSchema = &schema.Resource{
+var plaintextParserResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"name": {
 			Type:     schema.TypeString,
@@ -41,31 +37,38 @@ var PlaintextParserSchema = &schema.Resource{
 	},
 }
 
-var LogFieldParserSchema = &schema.Resource{
+var logFieldParserResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"mode": Enum{
 			Value:    enum.LogFieldParserMode.ToStrings(),
 			Optional: true,
 		}.Schema(),
-		"source":      LogFieldPathSchema,
-		"destination": LogFieldPathSchema,
-		"parser":      LogParserSchema,
+		"source": {
+			Type: schema.TypeList,
+			Elem: &schema.Resource{
+				Schema: logFieldSelectorResource,
+			},
+			Required: true,
+			MaxItems: 1,
+		},
+		"destination": {
+			Type: schema.TypeList,
+			Elem: &schema.Resource{
+				Schema: logFieldSelectorResource,
+			},
+			Optional: true,
+			MaxItems: 1,
+		},
+		"parser": LogParserSchema,
 	},
 }
 
-var LogFieldPathSchema = &schema.Schema{
-	Type: schema.TypeList,
-	Elem: &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"selector": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "LogQL Selector to indicate field path. Use 'parent[child]' syntax to indicate nesting.",
-			},
-		},
+var logFieldSelectorResource = map[string]*schema.Schema{
+	"selector": {
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "LogQL Selector to indicate field path. Use 'parent[child]' syntax to indicate nesting.",
 	},
-	Required: true,
-	MaxItems: 1,
 }
 
 var LogParserSchema = &schema.Schema{
@@ -76,21 +79,11 @@ var LogParserSchema = &schema.Schema{
 				Value:    enum.LogParserType.ToStrings(),
 				Required: true,
 			}.Schema(),
-			"json_parser":      JSONLogParserSchema,
 			"regex_parser":     RegexLogParserSchema,
 			"key_value_parser": KeyValueLogParserSchema,
 		},
 	},
 	Required: true,
-	MaxItems: 1,
-}
-
-var JSONLogParserSchema = &schema.Schema{
-	Type: schema.TypeList,
-	Elem: &schema.Resource{
-		Schema: map[string]*schema.Schema{},
-	},
-	Optional: true,
 	MaxItems: 1,
 }
 

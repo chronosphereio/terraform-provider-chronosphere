@@ -64,35 +64,34 @@ func (logIngestConfigConverter) toModel(
 	m *intschema.LogIngestConfig,
 ) (*models.Configv1LogIngestConfig, error) {
 	return &models.Configv1LogIngestConfig{
-		PlaintextParsers: sliceutil.Map(m.PlaintextParser, func(p intschema.LogIngestConfigPlaintextParser) *models.Configv1PlaintextParser {
-			return &models.Configv1PlaintextParser{
+		PlaintextParsers: sliceutil.Map(m.PlaintextParser, func(p intschema.LogIngestConfigPlaintextParser) *models.LogIngestConfigPlaintextParser {
+			return &models.LogIngestConfigPlaintextParser{
 				Name:         p.Name,
-				Mode:         models.Configv1PlaintextParserMode(p.Mode),
+				Mode:         models.LogIngestConfigPlaintextParserMode(p.Mode),
 				Parser:       convertLogParserToModel(p.Parser),
 				DropOriginal: p.DropOriginal,
 			}
 		}),
-		FieldParsers: sliceutil.Map(m.FieldParser, func(p intschema.LogIngestConfigFieldParser) *models.Configv1LogFieldParser {
-			return &models.Configv1LogFieldParser{
-				Mode:        models.Configv1LogFieldParserMode(p.Mode),
-				Source:      &models.Configv1LogFieldPath{Selector: p.Source.Selector},
-				Destination: &models.Configv1LogFieldPath{Selector: p.Destination.Selector},
-				Parser:      convertLogParserToModel(p.Parser),
+		FieldParsers: sliceutil.Map(m.FieldParser, func(p intschema.LogIngestConfigFieldParser) *models.LogIngestConfigLogFieldParser {
+			fp := &models.LogIngestConfigLogFieldParser{
+				Mode:   models.LogIngestConfigLogFieldParserMode(p.Mode),
+				Source: &models.Configv1LogFieldPath{Selector: p.Source.Selector},
+				Parser: convertLogParserToModel(p.Parser),
 			}
+			if p.Destination != nil {
+				fp.Destination = &models.Configv1LogFieldPath{Selector: p.Destination.Selector}
+			}
+			return fp
 		}),
 	}, nil
 }
 
-func convertLogParserToModel(p *intschema.LogParser) *models.Configv1LogParser {
+func convertLogParserToModel(p *intschema.LogParser) *models.LogIngestConfigLogParser {
 	if p == nil {
 		return nil
 	}
-	result := &models.Configv1LogParser{
+	result := &models.LogIngestConfigLogParser{
 		ParserType: models.LogParserParserType(p.ParserType),
-	}
-
-	if p.JsonParser != nil {
-		result.JSONParser = struct{}{}
 	}
 
 	if p.RegexParser != nil {
@@ -116,7 +115,7 @@ func (logIngestConfigConverter) fromModel(
 	m *models.Configv1LogIngestConfig,
 ) (*intschema.LogIngestConfig, error) {
 	return &intschema.LogIngestConfig{
-		PlaintextParser: sliceutil.Map(m.PlaintextParsers, func(p *models.Configv1PlaintextParser) intschema.LogIngestConfigPlaintextParser {
+		PlaintextParser: sliceutil.Map(m.PlaintextParsers, func(p *models.LogIngestConfigPlaintextParser) intschema.LogIngestConfigPlaintextParser {
 			return intschema.LogIngestConfigPlaintextParser{
 				Name:         p.Name,
 				Mode:         string(p.Mode),
@@ -124,28 +123,27 @@ func (logIngestConfigConverter) fromModel(
 				DropOriginal: p.DropOriginal,
 			}
 		}),
-		FieldParser: sliceutil.Map(m.FieldParsers, func(p *models.Configv1LogFieldParser) intschema.LogIngestConfigFieldParser {
-			return intschema.LogIngestConfigFieldParser{
+		FieldParser: sliceutil.Map(m.FieldParsers, func(p *models.LogIngestConfigLogFieldParser) intschema.LogIngestConfigFieldParser {
+			fp := intschema.LogIngestConfigFieldParser{
 				Mode: string(p.Mode),
-				Source: &intschema.LogFieldPath{
+				Source: &intschema.LogIngestConfigFieldParserSource{
 					Selector: p.Source.Selector,
-				},
-				Destination: &intschema.LogFieldPath{
-					Selector: p.Destination.Selector,
 				},
 				Parser: convertLogParserFromModel(p.Parser),
 			}
+			if p.Destination != nil {
+				fp.Destination = &intschema.LogIngestConfigFieldParserDestination{
+					Selector: p.Destination.Selector,
+				}
+			}
+			return fp
 		}),
 	}, nil
 }
 
-func convertLogParserFromModel(p *models.Configv1LogParser) *intschema.LogParser {
+func convertLogParserFromModel(p *models.LogIngestConfigLogParser) *intschema.LogParser {
 	result := &intschema.LogParser{
 		ParserType: string(p.ParserType),
-	}
-
-	if p.JSONParser != nil {
-		result.JsonParser = &intschema.JSONParser{}
 	}
 
 	if p.RegexParser != nil {

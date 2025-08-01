@@ -13,26 +13,26 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Configv1LogFieldParser configv1 log field parser
+// LogIngestConfigLogFieldParser log ingest config log field parser
 //
-// swagger:model configv1LogFieldParser
-type Configv1LogFieldParser struct {
+// swagger:model LogIngestConfigLogFieldParser
+type LogIngestConfigLogFieldParser struct {
 
 	// destination
 	Destination *Configv1LogFieldPath `json:"destination,omitempty"`
 
 	// mode
-	Mode Configv1LogFieldParserMode `json:"mode,omitempty"`
+	Mode LogIngestConfigLogFieldParserMode `json:"mode,omitempty"`
 
 	// parser
-	Parser *Configv1LogParser `json:"parser,omitempty"`
+	Parser *LogIngestConfigLogParser `json:"parser,omitempty"`
 
 	// source
 	Source *Configv1LogFieldPath `json:"source,omitempty"`
 }
 
-// Validate validates this configv1 log field parser
-func (m *Configv1LogFieldParser) Validate(formats strfmt.Registry) error {
+// Validate validates this log ingest config log field parser
+func (m *LogIngestConfigLogFieldParser) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateDestination(formats); err != nil {
@@ -57,7 +57,7 @@ func (m *Configv1LogFieldParser) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1LogFieldParser) validateDestination(formats strfmt.Registry) error {
+func (m *LogIngestConfigLogFieldParser) validateDestination(formats strfmt.Registry) error {
 	if swag.IsZero(m.Destination) { // not required
 		return nil
 	}
@@ -76,7 +76,7 @@ func (m *Configv1LogFieldParser) validateDestination(formats strfmt.Registry) er
 	return nil
 }
 
-func (m *Configv1LogFieldParser) validateMode(formats strfmt.Registry) error {
+func (m *LogIngestConfigLogFieldParser) validateMode(formats strfmt.Registry) error {
 	if swag.IsZero(m.Mode) { // not required
 		return nil
 	}
@@ -93,7 +93,7 @@ func (m *Configv1LogFieldParser) validateMode(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1LogFieldParser) validateParser(formats strfmt.Registry) error {
+func (m *LogIngestConfigLogFieldParser) validateParser(formats strfmt.Registry) error {
 	if swag.IsZero(m.Parser) { // not required
 		return nil
 	}
@@ -112,7 +112,7 @@ func (m *Configv1LogFieldParser) validateParser(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1LogFieldParser) validateSource(formats strfmt.Registry) error {
+func (m *LogIngestConfigLogFieldParser) validateSource(formats strfmt.Registry) error {
 	if swag.IsZero(m.Source) { // not required
 		return nil
 	}
@@ -131,8 +131,8 @@ func (m *Configv1LogFieldParser) validateSource(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this configv1 log field parser based on the context it is used
-func (m *Configv1LogFieldParser) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this log ingest config log field parser based on the context it is used
+func (m *LogIngestConfigLogFieldParser) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateDestination(ctx, formats); err != nil {
@@ -157,7 +157,7 @@ func (m *Configv1LogFieldParser) ContextValidate(ctx context.Context, formats st
 	return nil
 }
 
-func (m *Configv1LogFieldParser) contextValidateDestination(ctx context.Context, formats strfmt.Registry) error {
+func (m *LogIngestConfigLogFieldParser) contextValidateDestination(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Destination != nil {
 		if err := m.Destination.ContextValidate(ctx, formats); err != nil {
@@ -173,7 +173,7 @@ func (m *Configv1LogFieldParser) contextValidateDestination(ctx context.Context,
 	return nil
 }
 
-func (m *Configv1LogFieldParser) contextValidateMode(ctx context.Context, formats strfmt.Registry) error {
+func (m *LogIngestConfigLogFieldParser) contextValidateMode(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := m.Mode.ContextValidate(ctx, formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
@@ -187,7 +187,7 @@ func (m *Configv1LogFieldParser) contextValidateMode(ctx context.Context, format
 	return nil
 }
 
-func (m *Configv1LogFieldParser) contextValidateParser(ctx context.Context, formats strfmt.Registry) error {
+func (m *LogIngestConfigLogFieldParser) contextValidateParser(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Parser != nil {
 		if err := m.Parser.ContextValidate(ctx, formats); err != nil {
@@ -203,7 +203,7 @@ func (m *Configv1LogFieldParser) contextValidateParser(ctx context.Context, form
 	return nil
 }
 
-func (m *Configv1LogFieldParser) contextValidateSource(ctx context.Context, formats strfmt.Registry) error {
+func (m *LogIngestConfigLogFieldParser) contextValidateSource(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Source != nil {
 		if err := m.Source.ContextValidate(ctx, formats); err != nil {
@@ -220,7 +220,7 @@ func (m *Configv1LogFieldParser) contextValidateSource(ctx context.Context, form
 }
 
 // MarshalBinary interface implementation
-func (m *Configv1LogFieldParser) MarshalBinary() ([]byte, error) {
+func (m *LogIngestConfigLogFieldParser) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -228,8 +228,8 @@ func (m *Configv1LogFieldParser) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Configv1LogFieldParser) UnmarshalBinary(b []byte) error {
-	var res Configv1LogFieldParser
+func (m *LogIngestConfigLogFieldParser) UnmarshalBinary(b []byte) error {
+	var res LogIngestConfigLogFieldParser
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

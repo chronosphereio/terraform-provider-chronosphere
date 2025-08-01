@@ -78,10 +78,23 @@
     },
     "BehaviorThresholdType": {
       "enum": [
-        "TARGET_MONTHLY_VOLUME",
+        "VOLUME",
         "INSTANT_RATE"
       ],
       "type": "string"
+    },
+    "BehaviorVolumeThreshold": {
+      "properties": {
+        "time_period": {
+          "$ref": "#/definitions/VolumeThresholdTimePeriod"
+        },
+        "fixed_value": {
+          "description": "fixed_value is the required volume threshold.",
+          "format": "int64",
+          "type": "string"
+        }
+      },
+      "type": "object"
     },
     "ChronoConfigCollectionsConfig": {
       "properties": {
@@ -260,6 +273,9 @@
         },
         "instant_rate_threshold": {
           "$ref": "#/definitions/BehaviorInstantRateThreshold"
+        },
+        "volume_threshold": {
+          "$ref": "#/definitions/BehaviorVolumeThreshold"
         }
       },
       "type": "object"
@@ -800,6 +816,14 @@
       },
       "type": "object"
     },
+    "VolumeThresholdTimePeriod": {
+      "enum": [
+        "DAILY",
+        "WEEKLY",
+        "MONTHLY"
+      ],
+      "type": "string"
+    },
     "apiError": {
       "properties": {
         "code": {
@@ -892,11 +916,6 @@
             "type": "string"
           },
           "type": "array"
-        },
-        "target_monthly_volume": {
-          "description": "target_monthly_volume is the optional desired resource consumption volume\nper month.",
-          "format": "int64",
-          "type": "string"
         },
         "priorities": {
           "description": "priorities are optional budget priorities. Priorites define in what\norder should requests be dropped when necessary (i.e. lowest priority\ndropped first, highest priority dropped last). If a request does not\nmatch any priority dataset, then it defaults to the lowest priority.",

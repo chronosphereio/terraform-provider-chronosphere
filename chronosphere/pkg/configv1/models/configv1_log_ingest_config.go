@@ -26,10 +26,10 @@ type Configv1LogIngestConfig struct {
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
 	// The parsers to run on specific fields within structured logs or plaintext logs after parsing.
-	FieldParsers []*Configv1LogFieldParser `json:"field_parsers"`
+	FieldParsers []*LogIngestConfigLogFieldParser `json:"field_parsers"`
 
 	// The parsers to run on plaintext logs. The first parser that matches the log is used.
-	PlaintextParsers []*Configv1PlaintextParser `json:"plaintext_parsers"`
+	PlaintextParsers []*LogIngestConfigPlaintextParser `json:"plaintext_parsers"`
 
 	// Timestamp of when the LogIngestConfig was last updated. Cannot be set by clients.
 	// Read Only: true

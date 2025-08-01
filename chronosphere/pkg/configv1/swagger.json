@@ -741,8 +741,69 @@
       },
       "type": "object"
     },
-    "LogParserJSONParser": {
+    "LogIngestConfigLogFieldParser": {
+      "properties": {
+        "mode": {
+          "$ref": "#/definitions/LogIngestConfigLogFieldParserMode"
+        },
+        "source": {
+          "$ref": "#/definitions/configv1LogFieldPath"
+        },
+        "destination": {
+          "$ref": "#/definitions/configv1LogFieldPath"
+        },
+        "parser": {
+          "$ref": "#/definitions/LogIngestConfigLogParser"
+        }
+      },
       "type": "object"
+    },
+    "LogIngestConfigLogFieldParserMode": {
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ],
+      "type": "string"
+    },
+    "LogIngestConfigLogParser": {
+      "properties": {
+        "parser_type": {
+          "$ref": "#/definitions/LogParserParserType"
+        },
+        "regex_parser": {
+          "$ref": "#/definitions/LogParserRegexParser"
+        },
+        "key_value_parser": {
+          "$ref": "#/definitions/LogParserKeyValueParser"
+        }
+      },
+      "type": "object"
+    },
+    "LogIngestConfigPlaintextParser": {
+      "properties": {
+        "name": {
+          "description": "The name of the parser. Must be unique within the configuration.",
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/definitions/LogIngestConfigPlaintextParserMode"
+        },
+        "parser": {
+          "$ref": "#/definitions/LogIngestConfigLogParser"
+        },
+        "drop_original": {
+          "description": "If true, the original log will be dropped after parsing.\nOtherwise the original log is stored under the key \"plaintext_log\".",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "LogIngestConfigPlaintextParserMode": {
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ],
+      "type": "string"
     },
     "LogParserKeyValueParser": {
       "description": "A parser to extract key-value pairs from a string.\nIf duplicate keys are found, the first instance is used.",
@@ -1602,7 +1663,7 @@
     "PerOperationSamplingStrategiesPerOperationSamplingStrategy": {
       "properties": {
         "operation": {
-          "description": "The operation to which this specific strategy should apply.",
+          "description": "The operation to which this specific strategy applies.",
           "type": "string"
         },
         "probabilistic_sampling_strategy": {
@@ -2220,22 +2281,22 @@
     "TraceJaegerRemoteSamplingStrategyPerOperationSamplingStrategies": {
       "properties": {
         "default_sampling_rate": {
-          "description": "Defines the service-wide sampling probability (in the range [0, 1]) when specific operations are not matched.",
+          "description": "Defines the service-wide sampling probability (in the range `[0, 1]`) when\nspecific operations are not matched.",
           "format": "double",
           "type": "number"
         },
         "default_lower_bound_traces_per_second": {
-          "description": "Defines a minimum number of traces to send for ANY operation in the service, regardless of matching per operation strategy.",
+          "description": "Defines a minimum number of traces to send for any operation in the service,\nregardless of matching per operation strategy.",
           "format": "double",
           "type": "number"
         },
         "default_upper_bound_traces_per_second": {
-          "description": "Defines a maximum number of traces to send for ANY operation in the service, regardless of matching per operation strategy.",
+          "description": "Defines a maximum number of traces to send for any operation in the service,\nregardless of matching per operation strategy.",
           "format": "double",
           "type": "number"
         },
         "per_operation_strategies": {
-          "description": "Defines explicit operations-specific strategies that take precedence over the default sampling rate.",
+          "description": "Defines explicit operations-specific strategies that take precedence over the\ndefault sampling rate.",
           "items": {
             "$ref": "#/definitions/PerOperationSamplingStrategiesPerOperationSamplingStrategy"
           },
@@ -2247,7 +2308,7 @@
     "TraceJaegerRemoteSamplingStrategyProbabilisticStrategy": {
       "properties": {
         "sampling_rate": {
-          "description": "Value in the range [0, 1] that defines the probability of sampling any trace.",
+          "description": "Value in the range `[0, 1]` that defines the percentage probability of\nsampling any trace, where `0` is zero percent and `1` equals 100 percent.",
           "format": "double",
           "type": "number"
         }
@@ -4088,30 +4149,6 @@
       },
       "type": "object"
     },
-    "configv1LogFieldParser": {
-      "properties": {
-        "mode": {
-          "$ref": "#/definitions/configv1LogFieldParserMode"
-        },
-        "source": {
-          "$ref": "#/definitions/configv1LogFieldPath"
-        },
-        "destination": {
-          "$ref": "#/definitions/configv1LogFieldPath"
-        },
-        "parser": {
-          "$ref": "#/definitions/configv1LogParser"
-        }
-      },
-      "type": "object"
-    },
-    "configv1LogFieldParserMode": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
-    },
     "configv1LogFieldPath": {
       "properties": {
         "selector": {
@@ -4139,33 +4176,16 @@
         "plaintext_parsers": {
           "description": "The parsers to run on plaintext logs. The first parser that matches the log is used.",
           "items": {
-            "$ref": "#/definitions/configv1PlaintextParser"
+            "$ref": "#/definitions/LogIngestConfigPlaintextParser"
           },
           "type": "array"
         },
         "field_parsers": {
           "description": "The parsers to run on specific fields within structured logs or plaintext logs after parsing.",
           "items": {
-            "$ref": "#/definitions/configv1LogFieldParser"
+            "$ref": "#/definitions/LogIngestConfigLogFieldParser"
           },
           "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "configv1LogParser": {
-      "properties": {
-        "parser_type": {
-          "$ref": "#/definitions/LogParserParserType"
-        },
-        "json_parser": {
-          "$ref": "#/definitions/LogParserJSONParser"
-        },
-        "regex_parser": {
-          "$ref": "#/definitions/LogParserRegexParser"
-        },
-        "key_value_parser": {
-          "$ref": "#/definitions/LogParserKeyValueParser"
         }
       },
       "type": "object"
@@ -4665,32 +4685,6 @@
         }
       },
       "type": "object"
-    },
-    "configv1PlaintextParser": {
-      "properties": {
-        "name": {
-          "description": "The name of the parser. Must be unique within the configuration.",
-          "type": "string"
-        },
-        "mode": {
-          "$ref": "#/definitions/configv1PlaintextParserMode"
-        },
-        "parser": {
-          "$ref": "#/definitions/configv1LogParser"
-        },
-        "drop_original": {
-          "description": "If true, the original log will be dropped after parsing.\nOtherwise the original log is stored under the key \"plaintext_log\".",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "configv1PlaintextParserMode": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
     },
     "configv1ReadBucketResponse": {
       "properties": {
@@ -5523,7 +5517,7 @@
           "type": "string"
         },
         "service_name": {
-          "description": "The name of the service this sampling strategy applies to. This must match the slug and name fields.",
+          "description": "The name of the service this sampling strategy applies to. This value must match\nthe `slug` and `name` fields.",
           "type": "string"
         },
         "applied_strategy": {

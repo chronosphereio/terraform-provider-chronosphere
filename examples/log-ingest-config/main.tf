@@ -36,10 +36,6 @@ resource "chronosphere_log_ingest_config" "my-log-ingest-config" {
       selector = "raw_message"
     }
     
-    destination {
-      selector = "parsed_data"
-    }
-    
     parser {
       parser_type = "JSON"
     }
