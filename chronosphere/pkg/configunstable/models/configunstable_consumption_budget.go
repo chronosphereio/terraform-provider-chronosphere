@@ -49,10 +49,6 @@ type ConfigunstableConsumptionBudget struct {
 	// Unique identifier of the ConsumptionBudget. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the ConsumptionBudget is created.
 	Slug string `json:"slug,omitempty"`
 
-	// target_monthly_volume is the optional desired resource consumption volume
-	// per month.
-	TargetMonthlyVolume string `json:"target_monthly_volume,omitempty"`
-
 	// Timestamp of when the ConsumptionBudget was last updated. Cannot be set by clients.
 	// Read Only: true
 	// Format: date-time

@@ -741,6 +741,105 @@
       },
       "type": "object"
     },
+    "LogIngestConfigLogFieldParser": {
+      "properties": {
+        "mode": {
+          "$ref": "#/definitions/LogIngestConfigLogFieldParserMode"
+        },
+        "source": {
+          "$ref": "#/definitions/configv1LogFieldPath"
+        },
+        "destination": {
+          "$ref": "#/definitions/configv1LogFieldPath"
+        },
+        "parser": {
+          "$ref": "#/definitions/LogIngestConfigLogParser"
+        }
+      },
+      "type": "object"
+    },
+    "LogIngestConfigLogFieldParserMode": {
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ],
+      "type": "string"
+    },
+    "LogIngestConfigLogParser": {
+      "properties": {
+        "parser_type": {
+          "$ref": "#/definitions/LogParserParserType"
+        },
+        "regex_parser": {
+          "$ref": "#/definitions/LogParserRegexParser"
+        },
+        "key_value_parser": {
+          "$ref": "#/definitions/LogParserKeyValueParser"
+        }
+      },
+      "type": "object"
+    },
+    "LogIngestConfigPlaintextParser": {
+      "properties": {
+        "name": {
+          "description": "The name of the parser. Must be unique within the configuration.",
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/definitions/LogIngestConfigPlaintextParserMode"
+        },
+        "parser": {
+          "$ref": "#/definitions/LogIngestConfigLogParser"
+        },
+        "drop_original": {
+          "description": "If true, the original log will be dropped after parsing.\nOtherwise the original log is stored under the key \"plaintext_log\".",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "LogIngestConfigPlaintextParserMode": {
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ],
+      "type": "string"
+    },
+    "LogParserKeyValueParser": {
+      "description": "A parser to extract key-value pairs from a string.\nIf duplicate keys are found, the first instance is used.",
+      "properties": {
+        "pair_separator": {
+          "description": "String used to split each pair into its key and value. Required.",
+          "type": "string"
+        },
+        "delimiter": {
+          "description": "String used to split the input into key-value pairs. Required.",
+          "type": "string"
+        },
+        "trim_set": {
+          "description": "All leading and trailing Unicode code points contained in the trim\nset will be removed from keys and values. Optional.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "LogParserParserType": {
+      "enum": [
+        "JSON",
+        "REGEX",
+        "KEY_VALUE"
+      ],
+      "type": "string"
+    },
+    "LogParserRegexParser": {
+      "properties": {
+        "regex": {
+          "description": "Regex is the Re2 regex parser pattern to apply.\nNamed capturing groups become named fields in the extracted log.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "LogScaleActionActionType": {
       "enum": [
         "EMAIL",
@@ -1564,7 +1663,7 @@
     "PerOperationSamplingStrategiesPerOperationSamplingStrategy": {
       "properties": {
         "operation": {
-          "description": "The operation to which this specific strategy should apply.",
+          "description": "The operation to which this specific strategy applies.",
           "type": "string"
         },
         "probabilistic_sampling_strategy": {
@@ -2055,7 +2154,7 @@
     "TraceBehaviorErrorSampleOptions": {
       "properties": {
         "sample_rate": {
-          "description": "Sample rate for traces with errors.",
+          "description": "Specifies the sample rate for traces with errors.",
           "format": "double",
           "type": "number"
         },
@@ -2063,7 +2162,7 @@
           "$ref": "#/definitions/TraceBehaviorSamplingType"
         },
         "enabled": {
-          "description": "Whether or not to use these options.",
+          "description": "Determines whether or not to define options for error traces.",
           "type": "boolean"
         }
       },
@@ -2072,12 +2171,12 @@
     "TraceBehaviorFastSampleOptions": {
       "properties": {
         "max_duration_seconds": {
-          "description": "Duration in seconds under which traces are sampled\naccording to the given sample rate.",
+          "description": "Duration in seconds under which traces are sampled according to the given\nsample rate.",
           "format": "double",
           "type": "number"
         },
         "sample_rate": {
-          "description": "Sample rate for traces under the given duration.",
+          "description": "Defines the sample rate for traces during a specified duration.",
           "format": "double",
           "type": "number"
         },
@@ -2085,7 +2184,7 @@
           "$ref": "#/definitions/TraceBehaviorSamplingType"
         },
         "enabled": {
-          "description": "Whether or not to use these options.",
+          "description": "Determines whether or not to define options for fast traces.",
           "type": "boolean"
         }
       },
@@ -2094,12 +2193,12 @@
     "TraceBehaviorLargeTraceSampleOptions": {
       "properties": {
         "span_count_threshold": {
-          "description": "For N = number of spans in the trace, if N \u003e= span_count_threshold, the trace is sampled according to the\ngiven sample rate.",
+          "description": "Defines the sampling rate for large traces. If the number of spans in the\ntrace is grater than or equal to (`\u003e=`) the `span_count_threshold`, the trace\nis sampled according to the given sample rate.",
           "format": "int64",
           "type": "integer"
         },
         "sample_rate": {
-          "description": "Sample rate.",
+          "description": "Defines the sample rate for traces during a specified duration.",
           "format": "double",
           "type": "number"
         },
@@ -2107,7 +2206,7 @@
           "$ref": "#/definitions/TraceBehaviorSamplingType"
         },
         "enabled": {
-          "description": "Whether or not to use these options.",
+          "description": "Determines whether or not to define options for large traces.",
           "type": "boolean"
         }
       },
@@ -2124,12 +2223,12 @@
     "TraceBehaviorSlowSampleOptions": {
       "properties": {
         "min_duration_seconds": {
-          "description": "Duration in seconds over which traces are sampled\naccording to the given sample rate.",
+          "description": "Duration in seconds under which traces are sampled according to the given\nsample rate.",
           "format": "double",
           "type": "number"
         },
         "sample_rate": {
-          "description": "Sample rate.",
+          "description": "Defines the sample rate for traces during a specified duration.",
           "format": "double",
           "type": "number"
         },
@@ -2137,7 +2236,7 @@
           "$ref": "#/definitions/TraceBehaviorSamplingType"
         },
         "enabled": {
-          "description": "Whether or not to use these options.",
+          "description": "Determines whether or not to define options for slow traces.",
           "type": "boolean"
         }
       },
@@ -2146,12 +2245,12 @@
     "TraceBehaviorSmallTraceSampleOptions": {
       "properties": {
         "span_count_threshold": {
-          "description": "For N = number of spans in the trace, if N \u003c= span_count_threshold, the trace is sampled according to the\ngiven sample rate.",
+          "description": "Defines the sampling rate for small traces. If the number of spans in the\ntrace is less than or equal to (`\u003c=`) the `span_count_threshold`, the trace is\nsampled according to the given sample rate.",
           "format": "int64",
           "type": "integer"
         },
         "sample_rate": {
-          "description": "Sample rate.",
+          "description": "Defines the sample rate for traces during a specified duration.",
           "format": "double",
           "type": "number"
         },
@@ -2159,7 +2258,7 @@
           "$ref": "#/definitions/TraceBehaviorSamplingType"
         },
         "enabled": {
-          "description": "Whether or not to use these options.",
+          "description": "Determines whether or not to define options for small traces.",
           "type": "boolean"
         }
       },
@@ -2182,22 +2281,22 @@
     "TraceJaegerRemoteSamplingStrategyPerOperationSamplingStrategies": {
       "properties": {
         "default_sampling_rate": {
-          "description": "Defines the service-wide sampling probability (in the range [0, 1]) when specific operations are not matched.",
+          "description": "Defines the service-wide sampling probability (in the range `[0, 1]`) when\nspecific operations are not matched.",
           "format": "double",
           "type": "number"
         },
         "default_lower_bound_traces_per_second": {
-          "description": "Defines a minimum number of traces to send for ANY operation in the service, regardless of matching per operation strategy.",
+          "description": "Defines a minimum number of traces to send for any operation in the service,\nregardless of matching per operation strategy.",
           "format": "double",
           "type": "number"
         },
         "default_upper_bound_traces_per_second": {
-          "description": "Defines a maximum number of traces to send for ANY operation in the service, regardless of matching per operation strategy.",
+          "description": "Defines a maximum number of traces to send for any operation in the service,\nregardless of matching per operation strategy.",
           "format": "double",
           "type": "number"
         },
         "per_operation_strategies": {
-          "description": "Defines explicit operations-specific strategies that take precedence over the default sampling rate.",
+          "description": "Defines explicit operations-specific strategies that take precedence over the\ndefault sampling rate.",
           "items": {
             "$ref": "#/definitions/PerOperationSamplingStrategiesPerOperationSamplingStrategy"
           },
@@ -2209,7 +2308,7 @@
     "TraceJaegerRemoteSamplingStrategyProbabilisticStrategy": {
       "properties": {
         "sampling_rate": {
-          "description": "Value in the range [0, 1] that defines the probability of sampling any trace.",
+          "description": "Value in the range `[0, 1]` that defines the percentage probability of\nsampling any trace, where `0` is zero percent and `1` equals 100 percent.",
           "format": "double",
           "type": "number"
         }
@@ -4050,6 +4149,15 @@
       },
       "type": "object"
     },
+    "configv1LogFieldPath": {
+      "properties": {
+        "selector": {
+          "description": "LogQL Selector to indicate field path. Use `parent[child]` syntax to\nindicate nesting.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "configv1LogIngestConfig": {
       "description": "LogIngestConfig is a singleton configuration object that specifies the configuration for log ingest.",
       "properties": {
@@ -4065,25 +4173,19 @@
           "readOnly": true,
           "type": "string"
         },
-        "parsers": {
-          "description": "The ordered list of parsers to run on ingested logs. The first parser which matches the log is used.",
+        "plaintext_parsers": {
+          "description": "The parsers to run on plaintext logs. The first parser that matches the log is used.",
           "items": {
-            "$ref": "#/definitions/configv1LogParser"
+            "$ref": "#/definitions/LogIngestConfigPlaintextParser"
           },
           "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "configv1LogParser": {
-      "properties": {
-        "name": {
-          "description": "Name is the name of the parser.",
-          "type": "string"
         },
-        "regex": {
-          "description": "Regex is the Re2 regex parser pattern to apply. Named capturing groups become named fields in the extracted log.",
-          "type": "string"
+        "field_parsers": {
+          "description": "The parsers to run on specific fields within structured logs or plaintext logs after parsing.",
+          "items": {
+            "$ref": "#/definitions/LogIngestConfigLogFieldParser"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -5307,12 +5409,12 @@
           "type": "string"
         },
         "base_tail_sample_rate": {
-          "description": "Sample rate for fully assembled traces that do not apply to the error, fast, slow, large, or small sampling options.",
+          "description": "Specifies the base sample rate for fully assembled traces that don't apply to\nthe `error_sample_options`, `fast_sample_options`, `slow_sample_options`,\n`large_trace_sample_options`, or `small_trace_sample_options` sampling options.",
           "format": "double",
           "type": "number"
         },
         "base_head_sample_rate": {
-          "description": "Sample rate for head sampling. This applies to all root spans that are enrolled in head sampling,\nbut do not have a specific rule defined for their service.",
+          "description": "Specifies the sample rate for head sampling. This rate applies to all root spans\nthat are enrolled in head sampling, but don't have a specific rule defined for\ntheir service.",
           "format": "double",
           "type": "number"
         },
@@ -5415,7 +5517,7 @@
           "type": "string"
         },
         "service_name": {
-          "description": "The name of the service this sampling strategy applies to. This must match the slug and name fields.",
+          "description": "The name of the service this sampling strategy applies to. This value must match\nthe `slug` and `name` fields.",
           "type": "string"
         },
         "applied_strategy": {
