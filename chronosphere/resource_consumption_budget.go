@@ -98,12 +98,25 @@ func (c consumptionBudgetConverter) toModel(
 		}),
 		Behaviors: sliceutil.Map(s.Behavior, consumptionBudgetBehaviorToModel),
 	}
+	if s.TargetMonthlyVolume != 0 {
+		m.TargetMonthlyVolume = strconv.FormatInt(s.TargetMonthlyVolume, 10)
+	}
 	return m, nil
 }
 
 func (c consumptionBudgetConverter) fromModel(
 	m *models.ConfigunstableConsumptionBudget,
 ) (*intschema.ConsumptionBudget, error) {
+	var targetMonthlyVolume int64
+	if m.TargetMonthlyVolume != "" {
+		v, err := strconv.ParseInt(m.TargetMonthlyVolume, 10, 64)
+		if err != nil {
+			return nil, fmt.Errorf(
+				"failed to parse target_monthly_volume %q: %w", m.TargetMonthlyVolume, err)
+		}
+		targetMonthlyVolume = v
+	}
+
 	behaviors, err := sliceutil.MapErr(m.Behaviors, consumptionBudgetBehaviorFromModel)
 	if err != nil {
 		return nil, err
@@ -115,6 +128,7 @@ func (c consumptionBudgetConverter) fromModel(
 		Slug:                m.Slug,
 		Resource:            string(m.Resource),
 		PartitionNamePath:   m.PartitionNamePath,
+		TargetMonthlyVolume: targetMonthlyVolume,
 		Priority: sliceutil.Map(m.Priorities, func(p *models.ConsumptionBudgetPriority) intschema.ConsumptionBudgetPriority {
 			return intschema.ConsumptionBudgetPriority{
 				DatasetFilter: sliceutil.Map(p.DatasetFilters, datasetFilterFromModel),
