@@ -25,8 +25,11 @@ type Configv1LogIngestConfig struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// The ordered list of parsers to run on ingested logs. The first parser which matches the log is used.
-	Parsers []*Configv1LogParser `json:"parsers"`
+	// The parsers to run on specific fields within structured logs or plaintext logs after parsing.
+	FieldParsers []*LogIngestConfigLogFieldParser `json:"field_parsers"`
+
+	// The parsers to run on plaintext logs. The first parser that matches the log is used.
+	PlaintextParsers []*LogIngestConfigPlaintextParser `json:"plaintext_parsers"`
 
 	// Timestamp of when the LogIngestConfig was last updated. Cannot be set by clients.
 	// Read Only: true
@@ -42,7 +45,11 @@ func (m *Configv1LogIngestConfig) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateParsers(formats); err != nil {
+	if err := m.validateFieldParsers(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePlaintextParsers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -68,22 +75,48 @@ func (m *Configv1LogIngestConfig) validateCreatedAt(formats strfmt.Registry) err
 	return nil
 }
 
-func (m *Configv1LogIngestConfig) validateParsers(formats strfmt.Registry) error {
-	if swag.IsZero(m.Parsers) { // not required
+func (m *Configv1LogIngestConfig) validateFieldParsers(formats strfmt.Registry) error {
+	if swag.IsZero(m.FieldParsers) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.Parsers); i++ {
-		if swag.IsZero(m.Parsers[i]) { // not required
+	for i := 0; i < len(m.FieldParsers); i++ {
+		if swag.IsZero(m.FieldParsers[i]) { // not required
 			continue
 		}
 
-		if m.Parsers[i] != nil {
-			if err := m.Parsers[i].Validate(formats); err != nil {
+		if m.FieldParsers[i] != nil {
+			if err := m.FieldParsers[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("parsers" + "." + strconv.Itoa(i))
+					return ve.ValidateName("field_parsers" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("parsers" + "." + strconv.Itoa(i))
+					return ce.ValidateName("field_parsers" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Configv1LogIngestConfig) validatePlaintextParsers(formats strfmt.Registry) error {
+	if swag.IsZero(m.PlaintextParsers) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.PlaintextParsers); i++ {
+		if swag.IsZero(m.PlaintextParsers[i]) { // not required
+			continue
+		}
+
+		if m.PlaintextParsers[i] != nil {
+			if err := m.PlaintextParsers[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("plaintext_parsers" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("plaintext_parsers" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -114,7 +147,11 @@ func (m *Configv1LogIngestConfig) ContextValidate(ctx context.Context, formats s
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateParsers(ctx, formats); err != nil {
+	if err := m.contextValidateFieldParsers(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidatePlaintextParsers(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -137,16 +174,36 @@ func (m *Configv1LogIngestConfig) contextValidateCreatedAt(ctx context.Context, 
 	return nil
 }
 
-func (m *Configv1LogIngestConfig) contextValidateParsers(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1LogIngestConfig) contextValidateFieldParsers(ctx context.Context, formats strfmt.Registry) error {
 
-	for i := 0; i < len(m.Parsers); i++ {
+	for i := 0; i < len(m.FieldParsers); i++ {
 
-		if m.Parsers[i] != nil {
-			if err := m.Parsers[i].ContextValidate(ctx, formats); err != nil {
+		if m.FieldParsers[i] != nil {
+			if err := m.FieldParsers[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("parsers" + "." + strconv.Itoa(i))
+					return ve.ValidateName("field_parsers" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("parsers" + "." + strconv.Itoa(i))
+					return ce.ValidateName("field_parsers" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Configv1LogIngestConfig) contextValidatePlaintextParsers(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.PlaintextParsers); i++ {
+
+		if m.PlaintextParsers[i] != nil {
+			if err := m.PlaintextParsers[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("plaintext_parsers" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("plaintext_parsers" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
