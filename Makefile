@@ -4,6 +4,10 @@ TESTPKGS?=$$(go list ./... | grep -v 'vendor' | grep -v 'scenario')
 TOOLS_BIN=$(abspath ./bin)
 OS=$(shell uname -s | tr '[:upper:]' '[:lower:]')
 ARCH=$(shell uname -m | sed "s/x86_64/amd64/" | sed "s/aarch64/arm64/")
+ARCH_VERSION := $(shell \
+  if [ "$(ARCH)" = "arm64" ]; then go env GOARM64; \
+  elif [ "$(ARCH)" = "amd64" ]; then go env GOAMD64; \
+  else echo ""; fi)
 OS_ARCH=${OS}_${ARCH}
 SHELL=/bin/bash -o pipefail
 
@@ -165,9 +169,9 @@ install-snapshot: snapshot verify-terraform-arch
 	@echo "Installing snapshot version: ${SNAPSHOT_VERSION}-SNAPSHOT-${LATEST_GIT_COMMIT}"
 	@echo "Installing snapshot binary: ${SNAPSHOT_BINARY}"
 	mkdir -p ~/.terraform.d/plugins/${OS_ARCH}
-	cp ./dist/terraform-provider-chronosphere_${OS_ARCH}/${SNAPSHOT_BINARY} ~/.terraform.d/plugins/${OS_ARCH}
+	cp ./dist/terraform-provider-chronosphere_${OS_ARCH}_${ARCH_VERSION}/${SNAPSHOT_BINARY} ~/.terraform.d/plugins/${OS_ARCH}
 	mkdir -p ~/.terraform.d/plugins/local/chronosphereio/chronosphere/${LOCAL_SNAPSHOT_VERSION_DIR}/${OS_ARCH}/
-	cp ./dist/terraform-provider-chronosphere_${OS_ARCH}/${SNAPSHOT_BINARY} ~/.terraform.d/plugins/local/chronosphereio/chronosphere/${LOCAL_SNAPSHOT_VERSION_DIR}/${OS_ARCH}
+	cp ./dist/terraform-provider-chronosphere_${OS_ARCH}_${ARCH_VERSION}/${SNAPSHOT_BINARY} ~/.terraform.d/plugins/local/chronosphereio/chronosphere/${LOCAL_SNAPSHOT_VERSION_DIR}/${OS_ARCH}
 	@echo "Installed snapshot version: ${SNAPSHOT_VERSION}-SNAPSHOT-${LATEST_GIT_COMMIT}"
 	@echo ""
 	@echo "reference this in your terraform code like so:"
