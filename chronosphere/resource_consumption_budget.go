@@ -16,7 +16,6 @@ package chronosphere
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"go.uber.org/atomic"
@@ -96,7 +95,8 @@ func (c consumptionBudgetConverter) toModel(
 				Priority:       int32(p.Priority),
 			}
 		}),
-		Behaviors: sliceutil.Map(s.Behavior, consumptionBudgetBehaviorToModel),
+		Behaviors:       sliceutil.Map(s.Behavior, consumptionBudgetBehaviorToModel),
+		DefaultPriority: int32(s.DefaultPriority),
 	}
 	return m, nil
 }
@@ -108,7 +108,6 @@ func (c consumptionBudgetConverter) fromModel(
 	if err != nil {
 		return nil, err
 	}
-
 	return &intschema.ConsumptionBudget{
 		ConsumptionConfigId: tfid.Slug(ConsumptionConfigID),
 		Name:                m.Name,
@@ -121,7 +120,8 @@ func (c consumptionBudgetConverter) fromModel(
 				Priority:      int64(p.Priority),
 			}
 		}),
-		Behavior: behaviors,
+		Behavior:        behaviors,
+		DefaultPriority: int64(m.DefaultPriority),
 	}, nil
 }
 
@@ -132,10 +132,20 @@ func consumptionBudgetBehaviorToModel(b intschema.ConsumptionBudgetBehavior) *mo
 			FixedValuePerSec: fmt.Sprint(b.InstantRateThreshold.FixedValuePerSec),
 		}
 	}
+
+	var volumeThreshold *models.BehaviorVolumeThreshold
+	if b.VolumeThreshold != nil {
+		volumeThreshold = &models.BehaviorVolumeThreshold{
+			FixedValue: fmt.Sprint(b.VolumeThreshold.FixedValue),
+			TimePeriod: models.VolumeThresholdTimePeriod(b.VolumeThreshold.TimePeriod),
+		}
+	}
+
 	return &models.ConsumptionBudgetBehavior{
 		Action:               models.BehaviorAction(b.Action),
 		ThresholdType:        models.BehaviorThresholdType(b.ThresholdType),
 		InstantRateThreshold: instantRateThreshold,
+		VolumeThreshold:      volumeThreshold,
 	}
 }
 
@@ -144,21 +154,29 @@ func consumptionBudgetBehaviorFromModel(b *models.ConsumptionBudgetBehavior) (in
 		Action:        string(b.Action),
 		ThresholdType: string(b.ThresholdType),
 	}
+
 	if b.InstantRateThreshold != nil {
-		var fixedValuePerSec int64
-		if b.InstantRateThreshold.FixedValuePerSec != "" {
-			var err error
-			fixedValuePerSec, err = strconv.ParseInt(
-				b.InstantRateThreshold.FixedValuePerSec, 10, 64)
-			if err != nil {
-				return intschema.ConsumptionBudgetBehavior{}, fmt.Errorf(
-					"failed to parse instant_rate_threshold.fixed_value_per_sec %q: %w",
-					b.InstantRateThreshold.FixedValuePerSec, err)
-			}
+		fixedValuePerSec, err := parseStringToInt64(
+			b.InstantRateThreshold.FixedValuePerSec, "instant_rate_threshold.fixed_value_per_sec")
+		if err != nil {
+			return intschema.ConsumptionBudgetBehavior{}, err
 		}
 		behavior.InstantRateThreshold = &intschema.ConsumptionBudgetBehaviorInstantRateThreshold{
 			FixedValuePerSec: fixedValuePerSec,
 		}
 	}
+
+	if b.VolumeThreshold != nil {
+		fixedValue, err := parseStringToInt64(
+			b.VolumeThreshold.FixedValue, "volume_threshold.fixed_value")
+		if err != nil {
+			return intschema.ConsumptionBudgetBehavior{}, err
+		}
+		behavior.VolumeThreshold = &intschema.ConsumptionBudgetBehaviorVolumeThreshold{
+			FixedValue: fixedValue,
+			TimePeriod: string(b.VolumeThreshold.TimePeriod),
+		}
+	}
+
 	return behavior, nil
 }

@@ -18,10 +18,10 @@ type ConsumptionBudget struct {
 	Slug                string                      `intschema:"slug,optional,computed"`
 	ConsumptionConfigId tfid.ID                     `intschema:"consumption_config_id"`
 	Behavior            []ConsumptionBudgetBehavior `intschema:"behavior,optional"`
+	DefaultPriority     int64                       `intschema:"default_priority,optional"`
 	PartitionNamePath   []string                    `intschema:"partition_name_path,optional"`
 	Priority            []ConsumptionBudgetPriority `intschema:"priority,optional"`
 	Resource            string                      `intschema:"resource,optional"`
-	TargetMonthlyVolume int64                       `intschema:"target_monthly_volume,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -69,6 +69,12 @@ type ConsumptionBudgetBehavior struct {
 	Action               string                                         `intschema:"action,optional"`
 	InstantRateThreshold *ConsumptionBudgetBehaviorInstantRateThreshold `intschema:"instant_rate_threshold,optional,list_encoded_object"`
 	ThresholdType        string                                         `intschema:"threshold_type,optional"`
+	VolumeThreshold      *ConsumptionBudgetBehaviorVolumeThreshold      `intschema:"volume_threshold,optional,list_encoded_object"`
+}
+
+type ConsumptionBudgetBehaviorVolumeThreshold struct {
+	FixedValue int64  `intschema:"fixed_value,optional"`
+	TimePeriod string `intschema:"time_period,optional"`
 }
 
 type ConsumptionBudgetBehaviorInstantRateThreshold struct {

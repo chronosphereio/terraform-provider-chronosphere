@@ -17,6 +17,7 @@ package chronosphere
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -162,4 +163,19 @@ func collectionIDFromRef(slug string, ref *models.Configv1CollectionReference) s
 	}
 
 	return CollectionTypeSlugToID(ref.Type, ref.Slug)
+}
+
+// parseStringToInt64 parses a string to int64 with proper error handling.
+// Returns 0 if the string is empty, otherwise parses the string as base 10.
+func parseStringToInt64(s string, fieldName string) (int64, error) {
+	if s == "" {
+		return 0, nil
+	}
+
+	value, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		return 0, fmt.Errorf("failed to parse %s %q: %w", fieldName, s, err)
+	}
+
+	return value, nil
 }

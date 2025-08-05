@@ -18,14 +18,18 @@ import (
 	configunstable "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 )
 
-// BehaviorThresholdType is an enum.
-var BehaviorThresholdType = newEnum("BehaviorThresholdType", []value[configunstable.BehaviorThresholdType]{
+// VolumeThresholdTimePeriod is an enum.
+var VolumeThresholdTimePeriod = newEnum("VolumeThresholdTimePeriod", []value[configunstable.VolumeThresholdTimePeriod]{
 	{
-		v1:    configunstable.BehaviorThresholdTypeVOLUME,
-		alias: "VOLUME",
+		v1:    configunstable.VolumeThresholdTimePeriodDAILY,
+		alias: "DAILY",
 	},
 	{
-		v1:    configunstable.BehaviorThresholdTypeINSTANTRATE,
-		alias: "INSTANT_RATE",
+		v1:    configunstable.VolumeThresholdTimePeriodWEEKLY,
+		alias: "WEEKLY",
+	},
+	{
+		v1:    configunstable.VolumeThresholdTimePeriodMONTHLY,
+		alias: "MONTHLY",
 	},
 })
