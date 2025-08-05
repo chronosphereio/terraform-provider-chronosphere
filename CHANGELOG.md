@@ -7,13 +7,13 @@ Added:
 * Add unstable `chronosphere_consumption_budget` resource.
 * Update parser support in LogIngestConfig.
 
+Deprecated:
+* Deprecate `permissive` in `chronosphere_rollup_rule`.
+
 ## v1.11.0
 
 Added:
 * Add timeslice indicator support to `chronosphere_slo` resource with `custom_timeslice_indicator` field.
-
-Deprecated:
-* Deprecate `permissive` in `chronosphere_rollup_rule`.
 
 ## v1.10.0
 
