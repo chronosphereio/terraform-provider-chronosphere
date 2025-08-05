@@ -29,6 +29,11 @@ type ConfigunstableConsumptionBudget struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
+	// default_priority is an optional default priority for requests which do not
+	// match any priority in the priorities list. If not set, then the lowest
+	// priority (10) is used as the default.
+	DefaultPriority int32 `json:"default_priority,omitempty"`
+
 	// Name of the ConsumptionBudget. You can modify this value after the ConsumptionBudget is created.
 	Name string `json:"name,omitempty"`
 
@@ -48,10 +53,6 @@ type ConfigunstableConsumptionBudget struct {
 
 	// Unique identifier of the ConsumptionBudget. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the ConsumptionBudget is created.
 	Slug string `json:"slug,omitempty"`
-
-	// target_monthly_volume is the optional desired resource consumption volume
-	// per month.
-	TargetMonthlyVolume string `json:"target_monthly_volume,omitempty"`
 
 	// Timestamp of when the ConsumptionBudget was last updated. Cannot be set by clients.
 	// Read Only: true
