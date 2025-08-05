@@ -2,13 +2,15 @@
 
 ## Unreleased
 
+## v1.12.0
+
 Added:
-* Add unstable `chronosphere_consumption_config` resource.
-* Add unstable `chronosphere_consumption_budget` resource.
-* Update parser support in LogIngestConfig.
+* Add unstable `chronosphere_consumption_config` resource for configuring telemetry data partitions.
+* Add unstable `chronosphere_consumption_budget` resource for configuring telemetry data partitions.
+* Update parsing support in `chronosphere_log_ingest_config` resource.
 
 Deprecated:
-* Deprecate `permissive` in `chronosphere_rollup_rule`.
+* Deprecate `permissive` in `chronosphere_rollup_rule` resource.
 
 ## v1.11.0
 
