@@ -34,7 +34,7 @@ type Configv1TraceJaegerRemoteSamplingStrategy struct {
 	// the `slug` and `name` fields.
 	ServiceName string `json:"service_name,omitempty"`
 
-	// Unique identifier of the TraceJaegerRemoteSamplingStrategy. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the TraceJaegerRemoteSamplingStrategy is created.
+	// The unique identifier of the TraceJaegerRemoteSamplingStrategy. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the TraceJaegerRemoteSamplingStrategy is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the TraceJaegerRemoteSamplingStrategy was last updated. Cannot be set by clients.

@@ -40,7 +40,7 @@ type ConfigunstableAzureMetricsIntegration struct {
 	// Specifies the scrape configs for this integration.
 	ScrapeConfigs []*AzureMetricsIntegrationAzureScrapeConfig `json:"scrape_configs"`
 
-	// Unique identifier of the AzureMetricsIntegration. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the AzureMetricsIntegration is created.
+	// The unique identifier of the AzureMetricsIntegration. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the AzureMetricsIntegration is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the AzureMetricsIntegration was last updated. Cannot be set by clients.

@@ -52,7 +52,7 @@ type Configv1TraceBehavior struct {
 	// slow sample options
 	SlowSampleOptions *TraceBehaviorSlowSampleOptions `json:"slow_sample_options,omitempty"`
 
-	// Unique identifier of the TraceBehavior. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the TraceBehavior is created.
+	// The unique identifier of the TraceBehavior. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the TraceBehavior is created.
 	Slug string `json:"slug,omitempty"`
 
 	// small trace sample options

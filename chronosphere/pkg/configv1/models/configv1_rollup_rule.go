@@ -26,7 +26,7 @@ type Configv1RollupRule struct {
 	// aggregation
 	Aggregation Configv1AggregationType `json:"aggregation,omitempty"`
 
-	// Slug of the bucket the RollupRule belongs to.
+	// The slug of the bucket the RollupRule belongs to.
 	BucketSlug string `json:"bucket_slug,omitempty"`
 
 	// Timestamp of when the RollupRule was created. Cannot be set by clients.
@@ -108,7 +108,7 @@ type Configv1RollupRule struct {
 	// Name of the RollupRule. You can modify this value after the RollupRule is created.
 	Name string `json:"name,omitempty"`
 
-	// Unique identifier of the RollupRule. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the RollupRule is created.
+	// The unique identifier of the RollupRule. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the RollupRule is created.
 	Slug string `json:"slug,omitempty"`
 
 	// storage policy

@@ -49,7 +49,7 @@ type Configv1RecordingRule struct {
 	// defined by the metric_name (or name) field.
 	PrometheusExpr string `json:"prometheus_expr,omitempty"`
 
-	// Unique identifier of the RecordingRule. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the RecordingRule is created.
+	// The unique identifier of the RecordingRule. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the RecordingRule is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the RecordingRule was last updated. Cannot be set by clients.

@@ -18,9 +18,6 @@ import (
 // swagger:model configunstableLogControlRule
 type ConfigunstableLogControlRule struct {
 
-	// drop
-	Drop LogControlRuleDrop `json:"drop,omitempty"`
-
 	// drop field
 	DropField *LogControlRuleDropField `json:"drop_field,omitempty"`
 
@@ -35,6 +32,9 @@ type ConfigunstableLogControlRule struct {
 
 	// sample
 	Sample *LogControlRuleSample `json:"sample,omitempty"`
+
+	// type
+	Type ConfigunstableLogControlRuleType `json:"type,omitempty"`
 }
 
 // Validate validates this configunstable log control rule
@@ -50,6 +50,10 @@ func (m *ConfigunstableLogControlRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSample(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateType(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -114,6 +118,23 @@ func (m *ConfigunstableLogControlRule) validateSample(formats strfmt.Registry) e
 	return nil
 }
 
+func (m *ConfigunstableLogControlRule) validateType(formats strfmt.Registry) error {
+	if swag.IsZero(m.Type) { // not required
+		return nil
+	}
+
+	if err := m.Type.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("type")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("type")
+		}
+		return err
+	}
+
+	return nil
+}
+
 // ContextValidate validate this configunstable log control rule based on the context it is used
 func (m *ConfigunstableLogControlRule) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
@@ -127,6 +148,10 @@ func (m *ConfigunstableLogControlRule) ContextValidate(ctx context.Context, form
 	}
 
 	if err := m.contextValidateSample(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateType(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -177,6 +202,20 @@ func (m *ConfigunstableLogControlRule) contextValidateSample(ctx context.Context
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *ConfigunstableLogControlRule) contextValidateType(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.Type.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("type")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("type")
+		}
+		return err
 	}
 
 	return nil

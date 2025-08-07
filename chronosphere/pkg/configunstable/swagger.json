@@ -78,16 +78,15 @@
     },
     "BehaviorThresholdType": {
       "enum": [
-        "VOLUME",
-        "INSTANT_RATE"
+        "DAILY_VOLUME",
+        "INSTANT_RATE",
+        "WEEKLY_VOLUME",
+        "MONTHLY_VOLUME"
       ],
       "type": "string"
     },
     "BehaviorVolumeThreshold": {
       "properties": {
-        "time_period": {
-          "$ref": "#/definitions/VolumeThresholdTimePeriod"
-        },
         "fixed_value": {
           "description": "fixed_value is the required volume threshold.",
           "format": "int64",
@@ -145,7 +144,7 @@
           "type": "boolean"
         },
         "dry_run": {
-          "description": "If `true`, the AzureMetricsIntegration isn't created or updated, and no response AzureMetricsIntegration will be returned. The response will return an error if the given AzureMetricsIntegration is invalid.",
+          "description": "If `true`, validates the specified configuration without creating or updating the AzureMetricsIntegration. If the specified configuration is valid, the endpoint returns a partial response without the AzureMetricsIntegration. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -161,7 +160,7 @@
           "type": "boolean"
         },
         "dry_run": {
-          "description": "If `true`, the ConsumptionBudget isn't created or updated, and no response ConsumptionBudget will be returned. The response will return an error if the given ConsumptionBudget is invalid.",
+          "description": "If `true`, validates the specified configuration without creating or updating the ConsumptionBudget. If the specified configuration is valid, the endpoint returns a partial response without the ConsumptionBudget. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -189,7 +188,7 @@
           "type": "boolean"
         },
         "dry_run": {
-          "description": "If `true`, the LinkTemplate isn't created or updated, and no response LinkTemplate will be returned. The response will return an error if the given LinkTemplate is invalid.",
+          "description": "If `true`, validates the specified configuration without creating or updating the LinkTemplate. If the specified configuration is valid, the endpoint returns a partial response without the LinkTemplate. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -241,7 +240,7 @@
           "type": "boolean"
         },
         "dry_run": {
-          "description": "If `true`, the Service isn't created or updated, and no response Service will be returned. The response will return an error if the given Service is invalid.",
+          "description": "If `true`, validates the specified configuration without creating or updating the Service. If the specified configuration is valid, the endpoint returns a partial response without the Service. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -257,7 +256,7 @@
           "type": "boolean"
         },
         "dry_run": {
-          "description": "If `true`, the TraceJaegerRemoteSamplingStrategy isn't created or updated, and no response TraceJaegerRemoteSamplingStrategy will be returned. The response will return an error if the given TraceJaegerRemoteSamplingStrategy is invalid.",
+          "description": "If `true`, validates the specified configuration without creating or updating the TraceJaegerRemoteSamplingStrategy. If the specified configuration is valid, the endpoint returns a partial response without the TraceJaegerRemoteSamplingStrategy. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -342,10 +341,6 @@
       ],
       "type": "string"
     },
-    "LogControlRuleDrop": {
-      "description": "Drop is the configuration for a drop logs action.",
-      "type": "object"
-    },
     "LogControlRuleDropField": {
       "description": "DropField is the configuration for a drop field action.",
       "properties": {
@@ -354,11 +349,7 @@
           "type": "string"
         },
         "parent_path": {
-          "description": "Fully specified path to the the field(s) to drop.\nIf empty, the field(s) to drop are at the root level of the log.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+          "$ref": "#/definitions/configunstableLogFieldPath"
         }
       },
       "type": "object"
@@ -816,14 +807,6 @@
       },
       "type": "object"
     },
-    "VolumeThresholdTimePeriod": {
-      "enum": [
-        "DAILY",
-        "WEEKLY",
-        "MONTHLY"
-      ],
-      "type": "string"
-    },
     "apiError": {
       "properties": {
         "code": {
@@ -841,7 +824,7 @@
     "configunstableAzureMetricsIntegration": {
       "properties": {
         "slug": {
-          "description": "Unique identifier of the AzureMetricsIntegration. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the AzureMetricsIntegration is created.",
+          "description": "The unique identifier of the AzureMetricsIntegration. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the AzureMetricsIntegration is created.",
           "type": "string"
         },
         "name": {
@@ -888,7 +871,7 @@
     "configunstableConsumptionBudget": {
       "properties": {
         "slug": {
-          "description": "Unique identifier of the ConsumptionBudget. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the ConsumptionBudget is created.",
+          "description": "The unique identifier of the ConsumptionBudget. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the ConsumptionBudget is created.",
           "type": "string"
         },
         "name": {
@@ -969,7 +952,7 @@
           "$ref": "#/definitions/configunstableAzureMetricsIntegration"
         },
         "dry_run": {
-          "description": "If `true`, the AzureMetricsIntegration isn't created, and no response AzureMetricsIntegration will be returned. The response will return an error if the given AzureMetricsIntegration is invalid.",
+          "description": "If `true`, validates the specified configuration without creating the AzureMetricsIntegration. If the specified configuration is valid, the endpoint returns a partial response without the AzureMetricsIntegration. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -989,7 +972,7 @@
           "$ref": "#/definitions/configunstableConsumptionBudget"
         },
         "dry_run": {
-          "description": "If `true`, the ConsumptionBudget isn't created, and no response ConsumptionBudget will be returned. The response will return an error if the given ConsumptionBudget is invalid.",
+          "description": "If `true`, validates the specified configuration without creating the ConsumptionBudget. If the specified configuration is valid, the endpoint returns a partial response without the ConsumptionBudget. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -1009,7 +992,7 @@
           "$ref": "#/definitions/configunstableConsumptionConfig"
         },
         "dry_run": {
-          "description": "If `true`, the ConsumptionConfig isn't created, and no response ConsumptionConfig will be returned. The response will return an error if the given ConsumptionConfig is invalid.",
+          "description": "If `true`, validates the specified configuration without creating the ConsumptionConfig. If the specified configuration is valid, the endpoint returns a partial response without the ConsumptionConfig. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -1045,7 +1028,7 @@
           "$ref": "#/definitions/configunstableLinkTemplate"
         },
         "dry_run": {
-          "description": "If `true`, the LinkTemplate isn't created, and no response LinkTemplate will be returned. The response will return an error if the given LinkTemplate is invalid.",
+          "description": "If `true`, validates the specified configuration without creating the LinkTemplate. If the specified configuration is valid, the endpoint returns a partial response without the LinkTemplate. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -1065,7 +1048,7 @@
           "$ref": "#/definitions/configunstableLogControlConfig"
         },
         "dry_run": {
-          "description": "If `true`, the LogControlConfig isn't created, and no response LogControlConfig will be returned. The response will return an error if the given LogControlConfig is invalid.",
+          "description": "If `true`, validates the specified configuration without creating the LogControlConfig. If the specified configuration is valid, the endpoint returns a partial response without the LogControlConfig. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -1133,7 +1116,7 @@
           "$ref": "#/definitions/configunstableService"
         },
         "dry_run": {
-          "description": "If `true`, the Service isn't created, and no response Service will be returned. The response will return an error if the given Service is invalid.",
+          "description": "If `true`, validates the specified configuration without creating the Service. If the specified configuration is valid, the endpoint returns a partial response without the Service. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -1153,7 +1136,7 @@
           "$ref": "#/definitions/configunstableTraceJaegerRemoteSamplingStrategy"
         },
         "dry_run": {
-          "description": "If `true`, the TraceJaegerRemoteSamplingStrategy isn't created, and no response TraceJaegerRemoteSamplingStrategy will be returned. The response will return an error if the given TraceJaegerRemoteSamplingStrategy is invalid.",
+          "description": "If `true`, validates the specified configuration without creating the TraceJaegerRemoteSamplingStrategy. If the specified configuration is valid, the endpoint returns a partial response without the TraceJaegerRemoteSamplingStrategy. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -1173,7 +1156,7 @@
           "$ref": "#/definitions/configunstableTraceTailSamplingRules"
         },
         "dry_run": {
-          "description": "If `true`, the TraceTailSamplingRules isn't created, and no response TraceTailSamplingRules will be returned. The response will return an error if the given TraceTailSamplingRules is invalid.",
+          "description": "If `true`, validates the specified configuration without creating the TraceTailSamplingRules. If the specified configuration is valid, the endpoint returns a partial response without the TraceTailSamplingRules. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -1193,7 +1176,7 @@
           "$ref": "#/definitions/configunstableTraceTopTagConfig"
         },
         "dry_run": {
-          "description": "If `true`, the TraceTopTagConfig isn't created, and no response TraceTopTagConfig will be returned. The response will return an error if the given TraceTopTagConfig is invalid.",
+          "description": "If `true`, validates the specified configuration without creating the TraceTopTagConfig. If the specified configuration is valid, the endpoint returns a partial response without the TraceTopTagConfig. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -1210,7 +1193,7 @@
     "configunstableDashboard": {
       "properties": {
         "slug": {
-          "description": "Unique identifier of the Dashboard. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the Dashboard is created.",
+          "description": "The unique identifier of the Dashboard. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the Dashboard is created.",
           "type": "string"
         },
         "name": {
@@ -1512,8 +1495,8 @@
           "description": "LogQL query to select logs. Only matching logs will have control action applied.",
           "type": "string"
         },
-        "drop": {
-          "$ref": "#/definitions/LogControlRuleDrop"
+        "type": {
+          "$ref": "#/definitions/configunstableLogControlRuleType"
         },
         "sample": {
           "$ref": "#/definitions/LogControlRuleSample"
@@ -1524,10 +1507,27 @@
       },
       "type": "object"
     },
+    "configunstableLogControlRuleType": {
+      "enum": [
+        "DROP",
+        "SAMPLE",
+        "DROP_FIELD"
+      ],
+      "type": "string"
+    },
+    "configunstableLogFieldPath": {
+      "properties": {
+        "selector": {
+          "description": "LogQL Selector to indicate field path. Use `parent[child]` syntax to\nindicate nesting.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "configunstableNoopEntity": {
       "properties": {
         "slug": {
-          "description": "Unique identifier of the NoopEntity. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the NoopEntity is created.",
+          "description": "The unique identifier of the NoopEntity. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the NoopEntity is created.",
           "type": "string"
         },
         "name": {
@@ -1564,7 +1564,7 @@
     "configunstableObjectDiscoveryRule": {
       "properties": {
         "slug": {
-          "description": "Unique identifier of the ObjectDiscoveryRule. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the ObjectDiscoveryRule is created.",
+          "description": "The unique identifier of the ObjectDiscoveryRule. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the ObjectDiscoveryRule is created.",
           "type": "string"
         },
         "name": {
@@ -1688,7 +1688,7 @@
           "type": "string"
         },
         "slug": {
-          "description": "Unique identifier of the SavedTraceSearch. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the SavedTraceSearch is created.",
+          "description": "The unique identifier of the SavedTraceSearch. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the SavedTraceSearch is created.",
           "type": "string"
         },
         "created_at": {
@@ -1715,7 +1715,7 @@
     "configunstableService": {
       "properties": {
         "slug": {
-          "description": "Unique identifier of the Service. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the Service is created.",
+          "description": "The unique identifier of the Service. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the Service is created.",
           "type": "string"
         },
         "name": {
@@ -1792,7 +1792,7 @@
     "configunstableTraceJaegerRemoteSamplingStrategy": {
       "properties": {
         "slug": {
-          "description": "Unique identifier of the TraceJaegerRemoteSamplingStrategy. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the TraceJaegerRemoteSamplingStrategy is created.",
+          "description": "The unique identifier of the TraceJaegerRemoteSamplingStrategy. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the TraceJaegerRemoteSamplingStrategy is created.",
           "type": "string"
         },
         "name": {
@@ -1938,7 +1938,7 @@
           "type": "boolean"
         },
         "dry_run": {
-          "description": "If `true`, the ConsumptionConfig isn't created or updated, and no response ConsumptionConfig will be returned. The response will return an error if the given ConsumptionConfig is invalid.",
+          "description": "If `true`, validates the specified configuration without creating or updating the ConsumptionConfig. If the specified configuration is valid, the endpoint returns a partial response without the ConsumptionConfig. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -1978,7 +1978,7 @@
           "type": "boolean"
         },
         "dry_run": {
-          "description": "If `true`, the LogControlConfig isn't created or updated, and no response LogControlConfig will be returned. The response will return an error if the given LogControlConfig is invalid.",
+          "description": "If `true`, validates the specified configuration without creating or updating the LogControlConfig. If the specified configuration is valid, the endpoint returns a partial response without the LogControlConfig. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -2042,7 +2042,7 @@
           "type": "boolean"
         },
         "dry_run": {
-          "description": "If `true`, the TraceTailSamplingRules isn't created or updated, and no response TraceTailSamplingRules will be returned. The response will return an error if the given TraceTailSamplingRules is invalid.",
+          "description": "If `true`, validates the specified configuration without creating or updating the TraceTailSamplingRules. If the specified configuration is valid, the endpoint returns a partial response without the TraceTailSamplingRules. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -2066,7 +2066,7 @@
           "type": "boolean"
         },
         "dry_run": {
-          "description": "If `true`, the TraceTopTagConfig isn't created or updated, and no response TraceTopTagConfig will be returned. The response will return an error if the given TraceTopTagConfig is invalid.",
+          "description": "If `true`, validates the specified configuration without creating or updating the TraceTopTagConfig. If the specified configuration is valid, the endpoint returns a partial response without the TraceTopTagConfig. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -2083,12 +2083,12 @@
     "configv1PageParams": {
       "properties": {
         "max_size": {
-          "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
+          "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
           "format": "int64",
           "type": "integer"
         },
         "token": {
-          "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
+          "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
           "type": "string"
         }
       },
@@ -2097,7 +2097,7 @@
     "configv1PageResult": {
       "properties": {
         "next_token": {
-          "description": "Opaque page token which identifies the next page of items which the\nclient should request. An empty next_token indicates that there are no\nmore items to return.",
+          "description": "An opaque page token that identifies the next page of items that the\nclient should request. An empty value indicates that there are no\nmore items to return.",
           "type": "string"
         }
       },
@@ -2143,21 +2143,21 @@
         "operationId": "ListAzureMetricsIntegrations",
         "parameters": [
           {
-            "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
+            "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
             "format": "int64",
             "in": "query",
             "name": "page.max_size",
             "type": "integer"
           },
           {
-            "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
+            "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
             "in": "query",
             "name": "page.token",
             "type": "string"
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by slug, where any AzureMetricsIntegration with a matching slug in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by slug, where any AzureMetricsIntegration with a matching slug in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -2167,7 +2167,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by name, where any AzureMetricsIntegration with a matching name in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by name, where any AzureMetricsIntegration with a matching name in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -2402,21 +2402,21 @@
         "operationId": "ListConsumptionBudgets",
         "parameters": [
           {
-            "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
+            "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
             "format": "int64",
             "in": "query",
             "name": "page.max_size",
             "type": "integer"
           },
           {
-            "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
+            "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
             "in": "query",
             "name": "page.token",
             "type": "string"
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by slug, where any ConsumptionBudget with a matching slug in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by slug, where any ConsumptionBudget with a matching slug in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -2426,7 +2426,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by name, where any ConsumptionBudget with a matching name in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by name, where any ConsumptionBudget with a matching name in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -2829,21 +2829,21 @@
         "operationId": "ListDashboards",
         "parameters": [
           {
-            "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
+            "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
             "format": "int64",
             "in": "query",
             "name": "page.max_size",
             "type": "integer"
           },
           {
-            "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
+            "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
             "in": "query",
             "name": "page.token",
             "type": "string"
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by slug, where any Dashboard with a matching slug in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by slug, where any Dashboard with a matching slug in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -2853,7 +2853,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by collection_slug, where any Dashboard with a matching collection_slug in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by collection_slug, where any Dashboard with a matching collection_slug in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -2863,7 +2863,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by name, where any Dashboard with a matching name in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by name, where any Dashboard with a matching name in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -3104,21 +3104,21 @@
         "operationId": "ListLinkTemplates",
         "parameters": [
           {
-            "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
+            "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
             "format": "int64",
             "in": "query",
             "name": "page.max_size",
             "type": "integer"
           },
           {
-            "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
+            "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
             "in": "query",
             "name": "page.token",
             "type": "string"
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by slug, where any LinkTemplate with a matching slug in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by slug, where any LinkTemplate with a matching slug in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -3128,7 +3128,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by name, where any LinkTemplate with a matching name in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by name, where any LinkTemplate with a matching name in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -3138,7 +3138,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by ui_component, where any LinkTemplate with a matching ui_component in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by ui_component, where any LinkTemplate with a matching ui_component in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -3739,14 +3739,14 @@
         "operationId": "ListObjectDiscoveryRule",
         "parameters": [
           {
-            "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
+            "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
             "format": "int64",
             "in": "query",
             "name": "page.max_size",
             "type": "integer"
           },
           {
-            "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
+            "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
             "in": "query",
             "name": "page.token",
             "type": "string"
@@ -3978,21 +3978,21 @@
         "operationId": "ListSavedTraceSearches",
         "parameters": [
           {
-            "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
+            "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
             "format": "int64",
             "in": "query",
             "name": "page.max_size",
             "type": "integer"
           },
           {
-            "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
+            "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
             "in": "query",
             "name": "page.token",
             "type": "string"
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by slug, where any SavedTraceSearch with a matching slug in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by slug, where any SavedTraceSearch with a matching slug in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -4002,7 +4002,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by name, where any SavedTraceSearch with a matching name in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by name, where any SavedTraceSearch with a matching name in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -4244,21 +4244,21 @@
         "operationId": "ListServices",
         "parameters": [
           {
-            "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
+            "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
             "format": "int64",
             "in": "query",
             "name": "page.max_size",
             "type": "integer"
           },
           {
-            "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
+            "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
             "in": "query",
             "name": "page.token",
             "type": "string"
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by slug, where any Service with a matching slug in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by slug, where any Service with a matching slug in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -4268,7 +4268,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by team_slug, where any Service with a matching team_slug in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by team_slug, where any Service with a matching team_slug in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -4278,7 +4278,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by name, where any Service with a matching name in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by name, where any Service with a matching name in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -4556,21 +4556,21 @@
         "operationId": "ListTraceJaegerRemoteSamplingStrategies",
         "parameters": [
           {
-            "description": "Page size preference (i.e. how many items are returned in the next\npage). If zero, the server will use a default. Regardless of what size\nis given, clients must never assume how many items will be returned.",
+            "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
             "format": "int64",
             "in": "query",
             "name": "page.max_size",
             "type": "integer"
           },
           {
-            "description": "Opaque page token identifying which page to request. An empty token\nidentifies the first page.",
+            "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
             "in": "query",
             "name": "page.token",
             "type": "string"
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by slug, where any TraceJaegerRemoteSamplingStrategy with a matching slug in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by slug, where any TraceJaegerRemoteSamplingStrategy with a matching slug in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -4580,7 +4580,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by name, where any TraceJaegerRemoteSamplingStrategy with a matching name in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by name, where any TraceJaegerRemoteSamplingStrategy with a matching name in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -4590,7 +4590,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by service_name, where any TraceJaegerRemoteSamplingStrategy with a matching service_name in the given list (and matches all other filters) is returned.",
+            "description": "Filters results by service_name, where any TraceJaegerRemoteSamplingStrategy with a matching service_name in the given list (and matches all other filters) will be returned.",
             "in": "query",
             "items": {
               "type": "string"

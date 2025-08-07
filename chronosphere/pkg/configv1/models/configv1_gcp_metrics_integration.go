@@ -34,7 +34,7 @@ type Configv1GcpMetricsIntegration struct {
 	// service account
 	ServiceAccount *Configv1GcpMetricsIntegrationServiceAccount `json:"service_account,omitempty"`
 
-	// Unique identifier of the GcpMetricsIntegration. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the GcpMetricsIntegration is created.
+	// The unique identifier of the GcpMetricsIntegration. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the GcpMetricsIntegration is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the GcpMetricsIntegration was last updated. Cannot be set by clients.

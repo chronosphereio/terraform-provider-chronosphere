@@ -33,7 +33,7 @@ type ConfigunstableSavedTraceSearch struct {
 	// search
 	Search *SavedTraceSearchTraceSearch `json:"search,omitempty"`
 
-	// Unique identifier of the SavedTraceSearch. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the SavedTraceSearch is created.
+	// The unique identifier of the SavedTraceSearch. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the SavedTraceSearch is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the SavedTraceSearch was last updated. Cannot be set by clients.
