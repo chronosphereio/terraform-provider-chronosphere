@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+* Update volume threshold support in unstable `chronosphere_consumption_budget` resource.
+
 ## v1.12.0
 
 Added:

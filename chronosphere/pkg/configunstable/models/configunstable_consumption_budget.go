@@ -51,7 +51,7 @@ type ConfigunstableConsumptionBudget struct {
 	// resource
 	Resource ConsumptionBudgetResource `json:"resource,omitempty"`
 
-	// Unique identifier of the ConsumptionBudget. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the ConsumptionBudget is created.
+	// The unique identifier of the ConsumptionBudget. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the ConsumptionBudget is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the ConsumptionBudget was last updated. Cannot be set by clients.

@@ -39,7 +39,7 @@ type Configv1Bucket struct {
 	// This does not override the policy used when a monitor explicitly references a policy.
 	NotificationPolicySlug string `json:"notification_policy_slug,omitempty"`
 
-	// Unique identifier of the Bucket. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the Bucket is created.
+	// The unique identifier of the Bucket. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the Bucket is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Optional slug of the team the bucket belongs to.

@@ -34,7 +34,7 @@ type Configv1NotificationPolicy struct {
 	// routes
 	Routes *NotificationPolicyRoutes `json:"routes,omitempty"`
 
-	// Unique identifier of the NotificationPolicy. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the NotificationPolicy is created.
+	// The unique identifier of the NotificationPolicy. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the NotificationPolicy is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Slug of the team the notification policy belongs to. Required if

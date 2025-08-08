@@ -73,8 +73,7 @@ type ConsumptionBudgetBehavior struct {
 }
 
 type ConsumptionBudgetBehaviorVolumeThreshold struct {
-	FixedValue int64  `intschema:"fixed_value,optional"`
-	TimePeriod string `intschema:"time_period,optional"`
+	FixedValue int64 `intschema:"fixed_value,optional"`
 }
 
 type ConsumptionBudgetBehaviorInstantRateThreshold struct {

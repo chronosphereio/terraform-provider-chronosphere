@@ -35,7 +35,7 @@ type Configv1ServiceAccount struct {
 	// Name of the ServiceAccount. You can modify this value after the ServiceAccount is created.
 	Name string `json:"name,omitempty"`
 
-	// Unique identifier of the ServiceAccount. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the ServiceAccount is created.
+	// The unique identifier of the ServiceAccount. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the ServiceAccount is created.
 	Slug string `json:"slug,omitempty"`
 
 	// token is the generated API token of the service account. Cannot be set by

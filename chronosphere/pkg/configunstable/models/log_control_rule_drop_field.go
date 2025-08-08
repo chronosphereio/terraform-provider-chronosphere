@@ -8,6 +8,7 @@ package models
 import (
 	"context"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -20,18 +21,70 @@ type LogControlRuleDropField struct {
 	// Regular expression to match the field(s) to drop.
 	FieldRegex string `json:"field_regex,omitempty"`
 
-	// Fully specified path to the the field(s) to drop.
-	// If empty, the field(s) to drop are at the root level of the log.
-	ParentPath []string `json:"parent_path"`
+	// parent path
+	ParentPath *ConfigunstableLogFieldPath `json:"parent_path,omitempty"`
 }
 
 // Validate validates this log control rule drop field
 func (m *LogControlRuleDropField) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateParentPath(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 
-// ContextValidate validates this log control rule drop field based on context it is used
+func (m *LogControlRuleDropField) validateParentPath(formats strfmt.Registry) error {
+	if swag.IsZero(m.ParentPath) { // not required
+		return nil
+	}
+
+	if m.ParentPath != nil {
+		if err := m.ParentPath.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("parent_path")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("parent_path")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this log control rule drop field based on the context it is used
 func (m *LogControlRuleDropField) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateParentPath(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *LogControlRuleDropField) contextValidateParentPath(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.ParentPath != nil {
+		if err := m.ParentPath.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("parent_path")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("parent_path")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
