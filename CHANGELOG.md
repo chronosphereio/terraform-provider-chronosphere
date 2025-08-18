@@ -9,6 +9,7 @@ Added:
 * Update breaking filter API changes in `chronosphere_consumption_config` and `chronosphere_consumption_budget`.
 * Add partition slug field to `chronosphere_consumption_config`.
 * Add notification_policy_id field to `chronosphere_consumption_budget`.
+* Add unstable `azure_metrics_integration` resource for configuring the cloudscraper Azure metrics integration.
 
 ## v1.12.0
 
