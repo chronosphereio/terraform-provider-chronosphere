@@ -105,10 +105,6 @@ var consumptionBudgetInstantRateThresholdSchema = map[string]*schema.Schema{
 }
 
 var consumptionBudgetVolumeThresholdSchema = map[string]*schema.Schema{
-	"time_period": Enum{
-		Value:    enum.VolumeThresholdTimePeriod.ToStrings(),
-		Optional: true,
-	}.Schema(),
 	"fixed_value": {
 		Type:     schema.TypeInt,
 		Optional: true,

@@ -24,7 +24,7 @@ type ConfigV1UpdateDerivedLabelBody struct {
 	// derived label
 	DerivedLabel *Configv1DerivedLabel `json:"derived_label,omitempty"`
 
-	// If `true`, the DerivedLabel isn't created or updated, and no response DerivedLabel will be returned. The response will return an error if the given DerivedLabel is invalid.
+	// If `true`, validates the specified configuration without creating or updating the DerivedLabel. If the specified configuration is valid, the endpoint returns a partial response without the DerivedLabel. If the specified configuration is invalid, the endpoint returns an error.
 	DryRun bool `json:"dry_run,omitempty"`
 }
 

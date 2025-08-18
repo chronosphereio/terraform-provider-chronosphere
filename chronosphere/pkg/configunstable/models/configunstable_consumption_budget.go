@@ -37,6 +37,10 @@ type ConfigunstableConsumptionBudget struct {
 	// Name of the ConsumptionBudget. You can modify this value after the ConsumptionBudget is created.
 	Name string `json:"name,omitempty"`
 
+	// Notification policy slug for routing consumption alerts. Required only if
+	// ALERT_WARN or ALERT_CRITICAL actions are configured.
+	NotificationPolicySlug string `json:"notification_policy_slug,omitempty"`
+
 	// partition_name_path is the required path of the budget's partition, in the
 	// format `["global", "<name1>", "<name2>", ...]`, where name1 is a top-level
 	// partition, and name2 is a child partition of name1, etc.
@@ -51,7 +55,7 @@ type ConfigunstableConsumptionBudget struct {
 	// resource
 	Resource ConsumptionBudgetResource `json:"resource,omitempty"`
 
-	// Unique identifier of the ConsumptionBudget. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the ConsumptionBudget is created.
+	// The unique identifier of the ConsumptionBudget. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the ConsumptionBudget is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the ConsumptionBudget was last updated. Cannot be set by clients.

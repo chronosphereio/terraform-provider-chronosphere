@@ -41,7 +41,7 @@ type Configv1GrafanaDashboard struct {
 	// Name of the GrafanaDashboard. You can modify this value after the GrafanaDashboard is created.
 	Name string `json:"name,omitempty"`
 
-	// Unique identifier of the GrafanaDashboard. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the GrafanaDashboard is created.
+	// The unique identifier of the GrafanaDashboard. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the GrafanaDashboard is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the GrafanaDashboard was last updated. Cannot be set by clients.

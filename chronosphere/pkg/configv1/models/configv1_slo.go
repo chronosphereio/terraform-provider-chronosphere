@@ -56,7 +56,7 @@ type Configv1SLO struct {
 	// sli
 	Sli *Configv1SLI `json:"sli,omitempty"`
 
-	// Unique identifier of the SLO. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the SLO is created.
+	// The unique identifier of the SLO. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the SLO is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the SLO was last updated. Cannot be set by clients.

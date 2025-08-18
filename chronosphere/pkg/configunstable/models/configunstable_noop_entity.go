@@ -33,7 +33,7 @@ type ConfigunstableNoopEntity struct {
 	// nested enum
 	NestedEnum NoopEntityNestedEnum `json:"nested_enum,omitempty"`
 
-	// Unique identifier of the NoopEntity. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the NoopEntity is created.
+	// The unique identifier of the NoopEntity. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the NoopEntity is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the NoopEntity was last updated. Cannot be set by clients.

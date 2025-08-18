@@ -13,17 +13,23 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableUpdateLogControlConfigResponse configunstable update log control config response
+// Configv1UpdateLogControlConfigRequest configv1 update log control config request
 //
-// swagger:model configunstableUpdateLogControlConfigResponse
-type ConfigunstableUpdateLogControlConfigResponse struct {
+// swagger:model configv1UpdateLogControlConfigRequest
+type Configv1UpdateLogControlConfigRequest struct {
+
+	// If `true`, the LogControlConfig will be created if it does not already exist. If `false`, an error will be returned if the LogControlConfig does not already exist.
+	CreateIfMissing bool `json:"create_if_missing,omitempty"`
+
+	// If `true`, validates the specified configuration without creating or updating the LogControlConfig. If the specified configuration is valid, the endpoint returns a partial response without the LogControlConfig. If the specified configuration is invalid, the endpoint returns an error.
+	DryRun bool `json:"dry_run,omitempty"`
 
 	// log control config
-	LogControlConfig *ConfigunstableLogControlConfig `json:"log_control_config,omitempty"`
+	LogControlConfig *Configv1LogControlConfig `json:"log_control_config,omitempty"`
 }
 
-// Validate validates this configunstable update log control config response
-func (m *ConfigunstableUpdateLogControlConfigResponse) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 update log control config request
+func (m *Configv1UpdateLogControlConfigRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateLogControlConfig(formats); err != nil {
@@ -36,7 +42,7 @@ func (m *ConfigunstableUpdateLogControlConfigResponse) Validate(formats strfmt.R
 	return nil
 }
 
-func (m *ConfigunstableUpdateLogControlConfigResponse) validateLogControlConfig(formats strfmt.Registry) error {
+func (m *Configv1UpdateLogControlConfigRequest) validateLogControlConfig(formats strfmt.Registry) error {
 	if swag.IsZero(m.LogControlConfig) { // not required
 		return nil
 	}
@@ -55,8 +61,8 @@ func (m *ConfigunstableUpdateLogControlConfigResponse) validateLogControlConfig(
 	return nil
 }
 
-// ContextValidate validate this configunstable update log control config response based on the context it is used
-func (m *ConfigunstableUpdateLogControlConfigResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 update log control config request based on the context it is used
+func (m *Configv1UpdateLogControlConfigRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateLogControlConfig(ctx, formats); err != nil {
@@ -69,7 +75,7 @@ func (m *ConfigunstableUpdateLogControlConfigResponse) ContextValidate(ctx conte
 	return nil
 }
 
-func (m *ConfigunstableUpdateLogControlConfigResponse) contextValidateLogControlConfig(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1UpdateLogControlConfigRequest) contextValidateLogControlConfig(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.LogControlConfig != nil {
 		if err := m.LogControlConfig.ContextValidate(ctx, formats); err != nil {
@@ -86,7 +92,7 @@ func (m *ConfigunstableUpdateLogControlConfigResponse) contextValidateLogControl
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableUpdateLogControlConfigResponse) MarshalBinary() ([]byte, error) {
+func (m *Configv1UpdateLogControlConfigRequest) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -94,8 +100,8 @@ func (m *ConfigunstableUpdateLogControlConfigResponse) MarshalBinary() ([]byte, 
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableUpdateLogControlConfigResponse) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableUpdateLogControlConfigResponse
+func (m *Configv1UpdateLogControlConfigRequest) UnmarshalBinary(b []byte) error {
+	var res Configv1UpdateLogControlConfigRequest
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

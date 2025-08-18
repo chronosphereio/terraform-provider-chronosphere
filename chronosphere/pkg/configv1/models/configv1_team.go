@@ -30,7 +30,7 @@ type Configv1Team struct {
 	// Name of the Team. You can modify this value after the Team is created.
 	Name string `json:"name,omitempty"`
 
-	// Unique identifier of the Team. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the Team is created.
+	// The unique identifier of the Team. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the Team is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the Team was last updated. Cannot be set by clients.

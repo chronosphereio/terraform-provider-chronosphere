@@ -73,7 +73,7 @@ type Configv1Monitor struct {
 	// signal grouping
 	SignalGrouping *MonitorSignalGrouping `json:"signal_grouping,omitempty"`
 
-	// Unique identifier of the Monitor. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the Monitor is created.
+	// The unique identifier of the Monitor. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the Monitor is created.
 	Slug string `json:"slug,omitempty"`
 
 	// Timestamp of when the Monitor was last updated. Cannot be set by clients.

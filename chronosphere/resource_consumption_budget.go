@@ -137,7 +137,6 @@ func consumptionBudgetBehaviorToModel(b intschema.ConsumptionBudgetBehavior) *mo
 	if b.VolumeThreshold != nil {
 		volumeThreshold = &models.BehaviorVolumeThreshold{
 			FixedValue: fmt.Sprint(b.VolumeThreshold.FixedValue),
-			TimePeriod: models.VolumeThresholdTimePeriod(b.VolumeThreshold.TimePeriod),
 		}
 	}
 
@@ -174,7 +173,6 @@ func consumptionBudgetBehaviorFromModel(b *models.ConsumptionBudgetBehavior) (in
 		}
 		behavior.VolumeThreshold = &intschema.ConsumptionBudgetBehaviorVolumeThreshold{
 			FixedValue: fixedValue,
-			TimePeriod: string(b.VolumeThreshold.TimePeriod),
 		}
 	}
 

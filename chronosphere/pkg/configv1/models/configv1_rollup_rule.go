@@ -26,7 +26,7 @@ type Configv1RollupRule struct {
 	// aggregation
 	Aggregation Configv1AggregationType `json:"aggregation,omitempty"`
 
-	// Slug of the bucket the RollupRule belongs to.
+	// The slug of the bucket the RollupRule belongs to.
 	BucketSlug string `json:"bucket_slug,omitempty"`
 
 	// Timestamp of when the RollupRule was created. Cannot be set by clients.
@@ -34,11 +34,11 @@ type Configv1RollupRule struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Defines whether to automatically generate drop rules for this rollup rule.
-	// Set to `true` to remove raw metrics that match this rollup rule. Default: `false`.
+	// Defines whether to automatically generate drop rules for this rollup rule. Set
+	// to `true` to remove raw metrics that match this rollup rule. Default: `false`.
 	DropRaw bool `json:"drop_raw,omitempty"`
 
-	// DEPRECATED.
+	// **DEPRECATED**.
 	// A series matches and aggregates only if each label defined by filters and
 	// `label_policy.keep` or `graphite_label_policy.replace` (respectively) exist in
 	// the series. Setting `expansive_match=true` removes this restriction. Default:
@@ -64,17 +64,18 @@ type Configv1RollupRule struct {
 	//    format](https://docs.chronosphere.io/control/shaping/types#supported-formats).
 	//    Valid values: `carbon`, `chrono_gcp`, `dogstatsd`, `open_metrics`,
 	//    `open_telemetry`, `prometheus`, `signalfx`, `statsd`, `wavefront`.
-	//  * `__m3_prom_type__`: When ingesting with Prometheus, matches the incoming
-	//    metric's [Prometheus metric
+	//  * `__m3_prom_type__`: When ingesting metric data with Prometheus, matches the
+	//    incoming metric's [Prometheus metric
 	//    type](https://docs.chronosphere.io/control/shaping/types#prometheus). Valid
 	//    values: `counter`, `gauge`, `histogram`, `gauge_histogram`, `summary`,
 	//    `info`, `state_set`, `quantile`.
 	//  * `__otel_type__`: When ingesting with OpenTelemetry, matches on the incoming
-	//    metric's [OpenTelemetry metric type](https://docs.chronosphere.io/control/shaping/types#opentelemetry).
+	//    metric's [OpenTelemetry metric
+	//    type](https://docs.chronosphere.io/control/shaping/types#opentelemetry).
 	//    Valid values: `sum`, `monotonic_sum`, `gauge`, `histogram`, `exp_histogram`,
-	//    `summary`.
-	// For example, the following filter matches any cumulative counter metric with a
-	// `service=gateway` label whose metric name starts with `http_requests_`:
+	//   `summary`. For example, the following filter matches any cumulative counter
+	//   metric with a `service=gateway` label whose metric name starts with
+	//   `http_requests_`:
 	// ```
 	// __metric_type__:cumulative_counter service:gateway __name__:http_requests_*
 	// ```
@@ -83,11 +84,12 @@ type Configv1RollupRule struct {
 	// graphite label policy
 	GraphiteLabelPolicy *RollupRuleGraphiteLabelPolicy `json:"graphite_label_policy,omitempty"`
 
-	// The distance in time between aggregated data points. Intervals are based on your
+	// Optional. Sets a custom interval that defines the amount of
+	// time between aggregated data points. Intervals are based on your
 	// [retention policy](https://docs.chronosphere.io/administer/licensing#retention-policies).
-	// Use this optional field to set a custom interval.
 	// This field was known as `storage_policies` in version
-	// 0.286.0-2023-01-06-release.1 and earlier.
+	// 0.286.0-2023-01-06-release.1
+	// and earlier.
 	Interval string `json:"interval,omitempty"`
 
 	// label policy
@@ -96,6 +98,11 @@ type Configv1RollupRule struct {
 	// label replace
 	LabelReplace RollupRuleLabelReplace `json:"label_replace,omitempty"`
 
+	// The name of the new metric to create and persist to the database. You can use
+	// the template string `{{.MetricName }}` to create a new metric name that
+	// references the original metric name. For example, `new_metric: '{{ .MetricName
+	// }}:by_instance'` outputs a metric with the name `my_metric:by_instance` if the
+	// matched metric is `my_metric`.
 	// This field is optional for Graphite rollup rules.
 	MetricName string `json:"metric_name,omitempty"`
 
@@ -108,7 +115,7 @@ type Configv1RollupRule struct {
 	// Name of the RollupRule. You can modify this value after the RollupRule is created.
 	Name string `json:"name,omitempty"`
 
-	// Unique identifier of the RollupRule. If a `slug` isn't provided, one will be generated based of the `name` field. You can't modify this field after the RollupRule is created.
+	// The unique identifier of the RollupRule. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the RollupRule is created.
 	Slug string `json:"slug,omitempty"`
 
 	// storage policy

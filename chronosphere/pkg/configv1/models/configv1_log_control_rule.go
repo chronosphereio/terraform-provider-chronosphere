@@ -13,32 +13,32 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableLogControlRule LogControlRule is the configuration for a log control rule.
+// Configv1LogControlRule LogControlRule is the configuration for a log control rule.
 //
-// swagger:model configunstableLogControlRule
-type ConfigunstableLogControlRule struct {
-
-	// drop
-	Drop LogControlRuleDrop `json:"drop,omitempty"`
+// swagger:model configv1LogControlRule
+type Configv1LogControlRule struct {
 
 	// drop field
 	DropField *LogControlRuleDropField `json:"drop_field,omitempty"`
 
-	// LogQL query to select logs. Only matching logs will have control action applied.
+	// Log query syntax to select logs. Only matching logs will have control action applied.
 	Filter string `json:"filter,omitempty"`
 
 	// mode
-	Mode LogControlRuleMode `json:"mode,omitempty"`
+	Mode Configv1LogControlRuleMode `json:"mode,omitempty"`
 
 	// Name is the name of the control rule.
 	Name string `json:"name,omitempty"`
 
 	// sample
 	Sample *LogControlRuleSample `json:"sample,omitempty"`
+
+	// type
+	Type Configv1LogControlRuleType `json:"type,omitempty"`
 }
 
-// Validate validates this configunstable log control rule
-func (m *ConfigunstableLogControlRule) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 log control rule
+func (m *Configv1LogControlRule) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateDropField(formats); err != nil {
@@ -53,13 +53,17 @@ func (m *ConfigunstableLogControlRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateType(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
 	return nil
 }
 
-func (m *ConfigunstableLogControlRule) validateDropField(formats strfmt.Registry) error {
+func (m *Configv1LogControlRule) validateDropField(formats strfmt.Registry) error {
 	if swag.IsZero(m.DropField) { // not required
 		return nil
 	}
@@ -78,7 +82,7 @@ func (m *ConfigunstableLogControlRule) validateDropField(formats strfmt.Registry
 	return nil
 }
 
-func (m *ConfigunstableLogControlRule) validateMode(formats strfmt.Registry) error {
+func (m *Configv1LogControlRule) validateMode(formats strfmt.Registry) error {
 	if swag.IsZero(m.Mode) { // not required
 		return nil
 	}
@@ -95,7 +99,7 @@ func (m *ConfigunstableLogControlRule) validateMode(formats strfmt.Registry) err
 	return nil
 }
 
-func (m *ConfigunstableLogControlRule) validateSample(formats strfmt.Registry) error {
+func (m *Configv1LogControlRule) validateSample(formats strfmt.Registry) error {
 	if swag.IsZero(m.Sample) { // not required
 		return nil
 	}
@@ -114,8 +118,25 @@ func (m *ConfigunstableLogControlRule) validateSample(formats strfmt.Registry) e
 	return nil
 }
 
-// ContextValidate validate this configunstable log control rule based on the context it is used
-func (m *ConfigunstableLogControlRule) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1LogControlRule) validateType(formats strfmt.Registry) error {
+	if swag.IsZero(m.Type) { // not required
+		return nil
+	}
+
+	if err := m.Type.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("type")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("type")
+		}
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this configv1 log control rule based on the context it is used
+func (m *Configv1LogControlRule) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateDropField(ctx, formats); err != nil {
@@ -130,13 +151,17 @@ func (m *ConfigunstableLogControlRule) ContextValidate(ctx context.Context, form
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateType(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
 	return nil
 }
 
-func (m *ConfigunstableLogControlRule) contextValidateDropField(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1LogControlRule) contextValidateDropField(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.DropField != nil {
 		if err := m.DropField.ContextValidate(ctx, formats); err != nil {
@@ -152,7 +177,7 @@ func (m *ConfigunstableLogControlRule) contextValidateDropField(ctx context.Cont
 	return nil
 }
 
-func (m *ConfigunstableLogControlRule) contextValidateMode(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1LogControlRule) contextValidateMode(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := m.Mode.ContextValidate(ctx, formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
@@ -166,7 +191,7 @@ func (m *ConfigunstableLogControlRule) contextValidateMode(ctx context.Context, 
 	return nil
 }
 
-func (m *ConfigunstableLogControlRule) contextValidateSample(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1LogControlRule) contextValidateSample(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Sample != nil {
 		if err := m.Sample.ContextValidate(ctx, formats); err != nil {
@@ -182,8 +207,22 @@ func (m *ConfigunstableLogControlRule) contextValidateSample(ctx context.Context
 	return nil
 }
 
+func (m *Configv1LogControlRule) contextValidateType(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.Type.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("type")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("type")
+		}
+		return err
+	}
+
+	return nil
+}
+
 // MarshalBinary interface implementation
-func (m *ConfigunstableLogControlRule) MarshalBinary() ([]byte, error) {
+func (m *Configv1LogControlRule) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -191,8 +230,8 @@ func (m *ConfigunstableLogControlRule) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableLogControlRule) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableLogControlRule
+func (m *Configv1LogControlRule) UnmarshalBinary(b []byte) error {
+	var res Configv1LogControlRule
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

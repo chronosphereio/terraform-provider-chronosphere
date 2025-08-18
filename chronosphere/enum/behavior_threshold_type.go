@@ -21,11 +21,19 @@ import (
 // BehaviorThresholdType is an enum.
 var BehaviorThresholdType = newEnum("BehaviorThresholdType", []value[configunstable.BehaviorThresholdType]{
 	{
-		v1:    configunstable.BehaviorThresholdTypeVOLUME,
-		alias: "VOLUME",
+		v1:    configunstable.BehaviorThresholdTypeDAILYVOLUME,
+		alias: "DAILY_VOLUME",
 	},
 	{
 		v1:    configunstable.BehaviorThresholdTypeINSTANTRATE,
 		alias: "INSTANT_RATE",
+	},
+	{
+		v1:    configunstable.BehaviorThresholdTypeWEEKLYVOLUME,
+		alias: "WEEKLY_VOLUME",
+	},
+	{
+		v1:    configunstable.BehaviorThresholdTypeMONTHLYVOLUME,
+		alias: "MONTHLY_VOLUME",
 	},
 })
