@@ -222,6 +222,12 @@ var Resources = mustValidate([]Resource{
 		Schema: tfschema.GcpMetricsIntegration,
 	},
 	{
+		Name:   "azure_metrics_integration",
+		Entity: "AzureMetricsIntegration",
+		API:    Unstable,
+		Schema: tfschema.AzureMetricsIntegration,
+	},
+	{
 		Name:   "mapping_rule",
 		Entity: "MappingRule",
 		API:    V1,
