@@ -2,7 +2,7 @@ resource "chronosphere_log_ingest_config" "my-log-ingest-config" {
   plaintext_parser {
     name = "syslog"
     mode = "ENABLED"
-    drop_original = false
+    keep_original = true
     
     parser {
       parser_type = "REGEX"
@@ -17,7 +17,7 @@ resource "chronosphere_log_ingest_config" "my-log-ingest-config" {
   plaintext_parser {
     name = "apache_error"
     mode = "ENABLED"
-    drop_original = true
+    keep_original = false
     
     parser {
       parser_type = "REGEX"

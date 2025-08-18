@@ -18,11 +18,11 @@ import (
 // swagger:model LogControlRuleDropField
 type LogControlRuleDropField struct {
 
-	// Regular expression to match the field(s) to drop.
+	// Regular expression to match the field name(s) to drop.
 	FieldRegex string `json:"field_regex,omitempty"`
 
 	// parent path
-	ParentPath *ConfigunstableLogFieldPath `json:"parent_path,omitempty"`
+	ParentPath *Configv1LogFieldPath `json:"parent_path,omitempty"`
 }
 
 // Validate validates this log control rule drop field

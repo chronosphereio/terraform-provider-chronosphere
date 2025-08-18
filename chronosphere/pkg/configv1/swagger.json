@@ -632,12 +632,12 @@
     "GraphiteLabelPolicyReplace": {
       "properties": {
         "name": {
-          "description": "Required name of the label whose value should be replaced. Only\n`__gX__` labels are allowed (aka positional Graphite labels).",
+          "description": "Name of the label to replace the value for. Only positional Graphite labels\nsuch as `__gX__` are allowed.",
           "example": "__g1__",
           "type": "string"
         },
         "new_value": {
-          "description": "Required new value of the replaced label.",
+          "description": "New value of the replaced label.",
           "example": "ALL_HOSTS",
           "type": "string"
         }
@@ -741,6 +741,30 @@
       },
       "type": "object"
     },
+    "LogControlRuleDropField": {
+      "description": "DropField is the configuration for a drop field action.",
+      "properties": {
+        "field_regex": {
+          "description": "Regular expression to match the field name(s) to drop.",
+          "type": "string"
+        },
+        "parent_path": {
+          "$ref": "#/definitions/configv1LogFieldPath"
+        }
+      },
+      "type": "object"
+    },
+    "LogControlRuleSample": {
+      "description": "Sample is the configuration for the sample logs action.",
+      "properties": {
+        "rate": {
+          "description": "Percentage of matching logs to keep. Must be in the range (0, 1].",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
     "LogIngestConfigLogFieldParser": {
       "properties": {
         "mode": {
@@ -791,8 +815,8 @@
         "parser": {
           "$ref": "#/definitions/LogIngestConfigLogParser"
         },
-        "drop_original": {
-          "description": "If true, the original log will be dropped after parsing.\nOtherwise the original log is stored under the key \"plaintext_log\".",
+        "keep_original": {
+          "description": "If true, the original log is kept after parsing and stored under the key \"plaintext_log\".\nOtherwise the original log will be dropped after parsing. Default is false.",
           "type": "boolean"
         }
       },
@@ -1792,7 +1816,7 @@
     "RollupRuleGraphiteLabelPolicy": {
       "properties": {
         "replace": {
-          "description": "Required list of labels to replace. Useful for discarding\nhigh-cardinality values while still preserving the original positions of\nthe Graphite metric.",
+          "description": "List of labels to replace. Use to discard high-cardinality values while still\npreserving the original positions of the Graphite metric.",
           "items": {
             "$ref": "#/definitions/GraphiteLabelPolicyReplace"
           },
@@ -2863,6 +2887,26 @@
       },
       "type": "object"
     },
+    "configv1CreateLogControlConfigRequest": {
+      "properties": {
+        "log_control_config": {
+          "$ref": "#/definitions/configv1LogControlConfig"
+        },
+        "dry_run": {
+          "description": "If `true`, validates the specified configuration without creating the LogControlConfig. If the specified configuration is valid, the endpoint returns a partial response without the LogControlConfig. If the specified configuration is invalid, the endpoint returns an error.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "configv1CreateLogControlConfigResponse": {
+      "properties": {
+        "log_control_config": {
+          "$ref": "#/definitions/configv1LogControlConfig"
+        }
+      },
+      "type": "object"
+    },
     "configv1CreateLogIngestConfigRequest": {
       "properties": {
         "log_ingest_config": {
@@ -3392,6 +3436,9 @@
       "type": "object"
     },
     "configv1DeleteLogAllocationConfigResponse": {
+      "type": "object"
+    },
+    "configv1DeleteLogControlConfigResponse": {
       "type": "object"
     },
     "configv1DeleteLogIngestConfigResponse": {
@@ -4141,6 +4188,72 @@
       },
       "type": "object"
     },
+    "configv1LogControlConfig": {
+      "description": "LogControlConfig is a singleton configuration object that specifies the\nconfiguration for log control.",
+      "properties": {
+        "created_at": {
+          "description": "Timestamp of when the LogControlConfig was created. Cannot be set by clients.",
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "updated_at": {
+          "description": "Timestamp of when the LogControlConfig was last updated. Cannot be set by clients.",
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "rules": {
+          "description": "Control Rules are the ordered list of control rules.",
+          "items": {
+            "$ref": "#/definitions/configv1LogControlRule"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "configv1LogControlRule": {
+      "description": "LogControlRule is the configuration for a log control rule.",
+      "properties": {
+        "name": {
+          "description": "Name is the name of the control rule.",
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/definitions/configv1LogControlRuleMode"
+        },
+        "filter": {
+          "description": "Log query syntax to select logs. Only matching logs will have control action applied.",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/configv1LogControlRuleType"
+        },
+        "sample": {
+          "$ref": "#/definitions/LogControlRuleSample"
+        },
+        "drop_field": {
+          "$ref": "#/definitions/LogControlRuleDropField"
+        }
+      },
+      "type": "object"
+    },
+    "configv1LogControlRuleMode": {
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ],
+      "type": "string"
+    },
+    "configv1LogControlRuleType": {
+      "enum": [
+        "DROP",
+        "SAMPLE",
+        "DROP_FIELD"
+      ],
+      "type": "string"
+    },
     "configv1LogDataset": {
       "properties": {
         "match_criteria": {
@@ -4774,6 +4887,14 @@
       },
       "type": "object"
     },
+    "configv1ReadLogControlConfigResponse": {
+      "properties": {
+        "log_control_config": {
+          "$ref": "#/definitions/configv1LogControlConfig"
+        }
+      },
+      "type": "object"
+    },
     "configv1ReadLogIngestConfigResponse": {
       "properties": {
         "log_ingest_config": {
@@ -5094,14 +5215,14 @@
           "type": "string"
         },
         "filters": {
-          "description": "Filters incoming metrics by label. If multiple label filters are specified, an\nincoming metric must match every label filter to match the rule. Label values\nsupport glob patterns, including matching multiple patterns with an `OR`, such\nas `service:{svc1,svc2}`. These special filters are available for matching\nmetrics by non-label request metadata:\n * `__metric_type__`: Matches the incoming metric's [Observability Platform\n   metric\n   type](https://docs.chronosphere.io/control/shaping/types#observability-platform-types).\n   This is the recommended method for filtering on metric type. Valid values:\n   `cumulative_counter`, `cumulative_exponential_histogram`, `delta_counter`,\n   `delta_exponential_histogram`, `gauge`, `measurement`.\n * `__metric_source__`: Matches the incoming metric's [source\n   format](https://docs.chronosphere.io/control/shaping/types#supported-formats).\n   Valid values: `carbon`, `chrono_gcp`, `dogstatsd`, `open_metrics`,\n   `open_telemetry`, `prometheus`, `signalfx`, `statsd`, `wavefront`.\n * `__m3_prom_type__`: When ingesting with Prometheus, matches the incoming\n   metric's [Prometheus metric\n   type](https://docs.chronosphere.io/control/shaping/types#prometheus). Valid\n   values: `counter`, `gauge`, `histogram`, `gauge_histogram`, `summary`,\n   `info`, `state_set`, `quantile`.\n * `__otel_type__`: When ingesting with OpenTelemetry, matches on the incoming\n   metric's [OpenTelemetry metric type](https://docs.chronosphere.io/control/shaping/types#opentelemetry).\n   Valid values: `sum`, `monotonic_sum`, `gauge`, `histogram`, `exp_histogram`,\n   `summary`.\nFor example, the following filter matches any cumulative counter metric with a\n`service=gateway` label whose metric name starts with `http_requests_`:\n```\n__metric_type__:cumulative_counter service:gateway __name__:http_requests_*\n```",
+          "description": "Filters incoming metrics by label. If multiple label filters are specified, an\nincoming metric must match every label filter to match the rule. Label values\nsupport glob patterns, including matching multiple patterns with an `OR`, such\nas `service:{svc1,svc2}`. These special filters are available for matching\nmetrics by non-label request metadata:\n * `__metric_type__`: Matches the incoming metric's [Observability Platform\n   metric\n   type](https://docs.chronosphere.io/control/shaping/types#observability-platform-types).\n   This is the recommended method for filtering on metric type. Valid values:\n   `cumulative_counter`, `cumulative_exponential_histogram`, `delta_counter`,\n   `delta_exponential_histogram`, `gauge`, `measurement`.\n * `__metric_source__`: Matches the incoming metric's [source\n   format](https://docs.chronosphere.io/control/shaping/types#supported-formats).\n   Valid values: `carbon`, `chrono_gcp`, `dogstatsd`, `open_metrics`,\n   `open_telemetry`, `prometheus`, `signalfx`, `statsd`, `wavefront`.\n * `__m3_prom_type__`: When ingesting metric data with Prometheus, matches the\n   incoming metric's [Prometheus metric\n   type](https://docs.chronosphere.io/control/shaping/types#prometheus). Valid\n   values: `counter`, `gauge`, `histogram`, `gauge_histogram`, `summary`,\n   `info`, `state_set`, `quantile`.\n * `__otel_type__`: When ingesting with OpenTelemetry, matches on the incoming\n   metric's [OpenTelemetry metric\n   type](https://docs.chronosphere.io/control/shaping/types#opentelemetry).\n   Valid values: `sum`, `monotonic_sum`, `gauge`, `histogram`, `exp_histogram`,\n  `summary`. For example, the following filter matches any cumulative counter\n  metric with a `service=gateway` label whose metric name starts with\n  `http_requests_`:\n```\n__metric_type__:cumulative_counter service:gateway __name__:http_requests_*\n```",
           "items": {
             "$ref": "#/definitions/configv1LabelFilter"
           },
           "type": "array"
         },
         "metric_name": {
-          "description": "This field is optional for Graphite rollup rules.",
+          "description": "The name of the new metric to create and persist to the database. You can use\nthe template string `{{.MetricName }}` to create a new metric name that\nreferences the original metric name. For example, `new_metric: '{{ .MetricName\n}}:by_instance'` outputs a metric with the name `my_metric:by_instance` if the\nmatched metric is `my_metric`.\nThis field is optional for Graphite rollup rules.",
           "type": "string"
         },
         "metric_type": {
@@ -5114,11 +5235,11 @@
           "$ref": "#/definitions/configv1RollupRuleStoragePolicy"
         },
         "interval": {
-          "description": "The distance in time between aggregated data points. Intervals are based on your\n[retention policy](https://docs.chronosphere.io/administer/licensing#retention-policies).\nUse this optional field to set a custom interval.\nThis field was known as `storage_policies` in version\n0.286.0-2023-01-06-release.1 and earlier.",
+          "description": "Optional. Sets a custom interval that defines the amount of\ntime between aggregated data points. Intervals are based on your\n[retention policy](https://docs.chronosphere.io/administer/licensing#retention-policies).\nThis field was known as `storage_policies` in version\n0.286.0-2023-01-06-release.1\nand earlier.",
           "type": "string"
         },
         "expansive_match": {
-          "description": "DEPRECATED.\nA series matches and aggregates only if each label defined by filters and\n`label_policy.keep` or `graphite_label_policy.replace` (respectively) exist in\nthe series. Setting `expansive_match=true` removes this restriction. Default:\n`expansive_match=false`.\n\nIf `false`, a series matches and aggregates only if each label defined by the\nprovided `filters` and the `label_policy.keep` or\n`graphite_label_policy.replace` settings exist in the series.",
+          "description": "**DEPRECATED**.\nA series matches and aggregates only if each label defined by filters and\n`label_policy.keep` or `graphite_label_policy.replace` (respectively) exist in\nthe series. Setting `expansive_match=true` removes this restriction. Default:\n`expansive_match=false`.\n\nIf `false`, a series matches and aggregates only if each label defined by the\nprovided `filters` and the `label_policy.keep` or\n`graphite_label_policy.replace` settings exist in the series.",
           "type": "boolean"
         },
         "add_metric_type_label": {
@@ -5126,7 +5247,7 @@
           "type": "boolean"
         },
         "drop_raw": {
-          "description": "Defines whether to automatically generate drop rules for this rollup rule.\nSet to `true` to remove raw metrics that match this rollup rule. Default: `false`.",
+          "description": "Defines whether to automatically generate drop rules for this rollup rule. Set\nto `true` to remove raw metrics that match this rollup rule. Default: `false`.",
           "type": "boolean"
         },
         "label_policy": {
@@ -5148,14 +5269,14 @@
       "description": "TODO: consolidate w/ RecordingRule.LabelPolicy once both of these\n entities implement the same label semantics.",
       "properties": {
         "keep": {
-          "description": "Labels that should be retained in the output metric. If set, then the\ndiscard field must be empty.",
+          "description": "Labels to retain in the output metric. If set, the `discard` field must\nbe empty.",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "discard": {
-          "description": "Labels that should be discarded in the output metric. If set, then the\nkeep field must be empty.",
+          "description": "Labels to discard in the output metric. If set, the `keep` field must be\nempty.",
           "items": {
             "type": "string"
           },
@@ -5175,11 +5296,11 @@
     "configv1RollupRuleStoragePolicy": {
       "properties": {
         "resolution": {
-          "description": "Required resolution of the aggregated metrics.",
+          "description": "Resolution of the aggregated metrics.",
           "type": "string"
         },
         "retention": {
-          "description": "Required retention of the aggregated metrics.",
+          "description": "Retention of the aggregated metrics.",
           "type": "string"
         }
       },
@@ -5768,6 +5889,30 @@
       "properties": {
         "log_allocation_config": {
           "$ref": "#/definitions/configv1LogAllocationConfig"
+        }
+      },
+      "type": "object"
+    },
+    "configv1UpdateLogControlConfigRequest": {
+      "properties": {
+        "log_control_config": {
+          "$ref": "#/definitions/configv1LogControlConfig"
+        },
+        "create_if_missing": {
+          "description": "If `true`, the LogControlConfig will be created if it does not already exist. If `false`, an error will be returned if the LogControlConfig does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If `true`, validates the specified configuration without creating or updating the LogControlConfig. If the specified configuration is valid, the endpoint returns a partial response without the LogControlConfig. If the specified configuration is invalid, the endpoint returns an error.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "configv1UpdateLogControlConfigResponse": {
+      "properties": {
+        "log_control_config": {
+          "$ref": "#/definitions/configv1LogControlConfig"
         }
       },
       "type": "object"
@@ -8883,6 +9028,174 @@
         },
         "tags": [
           "LogAllocationConfig"
+        ]
+      }
+    },
+    "/api/v1/config/log-control-config": {
+      "delete": {
+        "operationId": "DeleteLogControlConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1DeleteLogControlConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot delete the LogControlConfig because it is in use.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot delete the LogControlConfig because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "LogControlConfig"
+        ]
+      },
+      "get": {
+        "operationId": "ReadLogControlConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1ReadLogControlConfigResponse"
+            }
+          },
+          "404": {
+            "description": "Cannot read the LogControlConfig because LogControlConfig has not been created.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "LogControlConfig"
+        ]
+      },
+      "post": {
+        "operationId": "CreateLogControlConfig",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/configv1CreateLogControlConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the created LogControlConfig.",
+            "schema": {
+              "$ref": "#/definitions/configv1CreateLogControlConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot create the LogControlConfig because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "409": {
+            "description": "Cannot create the LogControlConfig because there is a conflict with an existing LogControlConfig.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "LogControlConfig"
+        ]
+      },
+      "put": {
+        "operationId": "UpdateLogControlConfig",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/configv1UpdateLogControlConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the updated LogControlConfig.",
+            "schema": {
+              "$ref": "#/definitions/configv1UpdateLogControlConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot update the LogControlConfig because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot update the LogControlConfig because LogControlConfig has not been created.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "LogControlConfig"
         ]
       }
     },

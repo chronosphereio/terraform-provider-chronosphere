@@ -30,7 +30,7 @@ var plaintextParserResource = &schema.Resource{
 			Optional: true,
 		}.Schema(),
 		"parser": LogParserSchema,
-		"drop_original": {
+		"keep_original": {
 			Type:     schema.TypeBool,
 			Optional: true,
 		},
