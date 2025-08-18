@@ -17,7 +17,6 @@ resource "chronosphere_log_ingest_config" "my-log-ingest-config" {
   plaintext_parser {
     name = "apache_error"
     mode = "ENABLED"
-    keep_original = false
     
     parser {
       parser_type = "REGEX"
