@@ -1,6 +1,8 @@
 # Releases
 
 ## Unreleased
+* Add `azure_metrics_integration` resource for configuring the cloudscraper Azure metrics integration.
+
 
 ## v1.13.0
 

@@ -4,6 +4,9 @@ package pagination
 import (
 	"context"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/azure_metrics_integration"
+	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
@@ -37,6 +40,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_tail_sampling_rules"
 	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/unstable"
 )
 
 func ListBuckets(
@@ -1843,6 +1847,78 @@ func ListClassicDashboardsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.ClassicDashboards {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListUnstableAzureMetricsIntegrations(
+	ctx context.Context,
+	client *configunstable.Client,
+) ([]*configunstablemodels.ConfigunstableAzureMetricsIntegration, error) {
+	return ListUnstableAzureMetricsIntegrationsByFilter(ctx, client, Filter{})
+}
+
+func ListUnstableAzureMetricsIntegrationsBySlugs(
+	ctx context.Context,
+	client *configunstable.Client,
+	slugs []string,
+) ([]*configunstablemodels.ConfigunstableAzureMetricsIntegration, error) {
+	return ListUnstableAzureMetricsIntegrationsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListUnstableAzureMetricsIntegrationsByNames(
+	ctx context.Context,
+	client *configunstable.Client,
+	names []string,
+) ([]*configunstablemodels.ConfigunstableAzureMetricsIntegration, error) {
+	return ListUnstableAzureMetricsIntegrationsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListUnstableAzureMetricsIntegrationsByFilter(
+	ctx context.Context,
+	client *configunstable.Client,
+	f Filter,
+	opts ...func(*azure_metrics_integration.ListAzureMetricsIntegrationsParams),
+) ([]*configunstablemodels.ConfigunstableAzureMetricsIntegration, error) {
+	if !unstable.Enabled() {
+		return nil, nil
+	}
+	var (
+		nextToken string
+		result    []*configunstablemodels.ConfigunstableAzureMetricsIntegration
+	)
+	for {
+		p := &azure_metrics_integration.ListAzureMetricsIntegrationsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.AzureMetricsIntegration.ListAzureMetricsIntegrations(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.AzureMetricsIntegrations {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
