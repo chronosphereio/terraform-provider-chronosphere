@@ -63,7 +63,7 @@ var sharedSchemaTypeNames = map[*schema.Schema]string{
 	tfschema.ValueMappingsSchema:                    "ValueMappings",
 	tfschema.SLOAdditionalPromQLFilters:             "SLOAdditionalPromQLFilters",
 	tfschema.SignalGrouping:                         "SignalGrouping",
-	tfschema.DatasetFilterSchema:                    "DatasetFilter",
+	tfschema.PartitionFilterSchema:                  "PartitionFilter",
 }
 
 // Add shared element references here to generate shared types. Usually we

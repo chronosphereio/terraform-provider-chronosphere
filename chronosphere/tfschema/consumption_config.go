@@ -32,7 +32,11 @@ var ConsumptionConfigPartitionResource = makeRecursiveResource(
 					Type:     schema.TypeString,
 					Optional: true,
 				},
-				"dataset_filter": DatasetFilterSchema,
+				"slug": {
+					Type:     schema.TypeString,
+					Optional: true,
+				},
+				"filter": PartitionFilterSchema,
 			},
 		}
 		if child != nil {
@@ -45,16 +49,16 @@ var ConsumptionConfigPartitionResource = makeRecursiveResource(
 		return r
 	})
 
-var DatasetFilterSchema = &schema.Schema{
+var PartitionFilterSchema = &schema.Schema{
 	Type:     schema.TypeList,
 	Optional: true,
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"operator": Enum{
-				Value:    enum.DatasetFilterOperator.ToStrings(),
+				Value:    enum.PartitionFilterOperator.ToStrings(),
 				Optional: true,
 			}.Schema(),
-			"dataset": {
+			"condition": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
@@ -62,6 +66,14 @@ var DatasetFilterSchema = &schema.Schema{
 						"dataset_id": {
 							Type:     schema.TypeString,
 							Optional: true,
+						},
+						"log_filter": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: LogSearchSchema,
+							},
 						},
 					},
 				},

@@ -5,6 +5,9 @@
 Added:
 * Update volume threshold support in unstable `chronosphere_consumption_budget` resource.
 * Replace `drop_original` with `keep_original` in LogIngestConfig parser.
+* Update breaking filter API changes in `chronosphere_consumption_config` and `chronosphere_consumption_budget`.
+* Add partition slug field to `chronosphere_consumption_config`.
+* Add notification_policy_id field to `chronosphere_consumption_budget`.
 
 ## v1.12.0
 
