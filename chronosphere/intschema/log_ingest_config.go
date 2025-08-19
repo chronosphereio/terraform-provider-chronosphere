@@ -56,7 +56,7 @@ func (o *LogIngestConfig) Ref() tfid.ID {
 
 type LogIngestConfigPlaintextParser struct {
 	Name         string     `intschema:"name"`
-	DropOriginal bool       `intschema:"drop_original,optional"`
+	KeepOriginal bool       `intschema:"keep_original,optional"`
 	Mode         string     `intschema:"mode,optional"`
 	Parser       *LogParser `intschema:"parser,optional,list_encoded_object"`
 }

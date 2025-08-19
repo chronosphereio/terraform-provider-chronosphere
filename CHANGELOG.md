@@ -4,6 +4,7 @@
 
 Added:
 * Update volume threshold support in unstable `chronosphere_consumption_budget` resource.
+* Replace `drop_original` with `keep_original` in LogIngestConfig parser.
 
 ## v1.12.0
 

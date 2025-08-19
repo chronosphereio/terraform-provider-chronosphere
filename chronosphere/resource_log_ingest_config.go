@@ -69,7 +69,7 @@ func (logIngestConfigConverter) toModel(
 				Name:         p.Name,
 				Mode:         models.LogIngestConfigPlaintextParserMode(p.Mode),
 				Parser:       convertLogParserToModel(p.Parser),
-				DropOriginal: p.DropOriginal,
+				KeepOriginal: p.KeepOriginal,
 			}
 		}),
 		FieldParsers: sliceutil.Map(m.FieldParser, func(p intschema.LogIngestConfigFieldParser) *models.LogIngestConfigLogFieldParser {
@@ -120,7 +120,7 @@ func (logIngestConfigConverter) fromModel(
 				Name:         p.Name,
 				Mode:         string(p.Mode),
 				Parser:       convertLogParserFromModel(p.Parser),
-				DropOriginal: p.DropOriginal,
+				KeepOriginal: p.KeepOriginal,
 			}
 		}),
 		FieldParser: sliceutil.Map(m.FieldParsers, func(p *models.LogIngestConfigLogFieldParser) intschema.LogIngestConfigFieldParser {

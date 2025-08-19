@@ -13,23 +13,20 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableUpdateLogControlConfigRequest configunstable update log control config request
+// Configv1CreateLogControlConfigRequest configv1 create log control config request
 //
-// swagger:model configunstableUpdateLogControlConfigRequest
-type ConfigunstableUpdateLogControlConfigRequest struct {
+// swagger:model configv1CreateLogControlConfigRequest
+type Configv1CreateLogControlConfigRequest struct {
 
-	// If `true`, the LogControlConfig will be created if it does not already exist. If `false`, an error will be returned if the LogControlConfig does not already exist.
-	CreateIfMissing bool `json:"create_if_missing,omitempty"`
-
-	// If `true`, validates the specified configuration without creating or updating the LogControlConfig. If the specified configuration is valid, the endpoint returns a partial response without the LogControlConfig. If the specified configuration is invalid, the endpoint returns an error.
+	// If `true`, validates the specified configuration without creating the LogControlConfig. If the specified configuration is valid, the endpoint returns a partial response without the LogControlConfig. If the specified configuration is invalid, the endpoint returns an error.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// log control config
-	LogControlConfig *ConfigunstableLogControlConfig `json:"log_control_config,omitempty"`
+	LogControlConfig *Configv1LogControlConfig `json:"log_control_config,omitempty"`
 }
 
-// Validate validates this configunstable update log control config request
-func (m *ConfigunstableUpdateLogControlConfigRequest) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 create log control config request
+func (m *Configv1CreateLogControlConfigRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateLogControlConfig(formats); err != nil {
@@ -42,7 +39,7 @@ func (m *ConfigunstableUpdateLogControlConfigRequest) Validate(formats strfmt.Re
 	return nil
 }
 
-func (m *ConfigunstableUpdateLogControlConfigRequest) validateLogControlConfig(formats strfmt.Registry) error {
+func (m *Configv1CreateLogControlConfigRequest) validateLogControlConfig(formats strfmt.Registry) error {
 	if swag.IsZero(m.LogControlConfig) { // not required
 		return nil
 	}
@@ -61,8 +58,8 @@ func (m *ConfigunstableUpdateLogControlConfigRequest) validateLogControlConfig(f
 	return nil
 }
 
-// ContextValidate validate this configunstable update log control config request based on the context it is used
-func (m *ConfigunstableUpdateLogControlConfigRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 create log control config request based on the context it is used
+func (m *Configv1CreateLogControlConfigRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateLogControlConfig(ctx, formats); err != nil {
@@ -75,7 +72,7 @@ func (m *ConfigunstableUpdateLogControlConfigRequest) ContextValidate(ctx contex
 	return nil
 }
 
-func (m *ConfigunstableUpdateLogControlConfigRequest) contextValidateLogControlConfig(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1CreateLogControlConfigRequest) contextValidateLogControlConfig(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.LogControlConfig != nil {
 		if err := m.LogControlConfig.ContextValidate(ctx, formats); err != nil {
@@ -92,7 +89,7 @@ func (m *ConfigunstableUpdateLogControlConfigRequest) contextValidateLogControlC
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableUpdateLogControlConfigRequest) MarshalBinary() ([]byte, error) {
+func (m *Configv1CreateLogControlConfigRequest) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -100,8 +97,8 @@ func (m *ConfigunstableUpdateLogControlConfigRequest) MarshalBinary() ([]byte, e
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableUpdateLogControlConfigRequest) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableUpdateLogControlConfigRequest
+func (m *Configv1CreateLogControlConfigRequest) UnmarshalBinary(b []byte) error {
+	var res Configv1CreateLogControlConfigRequest
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

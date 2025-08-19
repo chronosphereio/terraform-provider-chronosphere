@@ -50,7 +50,7 @@ func (a *Client) CreateLogControlConfig(params *CreateLogControlConfigParams, op
 	op := &runtime.ClientOperation{
 		ID:                 "CreateLogControlConfig",
 		Method:             "POST",
-		PathPattern:        "/api/unstable/config/log-control-config",
+		PathPattern:        "/api/v1/config/log-control-config",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -87,7 +87,7 @@ func (a *Client) DeleteLogControlConfig(params *DeleteLogControlConfigParams, op
 	op := &runtime.ClientOperation{
 		ID:                 "DeleteLogControlConfig",
 		Method:             "DELETE",
-		PathPattern:        "/api/unstable/config/log-control-config",
+		PathPattern:        "/api/v1/config/log-control-config",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -124,7 +124,7 @@ func (a *Client) ReadLogControlConfig(params *ReadLogControlConfigParams, opts .
 	op := &runtime.ClientOperation{
 		ID:                 "ReadLogControlConfig",
 		Method:             "GET",
-		PathPattern:        "/api/unstable/config/log-control-config",
+		PathPattern:        "/api/v1/config/log-control-config",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -161,7 +161,7 @@ func (a *Client) UpdateLogControlConfig(params *UpdateLogControlConfigParams, op
 	op := &runtime.ClientOperation{
 		ID:                 "UpdateLogControlConfig",
 		Method:             "PUT",
-		PathPattern:        "/api/unstable/config/log-control-config",
+		PathPattern:        "/api/v1/config/log-control-config",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
