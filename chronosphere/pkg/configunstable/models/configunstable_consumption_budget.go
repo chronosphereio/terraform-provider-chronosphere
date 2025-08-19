@@ -30,8 +30,8 @@ type ConfigunstableConsumptionBudget struct {
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
 	// default_priority is an optional default priority for requests which do not
-	// match any priority in the priorities list. If not set, then the lowest
-	// priority (10) is used as the default.
+	// match any priority in the priorities list. If not set, then priority=10
+	// is used as the default.
 	DefaultPriority int32 `json:"default_priority,omitempty"`
 
 	// Name of the ConsumptionBudget. You can modify this value after the ConsumptionBudget is created.
@@ -41,15 +41,17 @@ type ConfigunstableConsumptionBudget struct {
 	// ALERT_WARN or ALERT_CRITICAL actions are configured.
 	NotificationPolicySlug string `json:"notification_policy_slug,omitempty"`
 
-	// partition_name_path is the required path of the budget's partition, in the
-	// format `["global", "<name1>", "<name2>", ...]`, where name1 is a top-level
-	// partition, and name2 is a child partition of name1, etc.
-	PartitionNamePath []string `json:"partition_name_path"`
+	// partition_slug_path is the required path of the budget's partition, in the
+	// format `["global", "<slug1>", "<slug2>", ...]`, where slug1 is a top-level
+	// partition, and slug2 is a child partition of slug1, etc.
+	PartitionSlugPath []string `json:"partition_slug_path"`
 
-	// priorities are optional budget priorities. Priorites define in what
-	// order should requests be dropped when necessary (i.e. lowest priority
-	// dropped first, highest priority dropped last). If a request does not
-	// match any priority dataset, then it defaults to the lowest priority.
+	// priorities are optional budget priorities. Priorities are defined in order
+	// of precedence, where incoming requests are assigned the first priority that
+	// matches. Each priority value defines the order in which requests are
+	// dropped when necessary (i.e. priority=10 dropped first, priority=1 dropped
+	// last). If a request does not match any priority, then it is assigned the
+	// default_priority.
 	Priorities []*ConsumptionBudgetPriority `json:"priorities"`
 
 	// resource
