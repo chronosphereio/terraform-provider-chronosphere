@@ -741,6 +741,37 @@
       },
       "type": "object"
     },
+    "LogControlRuleMode": {
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ],
+      "type": "string"
+    },
+    "LogControlRuleSample": {
+      "description": "Sample is the configuration for the sample logs action.",
+      "properties": {
+        "rate": {
+          "description": "Percentage of matching logs to keep. Must be in the range [0, 1].",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "LogControlRuleDropField": {
+      "description": "DropField is the configuration for a drop field action.",
+      "properties": {
+        "field_regex": {
+          "description": "Regular expression to match the field(s) to drop.",
+          "type": "string"
+        },
+        "parent_path": {
+          "$ref": "#/definitions/configv1LogFieldPath"
+        }
+      },
+      "type": "object"
+    },
     "LogIngestConfigLogFieldParser": {
       "properties": {
         "mode": {
@@ -2863,6 +2894,26 @@
       },
       "type": "object"
     },
+    "configv1CreateLogControlConfigRequest": {
+      "properties": {
+        "log_control_config": {
+          "$ref": "#/definitions/configv1LogControlConfig"
+        },
+        "dry_run": {
+          "description": "If `true`, validates the specified configuration without creating the LogControlConfig. If the specified configuration is valid, the endpoint returns a partial response without the LogControlConfig. If the specified configuration is invalid, the endpoint returns an error.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "configv1CreateLogControlConfigResponse": {
+      "properties": {
+        "log_control_config": {
+          "$ref": "#/definitions/configv1LogControlConfig"
+        }
+      },
+      "type": "object"
+    },
     "configv1CreateLogIngestConfigRequest": {
       "properties": {
         "log_ingest_config": {
@@ -3392,6 +3443,9 @@
       "type": "object"
     },
     "configv1DeleteLogAllocationConfigResponse": {
+      "type": "object"
+    },
+    "configv1DeleteLogControlConfigResponse": {
       "type": "object"
     },
     "configv1DeleteLogIngestConfigResponse": {
@@ -4130,6 +4184,65 @@
       },
       "type": "object"
     },
+    "configv1LogControlConfig": {
+      "description": "LogControlConfig is a singleton configuration object that specifies the\nconfiguration for log control.",
+      "properties": {
+        "created_at": {
+          "description": "Timestamp of when the LogControlConfig was created. Cannot be set by clients.",
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "updated_at": {
+          "description": "Timestamp of when the LogControlConfig was last updated. Cannot be set by clients.",
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "rules": {
+          "description": "Control Rules are the ordered list of control rules.",
+          "items": {
+            "$ref": "#/definitions/configv1LogControlRule"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "configv1LogControlRule": {
+      "description": "LogControlRule is the configuration for a log control rule.",
+      "properties": {
+        "name": {
+          "description": "Name is the name of the control rule.",
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/definitions/LogControlRuleMode"
+        },
+        "filter": {
+          "description": "LogQL query to select logs. Only matching logs will have control action applied.",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/configv1LogControlRuleType"
+        },
+        "sample": {
+          "$ref": "#/definitions/LogControlRuleSample"
+        },
+        "drop_field": {
+          "$ref": "#/definitions/LogControlRuleDropField"
+        }
+      },
+      "type": "object"
+    },
+    "configv1LogControlRuleType": {
+      "enum": [
+        "DROP",
+        "SAMPLE",
+        "DROP_FIELD"
+      ],
+      "type": "string"
+    },
     "configv1LogAllocationConfigAllocation": {
       "description": "Configuration for allocating resources to a dataset.",
       "properties": {
@@ -4770,6 +4883,14 @@
       "properties": {
         "log_allocation_config": {
           "$ref": "#/definitions/configv1LogAllocationConfig"
+        }
+      },
+      "type": "object"
+    },
+    "configv1ReadLogControlConfigResponse": {
+      "properties": {
+        "log_control_config": {
+          "$ref": "#/definitions/configv1LogControlConfig"
         }
       },
       "type": "object"
@@ -5768,6 +5889,30 @@
       "properties": {
         "log_allocation_config": {
           "$ref": "#/definitions/configv1LogAllocationConfig"
+        }
+      },
+      "type": "object"
+    },
+    "configv1UpdateLogControlConfigRequest": {
+      "properties": {
+        "log_control_config": {
+          "$ref": "#/definitions/configv1LogControlConfig"
+        },
+        "create_if_missing": {
+          "description": "If `true`, the LogControlConfig will be created if it does not already exist. If `false`, an error will be returned if the LogControlConfig does not already exist.",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "description": "If `true`, validates the specified configuration without creating or updating the LogControlConfig. If the specified configuration is valid, the endpoint returns a partial response without the LogControlConfig. If the specified configuration is invalid, the endpoint returns an error.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "configv1UpdateLogControlConfigResponse": {
+      "properties": {
+        "log_control_config": {
+          "$ref": "#/definitions/configv1LogControlConfig"
         }
       },
       "type": "object"
@@ -8883,6 +9028,174 @@
         },
         "tags": [
           "LogAllocationConfig"
+        ]
+      }
+    },
+    "/api/v1/config/log-control-config": {
+      "delete": {
+        "operationId": "DeleteLogControlConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1DeleteLogControlConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot delete the LogControlConfig because it is in use.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot delete the LogControlConfig because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "LogControlConfig"
+        ]
+      },
+      "get": {
+        "operationId": "ReadLogControlConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1ReadLogControlConfigResponse"
+            }
+          },
+          "404": {
+            "description": "Cannot read the LogControlConfig because LogControlConfig has not been created.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "LogControlConfig"
+        ]
+      },
+      "post": {
+        "operationId": "CreateLogControlConfig",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/configv1CreateLogControlConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the created LogControlConfig.",
+            "schema": {
+              "$ref": "#/definitions/configv1CreateLogControlConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot create the LogControlConfig because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "409": {
+            "description": "Cannot create the LogControlConfig because there is a conflict with an existing LogControlConfig.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "LogControlConfig"
+        ]
+      },
+      "put": {
+        "operationId": "UpdateLogControlConfig",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/configv1UpdateLogControlConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the updated LogControlConfig.",
+            "schema": {
+              "$ref": "#/definitions/configv1UpdateLogControlConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot update the LogControlConfig because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot update the LogControlConfig because LogControlConfig has not been created.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "LogControlConfig"
         ]
       }
     },
