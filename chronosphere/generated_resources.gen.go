@@ -18,6 +18,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_allocation_config"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_control_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_ingest_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_action"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_alert"
@@ -825,6 +826,85 @@ func (generatedLogAllocationConfig) delete(
 		Context: ctx,
 	}
 	_, err := clients.ConfigV1.LogAllocationConfig.DeleteLogAllocationConfig(req)
+	return err
+}
+
+type generatedLogControlConfig struct{}
+
+// LogControlConfigID is the static ID of the global LogControlConfig singleton.
+const LogControlConfigID = "log_control_config_singleton"
+
+func (generatedLogControlConfig) slugOf(m *configv1models.Configv1LogControlConfig) string {
+	return LogControlConfigID
+}
+
+func (generatedLogControlConfig) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1LogControlConfig,
+	dryRun bool,
+) (string, error) {
+	req := &log_control_config.CreateLogControlConfigParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateLogControlConfigRequest{
+			LogControlConfig: m,
+			DryRun:           dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.LogControlConfig.CreateLogControlConfig(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.LogControlConfig
+	if e == nil {
+		return "", nil
+	}
+	return (generatedLogControlConfig{}).slugOf(e), nil
+}
+
+func (generatedLogControlConfig) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1LogControlConfig, error) {
+	req := &log_control_config.ReadLogControlConfigParams{
+		Context: ctx,
+	}
+	resp, err := clients.ConfigV1.LogControlConfig.ReadLogControlConfig(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.LogControlConfig, nil
+}
+
+func (generatedLogControlConfig) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1LogControlConfig,
+	params updateParams,
+) error {
+	req := &log_control_config.UpdateLogControlConfigParams{
+		Context: ctx,
+
+		Body: &configv1models.Configv1UpdateLogControlConfigRequest{
+
+			LogControlConfig: m,
+			CreateIfMissing:  params.createIfMissing,
+			DryRun:           params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.LogControlConfig.UpdateLogControlConfig(req)
+	return err
+}
+func (generatedLogControlConfig) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &log_control_config.DeleteLogControlConfigParams{
+		Context: ctx,
+	}
+	_, err := clients.ConfigV1.LogControlConfig.DeleteLogControlConfig(req)
 	return err
 }
 

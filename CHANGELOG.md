@@ -3,6 +3,7 @@
 ## Unreleased
 
 Added:
+* Add `chronosphere_log_control_config` resource for configuring log control rules.
 * Update volume threshold support in unstable `chronosphere_consumption_budget` resource.
 * Replace `drop_original` with `keep_original` in LogIngestConfig parser.
 
