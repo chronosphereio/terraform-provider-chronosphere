@@ -63,6 +63,7 @@ func (azureMetricsIntegrationConverter) toModel(
 		CountMetricsEnabled: g.CountMetricsEnabled,
 		UsageMetricsEnabled: g.UsageMetricsEnabled,
 		PropagateTags:       g.PropagateTags,
+		ScrapeConfig:        resourceToModelScrapeConfig(g.ScrapeConfig),
 	}
 
 	if g.Principal != nil {
@@ -70,9 +71,6 @@ func (azureMetricsIntegrationConverter) toModel(
 			TenantID: g.Principal.TenantId,
 			ClientID: g.Principal.ClientId,
 		}
-	}
-	if g.ScrapeConfig != nil {
-		m.ScrapeConfig = resourceToModelScrapeConfig(g.ScrapeConfig)
 	}
 
 	return m, nil
@@ -87,6 +85,7 @@ func (azureMetricsIntegrationConverter) fromModel(
 		CountMetricsEnabled: m.CountMetricsEnabled,
 		UsageMetricsEnabled: m.UsageMetricsEnabled,
 		PropagateTags:       m.PropagateTags,
+		ScrapeConfig:        resourceFromModelScrapeConfig(m.ScrapeConfig),
 	}
 
 	if m.Principal != nil {
@@ -94,10 +93,6 @@ func (azureMetricsIntegrationConverter) fromModel(
 			TenantId: m.Principal.TenantID,
 			ClientId: m.Principal.ClientID,
 		}
-	}
-
-	if m.ScrapeConfig != nil {
-		i.ScrapeConfig = resourceFromModelScrapeConfig(m.ScrapeConfig)
 	}
 
 	return i, nil
