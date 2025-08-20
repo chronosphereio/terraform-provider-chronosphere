@@ -24,6 +24,8 @@ var AzureMetricsIntegration = map[string]*schema.Schema{
 	"slug": {
 		Type:     schema.TypeString,
 		Optional: true,
+		Computed: true,
+		ForceNew: true,
 	},
 	"principal": {
 		Type:     schema.TypeList,

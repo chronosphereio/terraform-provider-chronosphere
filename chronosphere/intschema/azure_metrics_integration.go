@@ -15,7 +15,7 @@ var _ tfid.ID // Always use tfid for simplified import generation.
 
 type AzureMetricsIntegration struct {
 	Name                string                               `intschema:"name"`
-	Slug                string                               `intschema:"slug,optional"`
+	Slug                string                               `intschema:"slug,optional,computed"`
 	CountMetricsEnabled bool                                 `intschema:"count_metrics_enabled,optional"`
 	Principal           *AzureMetricsIntegrationPrincipal    `intschema:"principal,optional,list_encoded_object"`
 	PropagateTags       bool                                 `intschema:"propagate_tags,optional"`
