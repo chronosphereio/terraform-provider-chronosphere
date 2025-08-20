@@ -20,6 +20,7 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
@@ -56,35 +57,50 @@ type azureMetricsIntegrationConverter struct{}
 func (azureMetricsIntegrationConverter) toModel(
 	g *intschema.AzureMetricsIntegration,
 ) (*models.ConfigunstableAzureMetricsIntegration, error) {
-	return &models.ConfigunstableAzureMetricsIntegration{
+	m := &models.ConfigunstableAzureMetricsIntegration{
 		Name:                g.Name,
 		Slug:                g.Slug,
 		CountMetricsEnabled: g.CountMetricsEnabled,
 		UsageMetricsEnabled: g.UsageMetricsEnabled,
 		PropagateTags:       g.PropagateTags,
-		Principal: &models.AzureMetricsIntegrationAzurePrincipal{
+	}
+
+	if g.Principal != nil {
+		m.Principal = &models.AzureMetricsIntegrationAzurePrincipal{
 			TenantID: g.Principal.TenantId,
 			ClientID: g.Principal.ClientId,
-		},
-		ScrapeConfig: resourceToModelScrapeConfig(g.ScrapeConfig),
-	}, nil
+		}
+	}
+	if g.ScrapeConfig != nil {
+		m.ScrapeConfig = resourceToModelScrapeConfig(g.ScrapeConfig)
+	}
+
+	return m, nil
 }
 
 func (azureMetricsIntegrationConverter) fromModel(
 	m *models.ConfigunstableAzureMetricsIntegration,
 ) (*intschema.AzureMetricsIntegration, error) {
-	return &intschema.AzureMetricsIntegration{
+	i := &intschema.AzureMetricsIntegration{
 		Name:                m.Name,
 		Slug:                m.Slug,
 		CountMetricsEnabled: m.CountMetricsEnabled,
 		UsageMetricsEnabled: m.UsageMetricsEnabled,
 		PropagateTags:       m.PropagateTags,
-		Principal: &intschema.AzureMetricsIntegrationPrincipal{
+	}
+
+	if m.Principal != nil {
+		i.Principal = &intschema.AzureMetricsIntegrationPrincipal{
 			TenantId: m.Principal.TenantID,
 			ClientId: m.Principal.ClientID,
-		},
-		ScrapeConfig: resourceFromModelScrapeConfig(m.ScrapeConfig),
-	}, nil
+		}
+	}
+
+	if m.ScrapeConfig != nil {
+		i.ScrapeConfig = resourceFromModelScrapeConfig(m.ScrapeConfig)
+	}
+
+	return i, nil
 }
 
 func resourceToModelScrapeConfig(
@@ -94,18 +110,10 @@ func resourceToModelScrapeConfig(
 		return nil
 	}
 
-	modelResourceTypes := make([]*models.AzureMetricsIntegrationAzureResourceType, len(scrapeConfig.ResourceTypes))
-	for i, rt := range scrapeConfig.ResourceTypes {
-		modelResourceTypes[i] = &models.AzureMetricsIntegrationAzureResourceType{
-			Name:        rt.Name,
-			MetricNames: rt.MetricNames,
-		}
-	}
-
 	return &models.AzureMetricsIntegrationAzureScrapeConfig{
-		SubscriptionIds: scrapeConfig.SubscriptionIds,
-		Locations:       scrapeConfig.Locations,
-		ResourceTypes:   modelResourceTypes,
+		SubscriptionIds: scrapeConfig.SubscriptionId,
+		Locations:       scrapeConfig.Location,
+		ResourceTypes:   sliceutil.Map(scrapeConfig.ResourceType, resourceToModelResourceType),
 	}
 }
 
@@ -116,17 +124,27 @@ func resourceFromModelScrapeConfig(
 		return nil
 	}
 
-	resourceTypes := make([]intschema.AzureMetricsIntegrationScrapeConfigResourceTypes, len(modelScrapeConfig.ResourceTypes))
-	for i, rt := range modelScrapeConfig.ResourceTypes {
-		resourceTypes[i] = intschema.AzureMetricsIntegrationScrapeConfigResourceTypes{
-			Name:        rt.Name,
-			MetricNames: rt.MetricNames,
-		}
-	}
-
 	return &intschema.AzureMetricsIntegrationScrapeConfig{
-		SubscriptionIds: modelScrapeConfig.SubscriptionIds,
-		Locations:       modelScrapeConfig.Locations,
-		ResourceTypes:   resourceTypes,
+		SubscriptionId: modelScrapeConfig.SubscriptionIds,
+		Location:       modelScrapeConfig.Locations,
+		ResourceType:   sliceutil.Map(modelScrapeConfig.ResourceTypes, modelToResourceResourceType),
+	}
+}
+
+func resourceToModelResourceType(
+	resourceType intschema.AzureMetricsIntegrationScrapeConfigResourceType,
+) *models.AzureMetricsIntegrationAzureResourceType {
+	return &models.AzureMetricsIntegrationAzureResourceType{
+		Name:        resourceType.Name,
+		MetricNames: resourceType.MetricName,
+	}
+}
+
+func modelToResourceResourceType(
+	modelResourceType *models.AzureMetricsIntegrationAzureResourceType,
+) intschema.AzureMetricsIntegrationScrapeConfigResourceType {
+	return intschema.AzureMetricsIntegrationScrapeConfigResourceType{
+		Name:       modelResourceType.Name,
+		MetricName: modelResourceType.MetricNames,
 	}
 }
