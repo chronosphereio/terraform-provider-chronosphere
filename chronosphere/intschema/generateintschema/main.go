@@ -94,12 +94,11 @@ var fieldIsTFID = map[string]bool{
 	"dataset_id":               true,
 	"consumption_config_id":    true,
 
-	"callback_id":     false,
-	"external_id":     false,
-	"project_id":      false,
-	"client_id":       false,
-	"tenant_id":       false,
-	"subscription_id": false,
+	"callback_id": false,
+	"external_id": false,
+	"project_id":  false,
+	"client_id":   false,
+	"tenant_id":   false,
 }
 
 var fieldAddFile = map[string]bool{

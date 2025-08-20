@@ -60,14 +60,14 @@ func (o *AzureMetricsIntegration) Ref() tfid.ID {
 }
 
 type AzureMetricsIntegrationScrapeConfig struct {
-	Location       []string                                          `intschema:"location,optional"`
-	ResourceType   []AzureMetricsIntegrationScrapeConfigResourceType `intschema:"resource_type,optional"`
-	SubscriptionId []string                                          `intschema:"subscription_id,optional"`
+	Locations       []string                                          `intschema:"locations,optional"`
+	ResourceType    []AzureMetricsIntegrationScrapeConfigResourceType `intschema:"resource_type,optional"`
+	SubscriptionIds []string                                          `intschema:"subscription_ids,optional"`
 }
 
 type AzureMetricsIntegrationScrapeConfigResourceType struct {
-	Name       string   `intschema:"name,optional"`
-	MetricName []string `intschema:"metric_name,optional"`
+	Name        string   `intschema:"name,optional"`
+	MetricNames []string `intschema:"metric_names,optional"`
 }
 
 type AzureMetricsIntegrationPrincipal struct {
