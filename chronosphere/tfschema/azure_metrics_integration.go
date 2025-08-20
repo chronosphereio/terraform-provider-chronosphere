@@ -48,12 +48,12 @@ var AzureMetricsIntegration = map[string]*schema.Schema{
 		Optional: true,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
-				"subscription_id": {
+				"subscription_ids": {
 					Type:     schema.TypeList,
 					Optional: true,
 					Elem:     &schema.Schema{Type: schema.TypeString},
 				},
-				"location": {
+				"locations": {
 					Type:     schema.TypeList,
 					Optional: true,
 					Elem:     &schema.Schema{Type: schema.TypeString},
@@ -67,7 +67,7 @@ var AzureMetricsIntegration = map[string]*schema.Schema{
 								Type:     schema.TypeString,
 								Optional: true,
 							},
-							"metric_name": {
+							"metric_names": {
 								Type:     schema.TypeList,
 								Optional: true,
 								Elem:     &schema.Schema{Type: schema.TypeString},

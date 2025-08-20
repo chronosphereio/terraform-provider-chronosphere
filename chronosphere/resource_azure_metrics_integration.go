@@ -111,8 +111,8 @@ func resourceToModelScrapeConfig(
 	}
 
 	return &models.AzureMetricsIntegrationAzureScrapeConfig{
-		SubscriptionIds: scrapeConfig.SubscriptionId,
-		Locations:       scrapeConfig.Location,
+		SubscriptionIds: scrapeConfig.SubscriptionIds,
+		Locations:       scrapeConfig.Locations,
 		ResourceTypes:   sliceutil.Map(scrapeConfig.ResourceType, resourceToModelResourceType),
 	}
 }
@@ -125,9 +125,9 @@ func resourceFromModelScrapeConfig(
 	}
 
 	return &intschema.AzureMetricsIntegrationScrapeConfig{
-		SubscriptionId: modelScrapeConfig.SubscriptionIds,
-		Location:       modelScrapeConfig.Locations,
-		ResourceType:   sliceutil.Map(modelScrapeConfig.ResourceTypes, modelToResourceResourceType),
+		SubscriptionIds: modelScrapeConfig.SubscriptionIds,
+		Locations:       modelScrapeConfig.Locations,
+		ResourceType:    sliceutil.Map(modelScrapeConfig.ResourceTypes, modelToResourceResourceType),
 	}
 }
 
@@ -136,7 +136,7 @@ func resourceToModelResourceType(
 ) *models.AzureMetricsIntegrationAzureResourceType {
 	return &models.AzureMetricsIntegrationAzureResourceType{
 		Name:        resourceType.Name,
-		MetricNames: resourceType.MetricName,
+		MetricNames: resourceType.MetricNames,
 	}
 }
 
@@ -144,7 +144,7 @@ func modelToResourceResourceType(
 	modelResourceType *models.AzureMetricsIntegrationAzureResourceType,
 ) intschema.AzureMetricsIntegrationScrapeConfigResourceType {
 	return intschema.AzureMetricsIntegrationScrapeConfigResourceType{
-		Name:       modelResourceType.Name,
-		MetricName: modelResourceType.MetricNames,
+		Name:        modelResourceType.Name,
+		MetricNames: modelResourceType.MetricNames,
 	}
 }
