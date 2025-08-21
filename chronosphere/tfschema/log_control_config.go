@@ -32,20 +32,19 @@ var logControlRuleResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"name": {
 			Type:     schema.TypeString,
-			Required: true,
+			Optional: true,
 		},
 		"mode": Enum{
 			Value:    enum.LogControlRuleMode.ToStrings(),
 			Optional: true,
 		}.Schema(),
 		"filter": {
-			Type:        schema.TypeString,
-			Required:    true,
-			Description: "Log query syntax to select logs. Only matching logs will have control action applied.",
+			Type:     schema.TypeString,
+			Optional: true,
 		},
 		"type": Enum{
 			Value:    enum.LogControlRuleType.ToStrings(),
-			Required: true,
+			Optional: true,
 		}.Schema(),
 		"sample": {
 			Type:     schema.TypeList,
@@ -65,9 +64,8 @@ var logControlRuleResource = &schema.Resource{
 var logControlRuleSampleResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"rate": {
-			Type:        schema.TypeFloat,
-			Required:    true,
-			Description: "Percentage of matching logs to keep. Must be in the range (0, 1].",
+			Type:     schema.TypeFloat,
+			Optional: true,
 		},
 	},
 }
@@ -75,9 +73,8 @@ var logControlRuleSampleResource = &schema.Resource{
 var logControlRuleDropFieldResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"field_regex": {
-			Type:        schema.TypeString,
-			Required:    true,
-			Description: "Regular expression to match the field name(s) to drop.",
+			Type:     schema.TypeString,
+			Optional: true,
 		},
 		"parent_path": {
 			Type:     schema.TypeList,
@@ -91,9 +88,8 @@ var logControlRuleDropFieldResource = &schema.Resource{
 var logFieldPathResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"selector": {
-			Type:        schema.TypeString,
-			Required:    true,
-			Description: "LogQL Selector to indicate field path. Use 'parent[child]' syntax to indicate nesting.",
+			Type:     schema.TypeString,
+			Optional: true,
 		},
 	},
 }

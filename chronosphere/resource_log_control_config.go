@@ -71,9 +71,7 @@ func (logControlConfigConverter) toModel(
 				Type:   models.Configv1LogControlRuleType(r.Type),
 			}
 
-			if r.Mode != "" {
-				rule.Mode = models.Configv1LogControlRuleMode(r.Mode)
-			}
+			rule.Mode = models.Configv1LogControlRuleMode(r.Mode)
 
 			if r.Sample != nil {
 				rule.Sample = &models.LogControlRuleSample{
@@ -112,9 +110,7 @@ func (logControlConfigConverter) fromModel(
 				Type:   string(r.Type),
 			}
 
-			if r.Mode != "" {
-				rule.Mode = string(r.Mode)
-			}
+			rule.Mode = string(r.Mode)
 
 			if r.Sample != nil {
 				rule.Sample = &intschema.LogControlConfigRulesSample{

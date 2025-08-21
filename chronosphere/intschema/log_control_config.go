@@ -54,23 +54,23 @@ func (o *LogControlConfig) Ref() tfid.ID {
 }
 
 type LogControlConfigRules struct {
-	Name      string                          `intschema:"name"`
-	Filter    string                          `intschema:"filter"`
-	Type      string                          `intschema:"type"`
+	Name      string                          `intschema:"name,optional"`
 	DropField *LogControlConfigRulesDropField `intschema:"drop_field,optional,list_encoded_object"`
+	Filter    string                          `intschema:"filter,optional"`
 	Mode      string                          `intschema:"mode,optional"`
 	Sample    *LogControlConfigRulesSample    `intschema:"sample,optional,list_encoded_object"`
+	Type      string                          `intschema:"type,optional"`
 }
 
 type LogControlConfigRulesSample struct {
-	Rate float64 `intschema:"rate"`
+	Rate float64 `intschema:"rate,optional"`
 }
 
 type LogControlConfigRulesDropField struct {
-	FieldRegex string                                    `intschema:"field_regex"`
+	FieldRegex string                                    `intschema:"field_regex,optional"`
 	ParentPath *LogControlConfigRulesDropFieldParentPath `intschema:"parent_path,optional,list_encoded_object"`
 }
 
 type LogControlConfigRulesDropFieldParentPath struct {
-	Selector string `intschema:"selector"`
+	Selector string `intschema:"selector,optional"`
 }
