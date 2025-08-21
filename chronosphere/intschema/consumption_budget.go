@@ -14,14 +14,15 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type ConsumptionBudget struct {
-	Name                string                      `intschema:"name"`
-	Slug                string                      `intschema:"slug,optional,computed"`
-	ConsumptionConfigId tfid.ID                     `intschema:"consumption_config_id"`
-	Behavior            []ConsumptionBudgetBehavior `intschema:"behavior,optional"`
-	DefaultPriority     int64                       `intschema:"default_priority,optional"`
-	PartitionNamePath   []string                    `intschema:"partition_name_path,optional"`
-	Priority            []ConsumptionBudgetPriority `intschema:"priority,optional"`
-	Resource            string                      `intschema:"resource,optional"`
+	Name                 string                      `intschema:"name"`
+	Slug                 string                      `intschema:"slug,optional,computed"`
+	ConsumptionConfigId  tfid.ID                     `intschema:"consumption_config_id"`
+	NotificationPolicyId tfid.ID                     `intschema:"notification_policy_id,optional"`
+	Behavior             []ConsumptionBudgetBehavior `intschema:"behavior,optional"`
+	DefaultPriority      int64                       `intschema:"default_priority,optional"`
+	PartitionSlugPath    []string                    `intschema:"partition_slug_path,optional"`
+	Priority             []ConsumptionBudgetPriority `intschema:"priority,optional"`
+	Resource             string                      `intschema:"resource,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -61,8 +62,17 @@ func (o *ConsumptionBudget) Ref() tfid.ID {
 }
 
 type ConsumptionBudgetPriority struct {
-	DatasetFilter []DatasetFilter `intschema:"dataset_filter,optional"`
-	Priority      int64           `intschema:"priority,optional"`
+	Filter   []ConsumptionBudgetPriorityFilter `intschema:"filter,optional"`
+	Priority int64                             `intschema:"priority,optional"`
+}
+
+type ConsumptionBudgetPriorityFilter struct {
+	DatasetId tfid.ID                                   `intschema:"dataset_id,optional"`
+	LogFilter *ConsumptionBudgetPriorityFilterLogFilter `intschema:"log_filter,optional,list_encoded_object"`
+}
+
+type ConsumptionBudgetPriorityFilterLogFilter struct {
+	Query string `intschema:"query"`
 }
 
 type ConsumptionBudgetBehavior struct {

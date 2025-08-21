@@ -35,7 +35,7 @@ var ConsumptionBudget = map[string]*schema.Schema{
 		Value:    enum.ConsumptionBudgetResource.ToStrings(),
 		Optional: true,
 	}.Schema(),
-	"partition_name_path": {
+	"partition_slug_path": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Schema{
@@ -60,10 +60,33 @@ var ConsumptionBudget = map[string]*schema.Schema{
 		Type:     schema.TypeInt,
 		Optional: true,
 	},
+	"notification_policy_id": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
 }
 
 var consumptionBudgetPrioritySchema = map[string]*schema.Schema{
-	"dataset_filter": DatasetFilterSchema,
+	"filter": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"dataset_id": {
+					Type:     schema.TypeString,
+					Optional: true,
+				},
+				"log_filter": {
+					Type:     schema.TypeList,
+					Optional: true,
+					MaxItems: 1,
+					Elem: &schema.Resource{
+						Schema: LogSearchSchema,
+					},
+				},
+			},
+		},
+	},
 	"priority": {
 		Type:     schema.TypeInt,
 		Optional: true,

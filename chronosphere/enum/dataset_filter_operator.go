@@ -18,14 +18,14 @@ import (
 	configunstable "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 )
 
-// DatasetFilterOperator is an enum.
-var DatasetFilterOperator = newEnum("DatasetFilterOperator", []value[configunstable.DatasetFilterOperator]{
+// PartitionFilterOperator is an enum.
+var PartitionFilterOperator = newEnum("PartitionFilterOperator", []value[configunstable.PartitionFilterOperator]{
 	{
-		v1:    configunstable.DatasetFilterOperatorIN,
+		v1:    configunstable.PartitionFilterOperatorIN,
 		alias: "IN",
 	},
 	{
-		v1:    configunstable.DatasetFilterOperatorNOTIN,
+		v1:    configunstable.PartitionFilterOperatorNOTIN,
 		alias: "NOT_IN",
 	},
 })

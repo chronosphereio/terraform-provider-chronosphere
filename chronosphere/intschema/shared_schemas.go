@@ -7,15 +7,6 @@ import (
 
 var _ tfid.ID // Always use tfid for simplified import generation.
 
-type DatasetFilter struct {
-	Dataset  []DatasetFilterDataset `intschema:"dataset,optional"`
-	Operator string                 `intschema:"operator,optional"`
-}
-
-type DatasetFilterDataset struct {
-	DatasetId tfid.ID `intschema:"dataset_id,optional"`
-}
-
 type KeyValueParser struct {
 	Delimiter     string `intschema:"delimiter"`
 	PairSeparator string `intschema:"pair_separator"`
@@ -64,6 +55,20 @@ type NotificationRoute struct {
 
 type NotificationRouteGroupBy struct {
 	LabelNames []string `intschema:"label_names,optional"`
+}
+
+type PartitionFilter struct {
+	Condition []PartitionFilterCondition `intschema:"condition,optional"`
+	Operator  string                     `intschema:"operator,optional"`
+}
+
+type PartitionFilterCondition struct {
+	DatasetId tfid.ID                            `intschema:"dataset_id,optional"`
+	LogFilter *PartitionFilterConditionLogFilter `intschema:"log_filter,optional,list_encoded_object"`
+}
+
+type PartitionFilterConditionLogFilter struct {
+	Query string `intschema:"query"`
 }
 
 type RegexParser struct {

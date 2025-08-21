@@ -54,7 +54,8 @@ func (o *ConsumptionConfig) Ref() tfid.ID {
 }
 
 type ConsumptionConfigPartition struct {
-	Name          string                       `intschema:"name,optional"`
-	DatasetFilter []DatasetFilter              `intschema:"dataset_filter,optional"`
-	Partition     []ConsumptionConfigPartition `intschema:"partition,optional"`
+	Name      string                       `intschema:"name,optional"`
+	Slug      string                       `intschema:"slug,optional"`
+	Filter    []PartitionFilter            `intschema:"filter,optional"`
+	Partition []ConsumptionConfigPartition `intschema:"partition,optional"`
 }

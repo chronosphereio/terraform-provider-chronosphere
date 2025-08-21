@@ -49,13 +49,23 @@ func resourceConsumptionBudget() *schema.Resource {
 				// Because this isn't a real API reference.
 				"consumption_config_id",
 				// Because dry run doesn't support tfids in lists (an artificial constraint).
-				"priority.[].dataset_filter.[].dataset.[].dataset_id",
+				"priority.[].filter.[].dataset_id",
 			},
 			ModifyAPIModel: func(cfg *models.ConfigunstableConsumptionBudget) {
 				for _, p := range cfg.Priorities {
-					for _, df := range p.DatasetFilters {
-						for _, d := range df.Datasets {
-							d.DatasetSlug = dryRunUnknownRef.Slug()
+					for _, f := range p.Filters {
+						// NOTE(codyg): There's no way to tell if the user
+						// actually set a dataset_id or not, and since it has
+						// one-of relationship with log_filter, we can't blindly
+						// set it, but we also can't always leave it empty,
+						// because at least one field must be set. So we do the
+						// slightly wrong thing of assuming if the user didn't
+						// set log_filter, then the probably set dataset_id.
+						// This will cause invalid configs to erroneously pass
+						// dry run validation if the user actually provided
+						// an empty filter object.
+						if f.LogFilter == nil {
+							f.DatasetSlug = dryRunUnknownRef.Slug()
 						}
 					}
 				}
@@ -88,15 +98,16 @@ func (c consumptionBudgetConverter) toModel(
 		Name:              s.Name,
 		Slug:              s.Slug,
 		Resource:          models.ConsumptionBudgetResource(s.Resource),
-		PartitionNamePath: s.PartitionNamePath,
+		PartitionSlugPath: s.PartitionSlugPath,
 		Priorities: sliceutil.Map(s.Priority, func(p intschema.ConsumptionBudgetPriority) *models.ConsumptionBudgetPriority {
 			return &models.ConsumptionBudgetPriority{
-				DatasetFilters: sliceutil.Map(p.DatasetFilter, datasetFilterToModel),
-				Priority:       int32(p.Priority),
+				Filters:  sliceutil.Map(p.Filter, consumptionBudgetPriorityFilterToModel),
+				Priority: int32(p.Priority),
 			}
 		}),
-		Behaviors:       sliceutil.Map(s.Behavior, consumptionBudgetBehaviorToModel),
-		DefaultPriority: int32(s.DefaultPriority),
+		Behaviors:              sliceutil.Map(s.Behavior, consumptionBudgetBehaviorToModel),
+		DefaultPriority:        int32(s.DefaultPriority),
+		NotificationPolicySlug: s.NotificationPolicyId.Slug(),
 	}
 	return m, nil
 }
@@ -113,16 +124,41 @@ func (c consumptionBudgetConverter) fromModel(
 		Name:                m.Name,
 		Slug:                m.Slug,
 		Resource:            string(m.Resource),
-		PartitionNamePath:   m.PartitionNamePath,
+		PartitionSlugPath:   m.PartitionSlugPath,
 		Priority: sliceutil.Map(m.Priorities, func(p *models.ConsumptionBudgetPriority) intschema.ConsumptionBudgetPriority {
 			return intschema.ConsumptionBudgetPriority{
-				DatasetFilter: sliceutil.Map(p.DatasetFilters, datasetFilterFromModel),
-				Priority:      int64(p.Priority),
+				Filter:   sliceutil.Map(p.Filters, consumptionBudgetPriorityFilterFromModel),
+				Priority: int64(p.Priority),
 			}
 		}),
-		Behavior:        behaviors,
-		DefaultPriority: int64(m.DefaultPriority),
+		Behavior:             behaviors,
+		DefaultPriority:      int64(m.DefaultPriority),
+		NotificationPolicyId: tfid.Slug(m.NotificationPolicySlug),
 	}, nil
+}
+
+func consumptionBudgetPriorityFilterToModel(f intschema.ConsumptionBudgetPriorityFilter) *models.ConsumptionBudgetPriorityFilter {
+	result := &models.ConsumptionBudgetPriorityFilter{
+		DatasetSlug: f.DatasetId.Slug(),
+	}
+	if f.LogFilter != nil {
+		result.LogFilter = &models.Configv1LogSearchFilter{
+			Query: f.LogFilter.Query,
+		}
+	}
+	return result
+}
+
+func consumptionBudgetPriorityFilterFromModel(f *models.ConsumptionBudgetPriorityFilter) intschema.ConsumptionBudgetPriorityFilter {
+	result := intschema.ConsumptionBudgetPriorityFilter{
+		DatasetId: tfid.Slug(f.DatasetSlug),
+	}
+	if f.LogFilter != nil {
+		result.LogFilter = &intschema.ConsumptionBudgetPriorityFilterLogFilter{
+			Query: f.LogFilter.Query,
+		}
+	}
+	return result
 }
 
 func consumptionBudgetBehaviorToModel(b intschema.ConsumptionBudgetBehavior) *models.ConsumptionBudgetBehavior {

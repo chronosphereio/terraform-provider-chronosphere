@@ -60,21 +60,30 @@ func (ConsumptionConfigConverter) toModel(
 
 func partitionToModel(p intschema.ConsumptionConfigPartition) *models.ConsumptionConfigPartition {
 	return &models.ConsumptionConfigPartition{
-		Name:           p.Name,
-		DatasetFilters: sliceutil.Map(p.DatasetFilter, datasetFilterToModel),
-		Partitions:     sliceutil.Map(p.Partition, partitionToModel),
+		Name:       p.Name,
+		Slug:       p.Slug,
+		Filters:    sliceutil.Map(p.Filter, filterToModel),
+		Partitions: sliceutil.Map(p.Partition, partitionToModel),
 	}
 }
 
-func datasetFilterToModel(df intschema.DatasetFilter) *models.ConfigunstableDatasetFilter {
-	return &models.ConfigunstableDatasetFilter{
-		Operator: models.DatasetFilterOperator(df.Operator),
-		Datasets: sliceutil.Map(df.Dataset, func(d intschema.DatasetFilterDataset) *models.DatasetFilterDataset {
-			return &models.DatasetFilterDataset{
-				DatasetSlug: d.DatasetId.Slug(),
-			}
-		}),
+func filterToModel(f intschema.PartitionFilter) *models.ConsumptionConfigPartitionFilter {
+	return &models.ConsumptionConfigPartitionFilter{
+		Operator:   models.PartitionFilterOperator(f.Operator),
+		Conditions: sliceutil.Map(f.Condition, conditionToModel),
 	}
+}
+
+func conditionToModel(c intschema.PartitionFilterCondition) *models.FilterCondition {
+	result := &models.FilterCondition{
+		DatasetSlug: c.DatasetId.Slug(),
+	}
+	if c.LogFilter != nil {
+		result.LogFilter = &models.Configv1LogSearchFilter{
+			Query: c.LogFilter.Query,
+		}
+	}
+	return result
 }
 
 func (ConsumptionConfigConverter) fromModel(
@@ -87,19 +96,28 @@ func (ConsumptionConfigConverter) fromModel(
 
 func partitionFromModel(p *models.ConsumptionConfigPartition) intschema.ConsumptionConfigPartition {
 	return intschema.ConsumptionConfigPartition{
-		Name:          p.Name,
-		DatasetFilter: sliceutil.Map(p.DatasetFilters, datasetFilterFromModel),
-		Partition:     sliceutil.Map(p.Partitions, partitionFromModel),
+		Name:      p.Name,
+		Slug:      p.Slug,
+		Filter:    sliceutil.Map(p.Filters, filterFromModel),
+		Partition: sliceutil.Map(p.Partitions, partitionFromModel),
 	}
 }
 
-func datasetFilterFromModel(df *models.ConfigunstableDatasetFilter) intschema.DatasetFilter {
-	return intschema.DatasetFilter{
-		Operator: string(df.Operator),
-		Dataset: sliceutil.Map(df.Datasets, func(d *models.DatasetFilterDataset) intschema.DatasetFilterDataset {
-			return intschema.DatasetFilterDataset{
-				DatasetId: tfid.Slug(d.DatasetSlug),
-			}
-		}),
+func filterFromModel(f *models.ConsumptionConfigPartitionFilter) intschema.PartitionFilter {
+	return intschema.PartitionFilter{
+		Operator:  string(f.Operator),
+		Condition: sliceutil.Map(f.Conditions, conditionFromModel),
 	}
+}
+
+func conditionFromModel(c *models.FilterCondition) intschema.PartitionFilterCondition {
+	result := intschema.PartitionFilterCondition{
+		DatasetId: tfid.Slug(c.DatasetSlug),
+	}
+	if c.LogFilter != nil {
+		result.LogFilter = &intschema.PartitionFilterConditionLogFilter{
+			Query: c.LogFilter.Query,
+		}
+	}
+	return result
 }
