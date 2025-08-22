@@ -49,7 +49,7 @@ func run() error {
 	}
 
 	var entityTypes []entityType
-	for _, e := range registry.NamedEntities(registry.V1) {
+	for _, e := range registry.AllEntities(registry.V1) {
 		entityTypes = append(entityTypes, newEntityType(v1, e))
 	}
 	entityTypes = append(entityTypes, newClassicDashboard(v1))
@@ -82,9 +82,10 @@ type api struct {
 }
 
 type entityType struct {
-	API      api
-	Singular string
-	Plural   string
+	API       api
+	Singleton bool
+	Singular  string
+	Plural    string
 	// This will normally be the same as Plural, but some entities have irregular plural forms.
 	PayloadPlural        string
 	SwaggerClient        string
@@ -96,6 +97,7 @@ type entityType struct {
 func newEntityType(a api, e registry.Resource) entityType {
 	et := entityType{
 		API:                  a,
+		Singleton:            e.SingletonID != "",
 		Singular:             e.Entity,
 		Plural:               plural(e.Entity),
 		PayloadPlural:        plural(e.Entity),
@@ -149,10 +151,35 @@ import (
 	{{- range .EntityTypes }}
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/{{.API.Package}}/client/{{.SwaggerClientPackage}}"
 	{{- end }}
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
 )
 
 {{range .EntityTypes}}
 
+{{if .Singleton}}
+func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Singular}}(
+	ctx context.Context,
+	client *{{.API.Package}}.Client,
+	opts... func(*{{.SwaggerClientPackage}}.Read{{.Singular}}Params),
+) ([]*{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}, error) {
+	p := &{{.SwaggerClientPackage}}.Read{{.Singular}}Params{
+		Context: ctx,
+	}
+	for _, opt := range opts {
+		opt(p)
+	}
+	resp, err := client.{{.Singular}}.Read{{.Singular}}(p)
+	if err != nil {
+		if clienterror.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return []*{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}{
+		resp.Payload.{{.Singular}},
+	}, nil
+}
+{{else}}
 func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}(
 	ctx context.Context,
 	client *{{.API.Package}}.Client,
@@ -230,5 +257,6 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(
 	return result, nil
 	{{- end}}
 }
+{{end}}
 {{end -}}
 `))
