@@ -9,6 +9,8 @@ Added:
 * Update breaking filter API changes in `chronosphere_consumption_config` and `chronosphere_consumption_budget`.
 * Add partition slug field to `chronosphere_consumption_config`.
 * Add notification_policy_id field to `chronosphere_consumption_budget`.
+* Promote `chronosphere_consumption_config` to V1.
+* Promote `chronosphere_consumption_budget` to V1.
 
 ## v1.12.0
 

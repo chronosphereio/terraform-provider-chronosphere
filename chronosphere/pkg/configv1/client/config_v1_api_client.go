@@ -13,6 +13,8 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_budget"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dataset"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
@@ -90,6 +92,8 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.Bucket = bucket.New(transport, formats)
 	cli.ClassicDashboard = classic_dashboard.New(transport, formats)
 	cli.Collection = collection.New(transport, formats)
+	cli.ConsumptionBudget = consumption_budget.New(transport, formats)
+	cli.ConsumptionConfig = consumption_config.New(transport, formats)
 	cli.Dashboard = dashboard.New(transport, formats)
 	cli.Dataset = dataset.New(transport, formats)
 	cli.DerivedLabel = derived_label.New(transport, formats)
@@ -170,6 +174,10 @@ type ConfigV1API struct {
 
 	Collection collection.ClientService
 
+	ConsumptionBudget consumption_budget.ClientService
+
+	ConsumptionConfig consumption_config.ClientService
+
 	Dashboard dashboard.ClientService
 
 	Dataset dataset.ClientService
@@ -239,6 +247,8 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.Bucket.SetTransport(transport)
 	c.ClassicDashboard.SetTransport(transport)
 	c.Collection.SetTransport(transport)
+	c.ConsumptionBudget.SetTransport(transport)
+	c.ConsumptionConfig.SetTransport(transport)
 	c.Dashboard.SetTransport(transport)
 	c.Dataset.SetTransport(transport)
 	c.DerivedLabel.SetTransport(transport)

@@ -135,7 +135,7 @@ func mappingLabelFromModel(
 }
 
 func nameMappingFromModel(
-	v *models.MappingLabelNameMapping,
+	v *models.MetricLabelMappingLabelNameMapping,
 ) intschema.DerivedLabelMetricLabelMappingLabelNameMappings {
 	return intschema.DerivedLabelMetricLabelMappingLabelNameMappings{
 		Filters:       sliceutil.Map(v.Filters, mappingLabelFilterFromModel),
@@ -217,8 +217,8 @@ func mappingLabelToModel(
 
 func nameMappingToModel(
 	v intschema.DerivedLabelMetricLabelMappingLabelNameMappings,
-) *models.MappingLabelNameMapping {
-	return &models.MappingLabelNameMapping{
+) *models.MetricLabelMappingLabelNameMapping {
+	return &models.MetricLabelMappingLabelNameMapping{
 		Filters:       sliceutil.Map(v.Filters, mappingLabelFilterToModel),
 		SourceLabel:   v.SourceLabel,
 		ValueMappings: sliceutil.Map(v.ValueMappings, valueMappingToModel),

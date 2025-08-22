@@ -20,7 +20,7 @@ type ConsumptionBudget struct {
 	NotificationPolicyId tfid.ID                     `intschema:"notification_policy_id,optional"`
 	Behavior             []ConsumptionBudgetBehavior `intschema:"behavior,optional"`
 	DefaultPriority      int64                       `intschema:"default_priority,optional"`
-	PartitionSlugPath    []string                    `intschema:"partition_slug_path,optional"`
+	PartitionSlugPath    string                      `intschema:"partition_slug_path,optional"`
 	Priority             []ConsumptionBudgetPriority `intschema:"priority,optional"`
 	Resource             string                      `intschema:"resource,optional"`
 
