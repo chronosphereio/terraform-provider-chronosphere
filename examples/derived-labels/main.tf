@@ -66,3 +66,19 @@ resource "chronosphere_derived_label" "my-mapping-derived-label" {
 
   existing_label_policy = "OVERRIDE"
 }
+
+resource "chronosphere_derived_label" "my-span-tag-derived-label" {
+  name        = "my-span-tag-label"
+  slug        = "my-span-tag-label"
+  description = "this is my span tag derived label"
+  label_name  = "service_tier"
+
+  span_tag {
+    name_mappings {
+      source_tag = "service.name"
+    }
+    name_mappings {
+      source_tag = "service.namespace"
+    }
+  }
+}
