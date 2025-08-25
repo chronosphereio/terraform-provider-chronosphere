@@ -3,11 +3,13 @@ package pagination
 
 import (
 	"context"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_budget"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dataset"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
@@ -15,19 +17,25 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_allocation_config"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_control_config"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_ingest_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_action"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notifier"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/otel_metrics_ingestion"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/recording_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/resource_pools"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/rollup_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/slo"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_tail_sampling_rules"
 	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
@@ -236,6 +244,29 @@ func ListConsumptionBudgetsByFilter(
 		}
 	}
 	return result, nil
+}
+
+func ListConsumptionConfig(
+	ctx context.Context,
+	client *configv1.Client,
+	opts ...func(*consumption_config.ReadConsumptionConfigParams),
+) ([]*configv1models.Configv1ConsumptionConfig, error) {
+	p := &consumption_config.ReadConsumptionConfigParams{
+		Context: ctx,
+	}
+	for _, opt := range opts {
+		opt(p)
+	}
+	resp, err := client.ConsumptionConfig.ReadConsumptionConfig(p)
+	if err != nil {
+		if clienterror.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return []*configv1models.Configv1ConsumptionConfig{
+		resp.Payload.ConsumptionConfig,
+	}, nil
 }
 
 func ListDashboards(
@@ -721,6 +752,75 @@ func ListGrafanaDashboardsByFilter(
 	return result, nil
 }
 
+func ListLogAllocationConfig(
+	ctx context.Context,
+	client *configv1.Client,
+	opts ...func(*log_allocation_config.ReadLogAllocationConfigParams),
+) ([]*configv1models.Configv1LogAllocationConfig, error) {
+	p := &log_allocation_config.ReadLogAllocationConfigParams{
+		Context: ctx,
+	}
+	for _, opt := range opts {
+		opt(p)
+	}
+	resp, err := client.LogAllocationConfig.ReadLogAllocationConfig(p)
+	if err != nil {
+		if clienterror.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return []*configv1models.Configv1LogAllocationConfig{
+		resp.Payload.LogAllocationConfig,
+	}, nil
+}
+
+func ListLogControlConfig(
+	ctx context.Context,
+	client *configv1.Client,
+	opts ...func(*log_control_config.ReadLogControlConfigParams),
+) ([]*configv1models.Configv1LogControlConfig, error) {
+	p := &log_control_config.ReadLogControlConfigParams{
+		Context: ctx,
+	}
+	for _, opt := range opts {
+		opt(p)
+	}
+	resp, err := client.LogControlConfig.ReadLogControlConfig(p)
+	if err != nil {
+		if clienterror.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return []*configv1models.Configv1LogControlConfig{
+		resp.Payload.LogControlConfig,
+	}, nil
+}
+
+func ListLogIngestConfig(
+	ctx context.Context,
+	client *configv1.Client,
+	opts ...func(*log_ingest_config.ReadLogIngestConfigParams),
+) ([]*configv1models.Configv1LogIngestConfig, error) {
+	p := &log_ingest_config.ReadLogIngestConfigParams{
+		Context: ctx,
+	}
+	for _, opt := range opts {
+		opt(p)
+	}
+	resp, err := client.LogIngestConfig.ReadLogIngestConfig(p)
+	if err != nil {
+		if clienterror.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return []*configv1models.Configv1LogIngestConfig{
+		resp.Payload.LogIngestConfig,
+	}, nil
+}
+
 func ListLogScaleActions(
 	ctx context.Context,
 	client *configv1.Client,
@@ -1135,6 +1235,29 @@ func ListNotifiersByFilter(
 	return result, nil
 }
 
+func ListOtelMetricsIngestion(
+	ctx context.Context,
+	client *configv1.Client,
+	opts ...func(*otel_metrics_ingestion.ReadOtelMetricsIngestionParams),
+) ([]*configv1models.Configv1OtelMetricsIngestion, error) {
+	p := &otel_metrics_ingestion.ReadOtelMetricsIngestionParams{
+		Context: ctx,
+	}
+	for _, opt := range opts {
+		opt(p)
+	}
+	resp, err := client.OtelMetricsIngestion.ReadOtelMetricsIngestion(p)
+	if err != nil {
+		if clienterror.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return []*configv1models.Configv1OtelMetricsIngestion{
+		resp.Payload.OtelMetricsIngestion,
+	}, nil
+}
+
 func ListRecordingRules(
 	ctx context.Context,
 	client *configv1.Client,
@@ -1202,6 +1325,29 @@ func ListRecordingRulesByFilter(
 		}
 	}
 	return result, nil
+}
+
+func ListResourcePools(
+	ctx context.Context,
+	client *configv1.Client,
+	opts ...func(*resource_pools.ReadResourcePoolsParams),
+) ([]*configv1models.Configv1ResourcePools, error) {
+	p := &resource_pools.ReadResourcePoolsParams{
+		Context: ctx,
+	}
+	for _, opt := range opts {
+		opt(p)
+	}
+	resp, err := client.ResourcePools.ReadResourcePools(p)
+	if err != nil {
+		if clienterror.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return []*configv1models.Configv1ResourcePools{
+		resp.Payload.ResourcePools,
+	}, nil
 }
 
 func ListRollupRules(
@@ -1616,6 +1762,29 @@ func ListTraceMetricsRulesByFilter(
 		}
 	}
 	return result, nil
+}
+
+func ListTraceTailSamplingRules(
+	ctx context.Context,
+	client *configv1.Client,
+	opts ...func(*trace_tail_sampling_rules.ReadTraceTailSamplingRulesParams),
+) ([]*configv1models.Configv1TraceTailSamplingRules, error) {
+	p := &trace_tail_sampling_rules.ReadTraceTailSamplingRulesParams{
+		Context: ctx,
+	}
+	for _, opt := range opts {
+		opt(p)
+	}
+	resp, err := client.TraceTailSamplingRules.ReadTraceTailSamplingRules(p)
+	if err != nil {
+		if clienterror.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return []*configv1models.Configv1TraceTailSamplingRules{
+		resp.Payload.TraceTailSamplingRules,
+	}, nil
 }
 
 func ListClassicDashboards(

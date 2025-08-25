@@ -25,6 +25,10 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
+func TraceTailSamplingRulesFromModel(m *models.Configv1TraceTailSamplingRules) (*intschema.TraceTailSamplingRules, error) {
+	return traceTailSamplingRulesConverter{}.fromModel(m)
+}
+
 func resourceTraceTailSamplingRules() *schema.Resource {
 	r := newGenericResource(
 		"trace_tail_sampling_rules",
