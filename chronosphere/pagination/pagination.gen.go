@@ -3,13 +3,12 @@ package pagination
 
 import (
 	"context"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/consumption_budget"
-	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_budget"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dataset"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
@@ -31,7 +30,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
 	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/unstable"
 )
 
 func ListBuckets(
@@ -1621,45 +1619,42 @@ func ListClassicDashboardsByFilter(
 	return result, nil
 }
 
-func ListUnstableConsumptionBudgets(
+func ListConsumptionBudgets(
 	ctx context.Context,
-	client *configunstable.Client,
-) ([]*configunstablemodels.ConfigunstableConsumptionBudget, error) {
-	return ListUnstableConsumptionBudgetsByFilter(ctx, client, Filter{})
+	client *configv1.Client,
+) ([]*configv1models.Configv1ConsumptionBudget, error) {
+	return ListConsumptionBudgetsByFilter(ctx, client, Filter{})
 }
 
-func ListUnstableConsumptionBudgetsBySlugs(
+func ListConsumptionBudgetsBySlugs(
 	ctx context.Context,
-	client *configunstable.Client,
+	client *configv1.Client,
 	slugs []string,
-) ([]*configunstablemodels.ConfigunstableConsumptionBudget, error) {
-	return ListUnstableConsumptionBudgetsByFilter(ctx, client, Filter{
+) ([]*configv1models.Configv1ConsumptionBudget, error) {
+	return ListConsumptionBudgetsByFilter(ctx, client, Filter{
 		Slugs: slugs,
 	})
 }
 
-func ListUnstableConsumptionBudgetsByNames(
+func ListConsumptionBudgetsByNames(
 	ctx context.Context,
-	client *configunstable.Client,
+	client *configv1.Client,
 	names []string,
-) ([]*configunstablemodels.ConfigunstableConsumptionBudget, error) {
-	return ListUnstableConsumptionBudgetsByFilter(ctx, client, Filter{
+) ([]*configv1models.Configv1ConsumptionBudget, error) {
+	return ListConsumptionBudgetsByFilter(ctx, client, Filter{
 		Names: names,
 	})
 }
 
-func ListUnstableConsumptionBudgetsByFilter(
+func ListConsumptionBudgetsByFilter(
 	ctx context.Context,
-	client *configunstable.Client,
+	client *configv1.Client,
 	f Filter,
 	opts ...func(*consumption_budget.ListConsumptionBudgetsParams),
-) ([]*configunstablemodels.ConfigunstableConsumptionBudget, error) {
-	if !unstable.Enabled() {
-		return nil, nil
-	}
+) ([]*configv1models.Configv1ConsumptionBudget, error) {
 	var (
 		nextToken string
-		result    []*configunstablemodels.ConfigunstableConsumptionBudget
+		result    []*configv1models.Configv1ConsumptionBudget
 	)
 	for {
 		p := &consumption_budget.ListConsumptionBudgetsParams{

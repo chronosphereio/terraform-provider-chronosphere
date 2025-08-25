@@ -15,25 +15,25 @@
 package enum
 
 import (
-	configunstable "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // BehaviorThresholdType is an enum.
-var BehaviorThresholdType = newEnum("BehaviorThresholdType", []value[configunstable.BehaviorThresholdType]{
+var BehaviorThresholdType = newEnum("BehaviorThresholdType", []value[configv1models.BehaviorThresholdType]{
 	{
-		v1:    configunstable.BehaviorThresholdTypeMONTHLYVOLUME,
+		v1:    configv1models.BehaviorThresholdTypeMONTHLYVOLUME,
 		alias: "MONTHLY_VOLUME",
 	},
 	{
-		v1:    configunstable.BehaviorThresholdTypeWEEKLYVOLUME,
+		v1:    configv1models.BehaviorThresholdTypeWEEKLYVOLUME,
 		alias: "WEEKLY_VOLUME",
 	},
 	{
-		v1:    configunstable.BehaviorThresholdTypeDAILYVOLUME,
+		v1:    configv1models.BehaviorThresholdTypeDAILYVOLUME,
 		alias: "DAILY_VOLUME",
 	},
 	{
-		v1:    configunstable.BehaviorThresholdTypeINSTANTRATE,
+		v1:    configv1models.BehaviorThresholdTypeINSTANTRATE,
 		alias: "INSTANT_RATE",
 	},
 })

@@ -15,21 +15,21 @@
 package enum
 
 import (
-	configunstable "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // BehaviorAction is an enum.
-var BehaviorAction = newEnum("BehaviorAction", []value[configunstable.BehaviorAction]{
+var BehaviorAction = newEnum("BehaviorAction", []value[configv1models.ConsumptionBudgetBehaviorAction]{
 	{
-		v1:    configunstable.BehaviorActionALERTWARN,
+		v1:    configv1models.ConsumptionBudgetBehaviorActionALERTWARN,
 		alias: "ALERT_WARN",
 	},
 	{
-		v1:    configunstable.BehaviorActionALERTCRITICAL,
+		v1:    configv1models.ConsumptionBudgetBehaviorActionALERTCRITICAL,
 		alias: "ALERT_CRITICAL",
 	},
 	{
-		v1:    configunstable.BehaviorActionDROP,
+		v1:    configv1models.ConsumptionBudgetBehaviorActionDROP,
 		alias: "DROP",
 	},
 })
