@@ -352,7 +352,7 @@ func monitorConditionsToModel(
 		return nil, nil
 	}
 
-	bySev := make(map[string][]*models.MonitorCondition)
+	bySev := make(map[string][]*models.Configv1MonitorCondition)
 	for _, c := range conds {
 		if err := checkSeverity(c.Severity); err != nil {
 			return nil, err
@@ -365,7 +365,7 @@ func monitorConditionsToModel(
 		if err != nil {
 			return nil, err
 		}
-		bySev[c.Severity] = append(bySev[c.Severity], &models.MonitorCondition{
+		bySev[c.Severity] = append(bySev[c.Severity], &models.Configv1MonitorCondition{
 			Op:                 enum.ConditionOp.V1(c.Op),
 			SustainSecs:        sustainSecs,
 			ResolveSustainSecs: resolveSustainSecs,

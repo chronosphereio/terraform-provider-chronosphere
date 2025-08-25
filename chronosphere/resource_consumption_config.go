@@ -18,14 +18,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
 // ConsumptionConfigConverter is a converter for ConsumptionConfig
-func ConsumptionConfigFromModel(m *models.ConfigunstableConsumptionConfig) (*intschema.ConsumptionConfig, error) {
+func ConsumptionConfigFromModel(m *models.Configv1ConsumptionConfig) (*intschema.ConsumptionConfig, error) {
 	return ConsumptionConfigConverter{}.fromModel(m)
 }
 
@@ -33,7 +33,7 @@ func resourceConsumptionConfig() *schema.Resource {
 	r := newGenericResource(
 		"consumption_config",
 		ConsumptionConfigConverter{},
-		generatedUnstableConsumptionConfig{},
+		generatedConsumptionConfig{},
 	)
 	return &schema.Resource{
 		Schema:        tfschema.ConsumptionConfig,
@@ -52,8 +52,8 @@ type ConsumptionConfigConverter struct{}
 
 func (ConsumptionConfigConverter) toModel(
 	m *intschema.ConsumptionConfig,
-) (*models.ConfigunstableConsumptionConfig, error) {
-	return &models.ConfigunstableConsumptionConfig{
+) (*models.Configv1ConsumptionConfig, error) {
+	return &models.Configv1ConsumptionConfig{
 		Partitions: sliceutil.Map(m.Partition, partitionToModel),
 	}, nil
 }
@@ -69,13 +69,13 @@ func partitionToModel(p intschema.ConsumptionConfigPartition) *models.Consumptio
 
 func filterToModel(f intschema.PartitionFilter) *models.ConsumptionConfigPartitionFilter {
 	return &models.ConsumptionConfigPartitionFilter{
-		Operator:   models.PartitionFilterOperator(f.Operator),
+		Operator:   models.FilterOperator(f.Operator),
 		Conditions: sliceutil.Map(f.Condition, conditionToModel),
 	}
 }
 
-func conditionToModel(c intschema.PartitionFilterCondition) *models.FilterCondition {
-	result := &models.FilterCondition{
+func conditionToModel(c intschema.PartitionFilterCondition) *models.PartitionFilterCondition {
+	result := &models.PartitionFilterCondition{
 		DatasetSlug: c.DatasetId.Slug(),
 	}
 	if c.LogFilter != nil {
@@ -87,7 +87,7 @@ func conditionToModel(c intschema.PartitionFilterCondition) *models.FilterCondit
 }
 
 func (ConsumptionConfigConverter) fromModel(
-	m *models.ConfigunstableConsumptionConfig,
+	m *models.Configv1ConsumptionConfig,
 ) (*intschema.ConsumptionConfig, error) {
 	return &intschema.ConsumptionConfig{
 		Partition: sliceutil.Map(m.Partitions, partitionFromModel),
@@ -110,7 +110,7 @@ func filterFromModel(f *models.ConsumptionConfigPartitionFilter) intschema.Parti
 	}
 }
 
-func conditionFromModel(c *models.FilterCondition) intschema.PartitionFilterCondition {
+func conditionFromModel(c *models.PartitionFilterCondition) intschema.PartitionFilterCondition {
 	result := intschema.PartitionFilterCondition{
 		DatasetId: tfid.Slug(c.DatasetSlug),
 	}

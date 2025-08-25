@@ -3,13 +3,11 @@ package pagination
 
 import (
 	"context"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/consumption_budget"
-	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_budget"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dataset"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
@@ -31,7 +29,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
 	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/unstable"
 )
 
 func ListBuckets(
@@ -159,6 +156,75 @@ func ListCollectionsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.Collections {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListConsumptionBudgets(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1ConsumptionBudget, error) {
+	return ListConsumptionBudgetsByFilter(ctx, client, Filter{})
+}
+
+func ListConsumptionBudgetsBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1ConsumptionBudget, error) {
+	return ListConsumptionBudgetsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListConsumptionBudgetsByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1ConsumptionBudget, error) {
+	return ListConsumptionBudgetsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListConsumptionBudgetsByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*consumption_budget.ListConsumptionBudgetsParams),
+) ([]*configv1models.Configv1ConsumptionBudget, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1ConsumptionBudget
+	)
+	for {
+		p := &consumption_budget.ListConsumptionBudgetsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.ConsumptionBudget.ListConsumptionBudgets(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.ConsumptionBudgets {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
@@ -1608,78 +1674,6 @@ func ListClassicDashboardsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.ClassicDashboards {
-				result = append(result, v)
-			}
-			if resp.Payload.Page != nil {
-				nextToken = resp.Payload.Page.NextToken
-			}
-		}
-		if nextToken == "" {
-			break
-		}
-	}
-	return result, nil
-}
-
-func ListUnstableConsumptionBudgets(
-	ctx context.Context,
-	client *configunstable.Client,
-) ([]*configunstablemodels.ConfigunstableConsumptionBudget, error) {
-	return ListUnstableConsumptionBudgetsByFilter(ctx, client, Filter{})
-}
-
-func ListUnstableConsumptionBudgetsBySlugs(
-	ctx context.Context,
-	client *configunstable.Client,
-	slugs []string,
-) ([]*configunstablemodels.ConfigunstableConsumptionBudget, error) {
-	return ListUnstableConsumptionBudgetsByFilter(ctx, client, Filter{
-		Slugs: slugs,
-	})
-}
-
-func ListUnstableConsumptionBudgetsByNames(
-	ctx context.Context,
-	client *configunstable.Client,
-	names []string,
-) ([]*configunstablemodels.ConfigunstableConsumptionBudget, error) {
-	return ListUnstableConsumptionBudgetsByFilter(ctx, client, Filter{
-		Names: names,
-	})
-}
-
-func ListUnstableConsumptionBudgetsByFilter(
-	ctx context.Context,
-	client *configunstable.Client,
-	f Filter,
-	opts ...func(*consumption_budget.ListConsumptionBudgetsParams),
-) ([]*configunstablemodels.ConfigunstableConsumptionBudget, error) {
-	if !unstable.Enabled() {
-		return nil, nil
-	}
-	var (
-		nextToken string
-		result    []*configunstablemodels.ConfigunstableConsumptionBudget
-	)
-	for {
-		p := &consumption_budget.ListConsumptionBudgetsParams{
-			Context:   ctx,
-			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
-		}
-		for _, opt := range opts {
-			opt(p)
-		}
-		resp, err := client.ConsumptionBudget.ListConsumptionBudgets(p)
-		if err != nil {
-			return nil, err
-		}
-
-		// If payload or page token aren't set, no next page.
-		nextToken = ""
-		if resp.Payload != nil {
-			for _, v := range resp.Payload.ConsumptionBudgets {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {

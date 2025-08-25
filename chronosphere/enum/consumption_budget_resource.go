@@ -15,13 +15,13 @@
 package enum
 
 import (
-	configunstable "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	configv1 "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // ConsumptionBudgetResource is an enum.
-var ConsumptionBudgetResource = newEnum("ConsumptionBudgetResource", []value[configunstable.ConsumptionBudgetResource]{
+var ConsumptionBudgetResource = newEnum("ConsumptionBudgetResource", []value[configv1.Configv1ConsumptionBudgetResource]{
 	{
-		v1:    configunstable.ConsumptionBudgetResourceLOGPERSISTEDBYTES,
+		v1:    configv1.Configv1ConsumptionBudgetResourceLOGPERSISTEDBYTES,
 		alias: "LOG_PERSISTED_BYTES",
 	},
 })

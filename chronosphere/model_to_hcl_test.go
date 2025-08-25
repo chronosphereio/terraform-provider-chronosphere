@@ -54,7 +54,7 @@ resource "chronosphere_monitor" "" {
 				SeriesConditions: &models.MonitorSeriesConditions{
 					Defaults: &models.SeriesConditionsSeverityConditions{
 						Warn: &models.SeriesConditionsConditions{
-							Conditions: []*models.MonitorCondition{{
+							Conditions: []*models.Configv1MonitorCondition{{
 								Op:    models.ConditionOpEQ,
 								Value: 10,
 							}},
@@ -112,7 +112,7 @@ resource "chronosphere_monitor" "" {
 				SeriesConditions: &models.MonitorSeriesConditions{
 					Defaults: &models.SeriesConditionsSeverityConditions{
 						Warn: &models.SeriesConditionsConditions{
-							Conditions: []*models.MonitorCondition{{
+							Conditions: []*models.Configv1MonitorCondition{{
 								Op:    models.ConditionOpEQ,
 								Value: 10,
 							}},

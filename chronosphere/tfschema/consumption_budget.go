@@ -11,7 +11,7 @@ var ConsumptionBudget = map[string]*schema.Schema{
 	// partition_name_path, and even though Terraform supports resource
 	// attribute references, we choose not to use that feature because the
 	// partition references would be by index (e.g. partitions[1].partitions[2]
-	// instead of ["global", "gateway", "dev"]), which would be super unreadable
+	// instead of "global/gateway/dev"), which would be super unreadable
 	// & fragile.
 	//
 	// So instead, we opt for a coarse reference which acts as a "depends_on"
@@ -36,11 +36,8 @@ var ConsumptionBudget = map[string]*schema.Schema{
 		Optional: true,
 	}.Schema(),
 	"partition_slug_path": {
-		Type:     schema.TypeList,
+		Type:     schema.TypeString,
 		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
 	},
 	"priority": {
 		Type:     schema.TypeList,

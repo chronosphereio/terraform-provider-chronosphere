@@ -15,17 +15,17 @@
 package enum
 
 import (
-	configunstable "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	configv1 "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // PartitionFilterOperator is an enum.
-var PartitionFilterOperator = newEnum("PartitionFilterOperator", []value[configunstable.PartitionFilterOperator]{
+var PartitionFilterOperator = newEnum("PartitionFilterOperator", []value[configv1.FilterOperator]{
 	{
-		v1:    configunstable.PartitionFilterOperatorIN,
+		v1:    configv1.FilterOperatorIN,
 		alias: "IN",
 	},
 	{
-		v1:    configunstable.PartitionFilterOperatorNOTIN,
+		v1:    configv1.FilterOperatorNOTIN,
 		alias: "NOT_IN",
 	},
 })

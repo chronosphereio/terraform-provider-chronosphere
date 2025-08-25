@@ -11,8 +11,6 @@ import (
 	"github.com/go-openapi/strfmt"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/azure_metrics_integration"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/consumption_budget"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/consumption_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/link_template"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/noop_entity"
@@ -68,8 +66,6 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli := new(ConfigUnstableAPI)
 	cli.Transport = transport
 	cli.AzureMetricsIntegration = azure_metrics_integration.New(transport, formats)
-	cli.ConsumptionBudget = consumption_budget.New(transport, formats)
-	cli.ConsumptionConfig = consumption_config.New(transport, formats)
 	cli.Dashboard = dashboard.New(transport, formats)
 	cli.LinkTemplate = link_template.New(transport, formats)
 	cli.NoopEntity = noop_entity.New(transport, formats)
@@ -126,10 +122,6 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 type ConfigUnstableAPI struct {
 	AzureMetricsIntegration azure_metrics_integration.ClientService
 
-	ConsumptionBudget consumption_budget.ClientService
-
-	ConsumptionConfig consumption_config.ClientService
-
 	Dashboard dashboard.ClientService
 
 	LinkTemplate link_template.ClientService
@@ -157,8 +149,6 @@ type ConfigUnstableAPI struct {
 func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 	c.AzureMetricsIntegration.SetTransport(transport)
-	c.ConsumptionBudget.SetTransport(transport)
-	c.ConsumptionConfig.SetTransport(transport)
 	c.Dashboard.SetTransport(transport)
 	c.LinkTemplate.SetTransport(transport)
 	c.NoopEntity.SetTransport(transport)

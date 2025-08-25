@@ -21,14 +21,14 @@ import (
 	"go.uber.org/atomic"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
 // ConsumptionBudgetFromModel maps an API model to an intschema model.
-func ConsumptionBudgetFromModel(m *models.ConfigunstableConsumptionBudget) (*intschema.ConsumptionBudget, error) {
+func ConsumptionBudgetFromModel(m *models.Configv1ConsumptionBudget) (*intschema.ConsumptionBudget, error) {
 	return consumptionBudgetConverter{}.fromModel(m)
 }
 
@@ -36,7 +36,7 @@ func resourceConsumptionBudget() *schema.Resource {
 	r := newGenericResource(
 		"consumption_budget",
 		consumptionBudgetConverter{},
-		generatedUnstableConsumptionBudget{})
+		generatedConsumptionBudget{})
 
 	return &schema.Resource{
 		CreateContext: r.CreateContext,
@@ -44,14 +44,14 @@ func resourceConsumptionBudget() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		Schema:        tfschema.ConsumptionBudget,
-		CustomizeDiff: r.ValidateDryRunOptions(&ConsumptionBudgetDryRunCount, ValidateDryRunOpts[*models.ConfigunstableConsumptionBudget]{
+		CustomizeDiff: r.ValidateDryRunOptions(&ConsumptionBudgetDryRunCount, ValidateDryRunOpts[*models.Configv1ConsumptionBudget]{
 			SetUnknownReferencesSkip: []string{
 				// Because this isn't a real API reference.
 				"consumption_config_id",
 				// Because dry run doesn't support tfids in lists (an artificial constraint).
 				"priority.[].filter.[].dataset_id",
 			},
-			ModifyAPIModel: func(cfg *models.ConfigunstableConsumptionBudget) {
+			ModifyAPIModel: func(cfg *models.Configv1ConsumptionBudget) {
 				for _, p := range cfg.Priorities {
 					for _, f := range p.Filters {
 						// NOTE(codyg): There's no way to tell if the user
@@ -85,7 +85,7 @@ type consumptionBudgetConverter struct{}
 
 func (c consumptionBudgetConverter) toModel(
 	s *intschema.ConsumptionBudget,
-) (*models.ConfigunstableConsumptionBudget, error) {
+) (*models.Configv1ConsumptionBudget, error) {
 	switch s.ConsumptionConfigId.Slug() {
 	case "", ConsumptionConfigID:
 		// Valid. Can be empty if the ConsumptionConfig has been created yet.
@@ -94,10 +94,10 @@ func (c consumptionBudgetConverter) toModel(
 			"invalid consumption_config_id %q: must point at chronosphere_consumption_config resource",
 			s.ConsumptionConfigId.Slug())
 	}
-	m := &models.ConfigunstableConsumptionBudget{
+	m := &models.Configv1ConsumptionBudget{
 		Name:              s.Name,
 		Slug:              s.Slug,
-		Resource:          models.ConsumptionBudgetResource(s.Resource),
+		Resource:          models.Configv1ConsumptionBudgetResource(s.Resource),
 		PartitionSlugPath: s.PartitionSlugPath,
 		Priorities: sliceutil.Map(s.Priority, func(p intschema.ConsumptionBudgetPriority) *models.ConsumptionBudgetPriority {
 			return &models.ConsumptionBudgetPriority{
@@ -113,7 +113,7 @@ func (c consumptionBudgetConverter) toModel(
 }
 
 func (c consumptionBudgetConverter) fromModel(
-	m *models.ConfigunstableConsumptionBudget,
+	m *models.Configv1ConsumptionBudget,
 ) (*intschema.ConsumptionBudget, error) {
 	behaviors, err := sliceutil.MapErr(m.Behaviors, consumptionBudgetBehaviorFromModel)
 	if err != nil {
@@ -177,7 +177,7 @@ func consumptionBudgetBehaviorToModel(b intschema.ConsumptionBudgetBehavior) *mo
 	}
 
 	return &models.ConsumptionBudgetBehavior{
-		Action:               models.BehaviorAction(b.Action),
+		Action:               models.ConsumptionBudgetBehaviorAction(b.Action),
 		ThresholdType:        models.BehaviorThresholdType(b.ThresholdType),
 		InstantRateThreshold: instantRateThreshold,
 		VolumeThreshold:      volumeThreshold,
