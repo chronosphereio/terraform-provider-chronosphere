@@ -12,10 +12,10 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// AllocationThreshold allocation threshold
+// ResourcePoolsAllocationThreshold resource pools allocation threshold
 //
-// swagger:model AllocationThreshold
-type AllocationThreshold struct {
+// swagger:model ResourcePoolsAllocationThreshold
+type ResourcePoolsAllocationThreshold struct {
 
 	// Threshold expressed as a fixed value of the license.
 	FixedValue string `json:"fixed_value,omitempty"`
@@ -29,18 +29,18 @@ type AllocationThreshold struct {
 	PercentOfPoolAllocation float64 `json:"percent_of_pool_allocation,omitempty"`
 }
 
-// Validate validates this allocation threshold
-func (m *AllocationThreshold) Validate(formats strfmt.Registry) error {
+// Validate validates this resource pools allocation threshold
+func (m *ResourcePoolsAllocationThreshold) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this allocation threshold based on context it is used
-func (m *AllocationThreshold) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this resource pools allocation threshold based on context it is used
+func (m *ResourcePoolsAllocationThreshold) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *AllocationThreshold) MarshalBinary() ([]byte, error) {
+func (m *ResourcePoolsAllocationThreshold) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -48,8 +48,8 @@ func (m *AllocationThreshold) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *AllocationThreshold) UnmarshalBinary(b []byte) error {
-	var res AllocationThreshold
+func (m *ResourcePoolsAllocationThreshold) UnmarshalBinary(b []byte) error {
+	var res ResourcePoolsAllocationThreshold
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
