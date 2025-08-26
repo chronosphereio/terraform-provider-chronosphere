@@ -46,11 +46,11 @@ var ConsumptionBudget = map[string]*schema.Schema{
 			Schema: consumptionBudgetPrioritySchema,
 		},
 	},
-	"behavior": {
+	"threshold": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Resource{
-			Schema: consumptionBudgetBehaviorSchema,
+			Schema: consumptionBudgetThresholdSchema,
 		},
 	},
 	"default_priority": {
@@ -90,41 +90,41 @@ var consumptionBudgetPrioritySchema = map[string]*schema.Schema{
 	},
 }
 
-var consumptionBudgetBehaviorSchema = map[string]*schema.Schema{
+var consumptionBudgetThresholdSchema = map[string]*schema.Schema{
 	"action": Enum{
-		Value:    enum.BehaviorAction.ToStrings(),
+		Value:    enum.ConsumptionBudgetThresholdAction.ToStrings(),
 		Optional: true,
 	}.Schema(),
-	"threshold_type": Enum{
-		Value:    enum.BehaviorThresholdType.ToStrings(),
+	"type": Enum{
+		Value:    enum.ConsumptionBudgetThresholdType.ToStrings(),
 		Optional: true,
 	}.Schema(),
-	"instant_rate_threshold": {
+	"instant_rate": {
 		Type:     schema.TypeList,
 		Optional: true,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: consumptionBudgetInstantRateThresholdSchema,
+			Schema: consumptionBudgetInstantRateSchema,
 		},
 	},
-	"volume_threshold": {
+	"volume": {
 		Type:     schema.TypeList,
 		Optional: true,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: consumptionBudgetVolumeThresholdSchema,
+			Schema: consumptionBudgetVolumeSchema,
 		},
 	},
 }
 
-var consumptionBudgetInstantRateThresholdSchema = map[string]*schema.Schema{
+var consumptionBudgetInstantRateSchema = map[string]*schema.Schema{
 	"fixed_value_per_sec": {
 		Type:     schema.TypeInt,
 		Optional: true,
 	},
 }
 
-var consumptionBudgetVolumeThresholdSchema = map[string]*schema.Schema{
+var consumptionBudgetVolumeSchema = map[string]*schema.Schema{
 	"fixed_value": {
 		Type:     schema.TypeInt,
 		Optional: true,
