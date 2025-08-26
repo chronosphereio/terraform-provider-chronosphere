@@ -12,27 +12,27 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// BehaviorVolumeThreshold behavior volume threshold
+// ThresholdVolume threshold volume
 //
-// swagger:model BehaviorVolumeThreshold
-type BehaviorVolumeThreshold struct {
+// swagger:model ThresholdVolume
+type ThresholdVolume struct {
 
 	// fixed_value is the required volume threshold.
 	FixedValue string `json:"fixed_value,omitempty"`
 }
 
-// Validate validates this behavior volume threshold
-func (m *BehaviorVolumeThreshold) Validate(formats strfmt.Registry) error {
+// Validate validates this threshold volume
+func (m *ThresholdVolume) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this behavior volume threshold based on context it is used
-func (m *BehaviorVolumeThreshold) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this threshold volume based on context it is used
+func (m *ThresholdVolume) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *BehaviorVolumeThreshold) MarshalBinary() ([]byte, error) {
+func (m *ThresholdVolume) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -40,8 +40,8 @@ func (m *BehaviorVolumeThreshold) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *BehaviorVolumeThreshold) UnmarshalBinary(b []byte) error {
-	var res BehaviorVolumeThreshold
+func (m *ThresholdVolume) UnmarshalBinary(b []byte) error {
+	var res ThresholdVolume
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

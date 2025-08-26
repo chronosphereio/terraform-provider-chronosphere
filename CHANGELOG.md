@@ -12,6 +12,7 @@ Added:
 * Promote `chronosphere_consumption_config` to V1.
 * Promote `chronosphere_consumption_budget` to V1.
 * Add `span_tag` field to `chronosphere_derived_label` resource.
+* Update breaking threshold API changes in `chronosphere_consumption_budget`.
 
 ## v1.12.0
 

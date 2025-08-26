@@ -225,7 +225,7 @@ func thresholdsFromModel(
 }
 
 func thresholdFromModel(
-	threshold *apimodels.AllocationThreshold,
+	threshold *apimodels.ResourcePoolsAllocationThreshold,
 ) (*intschema.ResourcePoolAllocationThresholdSchema, error) {
 	if threshold == nil {
 		return nil, nil
@@ -374,11 +374,11 @@ func thresholdsToModel(thresholds []intschema.ResourcePoolAllocationThresholdsSc
 	})
 }
 
-func thresholdToModel(threshold *intschema.ResourcePoolAllocationThresholdSchema) *apimodels.AllocationThreshold {
+func thresholdToModel(threshold *intschema.ResourcePoolAllocationThresholdSchema) *apimodels.ResourcePoolsAllocationThreshold {
 	if threshold == nil {
 		return nil
 	}
-	return &apimodels.AllocationThreshold{
+	return &apimodels.ResourcePoolsAllocationThreshold{
 		PercentOfPoolAllocation: threshold.PercentOfPoolAllocation,
 		FixedValue:              fmt.Sprint(threshold.FixedValue),
 	}

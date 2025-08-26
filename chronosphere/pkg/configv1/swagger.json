@@ -15,21 +15,6 @@
       },
       "type": "object"
     },
-    "AllocationThreshold": {
-      "properties": {
-        "percent_of_pool_allocation": {
-          "description": "Threshold expressed as a percent of the license allocated to a pool. A value\nof `100` represents a threshold that is the pool's full allocation. Values\nover `100` indicate thresholds that exceed the pool's allocation. For\nexample, a value of `50` represents a threshold that is half the pool's\nallocation, and a value of `200` represents a threshold that is double the\npool's allocation.",
-          "format": "double",
-          "type": "number"
-        },
-        "fixed_value": {
-          "description": "Threshold expressed as a fixed value of the license.",
-          "format": "int64",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "AllocationThresholds": {
       "description": "Thresholds define strict quota limits for each metrics license.",
       "properties": {
@@ -37,42 +22,13 @@
           "$ref": "#/definitions/ResourcePoolsLicense"
         },
         "all_priorities": {
-          "$ref": "#/definitions/AllocationThreshold"
+          "$ref": "#/definitions/ResourcePoolsAllocationThreshold"
         },
         "default_and_low_priority": {
-          "$ref": "#/definitions/AllocationThreshold"
+          "$ref": "#/definitions/ResourcePoolsAllocationThreshold"
         },
         "low_priority": {
-          "$ref": "#/definitions/AllocationThreshold"
-        }
-      },
-      "type": "object"
-    },
-    "BehaviorInstantRateThreshold": {
-      "properties": {
-        "fixed_value_per_sec": {
-          "description": "fixed_value_per_sec is the required rate threshold.",
-          "format": "int64",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "BehaviorThresholdType": {
-      "enum": [
-        "DAILY_VOLUME",
-        "INSTANT_RATE",
-        "WEEKLY_VOLUME",
-        "MONTHLY_VOLUME"
-      ],
-      "type": "string"
-    },
-    "BehaviorVolumeThreshold": {
-      "properties": {
-        "fixed_value": {
-          "description": "fixed_value is the required volume threshold.",
-          "format": "int64",
-          "type": "string"
+          "$ref": "#/definitions/ResourcePoolsAllocationThreshold"
         }
       },
       "type": "object"
@@ -504,31 +460,6 @@
       },
       "type": "object"
     },
-    "ConsumptionBudgetBehavior": {
-      "properties": {
-        "action": {
-          "$ref": "#/definitions/ConsumptionBudgetBehaviorAction"
-        },
-        "threshold_type": {
-          "$ref": "#/definitions/BehaviorThresholdType"
-        },
-        "instant_rate_threshold": {
-          "$ref": "#/definitions/BehaviorInstantRateThreshold"
-        },
-        "volume_threshold": {
-          "$ref": "#/definitions/BehaviorVolumeThreshold"
-        }
-      },
-      "type": "object"
-    },
-    "ConsumptionBudgetBehaviorAction": {
-      "enum": [
-        "ALERT_WARN",
-        "ALERT_CRITICAL",
-        "DROP"
-      ],
-      "type": "string"
-    },
     "ConsumptionBudgetPriority": {
       "properties": {
         "filters": {
@@ -557,6 +488,23 @@
         }
       },
       "type": "object"
+    },
+    "ConsumptionBudgetThresholdAction": {
+      "enum": [
+        "ALERT_WARN",
+        "ALERT_CRITICAL",
+        "DROP"
+      ],
+      "type": "string"
+    },
+    "ConsumptionBudgetThresholdType": {
+      "enum": [
+        "DAILY_VOLUME",
+        "INSTANT_RATE",
+        "WEEKLY_VOLUME",
+        "MONTHLY_VOLUME"
+      ],
+      "type": "string"
     },
     "ConsumptionConfigPartition": {
       "properties": {
@@ -1893,6 +1841,21 @@
       ],
       "type": "string"
     },
+    "ResourcePoolsAllocationThreshold": {
+      "properties": {
+        "percent_of_pool_allocation": {
+          "description": "Threshold expressed as a percent of the license allocated to a pool. A value\nof `100` represents a threshold that is the pool's full allocation. Values\nover `100` indicate thresholds that exceed the pool's allocation. For\nexample, a value of `50` represents a threshold that is half the pool's\nallocation, and a value of `200` represents a threshold that is double the\npool's allocation.",
+          "format": "double",
+          "type": "number"
+        },
+        "fixed_value": {
+          "description": "Threshold expressed as a fixed value of the license.",
+          "format": "int64",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "ResourcePoolsDefaultPool": {
       "properties": {
         "allocation": {
@@ -2261,6 +2224,26 @@
         "NOT_IN"
       ],
       "type": "string"
+    },
+    "ThresholdInstantRate": {
+      "properties": {
+        "fixed_value_per_sec": {
+          "description": "fixed_value_per_sec is the required rate threshold.",
+          "format": "int64",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ThresholdVolume": {
+      "properties": {
+        "fixed_value": {
+          "description": "fixed_value is the required volume threshold.",
+          "format": "int64",
+          "type": "string"
+        }
+      },
+      "type": "object"
     },
     "TraceBehaviorConfigMainBehaviorAssignment": {
       "properties": {
@@ -2862,10 +2845,10 @@
           },
           "type": "array"
         },
-        "behaviors": {
-          "description": "behaviors are optional budget behaviors for automated limiting and\nalerting.",
+        "thresholds": {
+          "description": "thresholds are optional budget thresholds for automated limiting and\nalerting.",
           "items": {
-            "$ref": "#/definitions/ConsumptionBudgetBehavior"
+            "$ref": "#/definitions/configv1ConsumptionBudgetThreshold"
           },
           "type": "array"
         },
@@ -2886,6 +2869,23 @@
         "LOG_PERSISTED_BYTES"
       ],
       "type": "string"
+    },
+    "configv1ConsumptionBudgetThreshold": {
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/ConsumptionBudgetThresholdAction"
+        },
+        "type": {
+          "$ref": "#/definitions/ConsumptionBudgetThresholdType"
+        },
+        "instant_rate": {
+          "$ref": "#/definitions/ThresholdInstantRate"
+        },
+        "volume": {
+          "$ref": "#/definitions/ThresholdVolume"
+        }
+      },
+      "type": "object"
     },
     "configv1ConsumptionConfig": {
       "properties": {

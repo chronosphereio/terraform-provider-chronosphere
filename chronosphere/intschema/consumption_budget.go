@@ -14,15 +14,15 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type ConsumptionBudget struct {
-	Name                 string                      `intschema:"name"`
-	Slug                 string                      `intschema:"slug,optional,computed"`
-	ConsumptionConfigId  tfid.ID                     `intschema:"consumption_config_id"`
-	NotificationPolicyId tfid.ID                     `intschema:"notification_policy_id,optional"`
-	Behavior             []ConsumptionBudgetBehavior `intschema:"behavior,optional"`
-	DefaultPriority      int64                       `intschema:"default_priority,optional"`
-	PartitionSlugPath    string                      `intschema:"partition_slug_path,optional"`
-	Priority             []ConsumptionBudgetPriority `intschema:"priority,optional"`
-	Resource             string                      `intschema:"resource,optional"`
+	Name                 string                       `intschema:"name"`
+	Slug                 string                       `intschema:"slug,optional,computed"`
+	ConsumptionConfigId  tfid.ID                      `intschema:"consumption_config_id"`
+	NotificationPolicyId tfid.ID                      `intschema:"notification_policy_id,optional"`
+	DefaultPriority      int64                        `intschema:"default_priority,optional"`
+	PartitionSlugPath    string                       `intschema:"partition_slug_path,optional"`
+	Priority             []ConsumptionBudgetPriority  `intschema:"priority,optional"`
+	Resource             string                       `intschema:"resource,optional"`
+	Threshold            []ConsumptionBudgetThreshold `intschema:"threshold,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -61,6 +61,21 @@ func (o *ConsumptionBudget) Ref() tfid.ID {
 	}.AsID()
 }
 
+type ConsumptionBudgetThreshold struct {
+	Action      string                                 `intschema:"action,optional"`
+	InstantRate *ConsumptionBudgetThresholdInstantRate `intschema:"instant_rate,optional,list_encoded_object"`
+	Type        string                                 `intschema:"type,optional"`
+	Volume      *ConsumptionBudgetThresholdVolume      `intschema:"volume,optional,list_encoded_object"`
+}
+
+type ConsumptionBudgetThresholdVolume struct {
+	FixedValue int64 `intschema:"fixed_value,optional"`
+}
+
+type ConsumptionBudgetThresholdInstantRate struct {
+	FixedValuePerSec int64 `intschema:"fixed_value_per_sec,optional"`
+}
+
 type ConsumptionBudgetPriority struct {
 	Filter   []ConsumptionBudgetPriorityFilter `intschema:"filter,optional"`
 	Priority int64                             `intschema:"priority,optional"`
@@ -73,19 +88,4 @@ type ConsumptionBudgetPriorityFilter struct {
 
 type ConsumptionBudgetPriorityFilterLogFilter struct {
 	Query string `intschema:"query"`
-}
-
-type ConsumptionBudgetBehavior struct {
-	Action               string                                         `intschema:"action,optional"`
-	InstantRateThreshold *ConsumptionBudgetBehaviorInstantRateThreshold `intschema:"instant_rate_threshold,optional,list_encoded_object"`
-	ThresholdType        string                                         `intschema:"threshold_type,optional"`
-	VolumeThreshold      *ConsumptionBudgetBehaviorVolumeThreshold      `intschema:"volume_threshold,optional,list_encoded_object"`
-}
-
-type ConsumptionBudgetBehaviorVolumeThreshold struct {
-	FixedValue int64 `intschema:"fixed_value,optional"`
-}
-
-type ConsumptionBudgetBehaviorInstantRateThreshold struct {
-	FixedValuePerSec int64 `intschema:"fixed_value_per_sec,optional"`
 }

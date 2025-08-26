@@ -20,10 +20,6 @@ import (
 // swagger:model configv1ConsumptionBudget
 type Configv1ConsumptionBudget struct {
 
-	// behaviors are optional budget behaviors for automated limiting and
-	// alerting.
-	Behaviors []*ConsumptionBudgetBehavior `json:"behaviors"`
-
 	// Timestamp of when the ConsumptionBudget was created. Cannot be set by clients.
 	// Read Only: true
 	// Format: date-time
@@ -63,6 +59,10 @@ type Configv1ConsumptionBudget struct {
 	// The unique identifier of the ConsumptionBudget. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the ConsumptionBudget is created.
 	Slug string `json:"slug,omitempty"`
 
+	// thresholds are optional budget thresholds for automated limiting and
+	// alerting.
+	Thresholds []*Configv1ConsumptionBudgetThreshold `json:"thresholds"`
+
 	// Timestamp of when the ConsumptionBudget was last updated. Cannot be set by clients.
 	// Read Only: true
 	// Format: date-time
@@ -72,10 +72,6 @@ type Configv1ConsumptionBudget struct {
 // Validate validates this configv1 consumption budget
 func (m *Configv1ConsumptionBudget) Validate(formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.validateBehaviors(formats); err != nil {
-		res = append(res, err)
-	}
 
 	if err := m.validateCreatedAt(formats); err != nil {
 		res = append(res, err)
@@ -89,6 +85,10 @@ func (m *Configv1ConsumptionBudget) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateThresholds(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateUpdatedAt(formats); err != nil {
 		res = append(res, err)
 	}
@@ -96,32 +96,6 @@ func (m *Configv1ConsumptionBudget) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *Configv1ConsumptionBudget) validateBehaviors(formats strfmt.Registry) error {
-	if swag.IsZero(m.Behaviors) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.Behaviors); i++ {
-		if swag.IsZero(m.Behaviors[i]) { // not required
-			continue
-		}
-
-		if m.Behaviors[i] != nil {
-			if err := m.Behaviors[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("behaviors" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("behaviors" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
 	return nil
 }
 
@@ -180,6 +154,32 @@ func (m *Configv1ConsumptionBudget) validateResource(formats strfmt.Registry) er
 	return nil
 }
 
+func (m *Configv1ConsumptionBudget) validateThresholds(formats strfmt.Registry) error {
+	if swag.IsZero(m.Thresholds) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Thresholds); i++ {
+		if swag.IsZero(m.Thresholds[i]) { // not required
+			continue
+		}
+
+		if m.Thresholds[i] != nil {
+			if err := m.Thresholds[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("thresholds" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("thresholds" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 func (m *Configv1ConsumptionBudget) validateUpdatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.UpdatedAt) { // not required
 		return nil
@@ -196,10 +196,6 @@ func (m *Configv1ConsumptionBudget) validateUpdatedAt(formats strfmt.Registry) e
 func (m *Configv1ConsumptionBudget) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateBehaviors(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -212,6 +208,10 @@ func (m *Configv1ConsumptionBudget) ContextValidate(ctx context.Context, formats
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateThresholds(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateUpdatedAt(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -219,26 +219,6 @@ func (m *Configv1ConsumptionBudget) ContextValidate(ctx context.Context, formats
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *Configv1ConsumptionBudget) contextValidateBehaviors(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.Behaviors); i++ {
-
-		if m.Behaviors[i] != nil {
-			if err := m.Behaviors[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("behaviors" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("behaviors" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
 	return nil
 }
 
@@ -280,6 +260,26 @@ func (m *Configv1ConsumptionBudget) contextValidateResource(ctx context.Context,
 			return ce.ValidateName("resource")
 		}
 		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1ConsumptionBudget) contextValidateThresholds(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Thresholds); i++ {
+
+		if m.Thresholds[i] != nil {
+			if err := m.Thresholds[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("thresholds" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("thresholds" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil

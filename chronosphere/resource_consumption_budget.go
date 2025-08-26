@@ -105,7 +105,7 @@ func (c consumptionBudgetConverter) toModel(
 				Priority: int32(p.Priority),
 			}
 		}),
-		Behaviors:              sliceutil.Map(s.Behavior, consumptionBudgetBehaviorToModel),
+		Thresholds:             sliceutil.Map(s.Threshold, consumptionBudgetThresholdToModel),
 		DefaultPriority:        int32(s.DefaultPriority),
 		NotificationPolicySlug: s.NotificationPolicyId.Slug(),
 	}
@@ -115,7 +115,7 @@ func (c consumptionBudgetConverter) toModel(
 func (c consumptionBudgetConverter) fromModel(
 	m *models.Configv1ConsumptionBudget,
 ) (*intschema.ConsumptionBudget, error) {
-	behaviors, err := sliceutil.MapErr(m.Behaviors, consumptionBudgetBehaviorFromModel)
+	thresholds, err := sliceutil.MapErr(m.Thresholds, consumptionBudgetThresholdFromModel)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +131,7 @@ func (c consumptionBudgetConverter) fromModel(
 				Priority: int64(p.Priority),
 			}
 		}),
-		Behavior:             behaviors,
+		Threshold:            thresholds,
 		DefaultPriority:      int64(m.DefaultPriority),
 		NotificationPolicyId: tfid.Slug(m.NotificationPolicySlug),
 	}, nil
@@ -161,53 +161,53 @@ func consumptionBudgetPriorityFilterFromModel(f *models.ConsumptionBudgetPriorit
 	return result
 }
 
-func consumptionBudgetBehaviorToModel(b intschema.ConsumptionBudgetBehavior) *models.ConsumptionBudgetBehavior {
-	var instantRateThreshold *models.BehaviorInstantRateThreshold
-	if b.InstantRateThreshold != nil {
-		instantRateThreshold = &models.BehaviorInstantRateThreshold{
-			FixedValuePerSec: fmt.Sprint(b.InstantRateThreshold.FixedValuePerSec),
+func consumptionBudgetThresholdToModel(b intschema.ConsumptionBudgetThreshold) *models.Configv1ConsumptionBudgetThreshold {
+	var instantRate *models.ThresholdInstantRate
+	if b.InstantRate != nil {
+		instantRate = &models.ThresholdInstantRate{
+			FixedValuePerSec: fmt.Sprint(b.InstantRate.FixedValuePerSec),
 		}
 	}
 
-	var volumeThreshold *models.BehaviorVolumeThreshold
-	if b.VolumeThreshold != nil {
-		volumeThreshold = &models.BehaviorVolumeThreshold{
-			FixedValue: fmt.Sprint(b.VolumeThreshold.FixedValue),
+	var volume *models.ThresholdVolume
+	if b.Volume != nil {
+		volume = &models.ThresholdVolume{
+			FixedValue: fmt.Sprint(b.Volume.FixedValue),
 		}
 	}
 
-	return &models.ConsumptionBudgetBehavior{
-		Action:               models.ConsumptionBudgetBehaviorAction(b.Action),
-		ThresholdType:        models.BehaviorThresholdType(b.ThresholdType),
-		InstantRateThreshold: instantRateThreshold,
-		VolumeThreshold:      volumeThreshold,
+	return &models.Configv1ConsumptionBudgetThreshold{
+		Action:      models.ConsumptionBudgetThresholdAction(b.Action),
+		Type:        models.ConsumptionBudgetThresholdType(b.Type),
+		InstantRate: instantRate,
+		Volume:      volume,
 	}
 }
 
-func consumptionBudgetBehaviorFromModel(b *models.ConsumptionBudgetBehavior) (intschema.ConsumptionBudgetBehavior, error) {
-	behavior := intschema.ConsumptionBudgetBehavior{
-		Action:        string(b.Action),
-		ThresholdType: string(b.ThresholdType),
+func consumptionBudgetThresholdFromModel(b *models.Configv1ConsumptionBudgetThreshold) (intschema.ConsumptionBudgetThreshold, error) {
+	behavior := intschema.ConsumptionBudgetThreshold{
+		Action: string(b.Action),
+		Type:   string(b.Type),
 	}
 
-	if b.InstantRateThreshold != nil {
+	if b.InstantRate != nil {
 		fixedValuePerSec, err := parseStringToInt64(
-			b.InstantRateThreshold.FixedValuePerSec, "instant_rate_threshold.fixed_value_per_sec")
+			b.InstantRate.FixedValuePerSec, "instant_rate.fixed_value_per_sec")
 		if err != nil {
-			return intschema.ConsumptionBudgetBehavior{}, err
+			return intschema.ConsumptionBudgetThreshold{}, err
 		}
-		behavior.InstantRateThreshold = &intschema.ConsumptionBudgetBehaviorInstantRateThreshold{
+		behavior.InstantRate = &intschema.ConsumptionBudgetThresholdInstantRate{
 			FixedValuePerSec: fixedValuePerSec,
 		}
 	}
 
-	if b.VolumeThreshold != nil {
+	if b.Volume != nil {
 		fixedValue, err := parseStringToInt64(
-			b.VolumeThreshold.FixedValue, "volume_threshold.fixed_value")
+			b.Volume.FixedValue, "volume.fixed_value")
 		if err != nil {
-			return intschema.ConsumptionBudgetBehavior{}, err
+			return intschema.ConsumptionBudgetThreshold{}, err
 		}
-		behavior.VolumeThreshold = &intschema.ConsumptionBudgetBehaviorVolumeThreshold{
+		behavior.Volume = &intschema.ConsumptionBudgetThresholdVolume{
 			FixedValue: fixedValue,
 		}
 	}
