@@ -20,6 +20,7 @@ type DerivedLabel struct {
 	Description         string                   `intschema:"description,optional"`
 	ExistingLabelPolicy string                   `intschema:"existing_label_policy,optional"`
 	MetricLabel         *DerivedLabelMetricLabel `intschema:"metric_label,optional,list_encoded_object"`
+	SpanTag             *DerivedLabelSpanTag     `intschema:"span_tag,optional,list_encoded_object"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -56,6 +57,14 @@ func (o *DerivedLabel) Ref() tfid.ID {
 		Type: "chronosphere_derived_label",
 		ID:   o.HCLID,
 	}.AsID()
+}
+
+type DerivedLabelSpanTag struct {
+	NameMappings []DerivedLabelSpanTagNameMappings `intschema:"name_mappings,optional"`
+}
+
+type DerivedLabelSpanTagNameMappings struct {
+	SourceTag string `intschema:"source_tag"`
 }
 
 type DerivedLabelMetricLabel struct {

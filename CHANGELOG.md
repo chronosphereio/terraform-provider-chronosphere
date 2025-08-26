@@ -11,6 +11,7 @@ Added:
 * Add notification_policy_id field to `chronosphere_consumption_budget`.
 * Promote `chronosphere_consumption_config` to V1.
 * Promote `chronosphere_consumption_budget` to V1.
+* Add `span_tag` field to `chronosphere_derived_label` resource.
 
 ## v1.12.0
 

@@ -65,6 +65,7 @@ func (derivedLabelConverter) toModel(
 		MetricLabel:         derivedLabelMetricLabelToModel(m.MetricLabel),
 		ExistingLabelPolicy: enum.LabelPolicy.V1(m.ExistingLabelPolicy),
 		Description:         m.Description,
+		SpanTag:             spanTagToModel(m.SpanTag),
 	}, nil
 }
 
@@ -78,6 +79,7 @@ func (derivedLabelConverter) fromModel(
 		MetricLabel:         derivedLabelMetricLabelFromModel(m.MetricLabel),
 		ExistingLabelPolicy: string(m.ExistingLabelPolicy),
 		Description:         m.Description,
+		SpanTag:             spanTagFromModel(m.SpanTag),
 	}, nil
 }
 
@@ -240,5 +242,35 @@ func mappingLabelFilterToModel(
 	return &models.Configv1LabelFilter{
 		Name:      f.Name,
 		ValueGlob: f.ValueGlob,
+	}
+}
+
+func spanTagToModel(s *intschema.DerivedLabelSpanTag) *models.DerivedLabelSpanTag {
+	if s == nil {
+		return nil
+	}
+	return &models.DerivedLabelSpanTag{
+		NameMappings: sliceutil.Map(s.NameMappings, spanTagNameMappingToModel),
+	}
+}
+
+func spanTagNameMappingToModel(m intschema.DerivedLabelSpanTagNameMappings) *models.DerivedLabelSpanTagNameMapping {
+	return &models.DerivedLabelSpanTagNameMapping{
+		SourceTag: m.SourceTag,
+	}
+}
+
+func spanTagFromModel(s *models.DerivedLabelSpanTag) *intschema.DerivedLabelSpanTag {
+	if s == nil {
+		return nil
+	}
+	return &intschema.DerivedLabelSpanTag{
+		NameMappings: sliceutil.Map(s.NameMappings, spanTagNameMappingFromModel),
+	}
+}
+
+func spanTagNameMappingFromModel(m *models.DerivedLabelSpanTagNameMapping) intschema.DerivedLabelSpanTagNameMappings {
+	return intschema.DerivedLabelSpanTagNameMappings{
+		SourceTag: m.SourceTag,
 	}
 }

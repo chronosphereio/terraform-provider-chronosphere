@@ -45,7 +45,7 @@ var DerivedLabel = map[string]*schema.Schema{
 	"metric_label": {
 		Type:     schema.TypeList,
 		MaxItems: 1,
-		Required: true,
+		Optional: true,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"constructed_label": {
@@ -121,6 +121,27 @@ var DerivedLabel = map[string]*schema.Schema{
 								},
 							},
 							"value_mappings": ValueMappingsSchema,
+						},
+					},
+				},
+			},
+		},
+	},
+	"span_tag": {
+		Type:     schema.TypeList,
+		MaxItems: 1,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"name_mappings": {
+					Type:     schema.TypeList,
+					Optional: true,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"source_tag": {
+								Type:     schema.TypeString,
+								Required: true,
+							},
 						},
 					},
 				},
