@@ -2,17 +2,14 @@
 
 ## Unreleased
 
+## v1.13.0
+
 Added:
 * Add `chronosphere_log_control_config` resource for configuring log control rules.
-* Update volume threshold support in unstable `chronosphere_consumption_budget` resource.
 * Replace `drop_original` with `keep_original` in LogIngestConfig parser.
-* Update breaking filter API changes in `chronosphere_consumption_config` and `chronosphere_consumption_budget`.
-* Add partition slug field to `chronosphere_consumption_config`.
-* Add notification_policy_id field to `chronosphere_consumption_budget`.
-* Promote `chronosphere_consumption_config` to V1.
-* Promote `chronosphere_consumption_budget` to V1.
+* Promote `chronosphere_consumption_config` resource from unstable to `/v1`.
+* Promote `chronosphere_consumption_budget` resource from unstable to `/v1`.
 * Add `span_tag` field to `chronosphere_derived_label` resource.
-* Update breaking threshold API changes in `chronosphere_consumption_budget`.
 
 ## v1.12.0
 
