@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+* Replace `active` field with `mode` in `chronosphere_drop_rule` resource.
+
 ## v1.13.0
 
 Added:

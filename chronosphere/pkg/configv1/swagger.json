@@ -3951,7 +3951,8 @@
     "configv1DropRuleMode": {
       "enum": [
         "ENABLED",
-        "DISABLED"
+        "DISABLED",
+        "PREVIEW"
       ],
       "type": "string"
     },
