@@ -5,8 +5,7 @@ import (
 	"context"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/azure_metrics_integration"
-	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_budget"
@@ -39,6 +38,85 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_tail_sampling_rules"
 	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
+
+type generatedAzureMetricsIntegration struct{}
+
+func (generatedAzureMetricsIntegration) slugOf(m *configv1models.Configv1AzureMetricsIntegration) string {
+	return m.Slug
+}
+
+func (generatedAzureMetricsIntegration) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1AzureMetricsIntegration,
+	dryRun bool,
+) (string, error) {
+	req := &azure_metrics_integration.CreateAzureMetricsIntegrationParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateAzureMetricsIntegrationRequest{
+			AzureMetricsIntegration: m,
+			DryRun:                  dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.AzureMetricsIntegration.CreateAzureMetricsIntegration(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.AzureMetricsIntegration
+	if e == nil {
+		return "", nil
+	}
+	return (generatedAzureMetricsIntegration{}).slugOf(e), nil
+}
+
+func (generatedAzureMetricsIntegration) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1AzureMetricsIntegration, error) {
+	req := &azure_metrics_integration.ReadAzureMetricsIntegrationParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigV1.AzureMetricsIntegration.ReadAzureMetricsIntegration(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.AzureMetricsIntegration, nil
+}
+
+func (generatedAzureMetricsIntegration) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1AzureMetricsIntegration,
+	params updateParams,
+) error {
+	req := &azure_metrics_integration.UpdateAzureMetricsIntegrationParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configv1models.ConfigV1UpdateAzureMetricsIntegrationBody{
+
+			AzureMetricsIntegration: m,
+			CreateIfMissing:         params.createIfMissing,
+			DryRun:                  params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.AzureMetricsIntegration.UpdateAzureMetricsIntegration(req)
+	return err
+}
+func (generatedAzureMetricsIntegration) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &azure_metrics_integration.DeleteAzureMetricsIntegrationParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigV1.AzureMetricsIntegration.DeleteAzureMetricsIntegration(req)
+	return err
+}
 
 type generatedBucket struct{}
 
@@ -2387,84 +2465,5 @@ func (generatedTraceTailSamplingRules) delete(
 		Context: ctx,
 	}
 	_, err := clients.ConfigV1.TraceTailSamplingRules.DeleteTraceTailSamplingRules(req)
-	return err
-}
-
-type generatedUnstableAzureMetricsIntegration struct{}
-
-func (generatedUnstableAzureMetricsIntegration) slugOf(m *configunstablemodels.ConfigunstableAzureMetricsIntegration) string {
-	return m.Slug
-}
-
-func (generatedUnstableAzureMetricsIntegration) create(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configunstablemodels.ConfigunstableAzureMetricsIntegration,
-	dryRun bool,
-) (string, error) {
-	req := &azure_metrics_integration.CreateAzureMetricsIntegrationParams{
-		Context: ctx,
-		Body: &configunstablemodels.ConfigunstableCreateAzureMetricsIntegrationRequest{
-			AzureMetricsIntegration: m,
-			DryRun:                  dryRun,
-		},
-	}
-	resp, err := clients.ConfigUnstable.AzureMetricsIntegration.CreateAzureMetricsIntegration(req)
-	if err != nil {
-		return "", err
-	}
-	e := resp.Payload.AzureMetricsIntegration
-	if e == nil {
-		return "", nil
-	}
-	return (generatedUnstableAzureMetricsIntegration{}).slugOf(e), nil
-}
-
-func (generatedUnstableAzureMetricsIntegration) read(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) (*configunstablemodels.ConfigunstableAzureMetricsIntegration, error) {
-	req := &azure_metrics_integration.ReadAzureMetricsIntegrationParams{
-		Context: ctx,
-		Slug:    slug,
-	}
-	resp, err := clients.ConfigUnstable.AzureMetricsIntegration.ReadAzureMetricsIntegration(req)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Payload.AzureMetricsIntegration, nil
-}
-
-func (generatedUnstableAzureMetricsIntegration) update(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configunstablemodels.ConfigunstableAzureMetricsIntegration,
-	params updateParams,
-) error {
-	req := &azure_metrics_integration.UpdateAzureMetricsIntegrationParams{
-		Context: ctx,
-		Slug:    m.Slug,
-
-		Body: &configunstablemodels.ConfigUnstableUpdateAzureMetricsIntegrationBody{
-
-			AzureMetricsIntegration: m,
-			CreateIfMissing:         params.createIfMissing,
-			DryRun:                  params.dryRun,
-		},
-	}
-	_, err := clients.ConfigUnstable.AzureMetricsIntegration.UpdateAzureMetricsIntegration(req)
-	return err
-}
-func (generatedUnstableAzureMetricsIntegration) delete(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) error {
-	req := &azure_metrics_integration.DeleteAzureMetricsIntegrationParams{
-		Context: ctx,
-		Slug:    slug,
-	}
-	_, err := clients.ConfigUnstable.AzureMetricsIntegration.DeleteAzureMetricsIntegration(req)
 	return err
 }

@@ -19,13 +19,13 @@ import (
 	"go.uber.org/atomic"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
 // AzureMetricsIntegrationFromModel maps an API model to the intschema model.
-func AzureMetricsIntegrationFromModel(m *models.ConfigunstableAzureMetricsIntegration) (*intschema.AzureMetricsIntegration, error) {
+func AzureMetricsIntegrationFromModel(m *models.Configv1AzureMetricsIntegration) (*intschema.AzureMetricsIntegration, error) {
 	return (azureMetricsIntegrationConverter{}).fromModel(m)
 }
 
@@ -33,7 +33,7 @@ func resourceAzureMetricsIntegration() *schema.Resource {
 	r := newGenericResource(
 		"azure_metrics_integration",
 		azureMetricsIntegrationConverter{},
-		generatedUnstableAzureMetricsIntegration{},
+		generatedAzureMetricsIntegration{},
 	)
 
 	return &schema.Resource{
@@ -56,8 +56,8 @@ type azureMetricsIntegrationConverter struct{}
 
 func (azureMetricsIntegrationConverter) toModel(
 	g *intschema.AzureMetricsIntegration,
-) (*models.ConfigunstableAzureMetricsIntegration, error) {
-	m := &models.ConfigunstableAzureMetricsIntegration{
+) (*models.Configv1AzureMetricsIntegration, error) {
+	m := &models.Configv1AzureMetricsIntegration{
 		Name:                g.Name,
 		Slug:                g.Slug,
 		CountMetricsEnabled: g.CountMetricsEnabled,
@@ -77,7 +77,7 @@ func (azureMetricsIntegrationConverter) toModel(
 }
 
 func (azureMetricsIntegrationConverter) fromModel(
-	m *models.ConfigunstableAzureMetricsIntegration,
+	m *models.Configv1AzureMetricsIntegration,
 ) (*intschema.AzureMetricsIntegration, error) {
 	i := &intschema.AzureMetricsIntegration{
 		Name:                m.Name,

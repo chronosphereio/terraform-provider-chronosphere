@@ -224,7 +224,7 @@ var Resources = mustValidate([]Resource{
 	{
 		Name:   "azure_metrics_integration",
 		Entity: "AzureMetricsIntegration",
-		API:    Unstable,
+		API:    V1,
 		Schema: tfschema.AzureMetricsIntegration,
 	},
 	{
