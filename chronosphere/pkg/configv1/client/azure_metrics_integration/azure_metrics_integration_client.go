@@ -52,7 +52,7 @@ func (a *Client) CreateAzureMetricsIntegration(params *CreateAzureMetricsIntegra
 	op := &runtime.ClientOperation{
 		ID:                 "CreateAzureMetricsIntegration",
 		Method:             "POST",
-		PathPattern:        "/api/unstable/config/azure-metrics-integrations",
+		PathPattern:        "/api/v1/config/azure-metrics-integrations",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -89,7 +89,7 @@ func (a *Client) DeleteAzureMetricsIntegration(params *DeleteAzureMetricsIntegra
 	op := &runtime.ClientOperation{
 		ID:                 "DeleteAzureMetricsIntegration",
 		Method:             "DELETE",
-		PathPattern:        "/api/unstable/config/azure-metrics-integrations/{slug}",
+		PathPattern:        "/api/v1/config/azure-metrics-integrations/{slug}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -126,7 +126,7 @@ func (a *Client) ListAzureMetricsIntegrations(params *ListAzureMetricsIntegratio
 	op := &runtime.ClientOperation{
 		ID:                 "ListAzureMetricsIntegrations",
 		Method:             "GET",
-		PathPattern:        "/api/unstable/config/azure-metrics-integrations",
+		PathPattern:        "/api/v1/config/azure-metrics-integrations",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -163,7 +163,7 @@ func (a *Client) ReadAzureMetricsIntegration(params *ReadAzureMetricsIntegration
 	op := &runtime.ClientOperation{
 		ID:                 "ReadAzureMetricsIntegration",
 		Method:             "GET",
-		PathPattern:        "/api/unstable/config/azure-metrics-integrations/{slug}",
+		PathPattern:        "/api/v1/config/azure-metrics-integrations/{slug}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -200,7 +200,7 @@ func (a *Client) UpdateAzureMetricsIntegration(params *UpdateAzureMetricsIntegra
 	op := &runtime.ClientOperation{
 		ID:                 "UpdateAzureMetricsIntegration",
 		Method:             "PUT",
-		PathPattern:        "/api/unstable/config/azure-metrics-integrations/{slug}",
+		PathPattern:        "/api/v1/config/azure-metrics-integrations/{slug}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},

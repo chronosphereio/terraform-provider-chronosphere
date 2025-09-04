@@ -10,6 +10,7 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
@@ -89,6 +90,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 
 	cli := new(ConfigV1API)
 	cli.Transport = transport
+	cli.AzureMetricsIntegration = azure_metrics_integration.New(transport, formats)
 	cli.Bucket = bucket.New(transport, formats)
 	cli.ClassicDashboard = classic_dashboard.New(transport, formats)
 	cli.Collection = collection.New(transport, formats)
@@ -168,6 +170,8 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // ConfigV1API is a client for config v1 API
 type ConfigV1API struct {
+	AzureMetricsIntegration azure_metrics_integration.ClientService
+
 	Bucket bucket.ClientService
 
 	ClassicDashboard classic_dashboard.ClientService
@@ -244,6 +248,7 @@ type ConfigV1API struct {
 // SetTransport changes the transport on the client and all its subresources
 func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
+	c.AzureMetricsIntegration.SetTransport(transport)
 	c.Bucket.SetTransport(transport)
 	c.ClassicDashboard.SetTransport(transport)
 	c.Collection.SetTransport(transport)
