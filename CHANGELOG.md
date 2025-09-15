@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+Added:
+* Add `mode` field to `chronosphere_drop_rule` resource with values `enabled`, `disabled`, and `preview`.
+
+Deprecated:
+* Deprecate `active` field in `chronosphere_drop_rule` resource in favor of `mode` field.
+
 ## v1.13.0
 
 Added:
