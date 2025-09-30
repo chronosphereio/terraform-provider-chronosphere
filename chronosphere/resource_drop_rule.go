@@ -18,7 +18,6 @@ import (
 	"go.uber.org/atomic"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/aggregationfilter"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
@@ -66,19 +65,10 @@ func (dropRuleConverter) toModel(
 	if err != nil {
 		return nil, err
 	}
-
-	// Use Mode field if set, otherwise fall back to Active field
-	var mode models.Configv1DropRuleMode
-	if r.Mode != "" {
-		mode = enum.DropRuleModeType.V1(r.Mode)
-	} else {
-		mode = dropRuleModeToModel(r.Active)
-	}
-
 	return &models.Configv1DropRule{
 		Name:                     r.Name,
 		Slug:                     r.Slug,
-		Mode:                     mode,
+		Mode:                     dropRuleModeToModel(r.Active),
 		Filters:                  filter,
 		ConditionalRateBasedDrop: conditionalRateBasedDrop,
 		DropNanValue:             r.DropNanValue,
@@ -92,7 +82,6 @@ func (dropRuleConverter) fromModel(
 	r := &intschema.DropRule{
 		Name:           m.Name,
 		Slug:           m.Slug,
-		Mode:           string(m.Mode),
 		Active:         m.Mode == models.Configv1DropRuleModeENABLED,
 		Query:          aggregationfilter.ListFromModel(m.Filters, aggregationfilter.DropRuleDelimiter),
 		DropNanValue:   m.DropNanValue,
