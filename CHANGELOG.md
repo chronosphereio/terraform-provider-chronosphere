@@ -1,8 +1,13 @@
 # Releases
 
 ## Unreleased
-* Add `azure_metrics_integration` resource for configuring the cloudscraper Azure metrics integration.
 
+Added:
+* Add `azure_metrics_integration` resource for configuring the cloudscraper Azure metrics integration.
+* Add `mode` field to `chronosphere_drop_rule` resource with values `enabled`, `disabled`, and `preview`.
+
+Deprecated:
+* Deprecate `active` field in `chronosphere_drop_rule` resource in favor of `mode` field. This field being set to `false` is disallowed and is a breaking change which requires switching to using the `mode` field.
 
 ## v1.13.0
 

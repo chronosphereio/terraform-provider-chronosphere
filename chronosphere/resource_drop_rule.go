@@ -18,6 +18,7 @@ import (
 	"go.uber.org/atomic"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/aggregationfilter"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
@@ -68,7 +69,7 @@ func (dropRuleConverter) toModel(
 	return &models.Configv1DropRule{
 		Name:                     r.Name,
 		Slug:                     r.Slug,
-		Mode:                     dropRuleModeToModel(r.Active),
+		Mode:                     enum.DropRuleModeType.V1(r.Mode),
 		Filters:                  filter,
 		ConditionalRateBasedDrop: conditionalRateBasedDrop,
 		DropNanValue:             r.DropNanValue,
@@ -83,6 +84,7 @@ func (dropRuleConverter) fromModel(
 		Name:           m.Name,
 		Slug:           m.Slug,
 		Active:         m.Mode == models.Configv1DropRuleModeENABLED,
+		Mode:           string(m.Mode),
 		Query:          aggregationfilter.ListFromModel(m.Filters, aggregationfilter.DropRuleDelimiter),
 		DropNanValue:   m.DropNanValue,
 		ValueBasedDrop: valueBasedDropFromModel(m.ValueBasedDrop),
@@ -138,11 +140,4 @@ func valueBaseDropToModel(
 		Enabled:         true,
 		TargetDropValue: p.TargetDropValue,
 	}
-}
-
-func dropRuleModeToModel(active bool) models.Configv1DropRuleMode {
-	if active {
-		return models.Configv1DropRuleModeENABLED
-	}
-	return models.Configv1DropRuleModeDISABLED
 }

@@ -41,3 +41,19 @@ var MappingModeType = newEnum("MappingModeType", []value[configv1.Configv1Mappin
 		alias: "PREVIEW",
 	},
 })
+
+// DropRuleModeType is an enum.
+var DropRuleModeType = newEnum("DropRuleModeType", []value[configv1.Configv1DropRuleMode]{
+	{
+		v1:        configv1.Configv1DropRuleModeENABLED,
+		isDefault: true,
+	},
+	{
+		v1:    configv1.Configv1DropRuleModeDISABLED,
+		alias: "DISABLED",
+	},
+	{
+		v1:    configv1.Configv1DropRuleModePREVIEW,
+		alias: "PREVIEW",
+	},
+})
