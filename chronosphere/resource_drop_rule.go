@@ -66,10 +66,21 @@ func (dropRuleConverter) toModel(
 	if err != nil {
 		return nil, err
 	}
+
+	// Mode favored over deprecated active field.
+	var mode models.Configv1DropRuleMode
+	if r.Mode != "" {
+		mode = enum.DropRuleModeType.V1(r.Mode)
+	} else if r.Active {
+		mode = models.Configv1DropRuleModeENABLED
+	} else {
+		mode = models.Configv1DropRuleModeDISABLED
+	}
+
 	return &models.Configv1DropRule{
 		Name:                     r.Name,
 		Slug:                     r.Slug,
-		Mode:                     enum.DropRuleModeType.V1(r.Mode),
+		Mode:                     mode,
 		Filters:                  filter,
 		ConditionalRateBasedDrop: conditionalRateBasedDrop,
 		DropNanValue:             r.DropNanValue,
