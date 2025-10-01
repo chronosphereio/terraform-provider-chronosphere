@@ -25,7 +25,7 @@ type Enum struct {
 	Required bool
 	Optional bool
 	ForceNew bool
-	Default  string
+	Default  any
 }
 
 // Schema returns the Terraform of the enum.
