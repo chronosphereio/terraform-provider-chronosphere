@@ -2,14 +2,13 @@
 package intschema
 
 import (
-	"io"
-
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/hclmarshal"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema/convertintschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"io"
 )
 
 var _ tfid.ID // Always use tfid for simplified import generation.
@@ -19,7 +18,7 @@ type DropRule struct {
 	Slug                  string                  `intschema:"slug,optional,computed"`
 	Query                 []string                `intschema:"query"`
 	ActivatedDropDuration string                  `intschema:"activated_drop_duration,optional"`
-	Active                bool                    `intschema:"active,optional,default:false"`
+	Active                bool                    `intschema:"active,optional,computed"`
 	ConditionalDrop       bool                    `intschema:"conditional_drop,optional"`
 	DropNanValue          bool                    `intschema:"drop_nan_value,optional"`
 	Mode                  string                  `intschema:"mode,optional"`
