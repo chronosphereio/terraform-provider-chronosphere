@@ -23,7 +23,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/pkg/errors"
 )
 
 // DropRuleFromModel maps an API model to an intschema model.
@@ -77,7 +76,8 @@ func (dropRuleConverter) toModel(
 	} else {
 		// Purposeful breaking change: active=false not supported because this
 		// causes plan diff of "- mode   = "DISABLED" -> null".
-		return nil, errors.New("must set `mode` instead of `active`")
+		// return nil, errors.New("must set `mode` instead of `active`")
+		mode = models.Configv1DropRuleModeDISABLED
 	}
 
 	return &models.Configv1DropRule{
