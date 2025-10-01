@@ -54,16 +54,45 @@ func (o *LogControlConfig) Ref() tfid.ID {
 }
 
 type LogControlConfigRules struct {
-	Name      string                          `intschema:"name,optional"`
-	DropField *LogControlConfigRulesDropField `intschema:"drop_field,optional,list_encoded_object"`
-	Filter    string                          `intschema:"filter,optional"`
-	Mode      string                          `intschema:"mode,optional"`
-	Sample    *LogControlConfigRulesSample    `intschema:"sample,optional,list_encoded_object"`
-	Type      string                          `intschema:"type,optional"`
+	Name         string                             `intschema:"name,optional"`
+	DropField    *LogControlConfigRulesDropField    `intschema:"drop_field,optional,list_encoded_object"`
+	Filter       string                             `intschema:"filter,optional"`
+	Mode         string                             `intschema:"mode,optional"`
+	ReplaceField *LogControlConfigRulesReplaceField `intschema:"replace_field,optional,list_encoded_object"`
+	Sample       *LogControlConfigRulesSample       `intschema:"sample,optional,list_encoded_object"`
+	Type         string                             `intschema:"type,optional"`
 }
 
 type LogControlConfigRulesSample struct {
 	Rate float64 `intschema:"rate,optional"`
+}
+
+type LogControlConfigRulesReplaceField struct {
+	Field        *LogControlConfigRulesReplaceFieldField       `intschema:"field,optional,list_encoded_object"`
+	FixedValue   *LogControlConfigRulesReplaceFieldFixedValue  `intschema:"fixed_value,optional,list_encoded_object"`
+	MappedValue  *LogControlConfigRulesReplaceFieldMappedValue `intschema:"mapped_value,optional,list_encoded_object"`
+	ReplaceAll   bool                                          `intschema:"replace_all,optional"`
+	ReplaceMode  string                                        `intschema:"replace_mode,optional"`
+	ReplaceRegex string                                        `intschema:"replace_regex,optional"`
+}
+
+type LogControlConfigRulesReplaceFieldMappedValue struct {
+	DefaultValue string                                              `intschema:"default_value,optional"`
+	Pairs        []LogControlConfigRulesReplaceFieldMappedValuePairs `intschema:"pairs,optional"`
+	UseDefault   bool                                                `intschema:"use_default,optional"`
+}
+
+type LogControlConfigRulesReplaceFieldMappedValuePairs struct {
+	Key   string `intschema:"key,optional"`
+	Value string `intschema:"value,optional"`
+}
+
+type LogControlConfigRulesReplaceFieldFixedValue struct {
+	Value string `intschema:"value,optional"`
+}
+
+type LogControlConfigRulesReplaceFieldField struct {
+	Selector string `intschema:"selector,optional"`
 }
 
 type LogControlConfigRulesDropField struct {

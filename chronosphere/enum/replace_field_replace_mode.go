@@ -18,22 +18,18 @@ import (
 	configv1 "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
-// LogControlRuleType is an enum.
-var LogControlRuleType = newEnum("LogControlRuleType", []value[configv1.Configv1LogControlRuleType]{
+// ReplaceFieldReplaceMode is an enum.
+var ReplaceFieldReplaceMode = newEnum("ReplaceFieldReplaceMode", []value[configv1.ReplaceFieldReplaceMode]{
 	{
-		v1:    configv1.Configv1LogControlRuleTypeDROP,
-		alias: "DROP",
+		v1:    configv1.ReplaceFieldReplaceModeHASH,
+		alias: "HASH",
 	},
 	{
-		v1:    configv1.Configv1LogControlRuleTypeSAMPLE,
-		alias: "SAMPLE",
+		v1:    configv1.ReplaceFieldReplaceModeFIXEDVALUE,
+		alias: "FIXED_VALUE",
 	},
 	{
-		v1:    configv1.Configv1LogControlRuleTypeDROPFIELD,
-		alias: "DROP_FIELD",
-	},
-	{
-		v1:    configv1.Configv1LogControlRuleTypeREPLACEFIELD,
-		alias: "REPLACE_FIELD",
+		v1:    configv1.ReplaceFieldReplaceModeMAPPEDVALUE,
+		alias: "MAPPED_VALUE",
 	},
 })

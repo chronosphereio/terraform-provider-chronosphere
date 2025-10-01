@@ -90,6 +90,39 @@ func (logControlConfigConverter) toModel(
 				}
 			}
 
+			if r.ReplaceField != nil {
+				rule.ReplaceField = &models.LogControlRuleReplaceField{
+					ReplaceRegex: r.ReplaceField.ReplaceRegex,
+					ReplaceAll:   r.ReplaceField.ReplaceAll,
+					ReplaceMode:  models.ReplaceFieldReplaceMode(r.ReplaceField.ReplaceMode),
+				}
+				if r.ReplaceField.Field != nil {
+					rule.ReplaceField.Field = &models.Configv1LogFieldPath{
+						Selector: r.ReplaceField.Field.Selector,
+					}
+				}
+				if r.ReplaceField.FixedValue != nil {
+					rule.ReplaceField.FixedValue = &models.LogControlRuleReplaceFieldFixedValue{
+						Value: r.ReplaceField.FixedValue.Value,
+					}
+				}
+				if r.ReplaceField.MappedValue != nil {
+					rule.ReplaceField.MappedValue = &models.ReplaceFieldMappedValue{
+						UseDefault:   r.ReplaceField.MappedValue.UseDefault,
+						DefaultValue: r.ReplaceField.MappedValue.DefaultValue,
+					}
+					for _, pair := range r.ReplaceField.MappedValue.Pairs {
+						rule.ReplaceField.MappedValue.Pairs = append(
+							rule.ReplaceField.MappedValue.Pairs,
+							&models.MappedValueReplacePair{
+								Key:   pair.Key,
+								Value: pair.Value,
+							},
+						)
+					}
+				}
+			}
+
 			return rule
 		}),
 	}, nil
@@ -125,6 +158,39 @@ func (logControlConfigConverter) fromModel(
 				if r.DropField.ParentPath != nil {
 					rule.DropField.ParentPath = &intschema.LogControlConfigRulesDropFieldParentPath{
 						Selector: r.DropField.ParentPath.Selector,
+					}
+				}
+			}
+
+			if r.ReplaceField != nil {
+				rule.ReplaceField = &intschema.LogControlConfigRulesReplaceField{
+					ReplaceRegex: r.ReplaceField.ReplaceRegex,
+					ReplaceAll:   r.ReplaceField.ReplaceAll,
+					ReplaceMode:  string(r.ReplaceField.ReplaceMode),
+				}
+				if r.ReplaceField.Field != nil {
+					rule.ReplaceField.Field = &intschema.LogControlConfigRulesReplaceFieldField{
+						Selector: r.ReplaceField.Field.Selector,
+					}
+				}
+				if r.ReplaceField.FixedValue != nil {
+					rule.ReplaceField.FixedValue = &intschema.LogControlConfigRulesReplaceFieldFixedValue{
+						Value: r.ReplaceField.FixedValue.Value,
+					}
+				}
+				if r.ReplaceField.MappedValue != nil {
+					rule.ReplaceField.MappedValue = &intschema.LogControlConfigRulesReplaceFieldMappedValue{
+						UseDefault:   r.ReplaceField.MappedValue.UseDefault,
+						DefaultValue: r.ReplaceField.MappedValue.DefaultValue,
+					}
+					for _, pair := range r.ReplaceField.MappedValue.Pairs {
+						rule.ReplaceField.MappedValue.Pairs = append(
+							rule.ReplaceField.MappedValue.Pairs,
+							intschema.LogControlConfigRulesReplaceFieldMappedValuePairs{
+								Key:   pair.Key,
+								Value: pair.Value,
+							},
+						)
 					}
 				}
 			}

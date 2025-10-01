@@ -1,6 +1,7 @@
 # Releases
 
 ## Unreleased
+* Add `replace_field` support to `chronosphere_log_control_config` resource.
 
 Added:
 * Add `azure_metrics_integration` resource for configuring the cloudscraper Azure metrics integration.

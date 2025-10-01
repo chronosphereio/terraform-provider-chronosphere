@@ -58,6 +58,12 @@ var logControlRuleResource = &schema.Resource{
 			Optional: true,
 			MaxItems: 1,
 		},
+		"replace_field": {
+			Type:     schema.TypeList,
+			Elem:     logControlRuleReplaceFieldResource,
+			Optional: true,
+			MaxItems: 1,
+		},
 	},
 }
 
@@ -88,6 +94,81 @@ var logControlRuleDropFieldResource = &schema.Resource{
 var logFieldPathResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"selector": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+	},
+}
+
+var logControlRuleReplaceFieldResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"field": {
+			Type:     schema.TypeList,
+			Elem:     logFieldPathResource,
+			Optional: true,
+			MaxItems: 1,
+		},
+		"replace_regex": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"replace_all": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+		"replace_mode": Enum{
+			Value:    enum.ReplaceFieldReplaceMode.ToStrings(),
+			Optional: true,
+		}.Schema(),
+		"fixed_value": {
+			Type:     schema.TypeList,
+			Elem:     replaceFieldFixedValueResource,
+			Optional: true,
+			MaxItems: 1,
+		},
+		"mapped_value": {
+			Type:     schema.TypeList,
+			Elem:     replaceFieldMappedValueResource,
+			Optional: true,
+			MaxItems: 1,
+		},
+	},
+}
+
+var replaceFieldFixedValueResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"value": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+	},
+}
+
+var replaceFieldMappedValueResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"pairs": {
+			Type:     schema.TypeList,
+			Elem:     mappedValueReplacePairResource,
+			Optional: true,
+		},
+		"use_default": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+		"default_value": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+	},
+}
+
+var mappedValueReplacePairResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"key": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"value": {
 			Type:     schema.TypeString,
 			Optional: true,
 		},

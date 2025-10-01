@@ -138,6 +138,10 @@ func TestAllEnumsValidate(t *testing.T) {
 			v1SwaggerName: "SLITimeSliceSize",
 			enum:          SLITimeSliceSize.ToStrings(),
 		},
+		{
+			v1SwaggerName: "ReplaceFieldReplaceMode",
+			enum:          ReplaceFieldReplaceMode.ToStrings(),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.enum.Name(), func(t *testing.T) {
