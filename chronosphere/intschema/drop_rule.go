@@ -18,7 +18,7 @@ type DropRule struct {
 	Slug                  string                  `intschema:"slug,optional,computed"`
 	Query                 []string                `intschema:"query"`
 	ActivatedDropDuration string                  `intschema:"activated_drop_duration,optional"`
-	Active                bool                    `intschema:"active,optional,computed"`
+	Active                bool                    `intschema:"active,optional,default:false"`
 	ConditionalDrop       bool                    `intschema:"conditional_drop,optional"`
 	DropNanValue          bool                    `intschema:"drop_nan_value,optional"`
 	Mode                  string                  `intschema:"mode,optional"`
