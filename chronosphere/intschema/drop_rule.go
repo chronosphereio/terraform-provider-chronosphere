@@ -18,9 +18,10 @@ type DropRule struct {
 	Slug                  string                  `intschema:"slug,optional,computed"`
 	Query                 []string                `intschema:"query"`
 	ActivatedDropDuration string                  `intschema:"activated_drop_duration,optional"`
-	Active                bool                    `intschema:"active,optional,default:false"`
+	Active                bool                    `intschema:"active,optional,default:true"`
 	ConditionalDrop       bool                    `intschema:"conditional_drop,optional"`
 	DropNanValue          bool                    `intschema:"drop_nan_value,optional"`
+	Mode                  string                  `intschema:"mode,optional,default:ENABLED"`
 	RateLimitThreshold    float64                 `intschema:"rate_limit_threshold,optional"`
 	ValueBasedDrop        *DropRuleValueBasedDrop `intschema:"value_based_drop,optional,list_encoded_object"`
 

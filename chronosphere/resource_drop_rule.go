@@ -17,11 +17,14 @@ package chronosphere
 import (
 	"go.uber.org/atomic"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/pkg/errors"
+
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/aggregationfilter"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // DropRuleFromModel maps an API model to an intschema model.
@@ -65,10 +68,19 @@ func (dropRuleConverter) toModel(
 	if err != nil {
 		return nil, err
 	}
+
+	// Mode favored over deprecated active field.
+	if !r.Active {
+		// Purposeful breaking change that will be encountered whenever the legacy `active` field was set to false.
+		// This is in order to transition to the use of `mode` field.
+		// Active is now entirely ignored and treated as always `true` (its default value). Mode is the field that actually drives behavior.
+		return nil, errors.New("must set `mode` instead of `active`")
+	}
+
 	return &models.Configv1DropRule{
 		Name:                     r.Name,
 		Slug:                     r.Slug,
-		Mode:                     dropRuleModeToModel(r.Active),
+		Mode:                     enum.DropRuleModeType.V1(r.Mode),
 		Filters:                  filter,
 		ConditionalRateBasedDrop: conditionalRateBasedDrop,
 		DropNanValue:             r.DropNanValue,
@@ -80,9 +92,12 @@ func (dropRuleConverter) fromModel(
 	m *models.Configv1DropRule,
 ) (*intschema.DropRule, error) {
 	r := &intschema.DropRule{
-		Name:           m.Name,
-		Slug:           m.Slug,
-		Active:         m.Mode == models.Configv1DropRuleModeENABLED,
+		Name: m.Name,
+		Slug: m.Slug,
+		// Active should already be treated as true to avoid diffs when mode is omitted.
+		// The actual source of truth is the mode field.
+		Active:         true,
+		Mode:           string(m.Mode),
 		Query:          aggregationfilter.ListFromModel(m.Filters, aggregationfilter.DropRuleDelimiter),
 		DropNanValue:   m.DropNanValue,
 		ValueBasedDrop: valueBasedDropFromModel(m.ValueBasedDrop),
@@ -93,6 +108,7 @@ func (dropRuleConverter) fromModel(
 		r.ConditionalDrop = m.ConditionalRateBasedDrop.Enabled
 		r.RateLimitThreshold = m.ConditionalRateBasedDrop.RateLimitThreshold
 	}
+
 	return r, nil
 }
 
@@ -138,11 +154,4 @@ func valueBaseDropToModel(
 		Enabled:         true,
 		TargetDropValue: p.TargetDropValue,
 	}
-}
-
-func dropRuleModeToModel(active bool) models.Configv1DropRuleMode {
-	if active {
-		return models.Configv1DropRuleModeENABLED
-	}
-	return models.Configv1DropRuleModeDISABLED
 }

@@ -16,6 +16,8 @@ package tfschema
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 )
 
 var DropRule = map[string]*schema.Schema{
@@ -26,10 +28,16 @@ var DropRule = map[string]*schema.Schema{
 		ForceNew: true,
 	},
 	"active": {
-		Type:     schema.TypeBool,
-		Optional: true,
-		Default:  false,
+		Type:       schema.TypeBool,
+		Optional:   true,
+		Default:    true,
+		Deprecated: "use `mode` instead",
 	},
+	"mode": Enum{
+		Value:    enum.DropRuleModeType.ToStrings(),
+		Optional: true,
+		Default:  "ENABLED",
+	}.Schema(),
 	"name": {
 		Type:     schema.TypeString,
 		Required: true,
