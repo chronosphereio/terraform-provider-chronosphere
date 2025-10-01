@@ -73,7 +73,7 @@ func (dropRuleConverter) toModel(
 	if !r.Active {
 		// Purposeful breaking change that will be encountered whenever the legacy `active` field was set to false.
 		// This is in order to transition to the use of `mode` field.
-		// If `active` is set to true, this is OK because mode defaults to "ENABLED".
+		// Active is now entirely ignored and treated as always `true` (its default value). Mode is the field that actually drives behavior.
 		return nil, errors.New("must set `mode` instead of `active`")
 	}
 
