@@ -25,6 +25,8 @@ type Enum struct {
 	Required bool
 	Optional bool
 	ForceNew bool
+	Computed bool
+	Default  any
 }
 
 // Schema returns the Terraform of the enum.
@@ -35,6 +37,8 @@ func (e Enum) Schema() *schema.Schema {
 		Optional:         e.Optional,
 		ForceNew:         e.ForceNew,
 		ValidateDiagFunc: e.Value.Validate,
+		Computed:         e.Computed,
+		Default:          e.Default,
 	})
 }
 

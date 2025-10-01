@@ -30,13 +30,13 @@ var DropRule = map[string]*schema.Schema{
 	"active": {
 		Type:       schema.TypeBool,
 		Optional:   true,
-		Default:    false,
+		Default:    true,
 		Deprecated: "use `mode` instead",
 	},
 	"mode": Enum{
 		Value:    enum.DropRuleModeType.ToStrings(),
 		Optional: true,
-		Required: false,
+		Default:  "ENABLED",
 	}.Schema(),
 	"name": {
 		Type:     schema.TypeString,

@@ -69,12 +69,7 @@ func (dropRuleConverter) toModel(
 	}
 
 	// Mode favored over deprecated active field.
-	var mode models.Configv1DropRuleMode
-	if r.Mode != "" {
-		mode = enum.DropRuleModeType.V1(r.Mode)
-	} else if r.Active {
-		mode = models.Configv1DropRuleModeENABLED
-	} else {
+	if !r.Active {
 		// Purposeful breaking change: active=false not supported because this
 		// causes plan diff of "- mode   = "DISABLED" -> null".
 		return nil, errors.New("must set `mode` instead of `active`")
@@ -83,7 +78,7 @@ func (dropRuleConverter) toModel(
 	return &models.Configv1DropRule{
 		Name:                     r.Name,
 		Slug:                     r.Slug,
-		Mode:                     mode,
+		Mode:                     enum.DropRuleModeType.V1(r.Mode),
 		Filters:                  filter,
 		ConditionalRateBasedDrop: conditionalRateBasedDrop,
 		DropNanValue:             r.DropNanValue,
@@ -97,7 +92,7 @@ func (dropRuleConverter) fromModel(
 	r := &intschema.DropRule{
 		Name:           m.Name,
 		Slug:           m.Slug,
-		Active:         m.Mode == models.Configv1DropRuleModeENABLED,
+		Active:         true,
 		Mode:           string(m.Mode),
 		Query:          aggregationfilter.ListFromModel(m.Filters, aggregationfilter.DropRuleDelimiter),
 		DropNanValue:   m.DropNanValue,
@@ -109,6 +104,7 @@ func (dropRuleConverter) fromModel(
 		r.ConditionalDrop = m.ConditionalRateBasedDrop.Enabled
 		r.RateLimitThreshold = m.ConditionalRateBasedDrop.RateLimitThreshold
 	}
+
 	return r, nil
 }
 
