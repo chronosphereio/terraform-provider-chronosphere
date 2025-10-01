@@ -70,8 +70,9 @@ func (dropRuleConverter) toModel(
 
 	// Mode favored over deprecated active field.
 	if !r.Active {
-		// Purposeful breaking change: active=false not supported because this
-		// causes plan diff of "- mode   = "DISABLED" -> null".
+		// Purposeful breaking change that will be encountered whenever the legacy `active` field was set to false.
+		// This is in order to transition to the use of `mode` field.
+		// If `active` is set to true, this is OK because mode defaults to "ENABLED".
 		return nil, errors.New("must set `mode` instead of `active`")
 	}
 
@@ -90,8 +91,10 @@ func (dropRuleConverter) fromModel(
 	m *models.Configv1DropRule,
 ) (*intschema.DropRule, error) {
 	r := &intschema.DropRule{
-		Name:           m.Name,
-		Slug:           m.Slug,
+		Name: m.Name,
+		Slug: m.Slug,
+		// Active should already be treated as true to avoid diffs when mode is omitted.
+		// The actual source of truth is the mode field.
 		Active:         true,
 		Mode:           string(m.Mode),
 		Query:          aggregationfilter.ListFromModel(m.Filters, aggregationfilter.DropRuleDelimiter),

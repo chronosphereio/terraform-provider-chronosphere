@@ -112,7 +112,6 @@ func (p *Project) runTF(args ...string) error {
 		"TF_REATTACH_PROVIDERS="+string(p.providerCfg),
 	)
 
-	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
 }
