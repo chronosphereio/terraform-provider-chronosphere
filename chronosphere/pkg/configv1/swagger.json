@@ -3,18 +3,6 @@
     "application/json"
   ],
   "definitions": {
-    "AllocationFixedValue": {
-      "properties": {
-        "license": {
-          "$ref": "#/definitions/ResourcePoolsLicense"
-        },
-        "value": {
-          "format": "int64",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "AllocationThresholds": {
       "description": "Thresholds define strict quota limits for each metrics license.",
       "properties": {
@@ -523,6 +511,7 @@
           "type": "string"
         },
         "filters": {
+          "description": "Determine when to apply `name_mappings`, filtering out all other values.",
           "items": {
             "$ref": "#/definitions/configv1LabelFilter"
           },
@@ -534,14 +523,14 @@
     "ConsumptionBudgetPriority": {
       "properties": {
         "filters": {
-          "description": "filters define what data matches the priority. The filters are AND'd\ntogether; a request must match every filter in order to match the\npriority. Must not be empty.",
+          "description": "Criteria that defines which data matches the `priority`. Filters are\nconcatenated together as implied `AND` operators. A request must match every\nfilter to match the `priority`.",
           "items": {
             "$ref": "#/definitions/ConsumptionBudgetPriorityFilter"
           },
           "type": "array"
         },
         "priority": {
-          "description": "priority is the required priority of the dataset, where priority=10 is dropped\nfirst, and priority=1 is dropped last.",
+          "description": "Priority order that determines when to drop data. A priority of `10` is\ndropped first, and a priority of `1` is dropped last.",
           "format": "int32",
           "type": "integer"
         }
@@ -551,7 +540,7 @@
     "ConsumptionBudgetPriorityFilter": {
       "properties": {
         "dataset_slug": {
-          "description": "If set, matches data which belongs to the given dataset. Cannot set if\nlog_filter is set. The dataset type must match the budget resource\n(e.g. type=LOGS for resource=LOG_PERSISTED_BYTES).",
+          "description": "Optional. If set, matches data that belongs to the specified dataset. The\ndataset type must match the budget resource. For example, if `resource=LOG_PERSISTED_BYTES`\nthen only dataset `type=LOGS` is allowed. You can't set a value for this\nfield if a value is set for `log_filter`.",
           "type": "string"
         },
         "log_filter": {
@@ -580,25 +569,25 @@
     "ConsumptionConfigPartition": {
       "properties": {
         "name": {
-          "description": "name is a human-readable name of the partition. Must be unique within the\nparent partition. You can modify this value after the partition is created.",
+          "description": "Name of the partition. Must be unique within the parent partition. You can\nmodify this value after the partition is created.",
           "type": "string"
         },
         "filters": {
-          "description": "filters define what data matches the partition. The filters are AND'd\ntogether; a request must match every filter in order to match the\npartition. Must not be empty.",
+          "description": "Criteria that defines which data matches the `partition`. Filters are\nconcatenated together as implied `AND` operators. A request must match every\nfilter to match the `partition`.",
           "items": {
             "$ref": "#/definitions/ConsumptionConfigPartitionFilter"
           },
           "type": "array"
         },
         "partitions": {
-          "description": "partitions are the optional child partitions of this partition. If set,\nrequests which match the current partition will be allocated to the\nfirst child partition that matches. Requests that don't match any child\npartition fall back to an omnipresent default child partition.",
+          "description": "Optional. Child partitions of this partition. If set, requests that match the\ncurrent partition are allocated to the first child partition that matches.\nRequests that don't match any child partition are assigned to an implicit `default`\nchild partition.",
           "items": {
             "$ref": "#/definitions/ConsumptionConfigPartition"
           },
           "type": "array"
         },
         "slug": {
-          "description": "slug is the immutable identifier of the partition. Must be unique within\nthe parent partition. You can not modify this value after the partition\nis created.",
+          "description": "Immutable identifier of the partition. Must be unique within the parent\npartition. You can't modify this value after the partition is created.",
           "type": "string"
         }
       },
@@ -610,7 +599,7 @@
           "$ref": "#/definitions/FilterOperator"
         },
         "conditions": {
-          "description": "conditions are the conditions to match.",
+          "description": "Conditions for the query to match.",
           "items": {
             "$ref": "#/definitions/PartitionFilterCondition"
           },
@@ -685,10 +674,10 @@
       "type": "object"
     },
     "DerivedLabelSpanTag": {
-      "description": "SpanTag is used to map span tags to derived labels.",
+      "description": "A span tag is used to map span tags to derived labels.",
       "properties": {
         "name_mappings": {
-          "description": "All name mappings are ORed together and the first matching name mapping is used to map the source tag to the derived tag.",
+          "description": "All name mappings are combined as `OR` matches. The first matching name\nmapping is used to map the source tag to the derived tag.",
           "items": {
             "$ref": "#/definitions/DerivedLabelSpanTagNameMapping"
           },
@@ -795,10 +784,53 @@
       },
       "type": "object"
     },
+    "EmitMetricsCounter": {
+      "properties": {
+        "value": {
+          "$ref": "#/definitions/configv1LogFieldPath"
+        }
+      },
+      "type": "object"
+    },
+    "EmitMetricsGauge": {
+      "properties": {
+        "value": {
+          "$ref": "#/definitions/configv1LogFieldPath"
+        },
+        "aggregation_type": {
+          "$ref": "#/definitions/GaugeAggregationType"
+        }
+      },
+      "type": "object"
+    },
+    "EmitMetricsHistogram": {
+      "properties": {
+        "value": {
+          "$ref": "#/definitions/configv1LogFieldPath"
+        }
+      },
+      "type": "object"
+    },
+    "EmitMetricsMetricMode": {
+      "enum": [
+        "COUNTER",
+        "GAUGE",
+        "HISTOGRAM"
+      ],
+      "type": "string"
+    },
     "FilterOperator": {
       "enum": [
         "IN",
         "NOT_IN"
+      ],
+      "type": "string"
+    },
+    "GaugeAggregationType": {
+      "enum": [
+        "LAST",
+        "MIN",
+        "MAX"
       ],
       "type": "string"
     },
@@ -939,6 +971,86 @@
         },
         "parent_path": {
           "$ref": "#/definitions/configv1LogFieldPath"
+        }
+      },
+      "type": "object"
+    },
+    "LogControlRuleEmitMetrics": {
+      "properties": {
+        "mode": {
+          "$ref": "#/definitions/EmitMetricsMetricMode"
+        },
+        "name": {
+          "description": "The name of the metric to emit. This name has to be unique, and conform to Prometheus naming conventions.",
+          "type": "string"
+        },
+        "labels": {
+          "description": "The labels to emit the metric with. This is a prom-valid label name mapped to a log key.",
+          "items": {
+            "$ref": "#/definitions/LogControlRuleEmitMetricsLabel"
+          },
+          "type": "array"
+        },
+        "drop_log": {
+          "description": "Drop log after emitting the metric.",
+          "type": "boolean"
+        },
+        "counter": {
+          "$ref": "#/definitions/EmitMetricsCounter"
+        },
+        "gauge": {
+          "$ref": "#/definitions/EmitMetricsGauge"
+        },
+        "histogram": {
+          "$ref": "#/definitions/EmitMetricsHistogram"
+        }
+      },
+      "title": "EmitMetrics is the configuration for emit metrics action.",
+      "type": "object"
+    },
+    "LogControlRuleEmitMetricsLabel": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/definitions/configv1LogFieldPath"
+        }
+      },
+      "type": "object"
+    },
+    "LogControlRuleReplaceField": {
+      "description": "ReplaceField is the configuration for a replace field action.",
+      "properties": {
+        "field": {
+          "$ref": "#/definitions/configv1LogFieldPath"
+        },
+        "replace_regex": {
+          "description": "Regular expression to specify what part of the field to replace.",
+          "type": "string"
+        },
+        "replace_all": {
+          "description": "Whether to replace all matches or just the first one.",
+          "type": "boolean"
+        },
+        "replace_mode": {
+          "$ref": "#/definitions/ReplaceFieldReplaceMode"
+        },
+        "fixed_value": {
+          "$ref": "#/definitions/LogControlRuleReplaceFieldFixedValue"
+        },
+        "mapped_value": {
+          "$ref": "#/definitions/ReplaceFieldMappedValue"
+        }
+      },
+      "type": "object"
+    },
+    "LogControlRuleReplaceFieldFixedValue": {
+      "description": "FixedValue is the configuration for the replace field control rule in fixed value\nmode. Used to replace the selected content with a fixed value.",
+      "properties": {
+        "value": {
+          "description": "The value to replace selected content with.\nIf empty, action will remove the content.",
+          "type": "string"
         }
       },
       "type": "object"
@@ -1248,17 +1360,28 @@
       ],
       "type": "string"
     },
+    "MappedValueReplacePair": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "MappingLabelValueMapping": {
       "properties": {
         "source_value_globs": {
-          "description": "Defines the source label values that should be mapped into the given target_value.",
+          "description": "Defines the source label values that map into the given `target_value`.",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "target_value": {
-          "description": "The value that source_value_globs are mapped into.\nFor example, given this mapping:\n```yaml\nvalue_mappings:\n - source_value_globs:\n     - Cat\n     - CAT\n   target_value: cat\n```\nThis indicates that the target value `cat` maps to the source label's values `Cat` and `CAT`.",
+          "description": "The value that `source_value_globs` are mapped into. For example, this\nmapping indicates that the target value `cat` maps to the source label's\nvalues of `Cat` and `CAT`.:\n```yaml\nvalue_mappings:\n - source_value_globs:\n     - Cat\n     - CAT\n   target_value: cat\n```",
           "type": "string"
         }
       },
@@ -1297,6 +1420,7 @@
     "MetricLabelMappingLabel": {
       "properties": {
         "name_mappings": {
+          "description": "Determines where the input data for a derived label comes from. For each\nname mapping, you must define a `source_label`.",
           "items": {
             "$ref": "#/definitions/MetricLabelMappingLabelNameMapping"
           },
@@ -1321,11 +1445,11 @@
           "type": "array"
         },
         "source_label": {
-          "description": "The actual label ingested on the time series",
+          "description": "The source label name on the time series from when it was ingested.",
           "type": "string"
         },
         "value_mappings": {
-          "description": "These value mappings apply to just the name mapping they belong to.",
+          "description": "These value mappings apply only to the name mapping they belong to.",
           "items": {
             "$ref": "#/definitions/MappingLabelValueMapping"
           },
@@ -1408,7 +1532,7 @@
           "$ref": "#/definitions/RoutesSeverityNotifiers"
         },
         "overrides": {
-          "description": "Optional list of overrides to use for alerts having matching labels.\nEach override defines labels that potentially match an alert's labels.\nIf one or more overrides match an alert, the notifiers of the first matching\noverride are used instead of the defaults.",
+          "description": "A list of overrides to use for alert notification policies. Each\noverride defines the labels that potentially match an alert. If an alert has\nmatching labels, the override notification policy is used for that alert\ninstead of the default notification policy. If multiple overrides match\nthe same alert, the first matching override notification policy is used.",
           "items": {
             "$ref": "#/definitions/NotificationPolicyRoutesOverride"
           },
@@ -1432,7 +1556,7 @@
     "NotificationPolicyRoutesOverride": {
       "properties": {
         "alert_label_matchers": {
-          "description": "Set of matchers on an alert's labels.\nIf all labels match then the override notifiers apply.",
+          "description": "The alert labels to match against. If an alert matches all of these labels,\nthe override notifier is applied to that alert.",
           "items": {
             "$ref": "#/definitions/configv1LabelMatcher"
           },
@@ -1853,7 +1977,7 @@
     "PartitionFilterCondition": {
       "properties": {
         "dataset_slug": {
-          "description": "If set, matches data which belongs to the given dataset. Cannot set if\nlog_filter is set.",
+          "description": "Optional. If set, matches data that belongs to the specified dataset. The\ndataset type must match the budget resource. For example, if `type=LOGS`\nthen set `resource=LOG_PERSISTED_BYTES`. You can't set a value for this\nfield if a value is set for `log_filter`.",
           "type": "string"
         },
         "log_filter": {
@@ -1873,6 +1997,36 @@
         }
       },
       "type": "object"
+    },
+    "ReplaceFieldMappedValue": {
+      "description": "MappedValue is the configuration for mapped value replace mode.",
+      "properties": {
+        "pairs": {
+          "description": "List of key value pairs.",
+          "items": {
+            "$ref": "#/definitions/MappedValueReplacePair"
+          },
+          "type": "array"
+        },
+        "use_default": {
+          "description": "If no matching key is found, fall back to default value. If use_default is false,\nthe value will be left unchanged if no matching key is found.",
+          "type": "boolean"
+        },
+        "default_value": {
+          "description": "Value to use if no value is found.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ReplaceFieldReplaceMode": {
+      "description": " - HASH: Hash the selected content.\n - FIXED_VALUE: Replace the selected content with a fixed string.\n - MAPPED_VALUE: Replace the selected content with a mapped value.",
+      "enum": [
+        "HASH",
+        "FIXED_VALUE",
+        "MAPPED_VALUE"
+      ],
+      "type": "string"
     },
     "ResourceAttributesFilterMode": {
       "enum": [
@@ -1912,6 +2066,18 @@
       ],
       "type": "string"
     },
+    "ResourcePoolsAllocationFixedValue": {
+      "properties": {
+        "license": {
+          "$ref": "#/definitions/ResourcePoolsLicense"
+        },
+        "value": {
+          "format": "int64",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "ResourcePoolsAllocationThreshold": {
       "properties": {
         "percent_of_pool_allocation": {
@@ -1936,7 +2102,7 @@
           "$ref": "#/definitions/ResourcePoolsPriorities"
         },
         "priority_thresholds": {
-          "description": "Optional. For supported licenses, defines thresholds with strict limits for\nwhen to drop new consumption of the license for a pool. Currently, only\n`PERSISTED_CARDINALITY_STANDARD` and `PERSISTED_CARDINALITY_HISTOGRAM` are\nsupported. See the [product documentation](https://docs.chronosphere.io/control/shaping/quotas/define-pools#pool-thresholds)\nfor more information.",
+          "description": "Optional. For supported licenses, defines thresholds with strict limits for\nwhen to drop new consumption of the license for a pool. Only\n`PERSISTED_CARDINALITY_STANDARD` and `PERSISTED_CARDINALITY_HISTOGRAM` are\nsupported. See the [product documentation](https://docs.chronosphere.io/control/shaping/quotas/define-pools#pool-thresholds)\nfor more information.",
           "items": {
             "$ref": "#/definitions/AllocationThresholds"
           },
@@ -2040,14 +2206,14 @@
     "RoutesNotifierList": {
       "properties": {
         "notifier_slugs": {
-          "description": "Slugs of notifiers that will receive the alerts.",
+          "description": "The slugs of the notifiers that will receive the alerts.",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "repeat_interval_secs": {
-          "description": "Frequency at which to resend alerts.",
+          "description": "The frequency at which to resend alerts.",
           "format": "int32",
           "type": "integer"
         },
@@ -2299,7 +2465,7 @@
     "ThresholdInstantRate": {
       "properties": {
         "fixed_value_per_sec": {
-          "description": "fixed_value_per_sec is the required rate threshold.",
+          "description": "Value of the fixed rate threshold.",
           "format": "int64",
           "type": "string"
         }
@@ -2309,7 +2475,7 @@
     "ThresholdVolume": {
       "properties": {
         "fixed_value": {
-          "description": "fixed_value is the required volume threshold.",
+          "description": "Value of the volume threshold.",
           "format": "int64",
           "type": "string"
         }
@@ -2949,30 +3115,30 @@
           "$ref": "#/definitions/configv1ConsumptionBudgetResource"
         },
         "partition_slug_path": {
-          "description": "partition_slug_path is the required path of the budget's partition,\ndelimited by \"/\", in the format \"global/\u003cslug1\u003e/\u003cslug2\u003e\", where slug1 is a\ntop-level partition, and slug2 is a child partition of slug1, etc.\n\nA well-formed partition path always starts with the \"global\" partition\nslug, and has no leading or trailing \"/\".",
+          "description": "Path of the budget's partition, delimited by forward slashes (`/`), in the\nformat `global/SLUG1/SLUG2`, where `SLUG1` is a top-level partition, and `SLUG2`\nis a child partition of `SLUG1`.\n\nA well-formed partition path always starts with the `global` partition slug, and\nhas no leading or trailing forward slashes.",
           "type": "string"
         },
         "priorities": {
-          "description": "priorities are optional budget priorities. Priorities are defined in order\nof precedence, where incoming requests are assigned the first priority that\nmatches. Each priority value defines the order in which requests are\ndropped when necessary (i.e. priority=10 dropped first, priority=1 dropped\nlast). If a request does not match any priority, then it is assigned the\ndefault_priority.",
+          "description": "Optional. Controls the order in which data is dropped when a drop action is\napplied. For example, a priority of 10 is dropped first, and a priority of 1 is\ndropped last. Priorities are evaluated in match order, and the first priority to\nmatch is applied. All other priorities are ignored. If a request does not match\nany priority, then it is assigned the `default_priority`.",
           "items": {
             "$ref": "#/definitions/ConsumptionBudgetPriority"
           },
           "type": "array"
         },
         "thresholds": {
-          "description": "thresholds are optional budget thresholds for automated limiting and\nalerting.",
+          "description": "Optional. Defines which actions to take when a threshold is exceeded.",
           "items": {
             "$ref": "#/definitions/configv1ConsumptionBudgetThreshold"
           },
           "type": "array"
         },
         "default_priority": {
-          "description": "default_priority is an optional default priority for requests which do not\nmatch any priority in the priorities list. If not set, then priority=10\nis used as the default.",
+          "description": "Optional. The default priority for requests that don't match any priority in the\n`priorities` list. If not set, then `priority=10` (dropped first) is used as the\ndefault.",
           "format": "int32",
           "type": "integer"
         },
         "notification_policy_slug": {
-          "description": "Notification policy slug for routing consumption alerts. Required only if\nALERT_WARN or ALERT_CRITICAL actions are configured.",
+          "description": "Notification policy slug for routing alerts. Required only if `ALERT_WARN` or\n`ALERT_CRITICAL` actions are configured.",
           "type": "string"
         }
       },
@@ -3016,7 +3182,7 @@
           "type": "string"
         },
         "partitions": {
-          "description": "partitions define non-overlapping groupings of telemetry. Partitions are\ndefined in order of precedence, where incoming requests are allocated to\nthe first partition that matches. Requests that don't match any\npartition fall back to an omnipresent default partition.",
+          "description": "Partitions define non-overlapping groupings of telemetry data. Partitions are\ndefined in order of precedence, where incoming requests are allocated to the\nfirst partition that matches. Requests that don't match any partition use an\nimplicit `default` partition.",
           "items": {
             "$ref": "#/definitions/ConsumptionConfigPartition"
           },
@@ -3951,11 +4117,11 @@
           "type": "string"
         },
         "label_name": {
-          "description": "Name of the derived label. It needs to be unique across the system.",
+          "description": "Name of the derived label. Must be unique across the system.",
           "type": "string"
         },
         "description": {
-          "description": "Optional description of the derived label.",
+          "description": "Optional. Description of the derived label.",
           "type": "string"
         },
         "metric_label": {
@@ -4198,11 +4364,11 @@
           "$ref": "#/definitions/configv1LabelMatcherMatcherType"
         },
         "name": {
-          "description": "name always matches against an exact label name.",
+          "description": "The name of the label to match against. This always matches against an\nexact label name, regardless of the value of `type`.",
           "type": "string"
         },
         "value": {
-          "description": "value matches against a label value based on the configured type.",
+          "description": "The value of the label to match against. If `type` is set to `EXACT`, this\nmatches against an exact label value. If `type` is set to `REGEX`, this\nparameter is treated as a regular expression for parsing label values.",
           "type": "string"
         }
       },
@@ -4694,6 +4860,12 @@
         },
         "drop_field": {
           "$ref": "#/definitions/LogControlRuleDropField"
+        },
+        "replace_field": {
+          "$ref": "#/definitions/LogControlRuleReplaceField"
+        },
+        "emit_metrics": {
+          "$ref": "#/definitions/LogControlRuleEmitMetrics"
         }
       },
       "type": "object"
@@ -4709,7 +4881,8 @@
       "enum": [
         "DROP",
         "SAMPLE",
-        "DROP_FIELD"
+        "DROP_FIELD",
+        "REPLACE_FIELD"
       ],
       "type": "string"
     },
@@ -5174,11 +5347,11 @@
           "type": "string"
         },
         "bucket_slug": {
-          "description": "Slug of the bucket the notification policy belongs to. Required if\nteam_slug is not set.",
+          "description": "The slug of the bucket that the notification policy belongs to. Required if\n`team_slug` is not set.",
           "type": "string"
         },
         "team_slug": {
-          "description": "Slug of the team the notification policy belongs to. Required if\nbucket_slug is not set.",
+          "description": "The slug of the team that the notification policy belongs to. Required if\n`bucket_slug` is not set.",
           "type": "string"
         },
         "routes": {
@@ -5667,12 +5840,12 @@
         "fixed_values": {
           "description": "Optional. Specifies overrides for the `percent_of_license` allocations for\nspecified licenses. When defining fixed values for a license, all pools must\nhave an explicit fixed value specification for that given license. The default\npool receives all remaining quota left within the license, after subtracting\nthe sum of fixed values across pools for that license.",
           "items": {
-            "$ref": "#/definitions/AllocationFixedValue"
+            "$ref": "#/definitions/ResourcePoolsAllocationFixedValue"
           },
           "type": "array"
         },
         "priority_thresholds": {
-          "description": "Optional. For supported licenses, defines thresholds with strict limits for\nwhen to drop new consumption of the license for a pool. Currently, only\n`PERSISTED_CARDINALITY_STANDARD` and `PERSISTED_CARDINALITY_HISTOGRAM` are\nsupported.",
+          "description": "Optional. For supported licenses, defines thresholds with strict limits for\nwhen to drop new consumption of the license for a pool. Only\n`PERSISTED_CARDINALITY_STANDARD` and `PERSISTED_CARDINALITY_HISTOGRAM` are\nsupported.",
           "items": {
             "$ref": "#/definitions/AllocationThresholds"
           },

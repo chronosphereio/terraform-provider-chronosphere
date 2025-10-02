@@ -13,10 +13,10 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// AllocationFixedValue allocation fixed value
+// ResourcePoolsAllocationFixedValue resource pools allocation fixed value
 //
-// swagger:model AllocationFixedValue
-type AllocationFixedValue struct {
+// swagger:model ResourcePoolsAllocationFixedValue
+type ResourcePoolsAllocationFixedValue struct {
 
 	// license
 	License ResourcePoolsLicense `json:"license,omitempty"`
@@ -25,8 +25,8 @@ type AllocationFixedValue struct {
 	Value string `json:"value,omitempty"`
 }
 
-// Validate validates this allocation fixed value
-func (m *AllocationFixedValue) Validate(formats strfmt.Registry) error {
+// Validate validates this resource pools allocation fixed value
+func (m *ResourcePoolsAllocationFixedValue) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateLicense(formats); err != nil {
@@ -39,7 +39,7 @@ func (m *AllocationFixedValue) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *AllocationFixedValue) validateLicense(formats strfmt.Registry) error {
+func (m *ResourcePoolsAllocationFixedValue) validateLicense(formats strfmt.Registry) error {
 	if swag.IsZero(m.License) { // not required
 		return nil
 	}
@@ -56,8 +56,8 @@ func (m *AllocationFixedValue) validateLicense(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this allocation fixed value based on the context it is used
-func (m *AllocationFixedValue) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this resource pools allocation fixed value based on the context it is used
+func (m *ResourcePoolsAllocationFixedValue) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateLicense(ctx, formats); err != nil {
@@ -70,7 +70,7 @@ func (m *AllocationFixedValue) ContextValidate(ctx context.Context, formats strf
 	return nil
 }
 
-func (m *AllocationFixedValue) contextValidateLicense(ctx context.Context, formats strfmt.Registry) error {
+func (m *ResourcePoolsAllocationFixedValue) contextValidateLicense(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := m.License.ContextValidate(ctx, formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
@@ -85,7 +85,7 @@ func (m *AllocationFixedValue) contextValidateLicense(ctx context.Context, forma
 }
 
 // MarshalBinary interface implementation
-func (m *AllocationFixedValue) MarshalBinary() ([]byte, error) {
+func (m *ResourcePoolsAllocationFixedValue) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -93,8 +93,8 @@ func (m *AllocationFixedValue) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *AllocationFixedValue) UnmarshalBinary(b []byte) error {
-	var res AllocationFixedValue
+func (m *ResourcePoolsAllocationFixedValue) UnmarshalBinary(b []byte) error {
+	var res ResourcePoolsAllocationFixedValue
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
