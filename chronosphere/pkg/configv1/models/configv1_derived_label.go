@@ -24,13 +24,13 @@ type Configv1DerivedLabel struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Optional description of the derived label.
+	// Optional. Description of the derived label.
 	Description string `json:"description,omitempty"`
 
 	// existing label policy
 	ExistingLabelPolicy Configv1DerivedLabelLabelPolicy `json:"existing_label_policy,omitempty"`
 
-	// Name of the derived label. It needs to be unique across the system.
+	// Name of the derived label. Must be unique across the system.
 	LabelName string `json:"label_name,omitempty"`
 
 	// metric label

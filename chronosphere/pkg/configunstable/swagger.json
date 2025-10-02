@@ -70,6 +70,20 @@
       },
       "type": "object"
     },
+    "ConfigUnstableUpdateLogInternalMaterializedFieldBody": {
+      "properties": {
+        "log_internal_materialized_field": {
+          "$ref": "#/definitions/configunstableLogInternalMaterializedField"
+        },
+        "create_if_missing": {
+          "type": "boolean"
+        },
+        "dry_run": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "ConfigUnstableUpdateNoopEntityBody": {
       "properties": {
         "noop_entity": {
@@ -137,6 +151,23 @@
         }
       },
       "type": "object"
+    },
+    "LogInternalMaterializedFieldMaterializedFieldStatus": {
+      "enum": [
+        "PENDING_MIGRATION",
+        "MIGRATED",
+        "PENDING_DELETION",
+        "DELETED"
+      ],
+      "type": "string"
+    },
+    "LogInternalMaterializedFieldMaterializedFieldType": {
+      "enum": [
+        "STRING",
+        "LOW_CARDINALITY_STRING",
+        "NUMBER"
+      ],
+      "type": "string"
     },
     "NoopEntityNestedEnum": {
       "enum": [
@@ -623,6 +654,25 @@
       },
       "type": "object"
     },
+    "configunstableCreateLogInternalMaterializedFieldRequest": {
+      "properties": {
+        "log_internal_materialized_field": {
+          "$ref": "#/definitions/configunstableLogInternalMaterializedField"
+        },
+        "dry_run": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableCreateLogInternalMaterializedFieldResponse": {
+      "properties": {
+        "log_internal_materialized_field": {
+          "$ref": "#/definitions/configunstableLogInternalMaterializedField"
+        }
+      },
+      "type": "object"
+    },
     "configunstableCreateNoopEntityRequest": {
       "properties": {
         "noop_entity": {
@@ -804,6 +854,9 @@
     "configunstableDeleteLinkTemplateResponse": {
       "type": "object"
     },
+    "configunstableDeleteLogInternalMaterializedFieldResponse": {
+      "type": "object"
+    },
     "configunstableDeleteNoopEntityResponse": {
       "properties": {
         "not_hidden": {
@@ -891,6 +944,20 @@
       },
       "type": "object"
     },
+    "configunstableListLogInternalMaterializedFieldsResponse": {
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/configv1PageResult"
+        },
+        "log_internal_materialized_fields": {
+          "items": {
+            "$ref": "#/definitions/configunstableLogInternalMaterializedField"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "configunstableListNoopEntitiesResponse": {
       "properties": {
         "noop_entities": {
@@ -962,6 +1029,37 @@
       },
       "type": "object"
     },
+    "configunstableLogInternalMaterializedField": {
+      "properties": {
+        "slug": {
+          "description": "Unique slug identifying the LogInternalMaterializedField.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the entity.",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/LogInternalMaterializedFieldMaterializedFieldType"
+        },
+        "targeted_field": {
+          "description": "Targeted field defines a field in a payload that should be materialized.",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/LogInternalMaterializedFieldMaterializedFieldStatus"
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "configunstableNoopEntity": {
       "properties": {
         "slug": {
@@ -1027,6 +1125,14 @@
       "properties": {
         "link_template": {
           "$ref": "#/definitions/configunstableLinkTemplate"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableReadLogInternalMaterializedFieldResponse": {
+      "properties": {
+        "log_internal_materialized_field": {
+          "$ref": "#/definitions/configunstableLogInternalMaterializedField"
         }
       },
       "type": "object"
@@ -1330,6 +1436,14 @@
       "properties": {
         "link_template": {
           "$ref": "#/definitions/configunstableLinkTemplate"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableUpdateLogInternalMaterializedFieldResponse": {
+      "properties": {
+        "log_internal_materialized_field": {
+          "$ref": "#/definitions/configunstableLogInternalMaterializedField"
         }
       },
       "type": "object"

@@ -25,32 +25,31 @@ type Configv1ConsumptionBudget struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// default_priority is an optional default priority for requests which do not
-	// match any priority in the priorities list. If not set, then priority=10
-	// is used as the default.
+	// Optional. The default priority for requests that don't match any priority in the
+	// `priorities` list. If not set, then `priority=10` (dropped first) is used as the
+	// default.
 	DefaultPriority int32 `json:"default_priority,omitempty"`
 
 	// Name of the ConsumptionBudget. You can modify this value after the ConsumptionBudget is created.
 	Name string `json:"name,omitempty"`
 
-	// Notification policy slug for routing consumption alerts. Required only if
-	// ALERT_WARN or ALERT_CRITICAL actions are configured.
+	// Notification policy slug for routing alerts. Required only if `ALERT_WARN` or
+	// `ALERT_CRITICAL` actions are configured.
 	NotificationPolicySlug string `json:"notification_policy_slug,omitempty"`
 
-	// partition_slug_path is the required path of the budget's partition,
-	// delimited by "/", in the format "global/<slug1>/<slug2>", where slug1 is a
-	// top-level partition, and slug2 is a child partition of slug1, etc.
+	// Path of the budget's partition, delimited by forward slashes (`/`), in the
+	// format `global/SLUG1/SLUG2`, where `SLUG1` is a top-level partition, and `SLUG2`
+	// is a child partition of `SLUG1`.
 	//
-	// A well-formed partition path always starts with the "global" partition
-	// slug, and has no leading or trailing "/".
+	// A well-formed partition path always starts with the `global` partition slug, and
+	// has no leading or trailing forward slashes.
 	PartitionSlugPath string `json:"partition_slug_path,omitempty"`
 
-	// priorities are optional budget priorities. Priorities are defined in order
-	// of precedence, where incoming requests are assigned the first priority that
-	// matches. Each priority value defines the order in which requests are
-	// dropped when necessary (i.e. priority=10 dropped first, priority=1 dropped
-	// last). If a request does not match any priority, then it is assigned the
-	// default_priority.
+	// Optional. Controls the order in which data is dropped when a drop action is
+	// applied. For example, a priority of 10 is dropped first, and a priority of 1 is
+	// dropped last. Priorities are evaluated in match order, and the first priority to
+	// match is applied. All other priorities are ignored. If a request does not match
+	// any priority, then it is assigned the `default_priority`.
 	Priorities []*ConsumptionBudgetPriority `json:"priorities"`
 
 	// resource
@@ -59,8 +58,7 @@ type Configv1ConsumptionBudget struct {
 	// The unique identifier of the ConsumptionBudget. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the ConsumptionBudget is created.
 	Slug string `json:"slug,omitempty"`
 
-	// thresholds are optional budget thresholds for automated limiting and
-	// alerting.
+	// Optional. Defines which actions to take when a threshold is exceeded.
 	Thresholds []*Configv1ConsumptionBudgetThreshold `json:"thresholds"`
 
 	// Timestamp of when the ConsumptionBudget was last updated. Cannot be set by clients.

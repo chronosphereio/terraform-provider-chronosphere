@@ -24,7 +24,7 @@ type Configv1ResourcePoolsAllocation struct {
 	// have an explicit fixed value specification for that given license. The default
 	// pool receives all remaining quota left within the license, after subtracting
 	// the sum of fixed values across pools for that license.
-	FixedValues []*AllocationFixedValue `json:"fixed_values"`
+	FixedValues []*ResourcePoolsAllocationFixedValue `json:"fixed_values"`
 
 	// Percent of the license to allocate to this pool. This value must be between
 	// `0` and `100`, inclusive. The `percent_of_license` values across all pools,
@@ -36,7 +36,7 @@ type Configv1ResourcePoolsAllocation struct {
 	PercentOfLicense float64 `json:"percent_of_license,omitempty"`
 
 	// Optional. For supported licenses, defines thresholds with strict limits for
-	// when to drop new consumption of the license for a pool. Currently, only
+	// when to drop new consumption of the license for a pool. Only
 	// `PERSISTED_CARDINALITY_STANDARD` and `PERSISTED_CARDINALITY_HISTOGRAM` are
 	// supported.
 	PriorityThresholds []*AllocationThresholds `json:"priority_thresholds"`

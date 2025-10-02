@@ -172,12 +172,12 @@ func poolAllocationFromModel(allocation *apimodels.Configv1ResourcePoolsAllocati
 }
 
 func allocationFixedValuesFromModel(
-	fixedValues []*apimodels.AllocationFixedValue,
+	fixedValues []*apimodels.ResourcePoolsAllocationFixedValue,
 ) ([]intschema.ResourcePoolAllocationSchemaFixedValue, error) {
 	if len(fixedValues) == 0 {
 		return nil, nil
 	}
-	return sliceutil.MapErr(fixedValues, func(f *apimodels.AllocationFixedValue) (intschema.ResourcePoolAllocationSchemaFixedValue, error) {
+	return sliceutil.MapErr(fixedValues, func(f *apimodels.ResourcePoolsAllocationFixedValue) (intschema.ResourcePoolAllocationSchemaFixedValue, error) {
 		var (
 			v   int64
 			err error
@@ -347,13 +347,13 @@ func poolAllocationToModel(allocation *intschema.ResourcePoolAllocationSchema) *
 	}
 }
 
-func fixedValuesToModel(fixedValues []intschema.ResourcePoolAllocationSchemaFixedValue) []*apimodels.AllocationFixedValue {
+func fixedValuesToModel(fixedValues []intschema.ResourcePoolAllocationSchemaFixedValue) []*apimodels.ResourcePoolsAllocationFixedValue {
 	if len(fixedValues) == 0 {
 		return nil
 	}
 
-	return sliceutil.Map(fixedValues, func(f intschema.ResourcePoolAllocationSchemaFixedValue) *apimodels.AllocationFixedValue {
-		return &apimodels.AllocationFixedValue{
+	return sliceutil.Map(fixedValues, func(f intschema.ResourcePoolAllocationSchemaFixedValue) *apimodels.ResourcePoolsAllocationFixedValue {
+		return &apimodels.ResourcePoolsAllocationFixedValue{
 			License: apimodels.ResourcePoolsLicense(f.License),
 			Value:   fmt.Sprint(f.Value),
 		}
