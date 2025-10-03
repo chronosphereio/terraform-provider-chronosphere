@@ -21,10 +21,10 @@ type RoutesNotifierList struct {
 	// group by
 	GroupBy *NotificationPolicyRoutesGroupBy `json:"group_by,omitempty"`
 
-	// Slugs of notifiers that will receive the alerts.
+	// The slugs of the notifiers that will receive the alerts.
 	NotifierSlugs []string `json:"notifier_slugs"`
 
-	// Frequency at which to resend alerts.
+	// The frequency at which to resend alerts.
 	RepeatIntervalSecs int32 `json:"repeat_interval_secs,omitempty"`
 }
 
