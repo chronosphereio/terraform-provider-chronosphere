@@ -22,7 +22,8 @@ type NotifierSlackConfig struct {
 	// actions
 	Actions []*NotifierSlackConfigAction `json:"actions"`
 
-	// Required Slack webhook API URL.
+	// Your Slack webhook API URL. Required if including a `slack` object in
+	// your request body.
 	APIURL string `json:"api_url,omitempty"`
 
 	// callback id

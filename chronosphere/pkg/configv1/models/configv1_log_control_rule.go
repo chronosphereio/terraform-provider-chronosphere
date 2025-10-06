@@ -21,6 +21,9 @@ type Configv1LogControlRule struct {
 	// drop field
 	DropField *LogControlRuleDropField `json:"drop_field,omitempty"`
 
+	// emit metrics
+	EmitMetrics *LogControlRuleEmitMetrics `json:"emit_metrics,omitempty"`
+
 	// Log query syntax to select logs. Only matching logs will have control action applied.
 	Filter string `json:"filter,omitempty"`
 
@@ -29,6 +32,9 @@ type Configv1LogControlRule struct {
 
 	// Name is the name of the control rule.
 	Name string `json:"name,omitempty"`
+
+	// replace field
+	ReplaceField *LogControlRuleReplaceField `json:"replace_field,omitempty"`
 
 	// sample
 	Sample *LogControlRuleSample `json:"sample,omitempty"`
@@ -45,7 +51,15 @@ func (m *Configv1LogControlRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateEmitMetrics(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateMode(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateReplaceField(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -82,6 +96,25 @@ func (m *Configv1LogControlRule) validateDropField(formats strfmt.Registry) erro
 	return nil
 }
 
+func (m *Configv1LogControlRule) validateEmitMetrics(formats strfmt.Registry) error {
+	if swag.IsZero(m.EmitMetrics) { // not required
+		return nil
+	}
+
+	if m.EmitMetrics != nil {
+		if err := m.EmitMetrics.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("emit_metrics")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("emit_metrics")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Configv1LogControlRule) validateMode(formats strfmt.Registry) error {
 	if swag.IsZero(m.Mode) { // not required
 		return nil
@@ -94,6 +127,25 @@ func (m *Configv1LogControlRule) validateMode(formats strfmt.Registry) error {
 			return ce.ValidateName("mode")
 		}
 		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1LogControlRule) validateReplaceField(formats strfmt.Registry) error {
+	if swag.IsZero(m.ReplaceField) { // not required
+		return nil
+	}
+
+	if m.ReplaceField != nil {
+		if err := m.ReplaceField.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("replace_field")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("replace_field")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -143,7 +195,15 @@ func (m *Configv1LogControlRule) ContextValidate(ctx context.Context, formats st
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateEmitMetrics(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateMode(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateReplaceField(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -177,6 +237,22 @@ func (m *Configv1LogControlRule) contextValidateDropField(ctx context.Context, f
 	return nil
 }
 
+func (m *Configv1LogControlRule) contextValidateEmitMetrics(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.EmitMetrics != nil {
+		if err := m.EmitMetrics.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("emit_metrics")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("emit_metrics")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Configv1LogControlRule) contextValidateMode(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := m.Mode.ContextValidate(ctx, formats); err != nil {
@@ -186,6 +262,22 @@ func (m *Configv1LogControlRule) contextValidateMode(ctx context.Context, format
 			return ce.ValidateName("mode")
 		}
 		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1LogControlRule) contextValidateReplaceField(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.ReplaceField != nil {
+		if err := m.ReplaceField.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("replace_field")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("replace_field")
+			}
+			return err
+		}
 	}
 
 	return nil

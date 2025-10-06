@@ -24,8 +24,8 @@ type Configv1Notifier struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// If set, enables the "discard" integration which simply discards all
-	// notifications. Cannot set if another integration is set.
+	// If `true`, enables the `discard` integration, which discards all
+	// notifications. Cannot be set if another integration is set.
 	Discard bool `json:"discard,omitempty"`
 
 	// email
@@ -40,7 +40,8 @@ type Configv1Notifier struct {
 	// pagerduty
 	Pagerduty *NotifierPagerdutyConfig `json:"pagerduty,omitempty"`
 
-	// If true, do not notify on resolved alerts. Cannot set if discard is set.
+	// If `true`, disables notifications for resolved alerts. Cannot be set if
+	// `discard` equals `true`.
 	SkipResolved bool `json:"skip_resolved,omitempty"`
 
 	// slack

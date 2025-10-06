@@ -19,7 +19,7 @@ import (
 // swagger:model ConsumptionConfigPartitionFilter
 type ConsumptionConfigPartitionFilter struct {
 
-	// conditions are the conditions to match.
+	// Conditions for the query to match.
 	Conditions []*PartitionFilterCondition `json:"conditions"`
 
 	// operator
