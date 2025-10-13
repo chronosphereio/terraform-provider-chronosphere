@@ -44,6 +44,10 @@ var ConsumptionBudgetThresholdType = newEnum("ConsumptionBudgetThresholdType", [
 		v1:    configv1.ConsumptionBudgetThresholdTypeINSTANTRATE,
 		alias: "INSTANT_RATE",
 	},
+	{
+		v1:    configv1.ConsumptionBudgetThresholdTypeHOURLYVOLUME,
+		alias: "HOURLY_VOLUME",
+	},
 })
 
 // ConsumptionBudgetThresholdAction is an enum.

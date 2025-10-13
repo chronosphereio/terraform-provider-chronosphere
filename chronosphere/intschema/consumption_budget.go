@@ -14,15 +14,16 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type ConsumptionBudget struct {
-	Name                 string                       `intschema:"name"`
-	Slug                 string                       `intschema:"slug,optional,computed"`
-	ConsumptionConfigId  tfid.ID                      `intschema:"consumption_config_id"`
-	NotificationPolicyId tfid.ID                      `intschema:"notification_policy_id,optional"`
-	DefaultPriority      int64                        `intschema:"default_priority,optional"`
-	PartitionSlugPath    string                       `intschema:"partition_slug_path,optional"`
-	Priority             []ConsumptionBudgetPriority  `intschema:"priority,optional"`
-	Resource             string                       `intschema:"resource,optional"`
-	Threshold            []ConsumptionBudgetThreshold `intschema:"threshold,optional"`
+	Name                 string                              `intschema:"name"`
+	Slug                 string                              `intschema:"slug,optional,computed"`
+	ConsumptionConfigId  tfid.ID                             `intschema:"consumption_config_id"`
+	NotificationPolicyId tfid.ID                             `intschema:"notification_policy_id,optional"`
+	AlertActionConfig    *ConsumptionBudgetAlertActionConfig `intschema:"alert_action_config,optional,list_encoded_object"`
+	DefaultPriority      int64                               `intschema:"default_priority,optional"`
+	PartitionSlugPath    string                              `intschema:"partition_slug_path,optional"`
+	Priority             []ConsumptionBudgetPriority         `intschema:"priority,optional"`
+	Resource             string                              `intschema:"resource,optional"`
+	Threshold            []ConsumptionBudgetThreshold        `intschema:"threshold,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -88,4 +89,10 @@ type ConsumptionBudgetPriorityFilter struct {
 
 type ConsumptionBudgetPriorityFilterLogFilter struct {
 	Query string `intschema:"query"`
+}
+
+type ConsumptionBudgetAlertActionConfig struct {
+	Annotations            map[string]string `intschema:"annotations,optional"`
+	InstantRateSustainSecs int64             `intschema:"instant_rate_sustain_secs,optional"`
+	Labels                 map[string]string `intschema:"labels,optional"`
 }
