@@ -43,7 +43,7 @@ type Configv1DropRule struct {
 	// mode
 	Mode Configv1DropRuleMode `json:"mode,omitempty"`
 
-	// Name of the DropRule. You can modify this value after the DropRule is created.
+	// The name of the DropRule. You can modify this value after the DropRule is created.
 	Name string `json:"name,omitempty"`
 
 	// The unique identifier of the DropRule. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the DropRule is created.

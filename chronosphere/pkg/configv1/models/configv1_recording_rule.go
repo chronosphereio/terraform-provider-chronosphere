@@ -41,7 +41,7 @@ type Configv1RecordingRule struct {
 	// metric name.
 	MetricName string `json:"metric_name,omitempty"`
 
-	// Name of the RecordingRule. You can modify this value after the RecordingRule is created.
+	// The name of the RecordingRule. You can modify this value after the RecordingRule is created.
 	Name string `json:"name,omitempty"`
 
 	// The PromQL expression to evaluate at the time of each evaluation cycle.

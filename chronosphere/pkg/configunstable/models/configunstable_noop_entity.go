@@ -27,7 +27,7 @@ type ConfigunstableNoopEntity struct {
 	// enum
 	Enum ConfigunstableNoopEnum `json:"enum,omitempty"`
 
-	// Name of the NoopEntity. You can modify this value after the NoopEntity is created.
+	// The name of the NoopEntity. You can modify this value after the NoopEntity is created.
 	Name string `json:"name,omitempty"`
 
 	// nested enum

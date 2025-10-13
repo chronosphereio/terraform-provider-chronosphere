@@ -20,6 +20,9 @@ import (
 // swagger:model configv1ConsumptionBudget
 type Configv1ConsumptionBudget struct {
 
+	// alert action config
+	AlertActionConfig *ConsumptionBudgetAlertActionConfig `json:"alert_action_config,omitempty"`
+
 	// Timestamp of when the ConsumptionBudget was created. Cannot be set by clients.
 	// Read Only: true
 	// Format: date-time
@@ -30,7 +33,7 @@ type Configv1ConsumptionBudget struct {
 	// default.
 	DefaultPriority int32 `json:"default_priority,omitempty"`
 
-	// Name of the ConsumptionBudget. You can modify this value after the ConsumptionBudget is created.
+	// The name of the ConsumptionBudget. You can modify this value after the ConsumptionBudget is created.
 	Name string `json:"name,omitempty"`
 
 	// Notification policy slug for routing alerts. Required only if `ALERT_WARN` or
@@ -71,6 +74,10 @@ type Configv1ConsumptionBudget struct {
 func (m *Configv1ConsumptionBudget) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAlertActionConfig(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCreatedAt(formats); err != nil {
 		res = append(res, err)
 	}
@@ -94,6 +101,25 @@ func (m *Configv1ConsumptionBudget) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Configv1ConsumptionBudget) validateAlertActionConfig(formats strfmt.Registry) error {
+	if swag.IsZero(m.AlertActionConfig) { // not required
+		return nil
+	}
+
+	if m.AlertActionConfig != nil {
+		if err := m.AlertActionConfig.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("alert_action_config")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("alert_action_config")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -194,6 +220,10 @@ func (m *Configv1ConsumptionBudget) validateUpdatedAt(formats strfmt.Registry) e
 func (m *Configv1ConsumptionBudget) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateAlertActionConfig(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -217,6 +247,22 @@ func (m *Configv1ConsumptionBudget) ContextValidate(ctx context.Context, formats
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Configv1ConsumptionBudget) contextValidateAlertActionConfig(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.AlertActionConfig != nil {
+		if err := m.AlertActionConfig.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("alert_action_config")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("alert_action_config")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

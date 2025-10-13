@@ -25,10 +25,13 @@ type Configv1LogIngestConfig struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// The parsers to run on specific fields within structured logs or plaintext logs after parsing.
+	// field normalization
+	FieldNormalization *LogIngestConfigfieldNormalization `json:"field_normalization,omitempty"`
+
+	// The parsers to apply to specific fields within structured logs or plaintext logs after those logs are parsed.
 	FieldParsers []*LogIngestConfigLogFieldParser `json:"field_parsers"`
 
-	// The parsers to run on plaintext logs. The first parser that matches the log is used.
+	// The parsers to apply to plaintext logs. The first parser that matches the log is used.
 	PlaintextParsers []*LogIngestConfigPlaintextParser `json:"plaintext_parsers"`
 
 	// Timestamp of when the LogIngestConfig was last updated. Cannot be set by clients.
@@ -42,6 +45,10 @@ func (m *Configv1LogIngestConfig) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCreatedAt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFieldNormalization(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -70,6 +77,25 @@ func (m *Configv1LogIngestConfig) validateCreatedAt(formats strfmt.Registry) err
 
 	if err := validate.FormatOf("created_at", "body", "date-time", m.CreatedAt.String(), formats); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1LogIngestConfig) validateFieldNormalization(formats strfmt.Registry) error {
+	if swag.IsZero(m.FieldNormalization) { // not required
+		return nil
+	}
+
+	if m.FieldNormalization != nil {
+		if err := m.FieldNormalization.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("field_normalization")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("field_normalization")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -147,6 +173,10 @@ func (m *Configv1LogIngestConfig) ContextValidate(ctx context.Context, formats s
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateFieldNormalization(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateFieldParsers(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -169,6 +199,22 @@ func (m *Configv1LogIngestConfig) contextValidateCreatedAt(ctx context.Context, 
 
 	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1LogIngestConfig) contextValidateFieldNormalization(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.FieldNormalization != nil {
+		if err := m.FieldNormalization.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("field_normalization")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("field_normalization")
+			}
+			return err
+		}
 	}
 
 	return nil

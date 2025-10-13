@@ -27,7 +27,7 @@ type ConfigunstableSavedTraceSearch struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Name of the SavedTraceSearch. You can modify this value after the SavedTraceSearch is created.
+	// The name of the SavedTraceSearch. You can modify this value after the SavedTraceSearch is created.
 	Name string `json:"name,omitempty"`
 
 	// search

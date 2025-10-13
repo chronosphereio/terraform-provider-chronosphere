@@ -27,7 +27,7 @@ type ConfigunstableTraceJaegerRemoteSamplingStrategy struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Name of the TraceJaegerRemoteSamplingStrategy. You can modify this value after the TraceJaegerRemoteSamplingStrategy is created.
+	// The name of the TraceJaegerRemoteSamplingStrategy. You can modify this value after the TraceJaegerRemoteSamplingStrategy is created.
 	Name string `json:"name,omitempty"`
 
 	// The name of the service this sampling strategy applies to. This must match the slug and name fields.

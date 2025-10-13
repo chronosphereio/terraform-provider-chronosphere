@@ -28,7 +28,7 @@ type Configv1GcpMetricsIntegration struct {
 	// An array of metric groups to be ingested for this integration.
 	MetricGroups []*GcpMetricsIntegrationMetricGroup `json:"metric_groups"`
 
-	// Name of the GcpMetricsIntegration. You can modify this value after the GcpMetricsIntegration is created.
+	// The name of the GcpMetricsIntegration. You can modify this value after the GcpMetricsIntegration is created.
 	Name string `json:"name,omitempty"`
 
 	// service account

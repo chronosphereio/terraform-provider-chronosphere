@@ -18,8 +18,9 @@ import (
 // swagger:model LogIngestConfigPlaintextParser
 type LogIngestConfigPlaintextParser struct {
 
-	// If true, the original log is kept after parsing and stored under the key "plaintext_log".
-	// Otherwise the original log will be dropped after parsing. Default is false.
+	// If `true`, the original log is retained after parsing and stored in the
+	// key `plaintext_log`. If `false`, the original log is dropped after parsing.
+	// Default value: `false`.
 	KeepOriginal bool `json:"keep_original,omitempty"`
 
 	// mode
