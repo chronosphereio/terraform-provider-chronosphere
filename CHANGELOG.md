@@ -2,9 +2,12 @@
 
 ## Unreleased
 
+## v1.15.0
+
 Added:
 * Add `HOURLY_VOLUME` threshold type to `chronosphere_consumption_budget` resource.
-* Add `alert_action_config` field to `chronosphere_consumption_budget` resource.
+* Add `alert_action_config` field to `chronosphere_consumption_budget` resource
+  for customizing consumption budget alerts.
 
 ## v1.14.0
 
