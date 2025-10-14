@@ -61,6 +61,31 @@ var ConsumptionBudget = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
 	},
+	"alert_action_config": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: consumptionBudgetAlertActionConfigSchema,
+		},
+	},
+}
+
+var consumptionBudgetAlertActionConfigSchema = map[string]*schema.Schema{
+	"annotations": {
+		Type:     schema.TypeMap,
+		Elem:     &schema.Schema{Type: schema.TypeString},
+		Optional: true,
+	},
+	"labels": {
+		Type:     schema.TypeMap,
+		Elem:     &schema.Schema{Type: schema.TypeString},
+		Optional: true,
+	},
+	"instant_rate_sustain_secs": {
+		Type:     schema.TypeInt,
+		Optional: true,
+	},
 }
 
 var consumptionBudgetPrioritySchema = map[string]*schema.Schema{

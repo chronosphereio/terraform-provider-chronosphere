@@ -108,6 +108,7 @@ func (c consumptionBudgetConverter) toModel(
 		Thresholds:             sliceutil.Map(s.Threshold, consumptionBudgetThresholdToModel),
 		DefaultPriority:        int32(s.DefaultPriority),
 		NotificationPolicySlug: s.NotificationPolicyId.Slug(),
+		AlertActionConfig:      consumptionBudgetAlertActionConfigToModel(s.AlertActionConfig),
 	}
 	return m, nil
 }
@@ -134,7 +135,30 @@ func (c consumptionBudgetConverter) fromModel(
 		Threshold:            thresholds,
 		DefaultPriority:      int64(m.DefaultPriority),
 		NotificationPolicyId: tfid.Slug(m.NotificationPolicySlug),
+		AlertActionConfig:    consumptionBudgetAlertActionConfigFromModel(m.AlertActionConfig),
 	}, nil
+}
+
+func consumptionBudgetAlertActionConfigToModel(a *intschema.ConsumptionBudgetAlertActionConfig) *models.ConsumptionBudgetAlertActionConfig {
+	if a == nil {
+		return nil
+	}
+	return &models.ConsumptionBudgetAlertActionConfig{
+		Annotations:            a.Annotations,
+		Labels:                 a.Labels,
+		InstantRateSustainSecs: int32(a.InstantRateSustainSecs),
+	}
+}
+
+func consumptionBudgetAlertActionConfigFromModel(a *models.ConsumptionBudgetAlertActionConfig) *intschema.ConsumptionBudgetAlertActionConfig {
+	if a == nil {
+		return nil
+	}
+	return &intschema.ConsumptionBudgetAlertActionConfig{
+		Annotations:            a.Annotations,
+		Labels:                 a.Labels,
+		InstantRateSustainSecs: int64(a.InstantRateSustainSecs),
+	}
 }
 
 func consumptionBudgetPriorityFilterToModel(f intschema.ConsumptionBudgetPriorityFilter) *models.ConsumptionBudgetPriorityFilter {
