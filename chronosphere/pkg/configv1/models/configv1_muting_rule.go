@@ -37,7 +37,7 @@ type Configv1MutingRule struct {
 	// value. Updates must specify the original value.
 	LabelMatchers []*Configv1MutingRuleLabelMatcher `json:"label_matchers"`
 
-	// Name of the MutingRule. You can modify this value after the MutingRule is created.
+	// The name of the MutingRule. You can modify this value after the MutingRule is created.
 	Name string `json:"name,omitempty"`
 
 	// The unique identifier of the MutingRule. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the MutingRule is created.

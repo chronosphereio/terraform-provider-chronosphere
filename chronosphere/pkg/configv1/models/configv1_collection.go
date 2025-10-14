@@ -27,7 +27,7 @@ type Configv1Collection struct {
 	// A description of the collection.
 	Description string `json:"description,omitempty"`
 
-	// Name of the Collection. You can modify this value after the Collection is created.
+	// The name of the Collection. You can modify this value after the Collection is created.
 	Name string `json:"name,omitempty"`
 
 	// The slug of the default notification policy for monitors in this collection.

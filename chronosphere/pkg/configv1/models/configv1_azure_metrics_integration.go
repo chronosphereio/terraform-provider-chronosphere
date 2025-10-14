@@ -27,7 +27,7 @@ type Configv1AzureMetricsIntegration struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Name of the AzureMetricsIntegration. You can modify this value after the AzureMetricsIntegration is created.
+	// The name of the AzureMetricsIntegration. You can modify this value after the AzureMetricsIntegration is created.
 	Name string `json:"name,omitempty"`
 
 	// principal

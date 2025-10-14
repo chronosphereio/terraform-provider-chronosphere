@@ -36,7 +36,7 @@ type Configv1Dashboard struct {
 	// Optional. Defines tags that add metadata about the dashboard.
 	Labels map[string]string `json:"labels,omitempty"`
 
-	// Name of the Dashboard. You can modify this value after the Dashboard is created.
+	// The name of the Dashboard. You can modify this value after the Dashboard is created.
 	Name string `json:"name,omitempty"`
 
 	// The unique identifier of the Dashboard. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the Dashboard is created.

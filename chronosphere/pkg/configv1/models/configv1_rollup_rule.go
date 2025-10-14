@@ -112,7 +112,7 @@ type Configv1RollupRule struct {
 	// mode
 	Mode Configv1RollupRuleMode `json:"mode,omitempty"`
 
-	// Name of the RollupRule. You can modify this value after the RollupRule is created.
+	// The name of the RollupRule. You can modify this value after the RollupRule is created.
 	Name string `json:"name,omitempty"`
 
 	// The unique identifier of the RollupRule. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the RollupRule is created.

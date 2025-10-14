@@ -46,7 +46,7 @@ type Configv1TraceBehavior struct {
 	// large trace sample options
 	LargeTraceSampleOptions *TraceBehaviorLargeTraceSampleOptions `json:"large_trace_sample_options,omitempty"`
 
-	// Name of the TraceBehavior. You can modify this value after the TraceBehavior is created.
+	// The name of the TraceBehavior. You can modify this value after the TraceBehavior is created.
 	Name string `json:"name,omitempty"`
 
 	// slow sample options

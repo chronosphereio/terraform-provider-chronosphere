@@ -532,6 +532,30 @@
       },
       "type": "object"
     },
+    "ConsumptionBudgetAlertActionConfig": {
+      "properties": {
+        "annotations": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Additional annotations to set on the generated monitor. By default, the\nmonitors already contain \"description\", \"dashboard\", \"resource\",\n\"consumption_budget_slug\", \"threshold_type\", and \"partition\" annotations.\nSetting any of these annotations will override its default value.",
+          "type": "object"
+        },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Additional labels to set on the generated monitor, which can be used for\nnotification routing. The following labels are reserved and cannot be\noverride: \"resource\", \"partition\", and \"threshold_type\".",
+          "type": "object"
+        },
+        "instant_rate_sustain_secs": {
+          "description": "How long instant rate consumption must sustain above the threshold in\norder to fire an alert. By default, the sustain is 0: any consumption\nover the threshold will fire an alert.",
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
     "ConsumptionBudgetPriority": {
       "properties": {
         "filters": {
@@ -574,7 +598,8 @@
         "DAILY_VOLUME",
         "INSTANT_RATE",
         "WEEKLY_VOLUME",
-        "MONTHLY_VOLUME"
+        "MONTHLY_VOLUME",
+        "HOURLY_VOLUME"
       ],
       "type": "string"
     },
@@ -686,10 +711,9 @@
       "type": "object"
     },
     "DerivedLabelSpanTag": {
-      "description": "A span tag is used to map span tags to derived labels.",
       "properties": {
         "name_mappings": {
-          "description": "All name mappings are combined as `OR` matches. The first matching name\nmapping is used to map the source tag to the derived tag.",
+          "description": "Determines where the input data for a derived label comes from. For each\nname mapping, you must define a `source_label`. If multiple name mappings\nare defined, the first name mapping that matches is used to map the source\ntag to the derived tag.",
           "items": {
             "$ref": "#/definitions/DerivedLabelSpanTagNameMapping"
           },
@@ -699,9 +723,9 @@
       "type": "object"
     },
     "DerivedLabelSpanTagNameMapping": {
-      "description": "Denotes the source tag to be mapped to the derived tag.",
       "properties": {
         "source_tag": {
+          "description": "The source span tag name.",
           "type": "string"
         }
       },
@@ -1106,6 +1130,19 @@
       },
       "type": "object"
     },
+    "LogIngestConfigNamedStringNormalization": {
+      "description": "NamedStringNormalization maps a field to a named target with optional transformations.",
+      "properties": {
+        "target": {
+          "description": "The name of the target field where the normalized value will be stored.",
+          "type": "string"
+        },
+        "normalization": {
+          "$ref": "#/definitions/LogIngestConfigStringNormalization"
+        }
+      },
+      "type": "object"
+    },
     "LogIngestConfigPlaintextParser": {
       "properties": {
         "name": {
@@ -1119,7 +1156,7 @@
           "$ref": "#/definitions/LogIngestConfigLogParser"
         },
         "keep_original": {
-          "description": "If true, the original log is kept after parsing and stored under the key \"plaintext_log\".\nOtherwise the original log will be dropped after parsing. Default is false.",
+          "description": "If `true`, the original log is retained after parsing and stored in the\nkey `plaintext_log`. If `false`, the original log is dropped after parsing.\nDefault value: `false`.",
           "type": "boolean"
         }
       },
@@ -1132,19 +1169,88 @@
       ],
       "type": "string"
     },
+    "LogIngestConfigStringNormalization": {
+      "description": "StringNormalization defines how to extract and transform string values from log fields.",
+      "properties": {
+        "source": {
+          "description": "List of field paths to check for values, in priority order.\nThe first non-empty value found will be used.",
+          "items": {
+            "$ref": "#/definitions/configv1LogFieldPath"
+          },
+          "type": "array"
+        },
+        "default_value": {
+          "description": "Default value to use when no source fields contain values.",
+          "type": "string"
+        },
+        "value_map": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Optional mapping to normalize values.\nFor example: {\"warn\": \"WARNING\", \"err\": \"ERROR\"} to standardize severity levels.",
+          "type": "object"
+        },
+        "sanitize_patterns": {
+          "description": "Optional regex patterns to extract and sanitize values.\nEach pattern must have exactly one capturing group that will be used as the result.\nFor example: \"^.*level=([A-Z]+).*$\" to extract log level from a string.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "LogIngestConfigTimestampNormalization": {
+      "description": "TimestampNormalization specifies which fields to check for timestamp values.",
+      "properties": {
+        "source": {
+          "description": "List of field paths to check for timestamp values, in priority order.\nCommon fields include \"timestamp\", \"@timestamp\", \"time\", \"datetime\".",
+          "items": {
+            "$ref": "#/definitions/configv1LogFieldPath"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "LogIngestConfigfieldNormalization": {
+      "properties": {
+        "primary_key": {
+          "$ref": "#/definitions/LogIngestConfigNamedStringNormalization"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/LogIngestConfigTimestampNormalization"
+        },
+        "severity": {
+          "$ref": "#/definitions/LogIngestConfigStringNormalization"
+        },
+        "message": {
+          "$ref": "#/definitions/LogIngestConfigStringNormalization"
+        },
+        "custom_field_normalization": {
+          "description": "Maps additional custom fields from your logs. These will not be indexed.\nUse these for any other fields you want to normalize, such as environment, region, or user ID.",
+          "items": {
+            "$ref": "#/definitions/LogIngestConfigNamedStringNormalization"
+          },
+          "type": "array"
+        }
+      },
+      "title": "fieldNormalization allows you to map and normalize well-known fields from your logs.\nThese mappings run after parsing to standardize common fields like timestamp,\nseverity level, primary key name, and message across different log formats.",
+      "type": "object"
+    },
     "LogParserKeyValueParser": {
-      "description": "A parser to extract key-value pairs from a string.\nIf duplicate keys are found, the first instance is used.",
+      "description": "A parser to extract key/value pairs from a string.\nIf duplicate keys are found, the first instance is used.",
       "properties": {
         "pair_separator": {
-          "description": "String used to split each pair into its key and value. Required.",
+          "description": "The string for splitting each pair into its key and value.",
           "type": "string"
         },
         "delimiter": {
-          "description": "String used to split the input into key-value pairs. Required.",
+          "description": "The string for splitting the input into key/value pairs.",
           "type": "string"
         },
         "trim_set": {
-          "description": "All leading and trailing Unicode code points contained in the trim\nset will be removed from keys and values. Optional.",
+          "description": "Specifies the code points of any Unicode characters to trim from the\nbeginning and end of keys and values.",
           "type": "string"
         }
       },
@@ -1161,7 +1267,7 @@
     "LogParserRegexParser": {
       "properties": {
         "regex": {
-          "description": "Regex is the Re2 regex parser pattern to apply.\nNamed capturing groups become named fields in the extracted log.",
+          "description": "The regular expression parser pattern to apply. Must use RE2 syntax.\nNamed capturing groups become named fields in the extracted log.",
           "type": "string"
         }
       },
@@ -1398,11 +1504,11 @@
           "$ref": "#/definitions/configv1MappingRuleStoragePolicy"
         },
         "interval": {
-          "description": "Interval between aggregated data points, equivalent to the resolution\nfield in storage policy. If set, then the storage_policy field can't be\nset.",
+          "description": "The interval between aggregated data points.",
           "type": "string"
         },
         "drop_timestamp": {
-          "description": "Deprecated: This field is no longer supported.",
+          "description": "Deprecated: This parameter is no longer supported.",
           "type": "boolean"
         }
       },
@@ -1422,7 +1528,7 @@
     "MetricLabelMappingLabel": {
       "properties": {
         "name_mappings": {
-          "description": "Determines where the input data for a derived label comes from. For each\nname mapping, you must define a `source_label`.",
+          "description": "Determines where the input data for a derived label comes from. For each\nname mapping, you must define a `source_label`. If multiple name mappings\nare defined, the first name mapping that matches is used to map the source\nlabel to the derived label.",
           "items": {
             "$ref": "#/definitions/MetricLabelMappingLabelNameMapping"
           },
@@ -2954,7 +3060,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the AzureMetricsIntegration. You can modify this value after the AzureMetricsIntegration is created.",
+          "description": "The name of the AzureMetricsIntegration. You can modify this value after the AzureMetricsIntegration is created.",
           "type": "string"
         },
         "created_at": {
@@ -2997,7 +3103,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the Bucket. You can modify this value after the Bucket is created.",
+          "description": "The name of the Bucket. You can modify this value after the Bucket is created.",
           "type": "string"
         },
         "created_at": {
@@ -3041,7 +3147,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the Collection. You can modify this value after the Collection is created.",
+          "description": "The name of the Collection. You can modify this value after the Collection is created.",
           "type": "string"
         },
         "created_at": {
@@ -3097,7 +3203,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the ConsumptionBudget. You can modify this value after the ConsumptionBudget is created.",
+          "description": "The name of the ConsumptionBudget. You can modify this value after the ConsumptionBudget is created.",
           "type": "string"
         },
         "created_at": {
@@ -3141,6 +3247,9 @@
         "notification_policy_slug": {
           "description": "Notification policy slug for routing alerts. Required only if `ALERT_WARN` or\n`ALERT_CRITICAL` actions are configured.",
           "type": "string"
+        },
+        "alert_action_config": {
+          "$ref": "#/definitions/ConsumptionBudgetAlertActionConfig"
         }
       },
       "type": "object"
@@ -3899,7 +4008,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the Dashboard. You can modify this value after the Dashboard is created.",
+          "description": "The name of the Dashboard. You can modify this value after the Dashboard is created.",
           "type": "string"
         },
         "created_at": {
@@ -3938,7 +4047,7 @@
     "configv1Dataset": {
       "properties": {
         "name": {
-          "description": "Name of the Dataset. You can modify this value after the Dataset is created.",
+          "description": "The name of the Dataset. You can modify this value after the Dataset is created.",
           "type": "string"
         },
         "slug": {
@@ -4098,7 +4207,7 @@
     "configv1DerivedLabel": {
       "properties": {
         "name": {
-          "description": "Name of the DerivedLabel. You can modify this value after the DerivedLabel is created.",
+          "description": "The name of the DerivedLabel. You can modify this value after the DerivedLabel is created.",
           "type": "string"
         },
         "slug": {
@@ -4147,7 +4256,7 @@
     "configv1DerivedMetric": {
       "properties": {
         "name": {
-          "description": "Name of the DerivedMetric. You can modify this value after the DerivedMetric is created.",
+          "description": "The name of the DerivedMetric. You can modify this value after the DerivedMetric is created.",
           "type": "string"
         },
         "slug": {
@@ -4214,7 +4323,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the DropRule. You can modify this value after the DropRule is created.",
+          "description": "The name of the DropRule. You can modify this value after the DropRule is created.",
           "type": "string"
         },
         "created_at": {
@@ -4267,7 +4376,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the GcpMetricsIntegration. You can modify this value after the GcpMetricsIntegration is created.",
+          "description": "The name of the GcpMetricsIntegration. You can modify this value after the GcpMetricsIntegration is created.",
           "type": "string"
         },
         "created_at": {
@@ -4311,7 +4420,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the GrafanaDashboard. You can modify this value after the GrafanaDashboard is created.",
+          "description": "The name of the GrafanaDashboard. You can modify this value after the GrafanaDashboard is created.",
           "type": "string"
         },
         "created_at": {
@@ -4347,12 +4456,12 @@
     "configv1LabelFilter": {
       "properties": {
         "name": {
-          "description": "Name of the label to match.",
+          "description": "The name of the label to match.",
           "example": "job",
           "type": "string"
         },
         "value_glob": {
-          "description": "Glob value of the label to match.",
+          "description": "The glob value of the label to match.",
           "example": "myservice*",
           "type": "string"
         }
@@ -4898,7 +5007,7 @@
     "configv1LogFieldPath": {
       "properties": {
         "selector": {
-          "description": "LogQL Selector to indicate field path. Use `parent[child]` syntax to\nindicate nesting.",
+          "description": "The LogQL selector to indicate the field path. Use `parent[child]` syntax to\nindicate nesting.",
           "type": "string"
         }
       },
@@ -4920,18 +5029,21 @@
           "type": "string"
         },
         "plaintext_parsers": {
-          "description": "The parsers to run on plaintext logs. The first parser that matches the log is used.",
+          "description": "The parsers to apply to plaintext logs. The first parser that matches the log is used.",
           "items": {
             "$ref": "#/definitions/LogIngestConfigPlaintextParser"
           },
           "type": "array"
         },
         "field_parsers": {
-          "description": "The parsers to run on specific fields within structured logs or plaintext logs after parsing.",
+          "description": "The parsers to apply to specific fields within structured logs or plaintext logs after those logs are parsed.",
           "items": {
             "$ref": "#/definitions/LogIngestConfigLogFieldParser"
           },
           "type": "array"
+        },
+        "field_normalization": {
+          "$ref": "#/definitions/LogIngestConfigfieldNormalization"
         }
       },
       "type": "object"
@@ -5089,7 +5201,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the MappingRule. You can modify this value after the MappingRule is created.",
+          "description": "The name of the MappingRule. You can modify this value after the MappingRule is created.",
           "type": "string"
         },
         "created_at": {
@@ -5109,7 +5221,7 @@
           "type": "string"
         },
         "filters": {
-          "description": "Required filters that determine to which metrics to apply the rule.",
+          "description": "The filters that determine which metrics should have rules applied to them.\nTo be considered a match, a metric must meet the criteria for all of the\nfilters specified in this array.",
           "items": {
             "$ref": "#/definitions/configv1LabelFilter"
           },
@@ -5119,7 +5231,7 @@
           "$ref": "#/definitions/MappingRuleAggregationPolicy"
         },
         "drop": {
-          "description": "Whether to drop the given set of metrics. If set, then the aggregation\npolicy can't be set.",
+          "description": "Specifies whether to drop the given set of metrics. Cannot be set if the\n`aggregation_policy` object is set.",
           "type": "boolean"
         },
         "mode": {
@@ -5139,11 +5251,11 @@
     "configv1MappingRuleStoragePolicy": {
       "properties": {
         "resolution": {
-          "description": "Required resolution of the aggregated metrics.",
+          "description": "Deprecated: This parameter is no longer supported.",
           "type": "string"
         },
         "retention": {
-          "description": "Required retention of the aggregated metrics.",
+          "description": "Deprecated: This parameter is no longer supported.",
           "type": "string"
         }
       },
@@ -5156,7 +5268,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the Monitor. You can modify this value after the Monitor is created.",
+          "description": "The name of the Monitor. You can modify this value after the Monitor is created.",
           "type": "string"
         },
         "created_at": {
@@ -5261,7 +5373,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the MutingRule. You can modify this value after the MutingRule is created.",
+          "description": "The name of the MutingRule. You can modify this value after the MutingRule is created.",
           "type": "string"
         },
         "created_at": {
@@ -5332,7 +5444,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the NotificationPolicy. You can modify this value after the NotificationPolicy is created.",
+          "description": "The name of the NotificationPolicy. You can modify this value after the NotificationPolicy is created.",
           "type": "string"
         },
         "created_at": {
@@ -5368,7 +5480,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the Notifier. You can modify this value after the Notifier is created.",
+          "description": "The name of the Notifier. You can modify this value after the Notifier is created.",
           "type": "string"
         },
         "created_at": {
@@ -5750,7 +5862,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the RecordingRule. You can modify this value after the RecordingRule is created.",
+          "description": "The name of the RecordingRule. You can modify this value after the RecordingRule is created.",
           "type": "string"
         },
         "created_at": {
@@ -5875,7 +5987,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the RollupRule. You can modify this value after the RollupRule is created.",
+          "description": "The name of the RollupRule. You can modify this value after the RollupRule is created.",
           "type": "string"
         },
         "created_at": {
@@ -6018,7 +6130,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the SLO. You can modify this value after the SLO is created.",
+          "description": "The name of the SLO. You can modify this value after the SLO is created.",
           "type": "string"
         },
         "description": {
@@ -6076,7 +6188,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the Service. You can modify this value after the Service is created.",
+          "description": "The name of the Service. You can modify this value after the Service is created.",
           "type": "string"
         },
         "created_at": {
@@ -6113,7 +6225,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the ServiceAccount. You can modify this value after the ServiceAccount is created.",
+          "description": "The name of the ServiceAccount. You can modify this value after the ServiceAccount is created.",
           "type": "string"
         },
         "created_at": {
@@ -6155,7 +6267,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the Team. You can modify this value after the Team is created.",
+          "description": "The name of the Team. You can modify this value after the Team is created.",
           "type": "string"
         },
         "created_at": {
@@ -6187,7 +6299,7 @@
     "configv1TraceBehavior": {
       "properties": {
         "name": {
-          "description": "Name of the TraceBehavior. You can modify this value after the TraceBehavior is created.",
+          "description": "The name of the TraceBehavior. You can modify this value after the TraceBehavior is created.",
           "type": "string"
         },
         "slug": {
@@ -6302,7 +6414,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Name of the TraceJaegerRemoteSamplingStrategy. You can modify this value after the TraceJaegerRemoteSamplingStrategy is created.",
+          "description": "The name of the TraceJaegerRemoteSamplingStrategy. You can modify this value after the TraceJaegerRemoteSamplingStrategy is created.",
           "type": "string"
         },
         "created_at": {
@@ -6330,7 +6442,7 @@
     "configv1TraceMetricsRule": {
       "properties": {
         "name": {
-          "description": "Name of the TraceMetricsRule. You can modify this value after the TraceMetricsRule is created.",
+          "description": "The name of the TraceMetricsRule. You can modify this value after the TraceMetricsRule is created.",
           "type": "string"
         },
         "slug": {

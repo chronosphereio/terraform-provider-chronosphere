@@ -37,7 +37,7 @@ type Configv1TraceMetricsRule struct {
 	// The name of the generated trace metrics.
 	MetricName string `json:"metric_name,omitempty"`
 
-	// Name of the TraceMetricsRule. You can modify this value after the TraceMetricsRule is created.
+	// The name of the TraceMetricsRule. You can modify this value after the TraceMetricsRule is created.
 	Name string `json:"name,omitempty"`
 
 	// The unique identifier of the TraceMetricsRule. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the TraceMetricsRule is created.

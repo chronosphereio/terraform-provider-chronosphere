@@ -156,8 +156,8 @@ func mappingStoragePolicyFromModel(
 		return nil
 	}
 	return &intschema.MappingRuleStoragePolicy{
-		Resolution: p.Resolution,
-		Retention:  p.Retention,
+		Resolution: p.Resolution, // nolint:staticcheck // deprecated field; supported for backwards compatibility
+		Retention:  p.Retention,  // nolint:staticcheck // deprecated field; supported for backwards compatibility
 	}
 }
 
