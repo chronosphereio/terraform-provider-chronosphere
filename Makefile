@@ -154,7 +154,7 @@ snapshot:
 	git tag ${SNAPSHOT_VERSION}
 	# --snapshot mode allows building artifacts w/o release tag present and w/ publishing mode disabled
 	# useful when we want to test whether we can build binaries, but not publish yet.
-	GO_BUILD_LDFLAGS="$(shell $(GO_BUILD_LDFLAGS))" \
+	GO_BUILD_LDFLAGS="$(GO_BUILD_LDFLAGS)" \
 		INSTRUMENT_PACKAGE=$(INSTRUMENT_PACKAGE) \
 		GO_RELEASER_DOCKER_IMAGE=$(GO_RELEASER_DOCKER_IMAGE) \
 		GO_RELEASER_RELEASE_ARGS="$(GO_RELEASER_RELEASE_ARGS)" \
