@@ -508,6 +508,18 @@
       },
       "type": "object"
     },
+    "TraceSearchFilterScopeFilter": {
+      "properties": {
+        "span_scopes": {
+          "description": "Specifies the span filters that define which spans contribute to the metrics calculation.\nOnly spans matching these filters will be included in the metrics aggregation.",
+          "items": {
+            "$ref": "#/definitions/TraceSearchFilterSpanFilter"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "TraceSearchFilterSpanFilter": {
       "properties": {
         "match_type": {
@@ -1061,6 +1073,10 @@
         "column_name": {
           "description": "Name of the clickhouse column that this field maps to. Its an actual value that is used for the queries.",
           "type": "string"
+        },
+        "materialize_expression": {
+          "description": "Materialize expression allows providing more complex instructions\nhow to get field value, for example using conditions, instead\nof simply targeting field defined by targeted_field.\nIf materialize_expression is provided targeted_field should be empty.",
+          "type": "string"
         }
       },
       "type": "object"
@@ -1575,6 +1591,9 @@
             "$ref": "#/definitions/TraceSearchFilterSpanFilter"
           },
           "type": "array"
+        },
+        "scope_filter": {
+          "$ref": "#/definitions/TraceSearchFilterScopeFilter"
         }
       },
       "type": "object"

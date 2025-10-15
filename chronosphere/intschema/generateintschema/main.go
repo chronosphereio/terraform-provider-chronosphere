@@ -64,6 +64,9 @@ var sharedSchemaTypeNames = map[*schema.Schema]string{
 	tfschema.SLOAdditionalPromQLFilters:             "SLOAdditionalPromQLFilters",
 	tfschema.SignalGrouping:                         "SignalGrouping",
 	tfschema.PartitionFilterSchema:                  "PartitionFilter",
+	// Field normalization schemas are handled via sharedElemTypeNames below
+	// Log control schemas
+	tfschema.LogFieldPathSchema: "LogControlConfigFieldPath",
 }
 
 // Add shared element references here to generate shared types. Usually we
@@ -77,6 +80,12 @@ var sharedSchemaTypeNames = map[*schema.Schema]string{
 var sharedElemTypeNames = map[*schema.Resource]string{
 	tfschema.NotificationRouteSchema.Elem.(*schema.Resource): "NotificationRoute",
 	tfschema.ResourcePoolElemSchema:                          "ResourcePoolsConfigPool",
+	// Log field normalization resources need to be here to prevent the generator from creating
+	// duplicate types when it processes nested resources within NamedStringNormalizationResource
+	tfschema.StringNormalizationResource:      "LogIngestConfigStringNormalization",
+	tfschema.NamedStringNormalizationResource: "LogIngestConfigNamedStringNormalization",
+	tfschema.TimestampNormalizationResource:   "LogIngestConfigTimestampNormalization",
+	tfschema.LogFieldSelectorResource:         "LogFieldPath",
 }
 
 // Exhaustive list of all "xxx_id" fields which identifies whether the field

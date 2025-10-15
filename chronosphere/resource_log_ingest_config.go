@@ -63,7 +63,7 @@ type logIngestConfigConverter struct{}
 func (logIngestConfigConverter) toModel(
 	m *intschema.LogIngestConfig,
 ) (*models.Configv1LogIngestConfig, error) {
-	return &models.Configv1LogIngestConfig{
+	result := &models.Configv1LogIngestConfig{
 		PlaintextParsers: sliceutil.Map(m.PlaintextParser, func(p intschema.LogIngestConfigPlaintextParser) *models.LogIngestConfigPlaintextParser {
 			return &models.LogIngestConfigPlaintextParser{
 				Name:         p.Name,
@@ -83,7 +83,13 @@ func (logIngestConfigConverter) toModel(
 			}
 			return fp
 		}),
-	}, nil
+	}
+
+	if m.FieldNormalization != nil {
+		result.FieldNormalization = convertFieldNormalizationToModel(m.FieldNormalization)
+	}
+
+	return result, nil
 }
 
 func convertLogParserToModel(p *intschema.LogParser) *models.LogIngestConfigLogParser {
@@ -114,7 +120,7 @@ func convertLogParserToModel(p *intschema.LogParser) *models.LogIngestConfigLogP
 func (logIngestConfigConverter) fromModel(
 	m *models.Configv1LogIngestConfig,
 ) (*intschema.LogIngestConfig, error) {
-	return &intschema.LogIngestConfig{
+	result := &intschema.LogIngestConfig{
 		PlaintextParser: sliceutil.Map(m.PlaintextParsers, func(p *models.LogIngestConfigPlaintextParser) intschema.LogIngestConfigPlaintextParser {
 			return intschema.LogIngestConfigPlaintextParser{
 				Name:         p.Name,
@@ -126,19 +132,25 @@ func (logIngestConfigConverter) fromModel(
 		FieldParser: sliceutil.Map(m.FieldParsers, func(p *models.LogIngestConfigLogFieldParser) intschema.LogIngestConfigFieldParser {
 			fp := intschema.LogIngestConfigFieldParser{
 				Mode: string(p.Mode),
-				Source: &intschema.LogIngestConfigFieldParserSource{
+				Source: &intschema.LogFieldPath{
 					Selector: p.Source.Selector,
 				},
 				Parser: convertLogParserFromModel(p.Parser),
 			}
 			if p.Destination != nil {
-				fp.Destination = &intschema.LogIngestConfigFieldParserDestination{
+				fp.Destination = &intschema.LogFieldPath{
 					Selector: p.Destination.Selector,
 				}
 			}
 			return fp
 		}),
-	}, nil
+	}
+
+	if m.FieldNormalization != nil {
+		result.FieldNormalization = convertFieldNormalizationFromModel(m.FieldNormalization)
+	}
+
+	return result, nil
 }
 
 func convertLogParserFromModel(p *models.LogIngestConfigLogParser) *intschema.LogParser {
@@ -158,6 +170,130 @@ func convertLogParserFromModel(p *models.LogIngestConfigLogParser) *intschema.Lo
 			Delimiter:     p.KeyValueParser.Delimiter,
 			TrimSet:       p.KeyValueParser.TrimSet,
 		}
+	}
+
+	return result
+}
+
+func convertFieldNormalizationToModel(fn *intschema.LogIngestConfigFieldNormalization) *models.LogIngestConfigFieldNormalization {
+	if fn == nil {
+		return nil
+	}
+
+	result := &models.LogIngestConfigFieldNormalization{}
+
+	if len(fn.CustomFieldNormalization) > 0 {
+		result.CustomFieldNormalization = sliceutil.Map(fn.CustomFieldNormalization, func(n intschema.LogIngestConfigNamedStringNormalization) *models.LogIngestConfigNamedStringNormalization {
+			return &models.LogIngestConfigNamedStringNormalization{
+				Normalization: convertStringNormalizationToModel(n.Normalization),
+				Target:        n.Target,
+			}
+		})
+	}
+
+	if fn.Message != nil {
+		result.Message = convertStringNormalizationToModel(fn.Message)
+	}
+
+	if fn.PrimaryKey != nil {
+		result.PrimaryKey = &models.LogIngestConfigNamedStringNormalization{
+			Normalization: convertStringNormalizationToModel(fn.PrimaryKey.Normalization),
+			Target:        fn.PrimaryKey.Target,
+		}
+	}
+
+	if fn.Severity != nil {
+		result.Severity = convertStringNormalizationToModel(fn.Severity)
+	}
+
+	if fn.Timestamp != nil {
+		result.Timestamp = &models.LogIngestConfigTimestampNormalization{
+			Source: sliceutil.Map(fn.Timestamp.Source, func(fp intschema.LogFieldPath) *models.Configv1LogFieldPath {
+				return &models.Configv1LogFieldPath{Selector: fp.Selector}
+			}),
+		}
+	}
+
+	return result
+}
+
+func convertStringNormalizationToModel(sn *intschema.LogIngestConfigStringNormalization) *models.LogIngestConfigStringNormalization {
+	if sn == nil {
+		return nil
+	}
+
+	result := &models.LogIngestConfigStringNormalization{
+		DefaultValue:     sn.DefaultValue,
+		SanitizePatterns: sn.SanitizePatterns,
+		ValueMap:         sn.ValueMap,
+	}
+
+	if len(sn.Source) > 0 {
+		result.Source = sliceutil.Map(sn.Source, func(fp intschema.LogFieldPath) *models.Configv1LogFieldPath {
+			return &models.Configv1LogFieldPath{Selector: fp.Selector}
+		})
+	}
+
+	return result
+}
+
+func convertFieldNormalizationFromModel(fn *models.LogIngestConfigFieldNormalization) *intschema.LogIngestConfigFieldNormalization {
+	if fn == nil {
+		return nil
+	}
+
+	result := &intschema.LogIngestConfigFieldNormalization{}
+
+	if len(fn.CustomFieldNormalization) > 0 {
+		result.CustomFieldNormalization = sliceutil.Map(fn.CustomFieldNormalization, func(n *models.LogIngestConfigNamedStringNormalization) intschema.LogIngestConfigNamedStringNormalization {
+			return intschema.LogIngestConfigNamedStringNormalization{
+				Normalization: convertStringNormalizationFromModel(n.Normalization),
+				Target:        n.Target,
+			}
+		})
+	}
+
+	if fn.Message != nil {
+		result.Message = convertStringNormalizationFromModel(fn.Message)
+	}
+
+	if fn.PrimaryKey != nil {
+		result.PrimaryKey = &intschema.LogIngestConfigNamedStringNormalization{
+			Normalization: convertStringNormalizationFromModel(fn.PrimaryKey.Normalization),
+			Target:        fn.PrimaryKey.Target,
+		}
+	}
+
+	if fn.Severity != nil {
+		result.Severity = convertStringNormalizationFromModel(fn.Severity)
+	}
+
+	if fn.Timestamp != nil {
+		result.Timestamp = &intschema.LogIngestConfigTimestampNormalization{
+			Source: sliceutil.Map(fn.Timestamp.Source, func(fp *models.Configv1LogFieldPath) intschema.LogFieldPath {
+				return intschema.LogFieldPath{Selector: fp.Selector}
+			}),
+		}
+	}
+
+	return result
+}
+
+func convertStringNormalizationFromModel(sn *models.LogIngestConfigStringNormalization) *intschema.LogIngestConfigStringNormalization {
+	if sn == nil {
+		return nil
+	}
+
+	result := &intschema.LogIngestConfigStringNormalization{
+		DefaultValue:     sn.DefaultValue,
+		SanitizePatterns: sn.SanitizePatterns,
+		ValueMap:         sn.ValueMap,
+	}
+
+	if len(sn.Source) > 0 {
+		result.Source = sliceutil.Map(sn.Source, func(fp *models.Configv1LogFieldPath) intschema.LogFieldPath {
+			return intschema.LogFieldPath{Selector: fp.Selector}
+		})
 	}
 
 	return result

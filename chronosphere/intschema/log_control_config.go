@@ -54,16 +54,90 @@ func (o *LogControlConfig) Ref() tfid.ID {
 }
 
 type LogControlConfigRules struct {
-	Name      string                          `intschema:"name,optional"`
-	DropField *LogControlConfigRulesDropField `intschema:"drop_field,optional,list_encoded_object"`
-	Filter    string                          `intschema:"filter,optional"`
-	Mode      string                          `intschema:"mode,optional"`
-	Sample    *LogControlConfigRulesSample    `intschema:"sample,optional,list_encoded_object"`
-	Type      string                          `intschema:"type,optional"`
+	Name         string                             `intschema:"name,optional"`
+	DropField    *LogControlConfigRulesDropField    `intschema:"drop_field,optional,list_encoded_object"`
+	EmitMetrics  *LogControlConfigRulesEmitMetrics  `intschema:"emit_metrics,optional,list_encoded_object"`
+	Filter       string                             `intschema:"filter,optional"`
+	Mode         string                             `intschema:"mode,optional"`
+	ReplaceField *LogControlConfigRulesReplaceField `intschema:"replace_field,optional,list_encoded_object"`
+	Sample       *LogControlConfigRulesSample       `intschema:"sample,optional,list_encoded_object"`
+	Type         string                             `intschema:"type,optional"`
 }
 
 type LogControlConfigRulesSample struct {
 	Rate float64 `intschema:"rate,optional"`
+}
+
+type LogControlConfigRulesReplaceField struct {
+	Field        *LogControlConfigRulesReplaceFieldField       `intschema:"field,optional,list_encoded_object"`
+	MappedValue  *LogControlConfigRulesReplaceFieldMappedValue `intschema:"mapped_value,optional,list_encoded_object"`
+	ReplaceAll   bool                                          `intschema:"replace_all,optional"`
+	ReplaceMode  string                                        `intschema:"replace_mode,optional"`
+	ReplaceRegex string                                        `intschema:"replace_regex,optional"`
+	StaticValue  *LogControlConfigRulesReplaceFieldStaticValue `intschema:"static_value,optional,list_encoded_object"`
+}
+
+type LogControlConfigRulesReplaceFieldStaticValue struct {
+	Value string `intschema:"value,optional"`
+}
+
+type LogControlConfigRulesReplaceFieldMappedValue struct {
+	DefaultValue string                                              `intschema:"default_value,optional"`
+	Pairs        []LogControlConfigRulesReplaceFieldMappedValuePairs `intschema:"pairs,optional"`
+	UseDefault   bool                                                `intschema:"use_default,optional"`
+}
+
+type LogControlConfigRulesReplaceFieldMappedValuePairs struct {
+	Key   string `intschema:"key,optional"`
+	Value string `intschema:"value,optional"`
+}
+
+type LogControlConfigRulesReplaceFieldField struct {
+	Selector string `intschema:"selector,optional"`
+}
+
+type LogControlConfigRulesEmitMetrics struct {
+	Name      string                                     `intschema:"name,optional"`
+	Counter   *LogControlConfigRulesEmitMetricsCounter   `intschema:"counter,optional,list_encoded_object"`
+	DropLog   bool                                       `intschema:"drop_log,optional"`
+	Gauge     *LogControlConfigRulesEmitMetricsGauge     `intschema:"gauge,optional,list_encoded_object"`
+	Histogram *LogControlConfigRulesEmitMetricsHistogram `intschema:"histogram,optional,list_encoded_object"`
+	Labels    []LogControlConfigRulesEmitMetricsLabels   `intschema:"labels,optional"`
+	Mode      string                                     `intschema:"mode,optional"`
+}
+
+type LogControlConfigRulesEmitMetricsLabels struct {
+	Key   string                                       `intschema:"key,optional"`
+	Value *LogControlConfigRulesEmitMetricsLabelsValue `intschema:"value,optional,list_encoded_object"`
+}
+
+type LogControlConfigRulesEmitMetricsLabelsValue struct {
+	Selector string `intschema:"selector,optional"`
+}
+
+type LogControlConfigRulesEmitMetricsHistogram struct {
+	Value *LogControlConfigRulesEmitMetricsHistogramValue `intschema:"value,optional,list_encoded_object"`
+}
+
+type LogControlConfigRulesEmitMetricsHistogramValue struct {
+	Selector string `intschema:"selector,optional"`
+}
+
+type LogControlConfigRulesEmitMetricsGauge struct {
+	AggregationType string                                      `intschema:"aggregation_type,optional"`
+	Value           *LogControlConfigRulesEmitMetricsGaugeValue `intschema:"value,optional,list_encoded_object"`
+}
+
+type LogControlConfigRulesEmitMetricsGaugeValue struct {
+	Selector string `intschema:"selector,optional"`
+}
+
+type LogControlConfigRulesEmitMetricsCounter struct {
+	Value *LogControlConfigRulesEmitMetricsCounterValue `intschema:"value,optional,list_encoded_object"`
+}
+
+type LogControlConfigRulesEmitMetricsCounterValue struct {
+	Selector string `intschema:"selector,optional"`
 }
 
 type LogControlConfigRulesDropField struct {

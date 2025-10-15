@@ -17,6 +17,30 @@ type LogAllocationConfigSchema struct {
 	PercentOfLicense float64 `intschema:"percent_of_license"`
 }
 
+type LogControlConfigFieldPath struct {
+	Selector string `intschema:"selector,optional"`
+}
+
+type LogFieldPath struct {
+	Selector string `intschema:"selector"`
+}
+
+type LogIngestConfigNamedStringNormalization struct {
+	Normalization *LogIngestConfigStringNormalization `intschema:"normalization,optional,list_encoded_object"`
+	Target        string                              `intschema:"target,optional"`
+}
+
+type LogIngestConfigStringNormalization struct {
+	DefaultValue     string            `intschema:"default_value,optional"`
+	SanitizePatterns []string          `intschema:"sanitize_patterns,optional"`
+	Source           []LogFieldPath    `intschema:"source,optional"`
+	ValueMap         map[string]string `intschema:"value_map,optional"`
+}
+
+type LogIngestConfigTimestampNormalization struct {
+	Source []LogFieldPath `intschema:"source,optional"`
+}
+
 type LogParser struct {
 	ParserType     string          `intschema:"parser_type"`
 	KeyValueParser *KeyValueParser `intschema:"key_value_parser,optional,list_encoded_object"`

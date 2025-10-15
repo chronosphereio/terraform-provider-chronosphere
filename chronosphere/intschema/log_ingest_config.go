@@ -14,8 +14,9 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type LogIngestConfig struct {
-	FieldParser     []LogIngestConfigFieldParser     `intschema:"field_parser,optional"`
-	PlaintextParser []LogIngestConfigPlaintextParser `intschema:"plaintext_parser,optional"`
+	FieldNormalization *LogIngestConfigFieldNormalization `intschema:"field_normalization,optional,list_encoded_object"`
+	FieldParser        []LogIngestConfigFieldParser       `intschema:"field_parser,optional"`
+	PlaintextParser    []LogIngestConfigPlaintextParser   `intschema:"plaintext_parser,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -62,16 +63,16 @@ type LogIngestConfigPlaintextParser struct {
 }
 
 type LogIngestConfigFieldParser struct {
-	Destination *LogIngestConfigFieldParserDestination `intschema:"destination,optional,list_encoded_object"`
-	Mode        string                                 `intschema:"mode,optional"`
-	Parser      *LogParser                             `intschema:"parser,optional,list_encoded_object"`
-	Source      *LogIngestConfigFieldParserSource      `intschema:"source,optional,list_encoded_object"`
+	Destination *LogFieldPath `intschema:"destination,optional,list_encoded_object"`
+	Mode        string        `intschema:"mode,optional"`
+	Parser      *LogParser    `intschema:"parser,optional,list_encoded_object"`
+	Source      *LogFieldPath `intschema:"source,optional,list_encoded_object"`
 }
 
-type LogIngestConfigFieldParserSource struct {
-	Selector string `intschema:"selector"`
-}
-
-type LogIngestConfigFieldParserDestination struct {
-	Selector string `intschema:"selector"`
+type LogIngestConfigFieldNormalization struct {
+	CustomFieldNormalization []LogIngestConfigNamedStringNormalization `intschema:"custom_field_normalization,optional"`
+	Message                  *LogIngestConfigStringNormalization       `intschema:"message,optional,list_encoded_object"`
+	PrimaryKey               *LogIngestConfigNamedStringNormalization  `intschema:"primary_key,optional,list_encoded_object"`
+	Severity                 *LogIngestConfigStringNormalization       `intschema:"severity,optional,list_encoded_object"`
+	Timestamp                *LogIngestConfigTimestampNormalization    `intschema:"timestamp,optional,list_encoded_object"`
 }

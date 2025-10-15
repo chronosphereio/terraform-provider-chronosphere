@@ -14,12 +14,12 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// LogIngestConfigfieldNormalization fieldNormalization allows you to map and normalize well-known fields from your logs.
+// LogIngestConfigFieldNormalization FieldNormalization allows you to map and normalize well-known fields from your logs.
 // These mappings run after parsing to standardize common fields like timestamp,
 // severity level, primary key name, and message across different log formats.
 //
-// swagger:model LogIngestConfigfieldNormalization
-type LogIngestConfigfieldNormalization struct {
+// swagger:model LogIngestConfigFieldNormalization
+type LogIngestConfigFieldNormalization struct {
 
 	// Maps additional custom fields from your logs. These will not be indexed.
 	// Use these for any other fields you want to normalize, such as environment, region, or user ID.
@@ -38,8 +38,8 @@ type LogIngestConfigfieldNormalization struct {
 	Timestamp *LogIngestConfigTimestampNormalization `json:"timestamp,omitempty"`
 }
 
-// Validate validates this log ingest configfield normalization
-func (m *LogIngestConfigfieldNormalization) Validate(formats strfmt.Registry) error {
+// Validate validates this log ingest config field normalization
+func (m *LogIngestConfigFieldNormalization) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCustomFieldNormalization(formats); err != nil {
@@ -68,7 +68,7 @@ func (m *LogIngestConfigfieldNormalization) Validate(formats strfmt.Registry) er
 	return nil
 }
 
-func (m *LogIngestConfigfieldNormalization) validateCustomFieldNormalization(formats strfmt.Registry) error {
+func (m *LogIngestConfigFieldNormalization) validateCustomFieldNormalization(formats strfmt.Registry) error {
 	if swag.IsZero(m.CustomFieldNormalization) { // not required
 		return nil
 	}
@@ -94,7 +94,7 @@ func (m *LogIngestConfigfieldNormalization) validateCustomFieldNormalization(for
 	return nil
 }
 
-func (m *LogIngestConfigfieldNormalization) validateMessage(formats strfmt.Registry) error {
+func (m *LogIngestConfigFieldNormalization) validateMessage(formats strfmt.Registry) error {
 	if swag.IsZero(m.Message) { // not required
 		return nil
 	}
@@ -113,7 +113,7 @@ func (m *LogIngestConfigfieldNormalization) validateMessage(formats strfmt.Regis
 	return nil
 }
 
-func (m *LogIngestConfigfieldNormalization) validatePrimaryKey(formats strfmt.Registry) error {
+func (m *LogIngestConfigFieldNormalization) validatePrimaryKey(formats strfmt.Registry) error {
 	if swag.IsZero(m.PrimaryKey) { // not required
 		return nil
 	}
@@ -132,7 +132,7 @@ func (m *LogIngestConfigfieldNormalization) validatePrimaryKey(formats strfmt.Re
 	return nil
 }
 
-func (m *LogIngestConfigfieldNormalization) validateSeverity(formats strfmt.Registry) error {
+func (m *LogIngestConfigFieldNormalization) validateSeverity(formats strfmt.Registry) error {
 	if swag.IsZero(m.Severity) { // not required
 		return nil
 	}
@@ -151,7 +151,7 @@ func (m *LogIngestConfigfieldNormalization) validateSeverity(formats strfmt.Regi
 	return nil
 }
 
-func (m *LogIngestConfigfieldNormalization) validateTimestamp(formats strfmt.Registry) error {
+func (m *LogIngestConfigFieldNormalization) validateTimestamp(formats strfmt.Registry) error {
 	if swag.IsZero(m.Timestamp) { // not required
 		return nil
 	}
@@ -170,8 +170,8 @@ func (m *LogIngestConfigfieldNormalization) validateTimestamp(formats strfmt.Reg
 	return nil
 }
 
-// ContextValidate validate this log ingest configfield normalization based on the context it is used
-func (m *LogIngestConfigfieldNormalization) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this log ingest config field normalization based on the context it is used
+func (m *LogIngestConfigFieldNormalization) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateCustomFieldNormalization(ctx, formats); err != nil {
@@ -200,7 +200,7 @@ func (m *LogIngestConfigfieldNormalization) ContextValidate(ctx context.Context,
 	return nil
 }
 
-func (m *LogIngestConfigfieldNormalization) contextValidateCustomFieldNormalization(ctx context.Context, formats strfmt.Registry) error {
+func (m *LogIngestConfigFieldNormalization) contextValidateCustomFieldNormalization(ctx context.Context, formats strfmt.Registry) error {
 
 	for i := 0; i < len(m.CustomFieldNormalization); i++ {
 
@@ -220,7 +220,7 @@ func (m *LogIngestConfigfieldNormalization) contextValidateCustomFieldNormalizat
 	return nil
 }
 
-func (m *LogIngestConfigfieldNormalization) contextValidateMessage(ctx context.Context, formats strfmt.Registry) error {
+func (m *LogIngestConfigFieldNormalization) contextValidateMessage(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Message != nil {
 		if err := m.Message.ContextValidate(ctx, formats); err != nil {
@@ -236,7 +236,7 @@ func (m *LogIngestConfigfieldNormalization) contextValidateMessage(ctx context.C
 	return nil
 }
 
-func (m *LogIngestConfigfieldNormalization) contextValidatePrimaryKey(ctx context.Context, formats strfmt.Registry) error {
+func (m *LogIngestConfigFieldNormalization) contextValidatePrimaryKey(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.PrimaryKey != nil {
 		if err := m.PrimaryKey.ContextValidate(ctx, formats); err != nil {
@@ -252,7 +252,7 @@ func (m *LogIngestConfigfieldNormalization) contextValidatePrimaryKey(ctx contex
 	return nil
 }
 
-func (m *LogIngestConfigfieldNormalization) contextValidateSeverity(ctx context.Context, formats strfmt.Registry) error {
+func (m *LogIngestConfigFieldNormalization) contextValidateSeverity(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Severity != nil {
 		if err := m.Severity.ContextValidate(ctx, formats); err != nil {
@@ -268,7 +268,7 @@ func (m *LogIngestConfigfieldNormalization) contextValidateSeverity(ctx context.
 	return nil
 }
 
-func (m *LogIngestConfigfieldNormalization) contextValidateTimestamp(ctx context.Context, formats strfmt.Registry) error {
+func (m *LogIngestConfigFieldNormalization) contextValidateTimestamp(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Timestamp != nil {
 		if err := m.Timestamp.ContextValidate(ctx, formats); err != nil {
@@ -285,7 +285,7 @@ func (m *LogIngestConfigfieldNormalization) contextValidateTimestamp(ctx context
 }
 
 // MarshalBinary interface implementation
-func (m *LogIngestConfigfieldNormalization) MarshalBinary() ([]byte, error) {
+func (m *LogIngestConfigFieldNormalization) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -293,8 +293,8 @@ func (m *LogIngestConfigfieldNormalization) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *LogIngestConfigfieldNormalization) UnmarshalBinary(b []byte) error {
-	var res LogIngestConfigfieldNormalization
+func (m *LogIngestConfigFieldNormalization) UnmarshalBinary(b []byte) error {
+	var res LogIngestConfigFieldNormalization
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

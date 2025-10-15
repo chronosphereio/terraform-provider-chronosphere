@@ -90,6 +90,14 @@ func (logControlConfigConverter) toModel(
 				}
 			}
 
+			if r.EmitMetrics != nil {
+				rule.EmitMetrics = convertEmitMetricsToModel(r.EmitMetrics)
+			}
+
+			if r.ReplaceField != nil {
+				rule.ReplaceField = convertReplaceFieldToModel(r.ReplaceField)
+			}
+
 			return rule
 		}),
 	}, nil
@@ -129,7 +137,211 @@ func (logControlConfigConverter) fromModel(
 				}
 			}
 
+			if r.EmitMetrics != nil {
+				rule.EmitMetrics = convertEmitMetricsFromModel(r.EmitMetrics)
+			}
+
+			if r.ReplaceField != nil {
+				rule.ReplaceField = convertReplaceFieldFromModel(r.ReplaceField)
+			}
+
 			return rule
 		}),
 	}, nil
+}
+
+func convertEmitMetricsToModel(em *intschema.LogControlConfigRulesEmitMetrics) *models.LogControlRuleEmitMetrics {
+	if em == nil {
+		return nil
+	}
+
+	result := &models.LogControlRuleEmitMetrics{
+		DropLog: em.DropLog,
+		Mode:    models.EmitMetricsMetricMode(em.Mode),
+		Name:    em.Name,
+	}
+
+	if em.Counter != nil {
+		result.Counter = &models.EmitMetricsCounter{}
+		if em.Counter.Value != nil {
+			result.Counter.Value = &models.Configv1LogFieldPath{
+				Selector: em.Counter.Value.Selector,
+			}
+		}
+	}
+
+	if em.Gauge != nil {
+		result.Gauge = &models.EmitMetricsGauge{
+			AggregationType: models.GaugeAggregationType(em.Gauge.AggregationType),
+		}
+		if em.Gauge.Value != nil {
+			result.Gauge.Value = &models.Configv1LogFieldPath{
+				Selector: em.Gauge.Value.Selector,
+			}
+		}
+	}
+
+	if em.Histogram != nil {
+		result.Histogram = &models.EmitMetricsHistogram{}
+		if em.Histogram.Value != nil {
+			result.Histogram.Value = &models.Configv1LogFieldPath{
+				Selector: em.Histogram.Value.Selector,
+			}
+		}
+	}
+
+	if len(em.Labels) > 0 {
+		result.Labels = sliceutil.Map(em.Labels, func(l intschema.LogControlConfigRulesEmitMetricsLabels) *models.LogControlRuleEmitMetricsLabel {
+			label := &models.LogControlRuleEmitMetricsLabel{
+				Key: l.Key,
+			}
+			if l.Value != nil {
+				label.Value = &models.Configv1LogFieldPath{
+					Selector: l.Value.Selector,
+				}
+			}
+			return label
+		})
+	}
+
+	return result
+}
+
+func convertReplaceFieldToModel(rf *intschema.LogControlConfigRulesReplaceField) *models.LogControlRuleReplaceField {
+	if rf == nil {
+		return nil
+	}
+
+	result := &models.LogControlRuleReplaceField{
+		ReplaceAll:   rf.ReplaceAll,
+		ReplaceMode:  models.ReplaceFieldReplaceMode(rf.ReplaceMode),
+		ReplaceRegex: rf.ReplaceRegex,
+	}
+
+	if rf.Field != nil {
+		result.Field = &models.Configv1LogFieldPath{
+			Selector: rf.Field.Selector,
+		}
+	}
+
+	if rf.MappedValue != nil {
+		result.MappedValue = &models.ReplaceFieldMappedValue{
+			DefaultValue: rf.MappedValue.DefaultValue,
+			UseDefault:   rf.MappedValue.UseDefault,
+		}
+		if len(rf.MappedValue.Pairs) > 0 {
+			result.MappedValue.Pairs = sliceutil.Map(rf.MappedValue.Pairs, func(p intschema.LogControlConfigRulesReplaceFieldMappedValuePairs) *models.MappedValueReplacePair {
+				return &models.MappedValueReplacePair{
+					Key:   p.Key,
+					Value: p.Value,
+				}
+			})
+		}
+	}
+
+	if rf.StaticValue != nil {
+		result.StaticValue = &models.ReplaceFieldStaticValue{
+			Value: rf.StaticValue.Value,
+		}
+	}
+
+	return result
+}
+
+func convertEmitMetricsFromModel(em *models.LogControlRuleEmitMetrics) *intschema.LogControlConfigRulesEmitMetrics {
+	if em == nil {
+		return nil
+	}
+
+	result := &intschema.LogControlConfigRulesEmitMetrics{
+		DropLog: em.DropLog,
+		Mode:    string(em.Mode),
+		Name:    em.Name,
+	}
+
+	if em.Counter != nil {
+		result.Counter = &intschema.LogControlConfigRulesEmitMetricsCounter{}
+		if em.Counter.Value != nil {
+			result.Counter.Value = &intschema.LogControlConfigRulesEmitMetricsCounterValue{
+				Selector: em.Counter.Value.Selector,
+			}
+		}
+	}
+
+	if em.Gauge != nil {
+		result.Gauge = &intschema.LogControlConfigRulesEmitMetricsGauge{
+			AggregationType: string(em.Gauge.AggregationType),
+		}
+		if em.Gauge.Value != nil {
+			result.Gauge.Value = &intschema.LogControlConfigRulesEmitMetricsGaugeValue{
+				Selector: em.Gauge.Value.Selector,
+			}
+		}
+	}
+
+	if em.Histogram != nil {
+		result.Histogram = &intschema.LogControlConfigRulesEmitMetricsHistogram{}
+		if em.Histogram.Value != nil {
+			result.Histogram.Value = &intschema.LogControlConfigRulesEmitMetricsHistogramValue{
+				Selector: em.Histogram.Value.Selector,
+			}
+		}
+	}
+
+	if len(em.Labels) > 0 {
+		result.Labels = sliceutil.Map(em.Labels, func(l *models.LogControlRuleEmitMetricsLabel) intschema.LogControlConfigRulesEmitMetricsLabels {
+			label := intschema.LogControlConfigRulesEmitMetricsLabels{
+				Key: l.Key,
+			}
+			if l.Value != nil {
+				label.Value = &intschema.LogControlConfigRulesEmitMetricsLabelsValue{
+					Selector: l.Value.Selector,
+				}
+			}
+			return label
+		})
+	}
+
+	return result
+}
+
+func convertReplaceFieldFromModel(rf *models.LogControlRuleReplaceField) *intschema.LogControlConfigRulesReplaceField {
+	if rf == nil {
+		return nil
+	}
+
+	result := &intschema.LogControlConfigRulesReplaceField{
+		ReplaceAll:   rf.ReplaceAll,
+		ReplaceMode:  string(rf.ReplaceMode),
+		ReplaceRegex: rf.ReplaceRegex,
+	}
+
+	if rf.Field != nil {
+		result.Field = &intschema.LogControlConfigRulesReplaceFieldField{
+			Selector: rf.Field.Selector,
+		}
+	}
+
+	if rf.MappedValue != nil {
+		result.MappedValue = &intschema.LogControlConfigRulesReplaceFieldMappedValue{
+			DefaultValue: rf.MappedValue.DefaultValue,
+			UseDefault:   rf.MappedValue.UseDefault,
+		}
+		if len(rf.MappedValue.Pairs) > 0 {
+			result.MappedValue.Pairs = sliceutil.Map(rf.MappedValue.Pairs, func(p *models.MappedValueReplacePair) intschema.LogControlConfigRulesReplaceFieldMappedValuePairs {
+				return intschema.LogControlConfigRulesReplaceFieldMappedValuePairs{
+					Key:   p.Key,
+					Value: p.Value,
+				}
+			})
+		}
+	}
+
+	if rf.StaticValue != nil {
+		result.StaticValue = &intschema.LogControlConfigRulesReplaceFieldStaticValue{
+			Value: rf.StaticValue.Value,
+		}
+	}
+
+	return result
 }

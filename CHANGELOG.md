@@ -1,6 +1,9 @@
 # Releases
 
 ## Unreleased
+Added:
+* Add `emit_metrics` and `replace_fields` to `log_control_config` resource.
+* Add `field_normalization` to `log_ingest_config` resource.
 
 ## v1.15.0
 

@@ -17,6 +17,12 @@ var LogIngestConfig = map[string]*schema.Schema{
 		Elem:     logFieldParserResource,
 		Optional: true,
 	},
+	"field_normalization": {
+		Type:     schema.TypeList,
+		Elem:     fieldNormalizationResource,
+		Optional: true,
+		MaxItems: 1,
+	},
 }
 
 var plaintextParserResource = &schema.Resource{
@@ -44,18 +50,14 @@ var logFieldParserResource = &schema.Resource{
 			Optional: true,
 		}.Schema(),
 		"source": {
-			Type: schema.TypeList,
-			Elem: &schema.Resource{
-				Schema: logFieldSelectorResource,
-			},
+			Type:     schema.TypeList,
+			Elem:     LogFieldSelectorResource,
 			Required: true,
 			MaxItems: 1,
 		},
 		"destination": {
-			Type: schema.TypeList,
-			Elem: &schema.Resource{
-				Schema: logFieldSelectorResource,
-			},
+			Type:     schema.TypeList,
+			Elem:     LogFieldSelectorResource,
 			Optional: true,
 			MaxItems: 1,
 		},
@@ -63,12 +65,51 @@ var logFieldParserResource = &schema.Resource{
 	},
 }
 
-var logFieldSelectorResource = map[string]*schema.Schema{
-	"selector": {
-		Type:        schema.TypeString,
-		Required:    true,
-		Description: "LogQL Selector to indicate field path. Use 'parent[child]' syntax to indicate nesting.",
+// LogFieldSelectorResource is shared across log configs
+var LogFieldSelectorResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"selector": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "LogQL Selector to indicate field path. Use 'parent[child]' syntax to indicate nesting.",
+		},
 	},
+}
+
+// Shared schemas for field normalization - these are used across multiple resources
+// to ensure the generator recognizes them as shared types
+var StringNormalizationSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Elem:     StringNormalizationResource,
+	Optional: true,
+	MaxItems: 1,
+}
+
+var NamedStringNormalizationSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Elem:     NamedStringNormalizationResource,
+	Optional: true,
+	MaxItems: 1,
+}
+
+// NamedStringNormalizationListSchema is for lists of named string normalizations (no MaxItems)
+var NamedStringNormalizationListSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Elem:     NamedStringNormalizationResource,
+	Optional: true,
+}
+
+var TimestampNormalizationSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Elem:     TimestampNormalizationResource,
+	Optional: true,
+	MaxItems: 1,
+}
+
+var LogFieldSelectorSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Elem:     LogFieldSelectorResource,
+	Optional: true,
 }
 
 var LogParserSchema = &schema.Schema{
@@ -125,4 +166,72 @@ var KeyValueLogParserSchema = &schema.Schema{
 	},
 	Optional: true,
 	MaxItems: 1,
+}
+
+var fieldNormalizationResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"custom_field_normalization": NamedStringNormalizationListSchema,
+		"message":                    StringNormalizationSchema,
+		"primary_key":                NamedStringNormalizationSchema,
+		"severity":                   StringNormalizationSchema,
+		"timestamp":                  TimestampNormalizationSchema,
+	},
+}
+
+// StringNormalizationResource is shared across log configs
+var StringNormalizationResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"default_value": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Default value to use when no source fields contain values.",
+		},
+		"sanitize_patterns": {
+			Type:        schema.TypeList,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Optional:    true,
+			Description: "Optional regex patterns to extract and sanitize values. Each pattern must have exactly one capturing group that will be used as the result.",
+		},
+		"source": {
+			Type:        schema.TypeList,
+			Elem:        LogFieldSelectorResource,
+			Optional:    true,
+			Description: "List of field paths to check for values, in priority order. The first non-empty value found will be used.",
+		},
+		"value_map": {
+			Type:        schema.TypeMap,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Optional:    true,
+			Description: "Optional mapping to normalize values. For example: {\"warn\": \"WARNING\", \"err\": \"ERROR\"} to standardize severity levels.",
+		},
+	},
+}
+
+// NamedStringNormalizationResource is shared across log configs
+var NamedStringNormalizationResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"normalization": {
+			Type:     schema.TypeList,
+			Elem:     StringNormalizationResource,
+			Optional: true,
+			MaxItems: 1,
+		},
+		"target": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The name of the target field where the normalized value will be stored.",
+		},
+	},
+}
+
+// TimestampNormalizationResource is shared across log configs
+var TimestampNormalizationResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"source": {
+			Type:        schema.TypeList,
+			Elem:        LogFieldSelectorResource,
+			Optional:    true,
+			Description: "List of field paths to check for timestamp values, in priority order. Common fields include \"timestamp\", \"@timestamp\", \"time\", \"datetime\".",
+		},
+	},
 }

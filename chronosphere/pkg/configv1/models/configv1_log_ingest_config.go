@@ -26,7 +26,7 @@ type Configv1LogIngestConfig struct {
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
 	// field normalization
-	FieldNormalization *LogIngestConfigfieldNormalization `json:"field_normalization,omitempty"`
+	FieldNormalization *LogIngestConfigFieldNormalization `json:"field_normalization,omitempty"`
 
 	// The parsers to apply to specific fields within structured logs or plaintext logs after those logs are parsed.
 	FieldParsers []*LogIngestConfigLogFieldParser `json:"field_parsers"`
