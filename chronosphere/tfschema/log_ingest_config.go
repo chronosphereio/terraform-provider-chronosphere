@@ -68,9 +68,8 @@ var logFieldParserResource = &schema.Resource{
 var LogFieldPathResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"selector": {
-			Type:        schema.TypeString,
-			Required:    true,
-			Description: "LogQL Selector to indicate field path. Use 'parent[child]' syntax to indicate nesting.",
+			Type:     schema.TypeString,
+			Required: true,
 		},
 	},
 }
@@ -96,9 +95,8 @@ var RegexLogParserSchema = &schema.Schema{
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"regex": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Re2 regex parser pattern to apply. Named capturing groups become named fields in the extracted log.",
+				Type:     schema.TypeString,
+				Required: true,
 			},
 		},
 	},
@@ -111,19 +109,16 @@ var KeyValueLogParserSchema = &schema.Schema{
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"pair_separator": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "String used to split each pair into its key and value.",
+				Type:     schema.TypeString,
+				Required: true,
 			},
 			"delimiter": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "String used to split the input into key-value pairs.",
+				Type:     schema.TypeString,
+				Required: true,
 			},
 			"trim_set": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "All leading and trailing characters contained in the trim set will be removed from keys and values.",
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 		},
 	},
@@ -158,10 +153,9 @@ var fieldNormalizationResource = &schema.Resource{
 var timestampNormalizationResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"source": {
-			Type:        schema.TypeList,
-			Elem:        LogFieldPathResource,
-			Optional:    true,
-			Description: "List of field paths to check for timestamp values, in priority order. Common fields include \"timestamp\", \"@timestamp\", \"time\", \"datetime\".",
+			Type:     schema.TypeList,
+			Elem:     LogFieldPathResource,
+			Optional: true,
 		},
 	},
 }
@@ -173,27 +167,23 @@ var LogIngestConfigStringNormalizationSchema = &schema.Schema{
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"default_value": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Default value to use when no source fields contain values.",
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 			"sanitize_patterns": {
-				Type:        schema.TypeList,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Optional:    true,
-				Description: "Optional regex patterns to extract and sanitize values. Each pattern must have exactly one capturing group that will be used as the result.",
+				Type:     schema.TypeList,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Optional: true,
 			},
 			"source": {
-				Type:        schema.TypeList,
-				Elem:        LogFieldPathResource,
-				Optional:    true,
-				Description: "List of field paths to check for values, in priority order. The first non-empty value found will be used.",
+				Type:     schema.TypeList,
+				Elem:     LogFieldPathResource,
+				Optional: true,
 			},
 			"value_map": {
-				Type:        schema.TypeMap,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Optional:    true,
-				Description: "Optional mapping to normalize values. For example: {\"warn\": \"WARNING\", \"err\": \"ERROR\"} to standardize severity levels.",
+				Type:     schema.TypeMap,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Optional: true,
 			},
 		},
 	},
@@ -203,9 +193,8 @@ var NamedStringNormalizationResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"normalization": LogIngestConfigStringNormalizationSchema,
 		"target": {
-			Type:        schema.TypeString,
-			Optional:    true,
-			Description: "The name of the target field where the normalized value will be stored.",
+			Type:     schema.TypeString,
+			Optional: true,
 		},
 	},
 }

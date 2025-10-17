@@ -88,27 +88,20 @@ var logControlRuleDropFieldResource = &schema.Resource{
 			Type:     schema.TypeString,
 			Optional: true,
 		},
-		"parent_path": {
-			Type:     schema.TypeList,
-			Elem:     logFieldPathResource,
-			Optional: true,
-			MaxItems: 1,
-		},
-	},
-}
-
-var logFieldPathResource = &schema.Resource{
-	Schema: map[string]*schema.Schema{
-		"selector": {
-			Type:     schema.TypeString,
-			Optional: true,
-		},
+		"parent_path": LogFieldPathSchema,
 	},
 }
 
 var LogFieldPathSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	Elem:     logFieldPathResource,
+	Type: schema.TypeList,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"selector": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+		},
+	},
 	Optional: true,
 	MaxItems: 1,
 }
@@ -155,12 +148,7 @@ var logControlRuleEmitMetricsResource = &schema.Resource{
 
 var logControlRuleEmitMetricsCounterResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
-		"value": {
-			Type:     schema.TypeList,
-			Elem:     logFieldPathResource,
-			Optional: true,
-			MaxItems: 1,
-		},
+		"value": LogFieldPathSchema,
 	},
 }
 
@@ -170,23 +158,13 @@ var logControlRuleEmitMetricsGaugeResource = &schema.Resource{
 			Value:    enum.GaugeAggregationType.ToStrings(),
 			Optional: true,
 		}.Schema(),
-		"value": {
-			Type:     schema.TypeList,
-			Elem:     logFieldPathResource,
-			Optional: true,
-			MaxItems: 1,
-		},
+		"value": LogFieldPathSchema,
 	},
 }
 
 var logControlRuleEmitMetricsHistogramResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
-		"value": {
-			Type:     schema.TypeList,
-			Elem:     logFieldPathResource,
-			Optional: true,
-			MaxItems: 1,
-		},
+		"value": LogFieldPathSchema,
 	},
 }
 
@@ -196,23 +174,13 @@ var logControlRuleEmitMetricsLabelResource = &schema.Resource{
 			Type:     schema.TypeString,
 			Optional: true,
 		},
-		"value": {
-			Type:     schema.TypeList,
-			Elem:     logFieldPathResource,
-			Optional: true,
-			MaxItems: 1,
-		},
+		"value": LogFieldPathSchema,
 	},
 }
 
 var logControlRuleReplaceFieldResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
-		"field": {
-			Type:     schema.TypeList,
-			Elem:     logFieldPathResource,
-			Optional: true,
-			MaxItems: 1,
-		},
+		"field": LogFieldPathSchema,
 		"mapped_value": {
 			Type:     schema.TypeList,
 			Elem:     logControlRuleReplaceFieldMappedValueResource,

@@ -69,7 +69,7 @@ type LogControlConfigRulesSample struct {
 }
 
 type LogControlConfigRulesReplaceField struct {
-	Field        *LogControlConfigRulesReplaceFieldField       `intschema:"field,optional,list_encoded_object"`
+	Field        *LogControlConfigFieldPath                    `intschema:"field,optional,list_encoded_object"`
 	MappedValue  *LogControlConfigRulesReplaceFieldMappedValue `intschema:"mapped_value,optional,list_encoded_object"`
 	ReplaceAll   bool                                          `intschema:"replace_all,optional"`
 	ReplaceMode  string                                        `intschema:"replace_mode,optional"`
@@ -92,10 +92,6 @@ type LogControlConfigRulesReplaceFieldMappedValuePairs struct {
 	Value string `intschema:"value,optional"`
 }
 
-type LogControlConfigRulesReplaceFieldField struct {
-	Selector string `intschema:"selector,optional"`
-}
-
 type LogControlConfigRulesEmitMetrics struct {
 	Name      string                                     `intschema:"name,optional"`
 	Counter   *LogControlConfigRulesEmitMetricsCounter   `intschema:"counter,optional,list_encoded_object"`
@@ -107,44 +103,24 @@ type LogControlConfigRulesEmitMetrics struct {
 }
 
 type LogControlConfigRulesEmitMetricsLabels struct {
-	Key   string                                       `intschema:"key,optional"`
-	Value *LogControlConfigRulesEmitMetricsLabelsValue `intschema:"value,optional,list_encoded_object"`
-}
-
-type LogControlConfigRulesEmitMetricsLabelsValue struct {
-	Selector string `intschema:"selector,optional"`
+	Key   string                     `intschema:"key,optional"`
+	Value *LogControlConfigFieldPath `intschema:"value,optional,list_encoded_object"`
 }
 
 type LogControlConfigRulesEmitMetricsHistogram struct {
-	Value *LogControlConfigRulesEmitMetricsHistogramValue `intschema:"value,optional,list_encoded_object"`
-}
-
-type LogControlConfigRulesEmitMetricsHistogramValue struct {
-	Selector string `intschema:"selector,optional"`
+	Value *LogControlConfigFieldPath `intschema:"value,optional,list_encoded_object"`
 }
 
 type LogControlConfigRulesEmitMetricsGauge struct {
-	AggregationType string                                      `intschema:"aggregation_type,optional"`
-	Value           *LogControlConfigRulesEmitMetricsGaugeValue `intschema:"value,optional,list_encoded_object"`
-}
-
-type LogControlConfigRulesEmitMetricsGaugeValue struct {
-	Selector string `intschema:"selector,optional"`
+	AggregationType string                     `intschema:"aggregation_type,optional"`
+	Value           *LogControlConfigFieldPath `intschema:"value,optional,list_encoded_object"`
 }
 
 type LogControlConfigRulesEmitMetricsCounter struct {
-	Value *LogControlConfigRulesEmitMetricsCounterValue `intschema:"value,optional,list_encoded_object"`
-}
-
-type LogControlConfigRulesEmitMetricsCounterValue struct {
-	Selector string `intschema:"selector,optional"`
+	Value *LogControlConfigFieldPath `intschema:"value,optional,list_encoded_object"`
 }
 
 type LogControlConfigRulesDropField struct {
-	FieldRegex string                                    `intschema:"field_regex,optional"`
-	ParentPath *LogControlConfigRulesDropFieldParentPath `intschema:"parent_path,optional,list_encoded_object"`
-}
-
-type LogControlConfigRulesDropFieldParentPath struct {
-	Selector string `intschema:"selector,optional"`
+	FieldRegex string                     `intschema:"field_regex,optional"`
+	ParentPath *LogControlConfigFieldPath `intschema:"parent_path,optional,list_encoded_object"`
 }
