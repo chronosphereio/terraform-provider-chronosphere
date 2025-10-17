@@ -39,34 +39,33 @@ import (
 // Add shared schema references here to generate shared types.
 // Insert in sorted order.
 var sharedSchemaTypeNames = map[*schema.Schema]string{
-	tfschema.KeyValueLogParserSchema:                "KeyValueParser",
-	tfschema.LogAllocationConfigSchema:              "LogAllocationConfigSchema",
-	tfschema.LogParserSchema:                        "LogParser",
-	tfschema.LogPrioritiesSchema:                    "LogPrioritiesSchema",
-	tfschema.LogSearchFilterSchema:                  "LogSearchFilterSchema",
-	tfschema.MatcherListSchema:                      "Matcher",
-	tfschema.MonitorSeriesConditionSchema:           "MonitorSeriesCondition",
-	tfschema.RegexLogParserSchema:                   "RegexParser",
-	tfschema.ResourcePoolAllocationSchema:           "ResourcePoolAllocationSchema",
-	tfschema.ResourcePoolPrioritiesSchema:           "ResourcePoolPrioritiesSchema",
-	tfschema.ResourcePoolAllocationThresholdsSchema: "ResourcePoolAllocationThresholdsSchema",
-	tfschema.ResourcePoolAllocationThresholdSchema:  "ResourcePoolAllocationThresholdSchema",
-	tfschema.TraceBoolFilterSchema:                  "TraceBoolFilter",
-	tfschema.TraceDurationFilterSchema:              "TraceDurationFilter",
-	tfschema.TraceFilterSchema:                      "TraceFilter",
-	tfschema.TraceNumericFilterSchema:               "TraceNumericFilter",
-	tfschema.TraceSearchFilterSchema:                "TraceSearchFilter",
-	tfschema.TraceSpanCountFilterSchema:             "TraceSpanCountFilter",
-	tfschema.TraceSpanFilterListSchema:              "TraceSpanFilter",
-	tfschema.TraceStringFilterSchema:                "TraceStringFilter",
-	tfschema.TraceTagFilterSchema:                   "TraceTagFilter",
-	tfschema.ValueMappingsSchema:                    "ValueMappings",
-	tfschema.SLOAdditionalPromQLFilters:             "SLOAdditionalPromQLFilters",
-	tfschema.SignalGrouping:                         "SignalGrouping",
-	tfschema.PartitionFilterSchema:                  "PartitionFilter",
-	// Field normalization schemas are handled via sharedElemTypeNames below
-	// Log control schemas
-	tfschema.LogFieldPathSchema: "LogControlConfigFieldPath",
+	tfschema.KeyValueLogParserSchema:                  "KeyValueParser",
+	tfschema.LogAllocationConfigSchema:                "LogAllocationConfigSchema",
+	tfschema.LogParserSchema:                          "LogParser",
+	tfschema.LogPrioritiesSchema:                      "LogPrioritiesSchema",
+	tfschema.LogSearchFilterSchema:                    "LogSearchFilterSchema",
+	tfschema.MatcherListSchema:                        "Matcher",
+	tfschema.MonitorSeriesConditionSchema:             "MonitorSeriesCondition",
+	tfschema.RegexLogParserSchema:                     "RegexParser",
+	tfschema.ResourcePoolAllocationSchema:             "ResourcePoolAllocationSchema",
+	tfschema.ResourcePoolPrioritiesSchema:             "ResourcePoolPrioritiesSchema",
+	tfschema.ResourcePoolAllocationThresholdsSchema:   "ResourcePoolAllocationThresholdsSchema",
+	tfschema.ResourcePoolAllocationThresholdSchema:    "ResourcePoolAllocationThresholdSchema",
+	tfschema.TraceBoolFilterSchema:                    "TraceBoolFilter",
+	tfschema.TraceDurationFilterSchema:                "TraceDurationFilter",
+	tfschema.TraceFilterSchema:                        "TraceFilter",
+	tfschema.TraceNumericFilterSchema:                 "TraceNumericFilter",
+	tfschema.TraceSearchFilterSchema:                  "TraceSearchFilter",
+	tfschema.TraceSpanCountFilterSchema:               "TraceSpanCountFilter",
+	tfschema.TraceSpanFilterListSchema:                "TraceSpanFilter",
+	tfschema.TraceStringFilterSchema:                  "TraceStringFilter",
+	tfschema.TraceTagFilterSchema:                     "TraceTagFilter",
+	tfschema.ValueMappingsSchema:                      "ValueMappings",
+	tfschema.SLOAdditionalPromQLFilters:               "SLOAdditionalPromQLFilters",
+	tfschema.SignalGrouping:                           "SignalGrouping",
+	tfschema.PartitionFilterSchema:                    "PartitionFilter",
+	tfschema.LogFieldPathSchema:                       "LogControlConfigFieldPath",
+	tfschema.LogIngestConfigStringNormalizationSchema: "LogIngestConfigStringNormalization",
 }
 
 // Add shared element references here to generate shared types. Usually we
@@ -80,12 +79,8 @@ var sharedSchemaTypeNames = map[*schema.Schema]string{
 var sharedElemTypeNames = map[*schema.Resource]string{
 	tfschema.NotificationRouteSchema.Elem.(*schema.Resource): "NotificationRoute",
 	tfschema.ResourcePoolElemSchema:                          "ResourcePoolsConfigPool",
-	// Log field normalization resources need to be here to prevent the generator from creating
-	// duplicate types when it processes nested resources within NamedStringNormalizationResource
-	tfschema.StringNormalizationResource:      "LogIngestConfigStringNormalization",
-	tfschema.NamedStringNormalizationResource: "LogIngestConfigNamedStringNormalization",
-	tfschema.TimestampNormalizationResource:   "LogIngestConfigTimestampNormalization",
-	tfschema.LogFieldSelectorResource:         "LogFieldPath",
+	tfschema.NamedStringNormalizationResource:                "LogIngestConfigNamedStringNormalization",
+	tfschema.LogFieldPathResource:                            "LogFieldPath",
 }
 
 // Exhaustive list of all "xxx_id" fields which identifies whether the field

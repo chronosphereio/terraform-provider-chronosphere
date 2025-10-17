@@ -37,10 +37,6 @@ type LogIngestConfigStringNormalization struct {
 	ValueMap         map[string]string `intschema:"value_map,optional"`
 }
 
-type LogIngestConfigTimestampNormalization struct {
-	Source []LogFieldPath `intschema:"source,optional"`
-}
-
 type LogParser struct {
 	ParserType     string          `intschema:"parser_type"`
 	KeyValueParser *KeyValueParser `intschema:"key_value_parser,optional,list_encoded_object"`

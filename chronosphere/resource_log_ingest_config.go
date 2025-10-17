@@ -269,7 +269,7 @@ func convertFieldNormalizationFromModel(fn *models.LogIngestConfigFieldNormaliza
 	}
 
 	if fn.Timestamp != nil {
-		result.Timestamp = &intschema.LogIngestConfigTimestampNormalization{
+		result.Timestamp = &intschema.LogIngestConfigFieldNormalizationTimestamp{
 			Source: sliceutil.Map(fn.Timestamp.Source, func(fp *models.Configv1LogFieldPath) intschema.LogFieldPath {
 				return intschema.LogFieldPath{Selector: fp.Selector}
 			}),
