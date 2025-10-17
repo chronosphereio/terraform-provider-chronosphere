@@ -2,8 +2,7 @@ resource "chronosphere_log_ingest_config" "my-log-ingest-config" {
   plaintext_parser {
     name = "syslog"
     mode = "ENABLED"
-    keep_original = true
-    
+
     parser {
       parser_type = "REGEX"
       regex_parser {
@@ -17,7 +16,8 @@ resource "chronosphere_log_ingest_config" "my-log-ingest-config" {
   plaintext_parser {
     name = "apache_error"
     mode = "ENABLED"
-    
+    keep_original = true
+
     parser {
       parser_type = "REGEX"
       regex_parser {
@@ -30,11 +30,11 @@ resource "chronosphere_log_ingest_config" "my-log-ingest-config" {
 
   field_parser {
     mode = "ENABLED"
-    
+
     source {
       selector = "raw_message"
     }
-    
+
     parser {
       parser_type = "JSON"
     }
@@ -42,15 +42,15 @@ resource "chronosphere_log_ingest_config" "my-log-ingest-config" {
 
   field_parser {
     mode = "ENABLED"
-    
+
     source {
       selector = "kv_details"
     }
-    
+
     destination {
       selector = "structured_details"
     }
-    
+
     parser {
       parser_type = "KEY_VALUE"
       key_value_parser {
@@ -58,6 +58,99 @@ resource "chronosphere_log_ingest_config" "my-log-ingest-config" {
         delimiter = ","
         trim_set = " {}"
       }
+    }
+  }
+
+  field_normalization {
+    # Primary key normalization with multiple sources, value mapping, and sanitization
+    primary_key {
+      normalization {
+        source {
+          selector = "service_name"
+        }
+        source {
+          selector = "app"
+        }
+        value_map = {
+          "svc1" = "service-1"
+          "svc2" = "service-2"
+        }
+        sanitize_patterns = ["^prefix-(.*)$"]
+        default_value = "unknown-service"
+      }
+      target = "service"
+    }
+
+    timestamp {
+      source {
+        selector = "timestamp"
+      }
+      source {
+        selector = "ts"
+      }
+      source {
+        selector = "@timestamp"
+      }
+    }
+
+    severity {
+      source {
+        selector = "level"
+      }
+      source {
+        selector = "severity"
+      }
+      value_map = {
+        "debug" = "DEBUG"
+        "info"  = "INFO"
+        "warn"  = "WARNING"
+        "error" = "ERROR"
+        "fatal" = "CRITICAL"
+      }
+      default_value = "INFO"
+    }
+
+    message {
+      source {
+        selector = "message"
+      }
+      source {
+        selector = "msg"
+      }
+      sanitize_patterns = ["^\\[.*\\] (.*)$"]
+      default_value = "no message"
+    }
+
+    custom_field_normalization {
+      normalization {
+        source {
+          selector = "env"
+        }
+        source {
+          selector = "environment"
+        }
+        value_map = {
+          "dev"  = "development"
+          "stg"  = "staging"
+          "prod" = "production"
+        }
+        default_value = "development"
+      }
+      target = "environment"
+    }
+
+    custom_field_normalization {
+      normalization {
+        source {
+          selector = "region"
+        }
+        source {
+          selector = "datacenter"
+        }
+        sanitize_patterns = ["^dc-(.*)$"]
+        default_value = "us-east-1"
+      }
+      target = "region"
     }
   }
 }

@@ -1012,6 +1012,7 @@
       "type": "object"
     },
     "LogControlRuleEmitMetrics": {
+      "description": "EmitMetrics is the configuration for emit metrics action.",
       "properties": {
         "mode": {
           "$ref": "#/definitions/EmitMetricsMetricMode"
@@ -1041,7 +1042,6 @@
           "$ref": "#/definitions/EmitMetricsHistogram"
         }
       },
-      "title": "EmitMetrics is the configuration for emit metrics action.",
       "type": "object"
     },
     "LogControlRuleEmitMetricsLabel": {
@@ -1088,6 +1088,31 @@
           "description": "Percentage of matching logs to keep. Must be in the range (0, 1].",
           "format": "double",
           "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "LogIngestConfigFieldNormalization": {
+      "description": "FieldNormalization allows you to map and normalize well-known fields from your logs.\nThese mappings run after parsing to standardize common fields like timestamp,\nseverity level, primary key name, and message across different log formats.",
+      "properties": {
+        "primary_key": {
+          "$ref": "#/definitions/LogIngestConfigNamedStringNormalization"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/LogIngestConfigTimestampNormalization"
+        },
+        "severity": {
+          "$ref": "#/definitions/LogIngestConfigStringNormalization"
+        },
+        "message": {
+          "$ref": "#/definitions/LogIngestConfigStringNormalization"
+        },
+        "custom_field_normalization": {
+          "description": "Maps additional custom fields from your logs. These will not be indexed.\nUse these for any other fields you want to normalize, such as environment, region, or user ID.",
+          "items": {
+            "$ref": "#/definitions/LogIngestConfigNamedStringNormalization"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -1211,31 +1236,6 @@
           "type": "array"
         }
       },
-      "type": "object"
-    },
-    "LogIngestConfigfieldNormalization": {
-      "properties": {
-        "primary_key": {
-          "$ref": "#/definitions/LogIngestConfigNamedStringNormalization"
-        },
-        "timestamp": {
-          "$ref": "#/definitions/LogIngestConfigTimestampNormalization"
-        },
-        "severity": {
-          "$ref": "#/definitions/LogIngestConfigStringNormalization"
-        },
-        "message": {
-          "$ref": "#/definitions/LogIngestConfigStringNormalization"
-        },
-        "custom_field_normalization": {
-          "description": "Maps additional custom fields from your logs. These will not be indexed.\nUse these for any other fields you want to normalize, such as environment, region, or user ID.",
-          "items": {
-            "$ref": "#/definitions/LogIngestConfigNamedStringNormalization"
-          },
-          "type": "array"
-        }
-      },
-      "title": "fieldNormalization allows you to map and normalize well-known fields from your logs.\nThese mappings run after parsing to standardize common fields like timestamp,\nseverity level, primary key name, and message across different log formats.",
       "type": "object"
     },
     "LogParserKeyValueParser": {
@@ -2883,6 +2883,18 @@
           "description": "The filter value used in comparison against match candidates.",
           "format": "double",
           "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "TraceSearchFilterScopeFilter": {
+      "properties": {
+        "span_scopes": {
+          "description": "Specifies the span filters that define which spans contribute to the metrics calculation.\nOnly spans matching these filters will be included in the metrics aggregation.",
+          "items": {
+            "$ref": "#/definitions/TraceSearchFilterSpanFilter"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -4992,7 +5004,8 @@
         "DROP",
         "SAMPLE",
         "DROP_FIELD",
-        "REPLACE_FIELD"
+        "REPLACE_FIELD",
+        "EMIT_METRICS"
       ],
       "type": "string"
     },
@@ -5043,7 +5056,7 @@
           "type": "array"
         },
         "field_normalization": {
-          "$ref": "#/definitions/LogIngestConfigfieldNormalization"
+          "$ref": "#/definitions/LogIngestConfigFieldNormalization"
         }
       },
       "type": "object"
@@ -6489,6 +6502,9 @@
             "$ref": "#/definitions/configv1TraceMetricsRuleGroupBy"
           },
           "type": "array"
+        },
+        "scope_filter": {
+          "$ref": "#/definitions/TraceSearchFilterScopeFilter"
         }
       },
       "type": "object"
@@ -6517,6 +6533,9 @@
             "$ref": "#/definitions/TraceSearchFilterSpanFilter"
           },
           "type": "array"
+        },
+        "scope_filter": {
+          "$ref": "#/definitions/TraceSearchFilterScopeFilter"
         }
       },
       "type": "object"

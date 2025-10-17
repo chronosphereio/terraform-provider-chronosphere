@@ -19,6 +19,9 @@ import (
 // swagger:model configv1TraceSearchFilter
 type Configv1TraceSearchFilter struct {
 
+	// scope filter
+	ScopeFilter *TraceSearchFilterScopeFilter `json:"scope_filter,omitempty"`
+
 	// Specifies the span conditions to match on. All conditions must be true in a
 	// single span for the span to be considered a match. If `span_count` is specified,
 	// the number of spans within the trace that match span conditions must be within
@@ -34,6 +37,10 @@ type Configv1TraceSearchFilter struct {
 func (m *Configv1TraceSearchFilter) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateScopeFilter(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSpan(formats); err != nil {
 		res = append(res, err)
 	}
@@ -45,6 +52,25 @@ func (m *Configv1TraceSearchFilter) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Configv1TraceSearchFilter) validateScopeFilter(formats strfmt.Registry) error {
+	if swag.IsZero(m.ScopeFilter) { // not required
+		return nil
+	}
+
+	if m.ScopeFilter != nil {
+		if err := m.ScopeFilter.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("scope_filter")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("scope_filter")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -97,6 +123,10 @@ func (m *Configv1TraceSearchFilter) validateTrace(formats strfmt.Registry) error
 func (m *Configv1TraceSearchFilter) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateScopeFilter(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateSpan(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -108,6 +138,22 @@ func (m *Configv1TraceSearchFilter) ContextValidate(ctx context.Context, formats
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Configv1TraceSearchFilter) contextValidateScopeFilter(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.ScopeFilter != nil {
+		if err := m.ScopeFilter.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("scope_filter")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("scope_filter")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

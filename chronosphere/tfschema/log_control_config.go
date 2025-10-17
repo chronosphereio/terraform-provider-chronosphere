@@ -58,6 +58,18 @@ var logControlRuleResource = &schema.Resource{
 			Optional: true,
 			MaxItems: 1,
 		},
+		"emit_metrics": {
+			Type:     schema.TypeList,
+			Elem:     logControlRuleEmitMetricsResource,
+			Optional: true,
+			MaxItems: 1,
+		},
+		"replace_field": {
+			Type:     schema.TypeList,
+			Elem:     logControlRuleReplaceFieldResource,
+			Optional: true,
+			MaxItems: 1,
+		},
 	},
 }
 
@@ -76,18 +88,160 @@ var logControlRuleDropFieldResource = &schema.Resource{
 			Type:     schema.TypeString,
 			Optional: true,
 		},
-		"parent_path": {
+		"parent_path": LogFieldPathSchema,
+	},
+}
+
+var LogFieldPathSchema = &schema.Schema{
+	Type: schema.TypeList,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"selector": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+		},
+	},
+	Optional: true,
+	MaxItems: 1,
+}
+
+var logControlRuleEmitMetricsResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"counter": {
 			Type:     schema.TypeList,
-			Elem:     logFieldPathResource,
+			Elem:     logControlRuleEmitMetricsCounterResource,
+			Optional: true,
+			MaxItems: 1,
+		},
+		"drop_log": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+		"gauge": {
+			Type:     schema.TypeList,
+			Elem:     logControlRuleEmitMetricsGaugeResource,
+			Optional: true,
+			MaxItems: 1,
+		},
+		"histogram": {
+			Type:     schema.TypeList,
+			Elem:     logControlRuleEmitMetricsHistogramResource,
+			Optional: true,
+			MaxItems: 1,
+		},
+		"labels": {
+			Type:     schema.TypeList,
+			Elem:     logControlRuleEmitMetricsLabelResource,
+			Optional: true,
+		},
+		"mode": Enum{
+			Value:    enum.EmitMetricsMetricMode.ToStrings(),
+			Optional: true,
+		}.Schema(),
+		"name": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+	},
+}
+
+var logControlRuleEmitMetricsCounterResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"value": LogFieldPathSchema,
+	},
+}
+
+var logControlRuleEmitMetricsGaugeResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"aggregation_type": Enum{
+			Value:    enum.GaugeAggregationType.ToStrings(),
+			Optional: true,
+		}.Schema(),
+		"value": LogFieldPathSchema,
+	},
+}
+
+var logControlRuleEmitMetricsHistogramResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"value": LogFieldPathSchema,
+	},
+}
+
+var logControlRuleEmitMetricsLabelResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"key": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"value": LogFieldPathSchema,
+	},
+}
+
+var logControlRuleReplaceFieldResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"field": LogFieldPathSchema,
+		"mapped_value": {
+			Type:     schema.TypeList,
+			Elem:     logControlRuleReplaceFieldMappedValueResource,
+			Optional: true,
+			MaxItems: 1,
+		},
+		"replace_all": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+		"replace_mode": Enum{
+			Value:    enum.ReplaceFieldReplaceMode.ToStrings(),
+			Optional: true,
+		}.Schema(),
+		"replace_regex": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"static_value": {
+			Type:     schema.TypeList,
+			Elem:     logControlRuleReplaceFieldStaticValueResource,
 			Optional: true,
 			MaxItems: 1,
 		},
 	},
 }
 
-var logFieldPathResource = &schema.Resource{
+var logControlRuleReplaceFieldMappedValueResource = &schema.Resource{
 	Schema: map[string]*schema.Schema{
-		"selector": {
+		"default_value": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"pairs": {
+			Type:     schema.TypeList,
+			Elem:     logControlRuleReplaceFieldMappedValuePairResource,
+			Optional: true,
+		},
+		"use_default": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+	},
+}
+
+var logControlRuleReplaceFieldMappedValuePairResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"key": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"value": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+	},
+}
+
+var logControlRuleReplaceFieldStaticValueResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"value": {
 			Type:     schema.TypeString,
 			Optional: true,
 		},

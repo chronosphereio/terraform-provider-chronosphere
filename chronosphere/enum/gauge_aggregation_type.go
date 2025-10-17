@@ -18,26 +18,18 @@ import (
 	configv1 "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
-// LogControlRuleType is an enum.
-var LogControlRuleType = newEnum("LogControlRuleType", []value[configv1.Configv1LogControlRuleType]{
+// GaugeAggregationType is an enum.
+var GaugeAggregationType = newEnum("GaugeAggregationType", []value[configv1.GaugeAggregationType]{
 	{
-		v1:    configv1.Configv1LogControlRuleTypeDROP,
-		alias: "DROP",
+		v1:    configv1.GaugeAggregationTypeLAST,
+		alias: "LAST",
 	},
 	{
-		v1:    configv1.Configv1LogControlRuleTypeSAMPLE,
-		alias: "SAMPLE",
+		v1:    configv1.GaugeAggregationTypeMIN,
+		alias: "MIN",
 	},
 	{
-		v1:    configv1.Configv1LogControlRuleTypeDROPFIELD,
-		alias: "DROP_FIELD",
-	},
-	{
-		v1:    configv1.Configv1LogControlRuleTypeREPLACEFIELD,
-		alias: "REPLACE_FIELD",
-	},
-	{
-		v1:    configv1.Configv1LogControlRuleTypeEMITMETRICS,
-		alias: "EMIT_METRICS",
+		v1:    configv1.GaugeAggregationTypeMAX,
+		alias: "MAX",
 	},
 })

@@ -26,6 +26,12 @@ type ConfigunstableLogInternalMaterializedField struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
+	// Materialize expression allows providing more complex instructions
+	// how to get field value, for example using conditions, instead
+	// of simply targeting field defined by targeted_field.
+	// If materialize_expression is provided targeted_field should be empty.
+	MaterializeExpression string `json:"materialize_expression,omitempty"`
+
 	// Name of the entity.
 	Name string `json:"name,omitempty"`
 

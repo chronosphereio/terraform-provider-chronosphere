@@ -17,6 +17,12 @@ var LogIngestConfig = map[string]*schema.Schema{
 		Elem:     logFieldParserResource,
 		Optional: true,
 	},
+	"field_normalization": {
+		Type:     schema.TypeList,
+		Elem:     fieldNormalizationResource,
+		Optional: true,
+		MaxItems: 1,
+	},
 }
 
 var plaintextParserResource = &schema.Resource{
@@ -44,18 +50,14 @@ var logFieldParserResource = &schema.Resource{
 			Optional: true,
 		}.Schema(),
 		"source": {
-			Type: schema.TypeList,
-			Elem: &schema.Resource{
-				Schema: logFieldSelectorResource,
-			},
+			Type:     schema.TypeList,
+			Elem:     LogFieldPathResource,
 			Required: true,
 			MaxItems: 1,
 		},
 		"destination": {
-			Type: schema.TypeList,
-			Elem: &schema.Resource{
-				Schema: logFieldSelectorResource,
-			},
+			Type:     schema.TypeList,
+			Elem:     LogFieldPathResource,
 			Optional: true,
 			MaxItems: 1,
 		},
@@ -63,11 +65,12 @@ var logFieldParserResource = &schema.Resource{
 	},
 }
 
-var logFieldSelectorResource = map[string]*schema.Schema{
-	"selector": {
-		Type:        schema.TypeString,
-		Required:    true,
-		Description: "LogQL Selector to indicate field path. Use 'parent[child]' syntax to indicate nesting.",
+var LogFieldPathResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"selector": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
 	},
 }
 
@@ -92,9 +95,8 @@ var RegexLogParserSchema = &schema.Schema{
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"regex": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Re2 regex parser pattern to apply. Named capturing groups become named fields in the extracted log.",
+				Type:     schema.TypeString,
+				Required: true,
 			},
 		},
 	},
@@ -107,22 +109,92 @@ var KeyValueLogParserSchema = &schema.Schema{
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"pair_separator": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "String used to split each pair into its key and value.",
+				Type:     schema.TypeString,
+				Required: true,
 			},
 			"delimiter": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "String used to split the input into key-value pairs.",
+				Type:     schema.TypeString,
+				Required: true,
 			},
 			"trim_set": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "All leading and trailing characters contained in the trim set will be removed from keys and values.",
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 		},
 	},
 	Optional: true,
 	MaxItems: 1,
+}
+
+var fieldNormalizationResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"custom_field_normalization": {
+			Type:     schema.TypeList,
+			Elem:     NamedStringNormalizationResource,
+			Optional: true,
+		},
+		"message": LogIngestConfigStringNormalizationSchema,
+		"primary_key": {
+			Type:     schema.TypeList,
+			Elem:     NamedStringNormalizationResource,
+			Optional: true,
+			MaxItems: 1,
+		},
+		"severity": LogIngestConfigStringNormalizationSchema,
+		"timestamp": {
+			Type:     schema.TypeList,
+			Elem:     timestampNormalizationResource,
+			Optional: true,
+			MaxItems: 1,
+		},
+	},
+}
+
+var timestampNormalizationResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"source": {
+			Type:     schema.TypeList,
+			Elem:     LogFieldPathResource,
+			Optional: true,
+		},
+	},
+}
+
+var LogIngestConfigStringNormalizationSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Optional: true,
+	MaxItems: 1,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"default_value": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"sanitize_patterns": {
+				Type:     schema.TypeList,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+			},
+			"source": {
+				Type:     schema.TypeList,
+				Elem:     LogFieldPathResource,
+				Optional: true,
+			},
+			"value_map": {
+				Type:     schema.TypeMap,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+			},
+		},
+	},
+}
+
+var NamedStringNormalizationResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"normalization": LogIngestConfigStringNormalizationSchema,
+		"target": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+	},
 }

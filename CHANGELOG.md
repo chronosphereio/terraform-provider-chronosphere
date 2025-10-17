@@ -1,6 +1,9 @@
 # Releases
 
 ## Unreleased
+Added:
+* Add `emit_metrics` and `replace_fields` to `chronosphere_log_control_config` resource.
+* Add `field_normalization` to `chronosphere_log_ingest_config` resource.
 
 ## v1.15.0
 
