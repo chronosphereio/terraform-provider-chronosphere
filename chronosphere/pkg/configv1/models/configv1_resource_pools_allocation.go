@@ -35,8 +35,9 @@ type Configv1ResourcePoolsAllocation struct {
 	// the default pool) must exactly equal `100`.
 	PercentOfLicense float64 `json:"percent_of_license,omitempty"`
 
-	// Optional. For supported licenses, defines thresholds with strict limits for
-	// when to drop new consumption of the license for a pool. Only
+	// Defines thresholds with strict limits for when to drop new consumption of the
+	// persisted cardinality license for a pool. Setting `priority_thresholds` is
+	// required to set limits for cardinality licenses. Only
 	// `PERSISTED_CARDINALITY_STANDARD` and `PERSISTED_CARDINALITY_HISTOGRAM` are
 	// supported.
 	PriorityThresholds []*AllocationThresholds `json:"priority_thresholds"`

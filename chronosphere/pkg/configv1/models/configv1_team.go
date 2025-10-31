@@ -24,7 +24,7 @@ type Configv1Team struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Optional short description of the team.
+	// Optional. Short description of the team.
 	Description string `json:"description,omitempty"`
 
 	// The name of the Team. You can modify this value after the Team is created.

@@ -599,7 +599,9 @@
         "INSTANT_RATE",
         "WEEKLY_VOLUME",
         "MONTHLY_VOLUME",
-        "HOURLY_VOLUME"
+        "HOURLY_VOLUME",
+        "ROLLING_1_HOUR_VOLUME",
+        "ROLLING_3_HOUR_VOLUME"
       ],
       "type": "string"
     },
@@ -669,22 +671,24 @@
     "DefinitionBurnRateDefinition": {
       "properties": {
         "window": {
+          "description": "Time window for the burn rate calculation.",
           "type": "string"
         },
         "budget": {
-          "description": "The amount of allowed errors during a given time window,\nexpressed as a percentage of the error budget. Must be a\nvalue between `0.0` and `100.0`, exclusive.",
+          "description": "The amount of allowed errors during a given time window, expressed as a\npercentage of the error budget. Must be a value between `0.0` and `100.0`,\nexclusive.",
+          "example": "50.0",
           "format": "double",
           "type": "number"
         },
         "severity": {
-          "description": "Severity may only be one of: critical, warn.",
+          "description": "Defines the alert severity level, which can only be one of `critical` or\n`warn`.",
           "type": "string"
         },
         "labels": {
           "additionalProperties": {
             "type": "string"
           },
-          "description": "Labels to attach when this burn rate triggers. If you add these labels to\n`signal_groupings`, you can route them in the notification policy, and\ncan route different burn rates to other notifiers.",
+          "description": "Labels to attach when this burn rate triggers. If you add these labels to\n`signal_groupings`, you can route them in the notification policy, and can\nroute different burn rates to other notifiers.",
           "type": "object"
         }
       },
@@ -693,7 +697,8 @@
     "DefinitionTimeWindow": {
       "properties": {
         "duration": {
-          "description": "duration as a string in the format \"28d\" or \"24h\", etc.",
+          "description": "Time window that defines the evaluation period as a string, in the format\nlike `\"28d\"` (28 days) or `\"24h\"` (24 hours).",
+          "example": "\"30d\"",
           "type": "string"
         }
       },
@@ -2036,14 +2041,14 @@
           "$ref": "#/definitions/ResourceAttributesFilterMode"
         },
         "exclude_keys": {
-          "description": "Do not copy any resource attribute whose key exactly matches one of the\nstrings in this list.",
+          "description": "Specifies resource attributes to exclude. If a resource attribute's key\nmatches any of the strings in this array, that resource attribute is\nexcluded.",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "generate_target_info": {
-          "description": "Generate a target_info time series with labels derived from resource\nattributes. The filter_mode and exclude_keys settings apply in the same way as\nfor the \"flatten\" operation. The default is false.",
+          "description": "If `true`, generates a `target_info` time series with labels derived from\nresource attributes. The `filter_mode` and `exclude_keys` settings apply\nin the same manner that they apply to the `flatten` operation. Default:\n`false`.",
           "type": "boolean"
         }
       },
@@ -2342,14 +2347,14 @@
       "type": "object"
     },
     "SLICustomIndicatorConfig": {
-      "description": "Configuration for error ratio SLIs.\nYou can include these variables in PromQL queries for SLIs:\n- {{.Window}}. Specifies the window of time that the PromQL query operates on.\n- {{.GroupBy}}. Specifies a comma-separated list of signal and dimension labels to group the results by.\n- {{.AdditionalFilters}}. Requires setting `additional_promql_filters`.",
+      "description": "Configuration for error ratio SLIs. You can include these variables in PromQL\nqueries for SLIs:\n- `{{.Window}}`: Specifies the window of time that the PromQL query operates on.\n- `{{.GroupBy}}`: Specifies a comma-separated list of signal and dimension\n  labels to group the results by.\n- `{{.AdditionalFilters}}`: Requires setting `additional_promql_filters`.",
       "properties": {
         "good_query_template": {
-          "description": "A PromQL query that measures the number of \"good\" events for this SLI.\nEither this or the bad_query_template must be set.",
+          "description": "A PromQL query that measures the number of \"good\" events for this SLI.\nEither this or `bad_query_template` must be set.",
           "type": "string"
         },
         "bad_query_template": {
-          "description": "A PromQL query that measures the number of \"bad\" events for this SLI.\nEither this or the good_query_template must be set.",
+          "description": "A PromQL query that measures the number of \"bad\" events for this SLI.\nEither this or `good_query_template` must be set.",
           "type": "string"
         },
         "total_query_template": {
@@ -2360,9 +2365,10 @@
       "type": "object"
     },
     "SLICustomTimeSliceIndicatorConfig": {
+      "description": "Defines the configuration for time slice SLIs. Time slice SLIs are evaluated by\nrunning a PromQL query over a certain time window and comparing the result against\na condition. You can include these variables in PromQL queries for SLIs:\n- `{{.Window}}`: Specifies the window of time that the PromQL query operates on.\n- `{{.GroupBy}}`: Specifies a comma-separated list of signal and dimension labels\n  to group the results by.\n- `{{.TimeSlice}}`: The time slice being evaluated, such as `1m` or `5m`.\n- `{{.AdditionalFilters}}`: Requires setting `additional_promql_filters`.",
       "properties": {
         "query_template": {
-          "description": "A PromQL query template for the timeslice SLI.",
+          "description": "A PromQL query template for the time slice SLI.",
           "type": "string"
         },
         "timeslice_size": {
@@ -2372,10 +2378,10 @@
           "$ref": "#/definitions/SLITimeSliceCondition"
         }
       },
-      "title": "Defines the configuration for TimeSlice SLIs.\nTimeSlice SLIs are evaluated by running a PromQL query over a certain time window and comparing the result again a condition.\nYou can include these variables in PromQL queries for SLIs:\n- {{.Window}}. Specifies the window of time that the PromQL query operates on.\n- {{.GroupBy}}. Specifies a comma-separated list of signal and dimension labels to group the results by.\n- {{.TimeSlice}} :The time slice being evaluated, e.g. `1m` or `5m`.\n- {{.AdditionalFilters}}. Requires setting `additional_promql_filters`.",
       "type": "object"
     },
     "SLITimeSliceCondition": {
+      "description": "Defines the condition for evaluating time slice SLIs.",
       "properties": {
         "op": {
           "$ref": "#/definitions/ConditionOp"
@@ -2386,20 +2392,21 @@
           "type": "number"
         }
       },
-      "title": "Defines the condition for evaluating TimeSlice SLIs.",
       "type": "object"
     },
     "SLITimeSliceSize": {
+      "description": "Defines the supported time slice sizes for time slice SLIs.",
       "enum": [
         "TIMESLICE_SIZE_ONE_MINUTE",
         "TIMESLICE_SIZE_FIVE_MINUTES"
       ],
-      "title": "Defines the supported time slice sizes for TimeSlice SLIs.",
       "type": "string"
     },
     "SLODefinition": {
       "properties": {
         "objective": {
+          "description": "The SLO target percentage, which represents the availability of the SLO.",
+          "example": "99.9995",
           "format": "double",
           "type": "number"
         },
@@ -2407,14 +2414,14 @@
           "$ref": "#/definitions/DefinitionTimeWindow"
         },
         "burn_rate_alerting_config": {
-          "description": "Provides the burn rate alert configuration for the SLO. If not provided the\ndefault burn rates will be used. The configuration is only valid if the\nenable_burn_rate_alerting flag is set to true.",
+          "description": "Provides the burn rate alert configuration for the SLO. If not provided, the\ndefault burn rates are used. The configuration is only valid if the\n`enable_burn_rate_alerting` flag is set to `true`.",
           "items": {
             "$ref": "#/definitions/DefinitionBurnRateDefinition"
           },
           "type": "array"
         },
         "enable_burn_rate_alerting": {
-          "description": "If true enables burn rate alerting.",
+          "description": "If `true`, enables burn rate alerting.",
           "type": "boolean"
         }
       },
@@ -2514,7 +2521,7 @@
           "additionalProperties": {
             "type": "string"
           },
-          "description": "Optional labels which further restricts the service account to only read\nor write metrics with the given label names and values.",
+          "description": "Optional. Specifies labels that further restrict the service account to only\nread or write metrics with the given label names and values.",
           "type": "object"
         }
       },
@@ -3268,7 +3275,8 @@
     },
     "configv1ConsumptionBudgetResource": {
       "enum": [
-        "LOG_PERSISTED_BYTES"
+        "LOG_PERSISTED_BYTES",
+        "LOG_PROCESSED_BYTES"
       ],
       "type": "string"
     },
@@ -5891,27 +5899,27 @@
           "type": "string"
         },
         "bucket_slug": {
-          "description": "Optional slug of the bucket the RecordingRule belongs to.",
+          "description": "The slug of the bucket the recording rule belongs to. Required if\n`execution_group` is not set. If both `bucket_slug` and `execution_group`\nare set, their values must match.",
           "type": "string"
         },
         "label_policy": {
           "$ref": "#/definitions/configv1RecordingRuleLabelPolicy"
         },
         "interval_secs": {
-          "description": "Optional interval for evaluating the recording rule.",
+          "description": "Specifies how often to evaluate the recording rule.",
           "format": "int32",
           "type": "integer"
         },
         "metric_name": {
-          "description": "The name of the time series to use for output, which must be a valid\nmetric name.",
+          "description": "The name of the time series to use for the output of `prometheus_expr`.\nThis value must be a valid metric name. If you don't set this value,\nthe output of `prometheus_expr` is output to a time series with a name\ndefined by the value of `name`.",
           "type": "string"
         },
         "prometheus_expr": {
-          "description": "The PromQL expression to evaluate at the time of each evaluation cycle.\nThe result is recorded as a new time series with its metric name\ndefined by the metric_name (or name) field.",
+          "description": "The PromQL expression to evaluate at the time of each evaluation cycle. The\nresult is output to a new time series with a name defined by the value of\n`metric_name`. If `metric_name` is unset, the result is output to a\ntime series defined by the value of `name`.",
           "type": "string"
         },
         "execution_group": {
-          "description": "Optional execution_group in which this rule is to be evaluated.\nAt least one of bucket_slug and execution_group must be set. If both are set, then they are expected to match.",
+          "description": "The slug of the execution group in which the recording rule will be\nevaluated. Required if `bucket_slug` is not set.  If both `bucket_slug` and\n`execution_group` are set, their values must match.",
           "type": "string"
         }
       },
@@ -5923,7 +5931,7 @@
           "additionalProperties": {
             "type": "string"
           },
-          "description": "Labels to add or overwrite before storing the result.",
+          "description": "A list of labels to add or overwrite before storing the result.",
           "type": "object"
         }
       },
@@ -5971,7 +5979,7 @@
           "type": "array"
         },
         "priority_thresholds": {
-          "description": "Optional. For supported licenses, defines thresholds with strict limits for\nwhen to drop new consumption of the license for a pool. Only\n`PERSISTED_CARDINALITY_STANDARD` and `PERSISTED_CARDINALITY_HISTOGRAM` are\nsupported.",
+          "description": "Defines thresholds with strict limits for when to drop new consumption of the\npersisted cardinality license for a pool. Setting `priority_thresholds` is\nrequired to set limits for cardinality licenses. Only\n`PERSISTED_CARDINALITY_STANDARD` and `PERSISTED_CARDINALITY_HISTOGRAM` are\nsupported.",
           "items": {
             "$ref": "#/definitions/AllocationThresholds"
           },
@@ -6120,14 +6128,15 @@
           "$ref": "#/definitions/SLICustomTimeSliceIndicatorConfig"
         },
         "custom_dimension_labels": {
-          "description": "Used to configure additional labels to export from\nthe underlying queries. This feature provides a logical budget to group\nunique combination of dimensions. For example, if you want to track a\nbudget per endpoint, add the endpoint label as a dimension. These dimensions\nare provided on the top-level SLI so that SLOs will receive them\nin `.GroupBy`.",
+          "description": "Configures additional labels to export from the underlying queries. This feature\nprovides a logical budget to group unique combinations of dimensions. For\nexample, if you want to track a budget per endpoint, add the endpoint label as a\ndimension. These dimensions are provided on the top-level SLI so that SLOs will\nreceive them in the `.GroupBy` variable.",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "additional_promql_filters": {
-          "description": "These are made available to the SLO queries and are intended to be used for things\nlike `cluster!~\"dev\"`",
+          "description": "Specifies additional PromQL filters, which are made available to the SLO queries.\nUse these filters to reduce the number of metrics used by the SLO.",
+          "example": "cluster!~\"dev\"",
           "items": {
             "$ref": "#/definitions/commonPromQLMatcher"
           },
@@ -6165,7 +6174,8 @@
           "$ref": "#/definitions/configv1CollectionReference"
         },
         "notification_policy_slug": {
-          "description": "Optional notification policy to explicitly apply to the generated monitors.\nSlug of the notification policy to use for the SLO. If you don't specify a value,\nthen the collection or service this SLO belongs to must have a notification\npolicy.",
+          "description": "Optional. Slug of the notification policy to use for the SLO. If you don't\nspecify a value, then the collection or service this SLO belongs to must have a\nnotification policy. Required if alerting is enabled for this SLO.",
+          "example": "alerting_notification_policy",
           "type": "string"
         },
         "signal_grouping": {
@@ -6182,7 +6192,7 @@
           "additionalProperties": {
             "type": "string"
           },
-          "description": "Annotations are visible in notifications generated by this SLO\nThey can be be templated with labels from notifications.",
+          "description": "Annotations are visible in notifications generated by this SLO.\nYou can template annotations with labels from notifications.",
           "type": "object"
         },
         "sli": {
@@ -6217,15 +6227,15 @@
           "type": "string"
         },
         "team_slug": {
-          "description": "Required slug of the team the service collection belongs to.",
+          "description": "Slug of the team the service collection belongs to.",
           "type": "string"
         },
         "description": {
-          "description": "Optional description of the service collection.",
+          "description": "Optional. Description of the service collection.",
           "type": "string"
         },
         "notification_policy_slug": {
-          "description": "Slug of the notification policy used by default for monitors in this service collection.\nThis is optional if the collection does not contain monitors or all of its monitors explicitly reference a policy.\nThis does not override the policy used when a monitor explicitly references a policy.",
+          "description": "Slug of the notification policy used by default for monitors in this service\ncollection. This parameter is optional if the collection doesn't contain\nmonitors, or if all of its monitors explicitly reference a policy. This\nparameter doesn't override the policy used if a monitor explicitly references\na policy.",
           "type": "string"
         }
       },
@@ -6254,17 +6264,17 @@
           "type": "string"
         },
         "token": {
-          "description": "token is the generated API token of the service account. Cannot be set by\nclients.\n\ntoken is only set once by the server in the CreateServiceAccount response.\nReadServiceAccount will always return an empty token. Therefore, when\ncreating a service account, clients are responsible for securely storing\nthe response token on their end, as they will not be able to read it\nagain.",
+          "description": "Generated API token of the service account. Cannot be set by clients.\n\nThe token is set only once by the server in the `CreateServiceAccount` response.\nThe `ReadServiceAccount` response always returns an empty token. Therefore, when\ncreating a service account, ensure you securely store the response token.\nIf you lose the token, you must delete and recreate the service account to\ngenerate a new token.",
           "readOnly": true,
           "type": "string"
         },
         "email": {
-          "description": "email is the generated email address of the service account. Cannot be set\nby clients.",
+          "description": "The unique email user for this service account. Cannot be set by clients.",
           "readOnly": true,
           "type": "string"
         },
         "unrestricted": {
-          "description": "If set, grants the service account access to all Chronosphere APIs\n(including resource configuration and metric data) within the access\ncontrols defined by the service account's team membership.\n\nExactly one of unrestricted or metrics_restriction must be set.",
+          "description": "If set, grants the service account access to all Chronosphere APIs, including\nresource configuration and metric data within the access controls defined by the\nservice account's team membership.\n\nOnly one of `unrestricted` or `metrics_restriction` must be set.",
           "type": "boolean"
         },
         "metrics_restriction": {
@@ -6303,7 +6313,7 @@
           "type": "array"
         },
         "description": {
-          "description": "Optional short description of the team.",
+          "description": "Optional. Short description of the team.",
           "type": "string"
         }
       },
@@ -8153,6 +8163,20 @@
               "type": "string"
             },
             "name": "partition_slug_paths",
+            "type": "array"
+          },
+          {
+            "collectionFormat": "multi",
+            "description": "Filters results by resource, where any ConsumptionBudget with a matching resource in the given list (and matches all other filters) will be returned.",
+            "in": "query",
+            "items": {
+              "enum": [
+                "LOG_PERSISTED_BYTES",
+                "LOG_PROCESSED_BYTES"
+              ],
+              "type": "string"
+            },
+            "name": "resources",
             "type": "array"
           }
         ],
@@ -13915,7 +13939,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by slug, where any Service with a matching slug in the given list (and matches all other filters) will be returned.",
+            "description": "Filters results by slug, where any Service with a matching slug in the given\nlist that matches all other filters is returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -13925,7 +13949,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by team_slug, where any Service with a matching team_slug in the given list (and matches all other filters) will be returned.",
+            "description": "Filters results by `team_slug`, where any Service with a matching `team_slug` in\nthe given list that matches all other filters is returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -13935,7 +13959,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by name, where any Service with a matching name in the given list (and matches all other filters) will be returned.",
+            "description": "Filters results by `name`, where any Service with a matching `name` in the given\nlist that matches all other filters is returned.",
             "in": "query",
             "items": {
               "type": "string"
@@ -13945,7 +13969,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filters results by notification_policy_slug, where any Service with a matching notification_policy_slug in the given list (and matches all other filters) will be returned.",
+            "description": "Filters results by `notification_policy_slug`, where any Service with a matching\n`notification_policy_slug` in the given list that matches all other filters is\nreturned.",
             "in": "query",
             "items": {
               "type": "string"
