@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.17.0
+
 Added:
 * Add `ROLLING_1_HOUR_VOLUME` and `ROLLING_3_HOUR_VOLUME` thresholds to `chronosphere_consumption_budget` resource.
 
