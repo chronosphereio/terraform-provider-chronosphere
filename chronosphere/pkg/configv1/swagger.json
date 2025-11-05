@@ -101,6 +101,17 @@
       ],
       "type": "string"
     },
+    "ConfigV1CreateServiceAttributeBody": {
+      "properties": {
+        "service_attribute": {
+          "$ref": "#/definitions/configv1ServiceAttribute"
+        },
+        "dry_run": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "ConfigV1UpdateAzureMetricsIntegrationBody": {
       "properties": {
         "azure_metrics_integration": {
@@ -448,6 +459,20 @@
         },
         "dry_run": {
           "description": "If `true`, validates the specified configuration without creating or updating the SLO. If the specified configuration is valid, the endpoint returns a partial response without the SLO. If the specified configuration is invalid, the endpoint returns an error.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigV1UpdateServiceAttributeBody": {
+      "properties": {
+        "service_attribute": {
+          "$ref": "#/definitions/configv1ServiceAttribute"
+        },
+        "create_if_missing": {
+          "type": "boolean"
+        },
+        "dry_run": {
           "type": "boolean"
         }
       },
@@ -3901,6 +3926,17 @@
       },
       "type": "object"
     },
+    "configv1CreateServiceAttributeResponse": {
+      "properties": {
+        "slug": {
+          "type": "string"
+        },
+        "service_attribute": {
+          "$ref": "#/definitions/configv1ServiceAttribute"
+        }
+      },
+      "type": "object"
+    },
     "configv1CreateTeamRequest": {
       "properties": {
         "team": {
@@ -4204,6 +4240,9 @@
       "type": "object"
     },
     "configv1DeleteServiceAccountResponse": {
+      "type": "object"
+    },
+    "configv1DeleteServiceAttributeResponse": {
       "type": "object"
     },
     "configv1DeleteTeamResponse": {
@@ -5820,6 +5859,17 @@
       },
       "type": "object"
     },
+    "configv1ReadServiceAttributeResponse": {
+      "properties": {
+        "slug": {
+          "type": "string"
+        },
+        "service_attribute": {
+          "$ref": "#/definitions/configv1ServiceAttribute"
+        }
+      },
+      "type": "object"
+    },
     "configv1ReadServiceResponse": {
       "properties": {
         "service": {
@@ -6279,6 +6329,37 @@
         },
         "metrics_restriction": {
           "$ref": "#/definitions/ServiceAccountMetricsRestriction"
+        }
+      },
+      "type": "object"
+    },
+    "configv1ServiceAttribute": {
+      "properties": {
+        "created_at": {
+          "description": "Created timestamp (system managed)",
+          "format": "date-time",
+          "type": "string"
+        },
+        "updated_at": {
+          "description": "Updated timestamp (system managed)",
+          "format": "date-time",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the service",
+          "type": "string"
+        },
+        "team_slug": {
+          "description": "Team that owns the service",
+          "type": "string"
+        },
+        "notification_policy_slug": {
+          "description": "Notification policy slug for alerts",
+          "type": "string"
+        },
+        "description": {
+          "description": "Human-readable description of the service",
+          "type": "string"
         }
       },
       "type": "object"
@@ -6926,6 +7007,17 @@
       "properties": {
         "slo": {
           "$ref": "#/definitions/configv1SLO"
+        }
+      },
+      "type": "object"
+    },
+    "configv1UpdateServiceAttributeResponse": {
+      "properties": {
+        "slug": {
+          "type": "string"
+        },
+        "service_attribute": {
+          "$ref": "#/definitions/configv1ServiceAttribute"
         }
       },
       "type": "object"
