@@ -6336,29 +6336,29 @@
     "configv1ServiceAttribute": {
       "properties": {
         "created_at": {
-          "description": "Created timestamp (system managed)",
+          "description": "Timestamp of when the service attributes were created. Cannot be set by clients.",
           "format": "date-time",
           "type": "string"
         },
         "updated_at": {
-          "description": "Updated timestamp (system managed)",
+          "description": "Timestamp of when the service attributes were updated. Cannot be set by clients.",
           "format": "date-time",
           "type": "string"
         },
         "name": {
-          "description": "Name of the service",
+          "description": "The name of the service. You can modify this value after the service\nattributes are created.",
           "type": "string"
         },
         "team_slug": {
-          "description": "Team that owns the service",
+          "description": "The slug of the team that the associated service belongs to.",
           "type": "string"
         },
         "notification_policy_slug": {
-          "description": "Notification policy slug for alerts",
+          "description": "The slug of the notification policy for the associated service.",
           "type": "string"
         },
         "description": {
-          "description": "Human-readable description of the service",
+          "description": "A description of the service.",
           "type": "string"
         }
       },
