@@ -19,23 +19,24 @@ import (
 // swagger:model configv1ServiceAttribute
 type Configv1ServiceAttribute struct {
 
-	// Created timestamp (system managed)
+	// Timestamp of when the service attributes were created. Cannot be set by clients.
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Human-readable description of the service
+	// A description of the service.
 	Description string `json:"description,omitempty"`
 
-	// Name of the service
+	// The name of the service. You can modify this value after the service
+	// attributes are created.
 	Name string `json:"name,omitempty"`
 
-	// Notification policy slug for alerts
+	// The slug of the notification policy for the associated service.
 	NotificationPolicySlug string `json:"notification_policy_slug,omitempty"`
 
-	// Team that owns the service
+	// The slug of the team that the associated service belongs to.
 	TeamSlug string `json:"team_slug,omitempty"`
 
-	// Updated timestamp (system managed)
+	// Timestamp of when the service attributes were updated. Cannot be set by clients.
 	// Format: date-time
 	UpdatedAt strfmt.DateTime `json:"updated_at,omitempty"`
 }
