@@ -14,6 +14,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/config_v1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_budget"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
@@ -94,6 +95,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.Bucket = bucket.New(transport, formats)
 	cli.ClassicDashboard = classic_dashboard.New(transport, formats)
 	cli.Collection = collection.New(transport, formats)
+	cli.ConfigV1 = config_v1.New(transport, formats)
 	cli.ConsumptionBudget = consumption_budget.New(transport, formats)
 	cli.ConsumptionConfig = consumption_config.New(transport, formats)
 	cli.Dashboard = dashboard.New(transport, formats)
@@ -178,6 +180,8 @@ type ConfigV1API struct {
 
 	Collection collection.ClientService
 
+	ConfigV1 config_v1.ClientService
+
 	ConsumptionBudget consumption_budget.ClientService
 
 	ConsumptionConfig consumption_config.ClientService
@@ -252,6 +256,7 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.Bucket.SetTransport(transport)
 	c.ClassicDashboard.SetTransport(transport)
 	c.Collection.SetTransport(transport)
+	c.ConfigV1.SetTransport(transport)
 	c.ConsumptionBudget.SetTransport(transport)
 	c.ConsumptionConfig.SetTransport(transport)
 	c.Dashboard.SetTransport(transport)
