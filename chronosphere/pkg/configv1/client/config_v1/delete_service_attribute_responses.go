@@ -86,11 +86,11 @@ func (o *DeleteServiceAttributeOK) Code() int {
 }
 
 func (o *DeleteServiceAttributeOK) Error() string {
-	return fmt.Sprintf("[DELETE /api/v1/config/services/{slug}/attributes][%d] deleteServiceAttributeOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/services/{service_slug}/attributes][%d] deleteServiceAttributeOK  %+v", 200, o.Payload)
 }
 
 func (o *DeleteServiceAttributeOK) String() string {
-	return fmt.Sprintf("[DELETE /api/v1/config/services/{slug}/attributes][%d] deleteServiceAttributeOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/services/{service_slug}/attributes][%d] deleteServiceAttributeOK  %+v", 200, o.Payload)
 }
 
 func (o *DeleteServiceAttributeOK) GetPayload() models.Configv1DeleteServiceAttributeResponse {
@@ -156,11 +156,11 @@ func (o *DeleteServiceAttributeDefault) Code() int {
 }
 
 func (o *DeleteServiceAttributeDefault) Error() string {
-	return fmt.Sprintf("[DELETE /api/v1/config/services/{slug}/attributes][%d] DeleteServiceAttribute default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/services/{service_slug}/attributes][%d] DeleteServiceAttribute default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *DeleteServiceAttributeDefault) String() string {
-	return fmt.Sprintf("[DELETE /api/v1/config/services/{slug}/attributes][%d] DeleteServiceAttribute default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/services/{service_slug}/attributes][%d] DeleteServiceAttribute default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *DeleteServiceAttributeDefault) GetPayload() *models.APIError {

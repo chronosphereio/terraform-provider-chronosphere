@@ -601,7 +601,7 @@
     "ConsumptionBudgetPriorityFilter": {
       "properties": {
         "dataset_slug": {
-          "description": "Optional. If set, matches data that belongs to the specified dataset. The\ndataset type must match the budget resource. For example, if `resource=LOG_PERSISTED_BYTES`\nthen only dataset `type=LOGS` is allowed. You can't set a value for this\nfield if a value is set for `log_filter`.",
+          "description": "If set, matches incoming data that belongs to the specified dataset.\nThe dataset type must match the budget resource. For example,\n`resource=LOG_PERSISTED_BYTES`, then the dataset type must be\n`type=LOGS`.\n\nExactly one of `dataset_slug` or `log_filter` must be set.",
           "type": "string"
         },
         "log_filter": {
@@ -2116,7 +2116,7 @@
     "PartitionFilterCondition": {
       "properties": {
         "dataset_slug": {
-          "description": "Optional. If set, matches data that belongs to the specified dataset. The\ndataset type must match the budget resource. For example, if `type=LOGS`\nthen set `resource=LOG_PERSISTED_BYTES`. You can't set a value for this\nfield if a value is set for `log_filter`.",
+          "description": "If set, matches incoming data that belongs to the specified dataset.\nThe dataset type must match the budget resource. For example,\n`resource=LOG_PERSISTED_BYTES`, then the dataset type must be\n`type=LOGS`.\n\nExactly one of `dataset_slug` or `log_filter` must be set.",
           "type": "string"
         },
         "log_filter": {
@@ -3928,7 +3928,7 @@
     },
     "configv1CreateServiceAttributeResponse": {
       "properties": {
-        "slug": {
+        "service_slug": {
           "type": "string"
         },
         "service_attribute": {
@@ -5861,7 +5861,7 @@
     },
     "configv1ReadServiceAttributeResponse": {
       "properties": {
-        "slug": {
+        "service_slug": {
           "type": "string"
         },
         "service_attribute": {
@@ -6347,6 +6347,10 @@
         },
         "name": {
           "description": "The name of the service. You can modify this value after the service\nattributes are created.",
+          "type": "string"
+        },
+        "service_slug": {
+          "description": "The slug of the service.",
           "type": "string"
         },
         "team_slug": {
@@ -7013,7 +7017,7 @@
     },
     "configv1UpdateServiceAttributeResponse": {
       "properties": {
-        "slug": {
+        "service_slug": {
           "type": "string"
         },
         "service_attribute": {
@@ -8264,7 +8268,8 @@
             "items": {
               "enum": [
                 "LOG_PERSISTED_BYTES",
-                "LOG_PROCESSED_BYTES"
+                "LOG_PROCESSED_BYTES",
+                "METRIC_PERSISTED_SERIES"
               ],
               "type": "string"
             },
@@ -14095,6 +14100,136 @@
         ]
       }
     },
+    "/api/v1/config/services/{service_slug}/attributes": {
+      "delete": {
+        "operationId": "DeleteServiceAttribute",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "service_slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1DeleteServiceAttributeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          }
+        },
+        "tags": [
+          "ConfigV1"
+        ]
+      },
+      "get": {
+        "operationId": "ReadServiceAttribute",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "service_slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1ReadServiceAttributeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          }
+        },
+        "tags": [
+          "ConfigV1"
+        ]
+      },
+      "post": {
+        "operationId": "CreateServiceAttribute",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "service_slug",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConfigV1CreateServiceAttributeBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1CreateServiceAttributeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          }
+        },
+        "tags": [
+          "ConfigV1"
+        ]
+      },
+      "put": {
+        "operationId": "UpdateServiceAttribute",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "service_slug",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConfigV1UpdateServiceAttributeBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1UpdateServiceAttributeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          }
+        },
+        "tags": [
+          "ConfigV1"
+        ]
+      }
+    },
     "/api/v1/config/services/{slug}": {
       "get": {
         "operationId": "ReadService",
@@ -14134,136 +14269,6 @@
         },
         "tags": [
           "Service"
-        ]
-      }
-    },
-    "/api/v1/config/services/{slug}/attributes": {
-      "delete": {
-        "operationId": "DeleteServiceAttribute",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configv1DeleteServiceAttributeResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          }
-        },
-        "tags": [
-          "ConfigV1"
-        ]
-      },
-      "get": {
-        "operationId": "ReadServiceAttribute",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configv1ReadServiceAttributeResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          }
-        },
-        "tags": [
-          "ConfigV1"
-        ]
-      },
-      "post": {
-        "operationId": "CreateServiceAttribute",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ConfigV1CreateServiceAttributeBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configv1CreateServiceAttributeResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          }
-        },
-        "tags": [
-          "ConfigV1"
-        ]
-      },
-      "put": {
-        "operationId": "UpdateServiceAttribute",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ConfigV1UpdateServiceAttributeBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configv1UpdateServiceAttributeResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          }
-        },
-        "tags": [
-          "ConfigV1"
         ]
       }
     },

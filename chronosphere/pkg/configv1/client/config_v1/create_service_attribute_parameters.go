@@ -66,8 +66,8 @@ type CreateServiceAttributeParams struct {
 	// Body.
 	Body *models.ConfigV1CreateServiceAttributeBody
 
-	// Slug.
-	Slug string
+	// ServiceSlug.
+	ServiceSlug string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -133,15 +133,15 @@ func (o *CreateServiceAttributeParams) SetBody(body *models.ConfigV1CreateServic
 	o.Body = body
 }
 
-// WithSlug adds the slug to the create service attribute params
-func (o *CreateServiceAttributeParams) WithSlug(slug string) *CreateServiceAttributeParams {
-	o.SetSlug(slug)
+// WithServiceSlug adds the serviceSlug to the create service attribute params
+func (o *CreateServiceAttributeParams) WithServiceSlug(serviceSlug string) *CreateServiceAttributeParams {
+	o.SetServiceSlug(serviceSlug)
 	return o
 }
 
-// SetSlug adds the slug to the create service attribute params
-func (o *CreateServiceAttributeParams) SetSlug(slug string) {
-	o.Slug = slug
+// SetServiceSlug adds the serviceSlug to the create service attribute params
+func (o *CreateServiceAttributeParams) SetServiceSlug(serviceSlug string) {
+	o.ServiceSlug = serviceSlug
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -157,8 +157,8 @@ func (o *CreateServiceAttributeParams) WriteToRequest(r runtime.ClientRequest, r
 		}
 	}
 
-	// path param slug
-	if err := r.SetPathParam("slug", o.Slug); err != nil {
+	// path param service_slug
+	if err := r.SetPathParam("service_slug", o.ServiceSlug); err != nil {
 		return err
 	}
 

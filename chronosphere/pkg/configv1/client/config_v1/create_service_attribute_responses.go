@@ -86,11 +86,11 @@ func (o *CreateServiceAttributeOK) Code() int {
 }
 
 func (o *CreateServiceAttributeOK) Error() string {
-	return fmt.Sprintf("[POST /api/v1/config/services/{slug}/attributes][%d] createServiceAttributeOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/services/{service_slug}/attributes][%d] createServiceAttributeOK  %+v", 200, o.Payload)
 }
 
 func (o *CreateServiceAttributeOK) String() string {
-	return fmt.Sprintf("[POST /api/v1/config/services/{slug}/attributes][%d] createServiceAttributeOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/services/{service_slug}/attributes][%d] createServiceAttributeOK  %+v", 200, o.Payload)
 }
 
 func (o *CreateServiceAttributeOK) GetPayload() *models.Configv1CreateServiceAttributeResponse {
@@ -158,11 +158,11 @@ func (o *CreateServiceAttributeDefault) Code() int {
 }
 
 func (o *CreateServiceAttributeDefault) Error() string {
-	return fmt.Sprintf("[POST /api/v1/config/services/{slug}/attributes][%d] CreateServiceAttribute default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/services/{service_slug}/attributes][%d] CreateServiceAttribute default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *CreateServiceAttributeDefault) String() string {
-	return fmt.Sprintf("[POST /api/v1/config/services/{slug}/attributes][%d] CreateServiceAttribute default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/services/{service_slug}/attributes][%d] CreateServiceAttribute default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *CreateServiceAttributeDefault) GetPayload() *models.APIError {

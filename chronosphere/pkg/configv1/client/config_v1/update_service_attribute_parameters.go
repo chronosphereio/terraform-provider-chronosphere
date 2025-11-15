@@ -66,8 +66,8 @@ type UpdateServiceAttributeParams struct {
 	// Body.
 	Body *models.ConfigV1UpdateServiceAttributeBody
 
-	// Slug.
-	Slug string
+	// ServiceSlug.
+	ServiceSlug string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -133,15 +133,15 @@ func (o *UpdateServiceAttributeParams) SetBody(body *models.ConfigV1UpdateServic
 	o.Body = body
 }
 
-// WithSlug adds the slug to the update service attribute params
-func (o *UpdateServiceAttributeParams) WithSlug(slug string) *UpdateServiceAttributeParams {
-	o.SetSlug(slug)
+// WithServiceSlug adds the serviceSlug to the update service attribute params
+func (o *UpdateServiceAttributeParams) WithServiceSlug(serviceSlug string) *UpdateServiceAttributeParams {
+	o.SetServiceSlug(serviceSlug)
 	return o
 }
 
-// SetSlug adds the slug to the update service attribute params
-func (o *UpdateServiceAttributeParams) SetSlug(slug string) {
-	o.Slug = slug
+// SetServiceSlug adds the serviceSlug to the update service attribute params
+func (o *UpdateServiceAttributeParams) SetServiceSlug(serviceSlug string) {
+	o.ServiceSlug = serviceSlug
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -157,8 +157,8 @@ func (o *UpdateServiceAttributeParams) WriteToRequest(r runtime.ClientRequest, r
 		}
 	}
 
-	// path param slug
-	if err := r.SetPathParam("slug", o.Slug); err != nil {
+	// path param service_slug
+	if err := r.SetPathParam("service_slug", o.ServiceSlug); err != nil {
 		return err
 	}
 

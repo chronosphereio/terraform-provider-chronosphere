@@ -21,8 +21,8 @@ type Configv1ReadServiceAttributeResponse struct {
 	// service attribute
 	ServiceAttribute *Configv1ServiceAttribute `json:"service_attribute,omitempty"`
 
-	// slug
-	Slug string `json:"slug,omitempty"`
+	// service slug
+	ServiceSlug string `json:"service_slug,omitempty"`
 }
 
 // Validate validates this configv1 read service attribute response

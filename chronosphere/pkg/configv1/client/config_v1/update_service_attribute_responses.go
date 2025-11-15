@@ -86,11 +86,11 @@ func (o *UpdateServiceAttributeOK) Code() int {
 }
 
 func (o *UpdateServiceAttributeOK) Error() string {
-	return fmt.Sprintf("[PUT /api/v1/config/services/{slug}/attributes][%d] updateServiceAttributeOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/services/{service_slug}/attributes][%d] updateServiceAttributeOK  %+v", 200, o.Payload)
 }
 
 func (o *UpdateServiceAttributeOK) String() string {
-	return fmt.Sprintf("[PUT /api/v1/config/services/{slug}/attributes][%d] updateServiceAttributeOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/services/{service_slug}/attributes][%d] updateServiceAttributeOK  %+v", 200, o.Payload)
 }
 
 func (o *UpdateServiceAttributeOK) GetPayload() *models.Configv1UpdateServiceAttributeResponse {
@@ -158,11 +158,11 @@ func (o *UpdateServiceAttributeDefault) Code() int {
 }
 
 func (o *UpdateServiceAttributeDefault) Error() string {
-	return fmt.Sprintf("[PUT /api/v1/config/services/{slug}/attributes][%d] UpdateServiceAttribute default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/services/{service_slug}/attributes][%d] UpdateServiceAttribute default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *UpdateServiceAttributeDefault) String() string {
-	return fmt.Sprintf("[PUT /api/v1/config/services/{slug}/attributes][%d] UpdateServiceAttribute default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/services/{service_slug}/attributes][%d] UpdateServiceAttribute default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *UpdateServiceAttributeDefault) GetPayload() *models.APIError {
