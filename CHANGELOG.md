@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+* Add `chronosphere_service_attributes` resource for setting up service attributes.
+
 ## v1.17.0
 
 Added:

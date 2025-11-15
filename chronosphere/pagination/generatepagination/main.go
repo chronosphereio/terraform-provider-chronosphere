@@ -50,7 +50,15 @@ func run() error {
 
 	var entityTypes []entityType
 	for _, e := range registry.AllEntities(registry.V1) {
-		entityTypes = append(entityTypes, newEntityType(v1, e))
+		// Ignore service attributes from generation as it has a different
+		// client structure for now.
+		et := newEntityType(v1, e)
+		fmt.Printf("%s\n", et.Singular)
+		if et.Singular == "ServiceAttribute" {
+			fmt.Println("skipping service attribute")
+			continue
+		}
+		entityTypes = append(entityTypes, et)
 	}
 	entityTypes = append(entityTypes, newClassicDashboard(v1))
 	includesUnstable := false
