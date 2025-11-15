@@ -50,7 +50,7 @@ func (a *Client) CreateServiceAttribute(params *CreateServiceAttributeParams, op
 	op := &runtime.ClientOperation{
 		ID:                 "CreateServiceAttribute",
 		Method:             "POST",
-		PathPattern:        "/api/v1/config/services/{slug}/attributes",
+		PathPattern:        "/api/v1/config/services/{service_slug}/attributes",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -87,7 +87,7 @@ func (a *Client) DeleteServiceAttribute(params *DeleteServiceAttributeParams, op
 	op := &runtime.ClientOperation{
 		ID:                 "DeleteServiceAttribute",
 		Method:             "DELETE",
-		PathPattern:        "/api/v1/config/services/{slug}/attributes",
+		PathPattern:        "/api/v1/config/services/{service_slug}/attributes",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -124,7 +124,7 @@ func (a *Client) ReadServiceAttribute(params *ReadServiceAttributeParams, opts .
 	op := &runtime.ClientOperation{
 		ID:                 "ReadServiceAttribute",
 		Method:             "GET",
-		PathPattern:        "/api/v1/config/services/{slug}/attributes",
+		PathPattern:        "/api/v1/config/services/{service_slug}/attributes",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -161,7 +161,7 @@ func (a *Client) UpdateServiceAttribute(params *UpdateServiceAttributeParams, op
 	op := &runtime.ClientOperation{
 		ID:                 "UpdateServiceAttribute",
 		Method:             "PUT",
-		PathPattern:        "/api/v1/config/services/{slug}/attributes",
+		PathPattern:        "/api/v1/config/services/{service_slug}/attributes",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},

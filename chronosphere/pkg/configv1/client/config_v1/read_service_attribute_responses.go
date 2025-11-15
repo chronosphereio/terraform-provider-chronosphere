@@ -86,11 +86,11 @@ func (o *ReadServiceAttributeOK) Code() int {
 }
 
 func (o *ReadServiceAttributeOK) Error() string {
-	return fmt.Sprintf("[GET /api/v1/config/services/{slug}/attributes][%d] readServiceAttributeOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/services/{service_slug}/attributes][%d] readServiceAttributeOK  %+v", 200, o.Payload)
 }
 
 func (o *ReadServiceAttributeOK) String() string {
-	return fmt.Sprintf("[GET /api/v1/config/services/{slug}/attributes][%d] readServiceAttributeOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/services/{service_slug}/attributes][%d] readServiceAttributeOK  %+v", 200, o.Payload)
 }
 
 func (o *ReadServiceAttributeOK) GetPayload() *models.Configv1ReadServiceAttributeResponse {
@@ -158,11 +158,11 @@ func (o *ReadServiceAttributeDefault) Code() int {
 }
 
 func (o *ReadServiceAttributeDefault) Error() string {
-	return fmt.Sprintf("[GET /api/v1/config/services/{slug}/attributes][%d] ReadServiceAttribute default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/services/{service_slug}/attributes][%d] ReadServiceAttribute default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *ReadServiceAttributeDefault) String() string {
-	return fmt.Sprintf("[GET /api/v1/config/services/{slug}/attributes][%d] ReadServiceAttribute default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/services/{service_slug}/attributes][%d] ReadServiceAttribute default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *ReadServiceAttributeDefault) GetPayload() *models.APIError {

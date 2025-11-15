@@ -33,6 +33,9 @@ type Configv1ServiceAttribute struct {
 	// The slug of the notification policy for the associated service.
 	NotificationPolicySlug string `json:"notification_policy_slug,omitempty"`
 
+	// The slug of the service.
+	ServiceSlug string `json:"service_slug,omitempty"`
+
 	// The slug of the team that the associated service belongs to.
 	TeamSlug string `json:"team_slug,omitempty"`
 

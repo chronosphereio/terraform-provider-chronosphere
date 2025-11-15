@@ -61,8 +61,8 @@ ReadServiceAttributeParams contains all the parameters to send to the API endpoi
 */
 type ReadServiceAttributeParams struct {
 
-	// Slug.
-	Slug string
+	// ServiceSlug.
+	ServiceSlug string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -117,15 +117,15 @@ func (o *ReadServiceAttributeParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithSlug adds the slug to the read service attribute params
-func (o *ReadServiceAttributeParams) WithSlug(slug string) *ReadServiceAttributeParams {
-	o.SetSlug(slug)
+// WithServiceSlug adds the serviceSlug to the read service attribute params
+func (o *ReadServiceAttributeParams) WithServiceSlug(serviceSlug string) *ReadServiceAttributeParams {
+	o.SetServiceSlug(serviceSlug)
 	return o
 }
 
-// SetSlug adds the slug to the read service attribute params
-func (o *ReadServiceAttributeParams) SetSlug(slug string) {
-	o.Slug = slug
+// SetServiceSlug adds the serviceSlug to the read service attribute params
+func (o *ReadServiceAttributeParams) SetServiceSlug(serviceSlug string) {
+	o.ServiceSlug = serviceSlug
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -136,8 +136,8 @@ func (o *ReadServiceAttributeParams) WriteToRequest(r runtime.ClientRequest, reg
 	}
 	var res []error
 
-	// path param slug
-	if err := r.SetPathParam("slug", o.Slug); err != nil {
+	// path param service_slug
+	if err := r.SetPathParam("service_slug", o.ServiceSlug); err != nil {
 		return err
 	}
 
