@@ -8,6 +8,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/config_v1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_budget"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/dashboard"
@@ -2149,6 +2150,86 @@ func (generatedServiceAccount) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.ServiceAccount.DeleteServiceAccount(req)
+	return err
+}
+
+type generatedServiceAttribute struct{}
+
+func (generatedServiceAttribute) slugOf(m *configv1models.Configv1ServiceAttribute) string {
+	return m.ServiceSlug
+}
+
+func (generatedServiceAttribute) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1ServiceAttribute,
+	dryRun bool,
+) (string, error) {
+	req := &config_v1.CreateServiceAttributeParams{
+		Context:     ctx,
+		ServiceSlug: m.ServiceSlug,
+		Body: &configv1models.ConfigV1CreateServiceAttributeBody{
+			ServiceAttribute: m,
+			DryRun:           dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.ConfigV1.CreateServiceAttribute(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.ServiceAttribute
+	if e == nil {
+		return "", nil
+	}
+	return (generatedServiceAttribute{}).slugOf(e), nil
+}
+
+func (generatedServiceAttribute) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1ServiceAttribute, error) {
+	req := &config_v1.ReadServiceAttributeParams{
+		Context:     ctx,
+		ServiceSlug: slug,
+	}
+	resp, err := clients.ConfigV1.ConfigV1.ReadServiceAttribute(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.ServiceAttribute, nil
+}
+
+func (generatedServiceAttribute) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1ServiceAttribute,
+	params updateParams,
+) error {
+	req := &config_v1.UpdateServiceAttributeParams{
+		Context:     ctx,
+		ServiceSlug: m.ServiceSlug,
+
+		Body: &configv1models.ConfigV1UpdateServiceAttributeBody{
+
+			ServiceAttribute: m,
+			CreateIfMissing:  params.createIfMissing,
+			DryRun:           params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.ConfigV1.UpdateServiceAttribute(req)
+	return err
+}
+func (generatedServiceAttribute) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &config_v1.DeleteServiceAttributeParams{
+		Context:     ctx,
+		ServiceSlug: slug,
+	}
+	_, err := clients.ConfigV1.ConfigV1.DeleteServiceAttribute(req)
 	return err
 }
 

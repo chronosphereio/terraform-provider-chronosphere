@@ -87,6 +87,9 @@ type Resource struct {
 	// Only set if the resource is a singleton.
 	SingletonID string
 
+	// Only set if the resource is an entity linked singleton.
+	EntityLinkedSingletonSlugField string
+
 	// DisableDryRun is a flag to disable dry run for a resource.
 	DisableDryRun bool
 
@@ -385,5 +388,12 @@ var Resources = mustValidate([]Resource{
 		Entity: "ConsumptionBudget",
 		API:    V1,
 		Schema: tfschema.ConsumptionBudget,
+	},
+	{
+		Name:                           "service_attribute",
+		Entity:                         "ServiceAttribute",
+		API:                            V1,
+		Schema:                         tfschema.ServiceAttribute,
+		EntityLinkedSingletonSlugField: "ServiceSlug",
 	},
 })
