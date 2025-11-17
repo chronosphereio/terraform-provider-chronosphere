@@ -20,6 +20,7 @@ import (
 type Configv1ServiceAttribute struct {
 
 	// Timestamp of when the service attributes were created. Cannot be set by clients.
+	// Read Only: true
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
@@ -40,6 +41,7 @@ type Configv1ServiceAttribute struct {
 	TeamSlug string `json:"team_slug,omitempty"`
 
 	// Timestamp of when the service attributes were updated. Cannot be set by clients.
+	// Read Only: true
 	// Format: date-time
 	UpdatedAt strfmt.DateTime `json:"updated_at,omitempty"`
 }
@@ -86,8 +88,39 @@ func (m *Configv1ServiceAttribute) validateUpdatedAt(formats strfmt.Registry) er
 	return nil
 }
 
-// ContextValidate validates this configv1 service attribute based on context it is used
+// ContextValidate validate this configv1 service attribute based on the context it is used
 func (m *Configv1ServiceAttribute) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateUpdatedAt(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Configv1ServiceAttribute) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1ServiceAttribute) contextValidateUpdatedAt(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "updated_at", "body", strfmt.DateTime(m.UpdatedAt)); err != nil {
+		return err
+	}
+
 	return nil
 }
 

@@ -4872,6 +4872,20 @@
       },
       "type": "object"
     },
+    "configv1ListServiceAttributesResponse": {
+      "properties": {
+        "service_attributes": {
+          "items": {
+            "$ref": "#/definitions/configv1ServiceAttribute"
+          },
+          "type": "array"
+        },
+        "page": {
+          "$ref": "#/definitions/configv1PageResult"
+        }
+      },
+      "type": "object"
+    },
     "configv1ListServicesResponse": {
       "properties": {
         "page": {
@@ -6338,11 +6352,13 @@
         "created_at": {
           "description": "Timestamp of when the service attributes were created. Cannot be set by clients.",
           "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "updated_at": {
           "description": "Timestamp of when the service attributes were updated. Cannot be set by clients.",
           "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "name": {
@@ -14014,6 +14030,49 @@
         },
         "tags": [
           "ServiceAccount"
+        ]
+      }
+    },
+    "/api/v1/config/service-attributes": {
+      "get": {
+        "operationId": "ListServiceAttributes",
+        "parameters": [
+          {
+            "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
+            "format": "int64",
+            "in": "query",
+            "name": "page.max_size",
+            "type": "integer"
+          },
+          {
+            "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
+            "in": "query",
+            "name": "page.token",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1ListServiceAttributesResponse"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "ServiceAttribute"
         ]
       }
     },
