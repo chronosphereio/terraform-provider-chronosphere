@@ -73,6 +73,7 @@ func Provider() *schema.Provider {
 		"chronosphere_log_control_config":                    resourceLogControlConfig(),
 		"chronosphere_consumption_config":                    resourceConsumptionConfig(),
 		"chronosphere_consumption_budget":                    resourceConsumptionBudget(),
+		"chronosphere_service_attribute":                     resourceServiceAttribute(),
 	}
 
 	// Apply common CRUD wrappers to all resources.

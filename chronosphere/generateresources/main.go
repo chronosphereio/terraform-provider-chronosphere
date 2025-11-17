@@ -26,6 +26,8 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/registry"
 )
 
+const defaultSlugField = "Slug"
+
 func main() {
 	if err := run(); err != nil {
 		fmt.Println(err.Error())
@@ -49,7 +51,8 @@ func run() error {
 
 	var entityTypes []entityType
 	for _, e := range registry.AllEntities(registry.V1) {
-		entityTypes = append(entityTypes, newEntityType(v1, e))
+		et := newEntityType(v1, e)
+		entityTypes = append(entityTypes, et)
 	}
 
 	includesUnstable := false
@@ -85,33 +88,51 @@ type entityType struct {
 	SwaggerType string
 	// SwaggerModel represents the underlying model to use. Will normally be the
 	// same as SwaggerType
-	SwaggerModel         string
-	FieldName            string
-	SwaggerClient        string
-	SwaggerClientPackage string
-	DisableDryRun        bool
-	UpdateUnsupported    bool
-	SingletonID          string
-	SingletonIDConst     string
+	SwaggerModel          string
+	FieldName             string
+	SwaggerClient         string
+	SwaggerClientPackage  string
+	DisableDryRun         bool
+	UpdateUnsupported     bool
+	SingletonID           string
+	SingletonIDConst      string
+	SlugField             string
+	EntityLinkedSingleton bool
 }
 
 func newEntityType(a api, r registry.Resource) entityType {
+	var (
+		slugField             = defaultSlugField
+		entityLinkedSingleton bool
+	)
+	if r.EntityLinkedSingletonSlugField != "" {
+		slugField = r.EntityLinkedSingletonSlugField
+		entityLinkedSingleton = true
+	}
 	et := entityType{
-		API:                  a,
-		GoType:               fmt.Sprintf("%s%s", a.GoPrefix, r.Entity),
-		SwaggerType:          r.Entity,
-		SwaggerModel:         r.Entity,
-		SwaggerClient:        fmt.Sprintf("%s.%s", a.Client, r.Entity),
-		SwaggerClientPackage: strcase.ToSnake(r.Entity),
-		DisableDryRun:        r.DisableDryRun,
-		UpdateUnsupported:    r.UpdateUnsupported,
-		SingletonID:          r.SingletonID,
-		SingletonIDConst:     fmt.Sprintf("%sID", r.Entity),
+		API:                   a,
+		GoType:                fmt.Sprintf("%s%s", a.GoPrefix, r.Entity),
+		SwaggerType:           r.Entity,
+		SwaggerModel:          r.Entity,
+		SwaggerClient:         fmt.Sprintf("%s.%s", a.Client, r.Entity),
+		SwaggerClientPackage:  strcase.ToSnake(r.Entity),
+		DisableDryRun:         r.DisableDryRun,
+		UpdateUnsupported:     r.UpdateUnsupported,
+		SingletonID:           r.SingletonID,
+		SingletonIDConst:      fmt.Sprintf("%sID", r.Entity),
+		SlugField:             slugField,
+		EntityLinkedSingleton: entityLinkedSingleton,
 	}
 
 	// special case for classic dashboards
 	if r.Name == "classic_dashboard" {
 		et.GoType = fmt.Sprintf("%s%s", a.GoPrefix, "ClassicDashboard")
+	}
+
+	// special case for service attributes - client is in config_v1 package
+	if r.Name == "service_attribute" {
+		et.SwaggerClientPackage = "config_v1"
+		et.SwaggerClient = fmt.Sprintf("%s.%s", a.Client, a.Client)
 	}
 
 	return et
@@ -157,7 +178,7 @@ func ({{.GoType}}) slugOf(m *{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.Swa
 	{{ if .SingletonID -}}
 	return {{.SingletonIDConst}}
 	{{- else -}}
-	return m.Slug
+	return m.{{.SlugField}}
 	{{- end }}
 }
 
@@ -174,7 +195,12 @@ func ({{.GoType}}) create(
 	{{ end -}}
 	req := &{{.SwaggerClientPackage}}.Create{{.SwaggerType}}Params{
 		Context: ctx,
+		{{ if not .EntityLinkedSingleton -}}
 		Body: &{{.API.Package}}models.{{.API.SwaggerPrefix}}Create{{.SwaggerType}}Request{
+		{{- else -}}
+		{{.SlugField}}:    m.{{.SlugField}},
+		Body: &{{.API.Package}}models.{{.API.Client}}Create{{.SwaggerType}}Body{
+		{{- end }}
 			{{.SwaggerType}}: m,
 			{{ if not .DisableDryRun }} DryRun: dryRun, {{ end }}
 		},
@@ -198,7 +224,7 @@ func ({{.GoType}}) read(
 	req := &{{.SwaggerClientPackage}}.Read{{.SwaggerType}}Params{
 		Context: ctx,
 		{{ if not .SingletonID -}}
-		Slug:    slug,
+		{{.SlugField}}:    slug,
 		{{- end }}
 	}
 	resp, err := clients.{{.SwaggerClient}}.Read{{.SwaggerType}}(req)
@@ -223,7 +249,7 @@ func ({{.GoType}}) update(
 	req := &{{.SwaggerClientPackage}}.Update{{.SwaggerType}}Params{
 		Context: ctx,
 		{{ if not .SingletonID -}}
-		Slug:    m.Slug,
+		{{.SlugField}}:    m.{{.SlugField}},
 		{{- end }}
 		{{ if not .SingletonID }}
 		Body: &{{.API.Package}}models.{{.API.Client}}Update{{.SwaggerType}}Body{
@@ -248,7 +274,7 @@ func ({{.GoType}}) delete(
 	req := &{{.SwaggerClientPackage}}.Delete{{.SwaggerType}}Params{
 		Context: ctx,
 		{{ if not .SingletonID -}}
-		Slug:    slug,
+		{{.SlugField}}:    slug,
 		{{- end }}
 	}
 	_, err := clients.{{.SwaggerClient}}.Delete{{.SwaggerType}}(req)
