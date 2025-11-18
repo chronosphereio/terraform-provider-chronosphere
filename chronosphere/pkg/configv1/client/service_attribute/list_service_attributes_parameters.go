@@ -79,6 +79,9 @@ type ListServiceAttributesParams struct {
 	*/
 	PageToken *string
 
+	// Slugs.
+	Slugs []string
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -154,6 +157,17 @@ func (o *ListServiceAttributesParams) SetPageToken(pageToken *string) {
 	o.PageToken = pageToken
 }
 
+// WithSlugs adds the slugs to the list service attributes params
+func (o *ListServiceAttributesParams) WithSlugs(slugs []string) *ListServiceAttributesParams {
+	o.SetSlugs(slugs)
+	return o
+}
+
+// SetSlugs adds the slugs to the list service attributes params
+func (o *ListServiceAttributesParams) SetSlugs(slugs []string) {
+	o.Slugs = slugs
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *ListServiceAttributesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -196,8 +210,36 @@ func (o *ListServiceAttributesParams) WriteToRequest(r runtime.ClientRequest, re
 		}
 	}
 
+	if o.Slugs != nil {
+
+		// binding items for slugs
+		joinedSlugs := o.bindParamSlugs(reg)
+
+		// query array param slugs
+		if err := r.SetQueryParam("slugs", joinedSlugs...); err != nil {
+			return err
+		}
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
 	return nil
+}
+
+// bindParamListServiceAttributes binds the parameter slugs
+func (o *ListServiceAttributesParams) bindParamSlugs(formats strfmt.Registry) []string {
+	slugsIR := o.Slugs
+
+	var slugsIC []string
+	for _, slugsIIR := range slugsIR { // explode []string
+
+		slugsIIV := slugsIIR // string as string
+		slugsIC = append(slugsIC, slugsIIV)
+	}
+
+	// items.CollectionFormat: "multi"
+	slugsIS := swag.JoinByFormat(slugsIC, "multi")
+
+	return slugsIS
 }

@@ -22,7 +22,7 @@ type LogControlRuleEmitMetrics struct {
 	// counter
 	Counter *EmitMetricsCounter `json:"counter,omitempty"`
 
-	// Drop log after emitting the metric.
+	// Optional. If `true`, drops the entire log after emitting the defined metric.
 	DropLog bool `json:"drop_log,omitempty"`
 
 	// gauge
@@ -31,13 +31,15 @@ type LogControlRuleEmitMetrics struct {
 	// histogram
 	Histogram *EmitMetricsHistogram `json:"histogram,omitempty"`
 
-	// The labels to emit the metric with. This is a prom-valid label name mapped to a log key.
+	// The labels to emit with the metric, specified as key/value pairs. The
+	// generated label is a valid Prometheus label name, mapped to a log key.
 	Labels []*LogControlRuleEmitMetricsLabel `json:"labels"`
 
 	// mode
 	Mode EmitMetricsMetricMode `json:"mode,omitempty"`
 
-	// The name of the metric to emit. This name has to be unique, and conform to Prometheus naming conventions.
+	// A unique name for the generated metric. This name must conform to Prometheus
+	// naming conventions.
 	Name string `json:"name,omitempty"`
 }
 
