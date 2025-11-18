@@ -99,6 +99,9 @@ type entityType struct {
 }
 
 func newEntityType(a api, e registry.Resource) entityType {
+	// Entity linked singletons do not have a name field on them. They do have
+	// a slug that corresponds to the entity they are linked to, so we do not
+	// include name filters for them.
 	nameFilters := true
 	if len(e.EntityLinkedSingletonSlugField) > 0 {
 		nameFilters = false
@@ -147,6 +150,7 @@ package pagination
 
 import (
 	"context"
+	"fmt"
 
 	{{- if .IncludesUnstable }}
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
@@ -237,13 +241,18 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(
 		result []*{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}
 	)
 	for {
+	{{- if not .NameFilters}}
+			if len(f.Names) > 0 {
+				return nil, fmt.Errorf("name filters not support for this entity type")
+			}
+	{{- end}}
 		p := &{{.SwaggerClientPackage}}.List{{.Plural}}Params{
 			Context: ctx,
 			PageToken: &nextToken,
 			Slugs: f.Slugs,
-		{{- if .NameFilters}}
+	{{- if .NameFilters}}
 			Names: f.Names,
-		{{- end}}
+	{{- end}}
 		}
 		for _, opt := range opts {
 			opt(p)

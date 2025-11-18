@@ -3,6 +3,7 @@ package pagination
 
 import (
 	"context"
+	"fmt"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
@@ -1656,6 +1657,9 @@ func ListServiceAttributesByFilter(
 		result    []*configv1models.Configv1ServiceAttribute
 	)
 	for {
+		if len(f.Names) > 0 {
+			return nil, fmt.Errorf("name filters not support for this entity type")
+		}
 		p := &service_attribute.ListServiceAttributesParams{
 			Context:   ctx,
 			PageToken: &nextToken,
