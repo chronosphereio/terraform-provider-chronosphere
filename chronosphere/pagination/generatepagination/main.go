@@ -95,13 +95,13 @@ type entityType struct {
 	SwaggerClientPackage string
 	SwaggerModel         string
 	Disable              bool
-	RequireFilterAPIs    bool
+	NameFilters          bool
 }
 
 func newEntityType(a api, e registry.Resource) entityType {
-	requireFilterAPIs := true
+	nameFilters := true
 	if len(e.EntityLinkedSingletonSlugField) > 0 {
-		requireFilterAPIs = false
+		nameFilters = false
 	}
 	et := entityType{
 		API:                  a,
@@ -112,7 +112,7 @@ func newEntityType(a api, e registry.Resource) entityType {
 		SwaggerClientPackage: strcase.ToSnake(e.Entity),
 		Disable:              e.DisableExportImport,
 		SwaggerModel:         e.Entity,
-		RequireFilterAPIs:    requireFilterAPIs,
+		NameFilters:          nameFilters,
 	}
 
 	if e.Name == "slo" {
@@ -196,7 +196,6 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}(
 	return List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(ctx, client, Filter{})
 }
 
-{{if .RequireFilterAPIs}}
 func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}BySlugs(
 	ctx context.Context,
 	client *{{.API.Package}}.Client,
@@ -207,6 +206,7 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}BySlugs(
 	})
 }
 
+{{if .NameFilters}}
 func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByNames(
 	ctx context.Context,
 	client *{{.API.Package}}.Client,
@@ -240,8 +240,8 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(
 		p := &{{.SwaggerClientPackage}}.List{{.Plural}}Params{
 			Context: ctx,
 			PageToken: &nextToken,
-		{{if .RequireFilterAPIs}}
 			Slugs: f.Slugs,
+		{{- if .NameFilters}}
 			Names: f.Names,
 		{{- end}}
 		}
