@@ -53,11 +53,6 @@ func run() error {
 		// Ignore service attributes from generation as it has a different
 		// client structure for now.
 		et := newEntityType(v1, e)
-		fmt.Printf("%s\n", et.Singular)
-		if et.Singular == "ServiceAttribute" {
-			fmt.Println("skipping service attribute")
-			continue
-		}
 		entityTypes = append(entityTypes, et)
 	}
 	entityTypes = append(entityTypes, newClassicDashboard(v1))
@@ -100,9 +95,14 @@ type entityType struct {
 	SwaggerClientPackage string
 	SwaggerModel         string
 	Disable              bool
+	RequireFilterAPIs    bool
 }
 
 func newEntityType(a api, e registry.Resource) entityType {
+	requireFilterAPIs := true
+	if len(e.EntityLinkedSingletonSlugField) > 0 {
+		requireFilterAPIs = false
+	}
 	et := entityType{
 		API:                  a,
 		Singleton:            e.SingletonID != "",
@@ -112,6 +112,7 @@ func newEntityType(a api, e registry.Resource) entityType {
 		SwaggerClientPackage: strcase.ToSnake(e.Entity),
 		Disable:              e.DisableExportImport,
 		SwaggerModel:         e.Entity,
+		RequireFilterAPIs:    requireFilterAPIs,
 	}
 
 	if e.Name == "slo" {
@@ -195,6 +196,7 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}(
 	return List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(ctx, client, Filter{})
 }
 
+{{if .RequireFilterAPIs}}
 func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}BySlugs(
 	ctx context.Context,
 	client *{{.API.Package}}.Client,
@@ -214,6 +216,7 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByNames(
 		Names: names,
 	})
 }
+{{- end}}
 
 func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(
 	ctx context.Context,
@@ -237,8 +240,10 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(
 		p := &{{.SwaggerClientPackage}}.List{{.Plural}}Params{
 			Context: ctx,
 			PageToken: &nextToken,
+		{{if .RequireFilterAPIs}}
 			Slugs: f.Slugs,
 			Names: f.Names,
+		{{- end}}
 		}
 		for _, opt := range opts {
 			opt(p)

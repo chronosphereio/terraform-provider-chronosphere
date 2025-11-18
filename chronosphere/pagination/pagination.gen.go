@@ -32,6 +32,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/resource_pools"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/rollup_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_attribute"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/slo"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
@@ -81,8 +82,9 @@ func ListAzureMetricsIntegrationsByFilter(
 		p := &azure_metrics_integration.ListAzureMetricsIntegrationsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -150,8 +152,9 @@ func ListBucketsByFilter(
 		p := &bucket.ListBucketsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -219,8 +222,9 @@ func ListCollectionsByFilter(
 		p := &collection.ListCollectionsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -288,8 +292,9 @@ func ListConsumptionBudgetsByFilter(
 		p := &consumption_budget.ListConsumptionBudgetsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -380,8 +385,9 @@ func ListDashboardsByFilter(
 		p := &dashboard.ListDashboardsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -449,8 +455,9 @@ func ListDatasetsByFilter(
 		p := &dataset.ListDatasetsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -518,8 +525,9 @@ func ListDerivedLabelsByFilter(
 		p := &derived_label.ListDerivedLabelsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -587,8 +595,9 @@ func ListDerivedMetricsByFilter(
 		p := &derived_metric.ListDerivedMetricsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -656,8 +665,9 @@ func ListDropRulesByFilter(
 		p := &drop_rule.ListDropRulesParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -725,8 +735,9 @@ func ListGcpMetricsIntegrationsByFilter(
 		p := &gcp_metrics_integration.ListGcpMetricsIntegrationsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -794,8 +805,9 @@ func ListGrafanaDashboardsByFilter(
 		p := &grafana_dashboard.ListGrafanaDashboardsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -932,8 +944,9 @@ func ListLogScaleActionsByFilter(
 		p := &log_scale_action.ListLogScaleActionsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1001,8 +1014,9 @@ func ListLogScaleAlertsByFilter(
 		p := &log_scale_alert.ListLogScaleAlertsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1070,8 +1084,9 @@ func ListMappingRulesByFilter(
 		p := &mapping_rule.ListMappingRulesParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1139,8 +1154,9 @@ func ListMonitorsByFilter(
 		p := &monitor.ListMonitorsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1208,8 +1224,9 @@ func ListNotificationPoliciesByFilter(
 		p := &notification_policy.ListNotificationPoliciesParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1277,8 +1294,9 @@ func ListNotifiersByFilter(
 		p := &notifier.ListNotifiersParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1369,8 +1387,9 @@ func ListRecordingRulesByFilter(
 		p := &recording_rule.ListRecordingRulesParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1461,8 +1480,9 @@ func ListRollupRulesByFilter(
 		p := &rollup_rule.ListRollupRulesParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1530,8 +1550,9 @@ func ListSLOsByFilter(
 		p := &slo.ListSLOsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1599,8 +1620,9 @@ func ListServiceAccountsByFilter(
 		p := &service_account.ListServiceAccountsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1614,6 +1636,53 @@ func ListServiceAccountsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.ServiceAccounts {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListServiceAttributes(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1ServiceAttribute, error) {
+	return ListServiceAttributesByFilter(ctx, client, Filter{})
+}
+
+func ListServiceAttributesByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*service_attribute.ListServiceAttributesParams),
+) ([]*configv1models.Configv1ServiceAttribute, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1ServiceAttribute
+	)
+	for {
+		p := &service_attribute.ListServiceAttributesParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.ServiceAttribute.ListServiceAttributes(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.ServiceAttributes {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
@@ -1668,8 +1737,9 @@ func ListTeamsByFilter(
 		p := &team.ListTeamsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1737,8 +1807,9 @@ func ListTraceJaegerRemoteSamplingStrategiesByFilter(
 		p := &trace_jaeger_remote_sampling_strategy.ListTraceJaegerRemoteSamplingStrategiesParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1806,8 +1877,9 @@ func ListTraceMetricsRulesByFilter(
 		p := &trace_metrics_rule.ListTraceMetricsRulesParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
@@ -1898,8 +1970,9 @@ func ListClassicDashboardsByFilter(
 		p := &classic_dashboard.ListClassicDashboardsParams{
 			Context:   ctx,
 			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
+
+			Slugs: f.Slugs,
+			Names: f.Names,
 		}
 		for _, opt := range opts {
 			opt(p)
