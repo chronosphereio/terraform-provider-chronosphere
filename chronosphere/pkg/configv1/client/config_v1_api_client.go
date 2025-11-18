@@ -40,6 +40,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/rollup_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_attribute"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/slo"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_behavior"
@@ -121,6 +122,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.RollupRule = rollup_rule.New(transport, formats)
 	cli.Service = service.New(transport, formats)
 	cli.ServiceAccount = service_account.New(transport, formats)
+	cli.ServiceAttribute = service_attribute.New(transport, formats)
 	cli.SLO = slo.New(transport, formats)
 	cli.Team = team.New(transport, formats)
 	cli.TraceBehavior = trace_behavior.New(transport, formats)
@@ -232,6 +234,8 @@ type ConfigV1API struct {
 
 	ServiceAccount service_account.ClientService
 
+	ServiceAttribute service_attribute.ClientService
+
 	SLO slo.ClientService
 
 	Team team.ClientService
@@ -282,6 +286,7 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.RollupRule.SetTransport(transport)
 	c.Service.SetTransport(transport)
 	c.ServiceAccount.SetTransport(transport)
+	c.ServiceAttribute.SetTransport(transport)
 	c.SLO.SetTransport(transport)
 	c.Team.SetTransport(transport)
 	c.TraceBehavior.SetTransport(transport)
