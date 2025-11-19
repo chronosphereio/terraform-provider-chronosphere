@@ -3,6 +3,7 @@ package pagination
 
 import (
 	"context"
+	"fmt"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
@@ -32,6 +33,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/resource_pools"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/rollup_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_attribute"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/slo"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
@@ -1614,6 +1616,67 @@ func ListServiceAccountsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.ServiceAccounts {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListServiceAttributes(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1ServiceAttribute, error) {
+	return ListServiceAttributesByFilter(ctx, client, Filter{})
+}
+
+func ListServiceAttributesBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1ServiceAttribute, error) {
+	return ListServiceAttributesByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListServiceAttributesByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*service_attribute.ListServiceAttributesParams),
+) ([]*configv1models.Configv1ServiceAttribute, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1ServiceAttribute
+	)
+	for {
+		if len(f.Names) > 0 {
+			return nil, fmt.Errorf("name filters not support for this entity type")
+		}
+		p := &service_attribute.ListServiceAttributesParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.ServiceAttribute.ListServiceAttributes(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.ServiceAttributes {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {

@@ -53,11 +53,6 @@ func run() error {
 		// Ignore service attributes from generation as it has a different
 		// client structure for now.
 		et := newEntityType(v1, e)
-		fmt.Printf("%s\n", et.Singular)
-		if et.Singular == "ServiceAttribute" {
-			fmt.Println("skipping service attribute")
-			continue
-		}
 		entityTypes = append(entityTypes, et)
 	}
 	entityTypes = append(entityTypes, newClassicDashboard(v1))
@@ -100,9 +95,17 @@ type entityType struct {
 	SwaggerClientPackage string
 	SwaggerModel         string
 	Disable              bool
+	NameFilters          bool
 }
 
 func newEntityType(a api, e registry.Resource) entityType {
+	// Entity linked singletons do not have a name field on them. They do have
+	// a slug that corresponds to the entity they are linked to, so we do not
+	// include name filters for them.
+	nameFilters := true
+	if len(e.EntityLinkedSingletonSlugField) > 0 {
+		nameFilters = false
+	}
 	et := entityType{
 		API:                  a,
 		Singleton:            e.SingletonID != "",
@@ -112,6 +115,7 @@ func newEntityType(a api, e registry.Resource) entityType {
 		SwaggerClientPackage: strcase.ToSnake(e.Entity),
 		Disable:              e.DisableExportImport,
 		SwaggerModel:         e.Entity,
+		NameFilters:          nameFilters,
 	}
 
 	if e.Name == "slo" {
@@ -146,6 +150,7 @@ package pagination
 
 import (
 	"context"
+	"fmt"
 
 	{{- if .IncludesUnstable }}
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
@@ -205,6 +210,7 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}BySlugs(
 	})
 }
 
+{{if .NameFilters}}
 func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByNames(
 	ctx context.Context,
 	client *{{.API.Package}}.Client,
@@ -214,6 +220,7 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByNames(
 		Names: names,
 	})
 }
+{{- end}}
 
 func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(
 	ctx context.Context,
@@ -234,11 +241,18 @@ func List{{if .API.RequireUnstable}}Unstable{{end}}{{.Plural}}ByFilter(
 		result []*{{.API.Package}}models.{{.API.SwaggerPrefix}}{{.SwaggerModel}}
 	)
 	for {
+	{{- if not .NameFilters}}
+			if len(f.Names) > 0 {
+				return nil, fmt.Errorf("name filters not support for this entity type")
+			}
+	{{- end}}
 		p := &{{.SwaggerClientPackage}}.List{{.Plural}}Params{
 			Context: ctx,
 			PageToken: &nextToken,
 			Slugs: f.Slugs,
+	{{- if .NameFilters}}
 			Names: f.Names,
+	{{- end}}
 		}
 		for _, opt := range opts {
 			opt(p)
