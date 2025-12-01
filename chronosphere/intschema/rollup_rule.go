@@ -29,6 +29,7 @@ type RollupRule struct {
 	Mode                string                         `intschema:"mode,optional"`
 	NewMetric           string                         `intschema:"new_metric,optional"`
 	Permissive          bool                           `intschema:"permissive,optional,default:false"`
+	SkipOnConflict      bool                           `intschema:"skip_on_conflict,optional,default:false"`
 	StoragePolicies     *RollupRuleStoragePolicies     `intschema:"storage_policies,optional,list_encoded_object"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().

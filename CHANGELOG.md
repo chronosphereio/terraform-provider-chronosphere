@@ -4,6 +4,7 @@
 
 Added:
 * Add `chronosphere_service_attributes` resource for setting up service attributes.
+* Add `skip_on_conflict` field to `chronosphere_rollup_rule` resource.
 
 ## v1.17.0
 

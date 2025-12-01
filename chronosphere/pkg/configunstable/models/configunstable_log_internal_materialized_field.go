@@ -35,6 +35,9 @@ type ConfigunstableLogInternalMaterializedField struct {
 	// Name of the entity.
 	Name string `json:"name,omitempty"`
 
+	// origin
+	Origin string `json:"origin,omitempty"`
+
 	// Unique slug identifying the LogInternalMaterializedField.
 	Slug string `json:"slug,omitempty"`
 
