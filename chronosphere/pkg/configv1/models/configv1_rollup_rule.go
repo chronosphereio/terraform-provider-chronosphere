@@ -115,6 +115,12 @@ type Configv1RollupRule struct {
 	// The name of the RollupRule. You can modify this value after the RollupRule is created.
 	Name string `json:"name,omitempty"`
 
+	// If true, this rollup rule is skipped if another rollup rule produces a
+	// metric with the same output name. Use this flag to write rollup rules that
+	// produce metrics only if no other rollup rule produces a series with the
+	// same name.
+	SkipOnConflict bool `json:"skip_on_conflict,omitempty"`
+
 	// The unique identifier of the RollupRule. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the RollupRule is created.
 	Slug string `json:"slug,omitempty"`
 
