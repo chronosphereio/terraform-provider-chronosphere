@@ -99,6 +99,7 @@ func (rollupRuleConverter) toModel(
 		},
 		Interval:            r.Interval,
 		GraphiteLabelPolicy: rollupGraphiteLabelPolicyToModel(r.GraphiteLabelPolicy),
+		SkipOnConflict:      r.SkipOnConflict,
 	}, nil
 }
 
@@ -120,6 +121,7 @@ func (rollupRuleConverter) fromModel(
 		Mode:                string(m.Mode),
 		Interval:            m.Interval,
 		GraphiteLabelPolicy: rollupGraphiteLabelPolicyFromModel(m.GraphiteLabelPolicy),
+		SkipOnConflict:      m.SkipOnConflict,
 	}
 	if m.LabelPolicy != nil {
 		r.GroupBy = m.LabelPolicy.Keep
