@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.19.0
+
 Added:
 * Add `ROLLING_1_DAY_VOLUME` and `ROLLING_7_DAY_VOLUME` thresholds to `chronosphere_consumption_budget` resource.
 
