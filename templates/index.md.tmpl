@@ -1,0 +1,27 @@
+---
+page_title: "Provider: chronosphere"
+description: |-
+  The chronosphere provider is used to interact with Chronosphere resources.
+---
+
+# chronosphere Provider
+
+The chronosphere provider allows you to manage Chronosphere resources using Terraform.
+
+## Example Usage
+
+{{tffile "examples/provider/provider.tf"}}
+
+## Authentication
+
+The provider supports authentication via API token. You can provide credentials via:
+
+- Provider configuration (shown above)
+- Environment variables
+
+### Environment Variables
+
+- `CHRONOSPHERE_API_TOKEN` - API token for authentication
+- `CHRONOSPHERE_ORG` - Organization name
+
+{{ .SchemaMarkdown | trimspace }}
