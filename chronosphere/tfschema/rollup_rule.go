@@ -109,6 +109,11 @@ var RollupRule = map[string]*schema.Schema{
 		Value:    enum.RollupModeType.ToStrings(),
 		Optional: true,
 	}.Schema(),
+	"skip_on_conflict": {
+		Type:     schema.TypeBool,
+		Optional: true,
+		Default:  false,
+	},
 	"graphite_label_policy": {
 		Type:     schema.TypeList,
 		MaxItems: 1,

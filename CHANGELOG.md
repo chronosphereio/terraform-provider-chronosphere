@@ -2,8 +2,16 @@
 
 ## Unreleased
 
+## v1.19.0
+
+Added:
+* Add `ROLLING_1_DAY_VOLUME` and `ROLLING_7_DAY_VOLUME` thresholds to `chronosphere_consumption_budget` resource.
+
+## v1.18.0
+
 Added:
 * Add `chronosphere_service_attributes` resource for setting up service attributes.
+* Add `skip_on_conflict` field to `chronosphere_rollup_rule` resource.
 
 ## v1.17.0
 
