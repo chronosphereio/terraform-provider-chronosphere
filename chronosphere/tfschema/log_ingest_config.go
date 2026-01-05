@@ -133,13 +133,7 @@ var fieldNormalizationResource = &schema.Resource{
 			Elem:     NamedStringNormalizationResource,
 			Optional: true,
 		},
-		"message": LogIngestConfigStringNormalizationSchema,
-		"primary_key": {
-			Type:     schema.TypeList,
-			Elem:     NamedStringNormalizationResource,
-			Optional: true,
-			MaxItems: 1,
-		},
+		"message":  LogIngestConfigStringNormalizationSchema,
 		"severity": LogIngestConfigStringNormalizationSchema,
 		"timestamp": {
 			Type:     schema.TypeList,

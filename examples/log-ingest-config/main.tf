@@ -62,25 +62,6 @@ resource "chronosphere_log_ingest_config" "my-log-ingest-config" {
   }
 
   field_normalization {
-    # Primary key normalization with multiple sources, value mapping, and sanitization
-    primary_key {
-      normalization {
-        source {
-          selector = "service_name"
-        }
-        source {
-          selector = "app"
-        }
-        value_map = {
-          "svc1" = "service-1"
-          "svc2" = "service-2"
-        }
-        sanitize_patterns = ["^prefix-(.*)$"]
-        default_value = "unknown-service"
-      }
-      target = "service"
-    }
-
     timestamp {
       source {
         selector = "timestamp"

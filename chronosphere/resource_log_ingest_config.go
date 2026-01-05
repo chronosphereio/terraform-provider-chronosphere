@@ -189,13 +189,6 @@ func convertFieldNormalizationToModel(fn *intschema.LogIngestConfigFieldNormaliz
 
 	result.Message = convertStringNormalizationToModel(fn.Message)
 
-	if fn.PrimaryKey != nil {
-		result.PrimaryKey = &models.LogIngestConfigNamedStringNormalization{
-			Normalization: convertStringNormalizationToModel(fn.PrimaryKey.Normalization),
-			Target:        fn.PrimaryKey.Target,
-		}
-	}
-
 	result.Severity = convertStringNormalizationToModel(fn.Severity)
 
 	if fn.Timestamp != nil {
@@ -242,13 +235,6 @@ func convertFieldNormalizationFromModel(fn *models.LogIngestConfigFieldNormaliza
 	})
 
 	result.Message = convertStringNormalizationFromModel(fn.Message)
-
-	if fn.PrimaryKey != nil {
-		result.PrimaryKey = &intschema.LogIngestConfigNamedStringNormalization{
-			Normalization: convertStringNormalizationFromModel(fn.PrimaryKey.Normalization),
-			Target:        fn.PrimaryKey.Target,
-		}
-	}
 
 	result.Severity = convertStringNormalizationFromModel(fn.Severity)
 

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Added:
+* Remove `primary_key` from `chronosphere_log_ingest_config` resource.
+
 ## v1.19.0
 
 Added:
