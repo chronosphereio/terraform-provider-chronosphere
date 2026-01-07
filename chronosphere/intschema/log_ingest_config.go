@@ -72,6 +72,7 @@ type LogIngestConfigFieldParser struct {
 type LogIngestConfigFieldNormalization struct {
 	CustomFieldNormalization []LogIngestConfigNamedStringNormalization   `intschema:"custom_field_normalization,optional"`
 	Message                  *LogIngestConfigStringNormalization         `intschema:"message,optional,list_encoded_object"`
+	Service                  *LogIngestConfigStringNormalization         `intschema:"service,optional,list_encoded_object"`
 	Severity                 *LogIngestConfigStringNormalization         `intschema:"severity,optional,list_encoded_object"`
 	Timestamp                *LogIngestConfigFieldNormalizationTimestamp `intschema:"timestamp,optional,list_encoded_object"`
 }

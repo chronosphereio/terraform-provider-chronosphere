@@ -189,6 +189,8 @@ func convertFieldNormalizationToModel(fn *intschema.LogIngestConfigFieldNormaliz
 
 	result.Message = convertStringNormalizationToModel(fn.Message)
 
+	result.Service = convertStringNormalizationToModel(fn.Service)
+
 	result.Severity = convertStringNormalizationToModel(fn.Severity)
 
 	if fn.Timestamp != nil {
@@ -235,6 +237,8 @@ func convertFieldNormalizationFromModel(fn *models.LogIngestConfigFieldNormaliza
 	})
 
 	result.Message = convertStringNormalizationFromModel(fn.Message)
+
+	result.Service = convertStringNormalizationFromModel(fn.Service)
 
 	result.Severity = convertStringNormalizationFromModel(fn.Severity)
 

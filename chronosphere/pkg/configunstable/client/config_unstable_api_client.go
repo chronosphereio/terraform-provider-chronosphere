@@ -12,6 +12,7 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/link_template"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_primary_key"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/noop_entity"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/object_discovery_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/saved_trace_search"
@@ -66,6 +67,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli.Transport = transport
 	cli.Dashboard = dashboard.New(transport, formats)
 	cli.LinkTemplate = link_template.New(transport, formats)
+	cli.LogPrimaryKey = log_primary_key.New(transport, formats)
 	cli.NoopEntity = noop_entity.New(transport, formats)
 	cli.ObjectDiscoveryRule = object_discovery_rule.New(transport, formats)
 	cli.SavedTraceSearch = saved_trace_search.New(transport, formats)
@@ -122,6 +124,8 @@ type ConfigUnstableAPI struct {
 
 	LinkTemplate link_template.ClientService
 
+	LogPrimaryKey log_primary_key.ClientService
+
 	NoopEntity noop_entity.ClientService
 
 	ObjectDiscoveryRule object_discovery_rule.ClientService
@@ -146,6 +150,7 @@ func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 	c.Dashboard.SetTransport(transport)
 	c.LinkTemplate.SetTransport(transport)
+	c.LogPrimaryKey.SetTransport(transport)
 	c.NoopEntity.SetTransport(transport)
 	c.ObjectDiscoveryRule.SetTransport(transport)
 	c.SavedTraceSearch.SetTransport(transport)
