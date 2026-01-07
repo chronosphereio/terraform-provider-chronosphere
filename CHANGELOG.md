@@ -4,6 +4,7 @@
 
 Added:
 * Remove `primary_key` from `chronosphere_log_ingest_config` resource.
+* Add `service` to `chronosphere_log_ingest_config` resource.
 
 ## v1.19.0
 
