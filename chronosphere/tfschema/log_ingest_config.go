@@ -134,6 +134,7 @@ var fieldNormalizationResource = &schema.Resource{
 			Optional: true,
 		},
 		"message":  LogIngestConfigStringNormalizationSchema,
+		"service":  LogIngestConfigStringNormalizationSchema,
 		"severity": LogIngestConfigStringNormalizationSchema,
 		"timestamp": {
 			Type:     schema.TypeList,

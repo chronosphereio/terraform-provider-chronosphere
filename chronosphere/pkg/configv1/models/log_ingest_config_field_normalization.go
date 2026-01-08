@@ -16,7 +16,7 @@ import (
 
 // LogIngestConfigFieldNormalization FieldNormalization allows you to map and normalize well-known fields from your logs.
 // These mappings run after parsing to standardize common fields like timestamp,
-// severity level, primary key name, and message across different log formats.
+// severity level, and message across different log formats.
 //
 // swagger:model LogIngestConfigFieldNormalization
 type LogIngestConfigFieldNormalization struct {
@@ -28,8 +28,8 @@ type LogIngestConfigFieldNormalization struct {
 	// message
 	Message *LogIngestConfigStringNormalization `json:"message,omitempty"`
 
-	// primary key
-	PrimaryKey *LogIngestConfigNamedStringNormalization `json:"primary_key,omitempty"`
+	// service
+	Service *LogIngestConfigStringNormalization `json:"service,omitempty"`
 
 	// severity
 	Severity *LogIngestConfigStringNormalization `json:"severity,omitempty"`
@@ -50,7 +50,7 @@ func (m *LogIngestConfigFieldNormalization) Validate(formats strfmt.Registry) er
 		res = append(res, err)
 	}
 
-	if err := m.validatePrimaryKey(formats); err != nil {
+	if err := m.validateService(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -113,17 +113,17 @@ func (m *LogIngestConfigFieldNormalization) validateMessage(formats strfmt.Regis
 	return nil
 }
 
-func (m *LogIngestConfigFieldNormalization) validatePrimaryKey(formats strfmt.Registry) error {
-	if swag.IsZero(m.PrimaryKey) { // not required
+func (m *LogIngestConfigFieldNormalization) validateService(formats strfmt.Registry) error {
+	if swag.IsZero(m.Service) { // not required
 		return nil
 	}
 
-	if m.PrimaryKey != nil {
-		if err := m.PrimaryKey.Validate(formats); err != nil {
+	if m.Service != nil {
+		if err := m.Service.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("primary_key")
+				return ve.ValidateName("service")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("primary_key")
+				return ce.ValidateName("service")
 			}
 			return err
 		}
@@ -182,7 +182,7 @@ func (m *LogIngestConfigFieldNormalization) ContextValidate(ctx context.Context,
 		res = append(res, err)
 	}
 
-	if err := m.contextValidatePrimaryKey(ctx, formats); err != nil {
+	if err := m.contextValidateService(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -236,14 +236,14 @@ func (m *LogIngestConfigFieldNormalization) contextValidateMessage(ctx context.C
 	return nil
 }
 
-func (m *LogIngestConfigFieldNormalization) contextValidatePrimaryKey(ctx context.Context, formats strfmt.Registry) error {
+func (m *LogIngestConfigFieldNormalization) contextValidateService(ctx context.Context, formats strfmt.Registry) error {
 
-	if m.PrimaryKey != nil {
-		if err := m.PrimaryKey.ContextValidate(ctx, formats); err != nil {
+	if m.Service != nil {
+		if err := m.Service.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("primary_key")
+				return ve.ValidateName("service")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("primary_key")
+				return ce.ValidateName("service")
 			}
 			return err
 		}
