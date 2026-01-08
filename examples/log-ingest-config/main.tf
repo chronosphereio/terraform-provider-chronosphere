@@ -74,6 +74,17 @@ resource "chronosphere_log_ingest_config" "my-log-ingest-config" {
       }
     }
 
+    service {
+      source {
+        selector = "app"
+      }
+      source {
+        selector = "service"
+      }
+      default_value = "UNKNOWN"
+      sanitize_patterns = ["^[a-zA-Z0-9_-]+$"]
+    }
+
     severity {
       source {
         selector = "level"
