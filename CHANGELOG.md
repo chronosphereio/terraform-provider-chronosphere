@@ -1,6 +1,8 @@
 # Releases
 
-## Unreleased
+## UNRELEASED
+
+## v1.20.0
 
 Added:
 * Remove `primary_key` from `chronosphere_log_ingest_config` resource.
