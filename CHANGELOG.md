@@ -5,8 +5,10 @@
 ## v1.20.0
 
 Added:
-* Remove `primary_key` from `chronosphere_log_ingest_config` resource.
-* Add `service` to `chronosphere_log_ingest_config` resource.
+* Add `service` to `chronosphere_log_ingest_config` resource. This field replaces the `primary_key` field, which is deprecated. **This is a breaking change**.
+
+Deprecated:
+* Deprecate the `primary_key` field in the `chronosphere_log_ingest_config` resource in favor of the `service` field. This field can no longer be set.
 
 ## v1.19.0
 
