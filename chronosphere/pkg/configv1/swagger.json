@@ -6088,7 +6088,7 @@
       "type": "object"
     },
     "RecordingRuleExecutionMode": {
-      "description": "ExecutionMode controls how a recording rule is assigned to shards for execution.",
+      "description": "ExecutionMode controls how a recording rule is assigned to shards for execution.\n\n - EXECUTION_MODE_SYNCHRONIZED: Synchronized: shard rule by execution group, which ensures that all\nsynchronized rules in the same group execute on the same shard.",
       "enum": [
         "EXECUTION_MODE_DEFAULT",
         "EXECUTION_MODE_SYNCHRONIZED"
