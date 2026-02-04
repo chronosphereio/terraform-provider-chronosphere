@@ -6080,9 +6080,20 @@
         "execution_group": {
           "description": "The slug of the execution group in which the recording rule will be\nevaluated. Required if `bucket_slug` is not set.  If both `bucket_slug` and\n`execution_group` are set, their values must match.",
           "type": "string"
+        },
+        "execution_mode": {
+          "$ref": "#/definitions/RecordingRuleExecutionMode"
         }
       },
       "type": "object"
+    },
+    "RecordingRuleExecutionMode": {
+      "description": "ExecutionMode controls how a recording rule is assigned to shards for execution.",
+      "enum": [
+        "EXECUTION_MODE_DEFAULT",
+        "EXECUTION_MODE_SYNCHRONIZED"
+      ],
+      "type": "string"
     },
     "configv1RecordingRuleLabelPolicy": {
       "properties": {

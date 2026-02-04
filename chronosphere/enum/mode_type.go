@@ -57,3 +57,15 @@ var DropRuleModeType = newEnum("DropRuleModeType", []value[configv1.Configv1Drop
 		alias: "PREVIEW",
 	},
 })
+
+// RecordingRuleExecutionModeType is an enum.
+var RecordingRuleExecutionModeType = newEnum("RecordingRuleExecutionModeType", []value[configv1.RecordingRuleExecutionMode]{
+	{
+		v1:    configv1.RecordingRuleExecutionModeEXECUTIONMODEDEFAULT,
+		alias: "DEFAULT",
+	},
+	{
+		v1:    configv1.RecordingRuleExecutionModeEXECUTIONMODESYNCHRONIZED,
+		alias: "SYNCHRONIZED",
+	},
+})
