@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+Added:
+* Add `execution_mode` field to `chronosphere_recording_rule` resource. This field controls how a recording rule is assigned to shards for execution.
+
 ## v1.20.0
 
 Added:

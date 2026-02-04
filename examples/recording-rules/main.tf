@@ -15,3 +15,10 @@ resource "chronosphere_recording_rule" "minimal_no_bucket" {
   execution_group = "foo"
   expr            = "sum by (kubernetes_namespace) (up)"
 }
+
+resource "chronosphere_recording_rule" "synchronized" {
+  name            = "up:by_cluster:synchronized"
+  execution_group = "my-group"
+  expr            = "sum by (namespace) (up)"
+  execution_mode  = "SYNCHRONIZED"
+}

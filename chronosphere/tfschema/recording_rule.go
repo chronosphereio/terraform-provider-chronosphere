@@ -16,6 +16,8 @@ package tfschema
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 )
 
 var executionGroupFields = []string{"bucket_id", "execution_group"}
@@ -31,6 +33,10 @@ var RecordingRule = map[string]*schema.Schema{
 		Optional:     true,
 		AtLeastOneOf: executionGroupFields,
 	},
+	"execution_mode": Enum{
+		Value:    enum.RecordingRuleExecutionModeType.ToStrings(),
+		Optional: true,
+	}.Schema(),
 	"name": {
 		Type:     schema.TypeString,
 		Required: true,

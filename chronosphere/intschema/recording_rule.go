@@ -19,6 +19,7 @@ type RecordingRule struct {
 	BucketId       tfid.ID           `intschema:"bucket_id,optional"`
 	ExecutionGroup tfid.ID           `intschema:"execution_group,optional"`
 	Expr           string            `intschema:"expr"`
+	ExecutionMode  string            `intschema:"execution_mode,optional"`
 	Interval       string            `intschema:"interval,optional"`
 	Labels         map[string]string `intschema:"labels,optional"`
 	MetricName     string            `intschema:"metric_name,optional"`

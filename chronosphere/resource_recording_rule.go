@@ -18,6 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"go.uber.org/atomic"
 
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
@@ -75,6 +76,7 @@ func (recordingRuleConverter) toModel(
 		Slug:           r.Slug,
 		BucketSlug:     r.BucketId.Slug(),
 		ExecutionGroup: r.ExecutionGroup.Slug(),
+		ExecutionMode:  enum.RecordingRuleExecutionModeType.V1(r.ExecutionMode),
 		PrometheusExpr: r.Expr,
 		IntervalSecs:   intervalSecs,
 		LabelPolicy: &models.Configv1RecordingRuleLabelPolicy{
@@ -92,6 +94,7 @@ func (recordingRuleConverter) fromModel(
 		Slug:           m.Slug,
 		BucketId:       tfid.Slug(m.BucketSlug),
 		ExecutionGroup: tfid.Slug(m.ExecutionGroup),
+		ExecutionMode:  string(m.ExecutionMode),
 		Expr:           m.PrometheusExpr,
 		Interval:       durationFromSecs(m.IntervalSecs),
 		MetricName:     m.MetricName,
