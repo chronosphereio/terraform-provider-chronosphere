@@ -29,6 +29,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/buildinfo"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/cliutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/tfresource"
 	xswagger "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/x/swagger"
 )
@@ -112,6 +113,7 @@ func New(p Params) (*httptransport.Runtime, error) {
 		rt:              transport.Transport,
 		userAgent:       userAgent,
 		entityNamespace: p.EntityNamespace,
+		actor:           os.Getenv(cliutil.ActorEnvVar),
 	})
 
 	return transport, nil
@@ -122,6 +124,7 @@ type customHeaderRoundTripper struct {
 	rt              http.RoundTripper
 	userAgent       string
 	entityNamespace string
+	actor           string
 }
 
 // RoundTrip adds the User-Agent header to the request
@@ -142,6 +145,10 @@ func (h *customHeaderRoundTripper) RoundTrip(r *http.Request) (*http.Response, e
 
 	if h.entityNamespace != "" {
 		r.Header.Set("Chrono-Entity-Namespace", h.entityNamespace)
+	}
+
+	if h.actor != "" {
+		r.Header.Set("Chronosphere-Actor", h.actor)
 	}
 
 	tflog.Debug(r.Context(), "http request", map[string]any{
