@@ -34,9 +34,6 @@ func (m RecordingRuleExecutionMode) Pointer() *RecordingRuleExecutionMode {
 
 const (
 
-	// RecordingRuleExecutionModeEXECUTIONMODEDEFAULT captures enum value "EXECUTION_MODE_DEFAULT"
-	RecordingRuleExecutionModeEXECUTIONMODEDEFAULT RecordingRuleExecutionMode = "EXECUTION_MODE_DEFAULT"
-
 	// RecordingRuleExecutionModeEXECUTIONMODESYNCHRONIZED captures enum value "EXECUTION_MODE_SYNCHRONIZED"
 	RecordingRuleExecutionModeEXECUTIONMODESYNCHRONIZED RecordingRuleExecutionMode = "EXECUTION_MODE_SYNCHRONIZED"
 )
@@ -46,7 +43,7 @@ var recordingRuleExecutionModeEnum []interface{}
 
 func init() {
 	var res []RecordingRuleExecutionMode
-	if err := json.Unmarshal([]byte(`["EXECUTION_MODE_DEFAULT","EXECUTION_MODE_SYNCHRONIZED"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["EXECUTION_MODE_SYNCHRONIZED"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {

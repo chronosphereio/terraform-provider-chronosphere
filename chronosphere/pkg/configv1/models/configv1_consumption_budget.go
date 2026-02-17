@@ -56,7 +56,7 @@ type Configv1ConsumptionBudget struct {
 	Priorities []*ConsumptionBudgetPriority `json:"priorities"`
 
 	// resource
-	Resource Configv1ConsumptionBudgetResource `json:"resource,omitempty"`
+	Resource ConsumptionBudgetSKUGroup `json:"resource,omitempty"`
 
 	// The unique identifier of the ConsumptionBudget. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the ConsumptionBudget is created.
 	Slug string `json:"slug,omitempty"`

@@ -97,7 +97,7 @@ func (c consumptionBudgetConverter) toModel(
 	m := &models.Configv1ConsumptionBudget{
 		Name:              s.Name,
 		Slug:              s.Slug,
-		Resource:          models.Configv1ConsumptionBudgetResource(s.Resource),
+		Resource:          models.ConsumptionBudgetSKUGroup(s.Resource),
 		PartitionSlugPath: s.PartitionSlugPath,
 		Priorities: sliceutil.Map(s.Priority, func(p intschema.ConsumptionBudgetPriority) *models.ConsumptionBudgetPriority {
 			return &models.ConsumptionBudgetPriority{
@@ -203,6 +203,8 @@ func consumptionBudgetThresholdToModel(b intschema.ConsumptionBudgetThreshold) *
 	return &models.Configv1ConsumptionBudgetThreshold{
 		Action:      models.ConsumptionBudgetThresholdAction(b.Action),
 		Type:        models.ConsumptionBudgetThresholdType(b.Type),
+		SkuGroup:    models.ConsumptionBudgetSKUGroup(b.SkuGroup),
+		Unit:        models.ConsumptionBudgetUnit(b.Unit),
 		InstantRate: instantRate,
 		Volume:      volume,
 	}
@@ -210,8 +212,10 @@ func consumptionBudgetThresholdToModel(b intschema.ConsumptionBudgetThreshold) *
 
 func consumptionBudgetThresholdFromModel(b *models.Configv1ConsumptionBudgetThreshold) (intschema.ConsumptionBudgetThreshold, error) {
 	behavior := intschema.ConsumptionBudgetThreshold{
-		Action: string(b.Action),
-		Type:   string(b.Type),
+		Action:   string(b.Action),
+		Type:     string(b.Type),
+		SkuGroup: string(b.SkuGroup),
+		Unit:     string(b.Unit),
 	}
 
 	if b.InstantRate != nil {

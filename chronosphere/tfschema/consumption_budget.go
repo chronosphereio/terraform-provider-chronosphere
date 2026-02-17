@@ -32,8 +32,9 @@ var ConsumptionBudget = map[string]*schema.Schema{
 		Required: true,
 	},
 	"resource": Enum{
-		Value:    enum.ConsumptionBudgetResource.ToStrings(),
-		Optional: true,
+		Value:      enum.ConsumptionBudgetResource.ToStrings(),
+		Optional:   true,
+		Deprecated: "use threshold.sku_group and threshold.unit instead",
 	}.Schema(),
 	"partition_slug_path": {
 		Type:     schema.TypeString,
@@ -140,6 +141,14 @@ var consumptionBudgetThresholdSchema = map[string]*schema.Schema{
 			Schema: consumptionBudgetVolumeSchema,
 		},
 	},
+	"sku_group": Enum{
+		Value:    enum.ConsumptionBudgetSKUGroup.ToStrings(),
+		Optional: true,
+	}.Schema(),
+	"unit": Enum{
+		Value:    enum.ConsumptionBudgetUnit.ToStrings(),
+		Optional: true,
+	}.Schema(),
 }
 
 var consumptionBudgetInstantRateSchema = map[string]*schema.Schema{
