@@ -29,15 +29,21 @@ type Configv1RecordingRule struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// The slug of the execution group in which the recording rule will be
-	// evaluated. Required if `bucket_slug` is not set.  If both `bucket_slug` and
-	// `execution_group` are set, their values must match.
+	// The slug of the execution group in which the recording rule will be evaluated.
+	// Rules in the same execution group run at intervals. All rules in a group must
+	// complete before the rules in that group run again. Required if `bucket_slug`
+	// isn't set. If both `bucket_slug` and `execution_group` are set, their values
+	// must match.
+	//
+	// Creating too many rules in an execution group can cause delays in execution of
+	// the next iteration. Chronosphere recommends limiting the number of rules in an
+	// execution group to 200-300 maximum.
 	ExecutionGroup string `json:"execution_group,omitempty"`
 
 	// execution mode
 	ExecutionMode RecordingRuleExecutionMode `json:"execution_mode,omitempty"`
 
-	// Specifies how often to evaluate the recording rule.
+	// Specifies how often to evaluate the recording rule. Default: `60s`.
 	IntervalSecs int32 `json:"interval_secs,omitempty"`
 
 	// label policy

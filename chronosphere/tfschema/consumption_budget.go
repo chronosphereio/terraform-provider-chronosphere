@@ -140,6 +140,13 @@ var consumptionBudgetThresholdSchema = map[string]*schema.Schema{
 			Schema: consumptionBudgetVolumeSchema,
 		},
 	},
+	// TODO: add sku_group and unit enums. the action field is a good
+	// example to follow.
+	// hint:
+	// 1. add to enum package
+	// 2. add bindings here in schema
+	// 3. `make generate-no-swagger` to generate the intschema
+	// 4. map to/from API models in resource_consumption_budget.go
 }
 
 var consumptionBudgetInstantRateSchema = map[string]*schema.Schema{
