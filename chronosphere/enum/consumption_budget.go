@@ -19,9 +19,9 @@ import (
 )
 
 // ConsumptionBudgetResource is an enum.
-var ConsumptionBudgetResource = newEnum("ConsumptionBudgetResource", []value[configv1.Configv1ConsumptionBudgetResource]{
+var ConsumptionBudgetResource = newEnum("ConsumptionBudgetResource", []value[configv1.ConsumptionBudgetSKUGroup]{
 	{
-		v1:    configv1.Configv1ConsumptionBudgetResourceLOGPERSISTEDBYTES,
+		v1:    configv1.ConsumptionBudgetSKUGroupLOGPERSISTEDBYTES,
 		alias: "LOG_PERSISTED_BYTES",
 	},
 })
@@ -79,5 +79,25 @@ var ConsumptionBudgetThresholdAction = newEnum("ConsumptionBudgetThresholdAction
 	{
 		v1:    configv1.ConsumptionBudgetThresholdActionDROP,
 		alias: "DROP",
+	},
+})
+
+// ConsumptionBudgetSKUGroup is an enum.
+var ConsumptionBudgetSKUGroup = newEnum("ConsumptionBudgetSKUGroup", []value[configv1.ConsumptionBudgetSKUGroup]{
+	{
+		v1:    configv1.ConsumptionBudgetSKUGroupLOGPERSISTEDBYTES,
+		alias: "LOG_PERSISTED_BYTES",
+	},
+	{
+		v1:    configv1.ConsumptionBudgetSKUGroupLOGPROCESSEDBYTES,
+		alias: "LOG_PROCESSED_BYTES",
+	},
+})
+
+// ConsumptionBudgetUnit is an enum.
+var ConsumptionBudgetUnit = newEnum("ConsumptionBudgetUnit", []value[configv1.ConsumptionBudgetUnit]{
+	{
+		v1:    configv1.ConsumptionBudgetUnitNATIVE,
+		alias: "NATIVE",
 	},
 })

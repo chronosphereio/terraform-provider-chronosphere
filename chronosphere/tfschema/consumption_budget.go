@@ -32,8 +32,9 @@ var ConsumptionBudget = map[string]*schema.Schema{
 		Required: true,
 	},
 	"resource": Enum{
-		Value:    enum.ConsumptionBudgetResource.ToStrings(),
-		Optional: true,
+		Value:      enum.ConsumptionBudgetResource.ToStrings(),
+		Optional:   true,
+		Deprecated: "use threshold.sku_group and threshold.unit instead",
 	}.Schema(),
 	"partition_slug_path": {
 		Type:     schema.TypeString,
@@ -140,13 +141,14 @@ var consumptionBudgetThresholdSchema = map[string]*schema.Schema{
 			Schema: consumptionBudgetVolumeSchema,
 		},
 	},
-	// TODO: add sku_group and unit enums. the action field is a good
-	// example to follow.
-	// hint:
-	// 1. add to enum package
-	// 2. add bindings here in schema
-	// 3. `make generate-no-swagger` to generate the intschema
-	// 4. map to/from API models in resource_consumption_budget.go
+	"sku_group": Enum{
+		Value:    enum.ConsumptionBudgetSKUGroup.ToStrings(),
+		Optional: true,
+	}.Schema(),
+	"unit": Enum{
+		Value:    enum.ConsumptionBudgetUnit.ToStrings(),
+		Optional: true,
+	}.Schema(),
 }
 
 var consumptionBudgetInstantRateSchema = map[string]*schema.Schema{
