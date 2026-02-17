@@ -20,4 +20,5 @@ const (
 	OrgNameEnvVar         = "CHRONOSPHERE_ORG_NAME" // fallback for CHRONOSPHERE_ORG
 	ApiTokenEnvVar        = "CHRONOSPHERE_API_TOKEN"
 	EntityNamespaceEnvVar = "CHRONOSPHERE_ENTITY_NAMESPACE"
+	ActorEnvVar           = "CHRONOSPHERE_ACTOR"
 )

@@ -4,6 +4,7 @@
 
 Added:
 * Add `execution_mode` field to `chronosphere_recording_rule` resource. This field controls how a recording rule is assigned to shards for execution.
+* Pass the value of the `CHRONOSPHERE_ACTOR` environment variable in header `Chronosphere-Actor` header on API requests. The value is recorded as change metadata in Version History.
 
 ## v1.20.0
 
