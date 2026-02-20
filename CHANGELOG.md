@@ -109,6 +109,7 @@ Added:
 
 Added:
 * Add `priority_thresholds` to `chronosphere_resource_pools_config` pools.
+* Update `monitors-logging` example.
 
 ## v1.7.0
 
