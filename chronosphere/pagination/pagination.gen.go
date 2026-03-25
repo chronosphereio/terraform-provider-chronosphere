@@ -22,6 +22,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_allocation_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_control_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_ingest_config"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_retention_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_action"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
@@ -891,6 +892,75 @@ func ListLogIngestConfig(
 	return []*configv1models.Configv1LogIngestConfig{
 		resp.Payload.LogIngestConfig,
 	}, nil
+}
+
+func ListLogRetentionConfigs(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1LogRetentionConfig, error) {
+	return ListLogRetentionConfigsByFilter(ctx, client, Filter{})
+}
+
+func ListLogRetentionConfigsBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1LogRetentionConfig, error) {
+	return ListLogRetentionConfigsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListLogRetentionConfigsByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1LogRetentionConfig, error) {
+	return ListLogRetentionConfigsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListLogRetentionConfigsByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*log_retention_config.ListLogRetentionConfigsParams),
+) ([]*configv1models.Configv1LogRetentionConfig, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1LogRetentionConfig
+	)
+	for {
+		p := &log_retention_config.ListLogRetentionConfigsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.LogRetentionConfig.ListLogRetentionConfigs(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.LogRetentionConfigs {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
 }
 
 func ListLogScaleActions(
