@@ -2,8 +2,10 @@
 
 ## UNRELEASED
 
+Added:
 * Add `chronosphere_log_retention_config` resource for configuring log retention rules.
-* Update GCP metrics integration and tracing related schemas.
+* Add `filters` and `rollup_rules` fields to `chronosphere_gcp_metrics_integration` metric groups.
+* Add `scope_filter` field to `chronosphere_trace_metrics_rule` resource.
 
 ## v1.21.0
 
