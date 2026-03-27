@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* Add `chronosphere_log_retention_config` resource for configuring log retention rules.
+
 ## v1.21.0
 
 Added:
