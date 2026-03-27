@@ -3,6 +3,7 @@
 ## UNRELEASED
 
 * Add `chronosphere_log_retention_config` resource for configuring log retention rules.
+* Update GCP metrics integration and tracing related schemas.
 
 ## v1.21.0
 
