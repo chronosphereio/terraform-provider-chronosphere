@@ -176,8 +176,9 @@ func traceSearchFilterFromModel(
 	f *models.Configv1TraceSearchFilter,
 ) intschema.TraceSearchFilter {
 	return intschema.TraceSearchFilter{
-		Span:  sliceutil.Map(f.Span, spanFilterFromModel),
-		Trace: traceFilterFromModel(f.Trace),
+		ScopeFilter: scopeFilterFromModel(f.ScopeFilter),
+		Span:        sliceutil.Map(f.Span, spanFilterFromModel),
+		Trace:       traceFilterFromModel(f.Trace),
 	}
 }
 
@@ -186,9 +187,14 @@ func traceSearchFilterToModel(f intschema.TraceSearchFilter) (*models.Configv1Tr
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+	scopeFilter, err := scopeFilterToModel(f.ScopeFilter)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
 	return &models.Configv1TraceSearchFilter{
-		Span:  spanFilters,
-		Trace: traceFilterToModel(f.Trace),
+		ScopeFilter: scopeFilter,
+		Span:        spanFilters,
+		Trace:       traceFilterToModel(f.Trace),
 	}, nil
 }
 
@@ -250,4 +256,66 @@ func traceFilterToModel(
 		Duration: durationFilterToModel(t.Duration),
 		Error:    boolFilterToModel(t.Error),
 	}
+}
+
+func scopeFilterFromModel(
+	f *models.TraceSearchFilterScopeFilter,
+) *intschema.TraceScopeFilter {
+	if f == nil {
+		return nil
+	}
+	return &intschema.TraceScopeFilter{
+		SpanScopes: sliceutil.Map(f.SpanScopes, scopeSpanFilterFromModel),
+	}
+}
+
+func scopeFilterToModel(
+	f *intschema.TraceScopeFilter,
+) (*models.TraceSearchFilterScopeFilter, error) {
+	if f == nil {
+		return nil, nil
+	}
+	spanScopes, err := sliceutil.MapErr(f.SpanScopes, scopeSpanFilterToModel)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	return &models.TraceSearchFilterScopeFilter{
+		SpanScopes: spanScopes,
+	}, nil
+}
+
+func scopeSpanFilterFromModel(
+	s *models.TraceSearchFilterSpanFilter,
+) intschema.TraceScopeFilterSpanScopes {
+	return intschema.TraceScopeFilterSpanScopes{
+		Duration:        durationFilterFromModel(s.Duration),
+		Error:           boolFilterFromModel(s.Error),
+		IsRootSpan:      boolFilterFromModel(s.IsRootSpan),
+		MatchType:       string(s.MatchType),
+		Operation:       stringFilterFromModel(s.Operation),
+		ParentOperation: stringFilterFromModel(s.ParentOperation),
+		ParentService:   stringFilterFromModel(s.ParentService),
+		Service:         stringFilterFromModel(s.Service),
+		SpanCount:       countFilterFromModel(s.SpanCount),
+		Tag:             sliceutil.Map(s.Tags, tagFilterFromModel),
+	}
+}
+
+func scopeSpanFilterToModel(s intschema.TraceScopeFilterSpanScopes) (*models.TraceSearchFilterSpanFilter, error) {
+	matchType, err := prettyenum.NewSpanFilterMatchType(s.MatchType)
+	if err != nil {
+		return nil, err
+	}
+	return &models.TraceSearchFilterSpanFilter{
+		Duration:        durationFilterToModel(s.Duration),
+		Error:           boolFilterToModel(s.Error),
+		IsRootSpan:      boolFilterToModel(s.IsRootSpan),
+		MatchType:       matchType.Model(),
+		Operation:       stringFilterToModel(s.Operation),
+		ParentOperation: stringFilterToModel(s.ParentOperation),
+		ParentService:   stringFilterToModel(s.ParentService),
+		Service:         stringFilterToModel(s.Service),
+		SpanCount:       countFilterToModel(s.SpanCount),
+		Tags:            sliceutil.Map(s.Tag, tagFilterToModel),
+	}, nil
 }

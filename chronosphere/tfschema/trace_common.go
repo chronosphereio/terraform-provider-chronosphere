@@ -30,8 +30,9 @@ var TraceSearchFilterSchema = &schema.Schema{
 	Required: true,
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"trace": TraceFilterSchema,
-			"span":  TraceSpanFilterListSchema,
+			"trace":        TraceFilterSchema,
+			"span":         TraceSpanFilterListSchema,
+			"scope_filter": TraceScopeFilterSchema,
 		},
 	},
 }
@@ -71,6 +72,41 @@ var TraceSpanFilterListSchema = &schema.Schema{
 			"tag":          TraceTagFilterSchema,
 			"span_count":   TraceSpanCountFilterSchema,
 			"is_root_span": TraceBoolFilterSchema,
+		},
+	},
+}
+
+var TraceScopeFilterSchema = &schema.Schema{
+	Type:     schema.TypeList,
+	Optional: true,
+	MinItems: 0,
+	MaxItems: 1,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"span_scopes": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"match_type": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							Default:          prettyenum.SpanFilterMatchTypeInclude,
+							ValidateDiagFunc: validateSpanFilterMatchType,
+							DiffSuppressFunc: diffSuppressSpanFilterMatchType,
+						},
+						"service":          TraceStringFilterSchema,
+						"operation":        TraceStringFilterSchema,
+						"parent_service":   TraceStringFilterSchema,
+						"parent_operation": TraceStringFilterSchema,
+						"duration":         TraceDurationFilterSchema,
+						"error":            TraceBoolFilterSchema,
+						"tag":              TraceTagFilterSchema,
+						"span_count":       TraceSpanCountFilterSchema,
+						"is_root_span":     TraceBoolFilterSchema,
+					},
+				},
+			},
 		},
 	},
 }

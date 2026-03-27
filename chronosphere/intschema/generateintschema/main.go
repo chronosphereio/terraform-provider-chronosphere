@@ -55,6 +55,7 @@ var sharedSchemaTypeNames = map[*schema.Schema]string{
 	tfschema.TraceDurationFilterSchema:                "TraceDurationFilter",
 	tfschema.TraceFilterSchema:                        "TraceFilter",
 	tfschema.TraceNumericFilterSchema:                 "TraceNumericFilter",
+	tfschema.TraceScopeFilterSchema:                   "TraceScopeFilter",
 	tfschema.TraceSearchFilterSchema:                  "TraceSearchFilter",
 	tfschema.TraceSpanCountFilterSchema:               "TraceSpanCountFilter",
 	tfschema.TraceSpanFilterListSchema:                "TraceSpanFilter",

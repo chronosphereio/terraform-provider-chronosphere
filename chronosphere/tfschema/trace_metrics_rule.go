@@ -48,6 +48,7 @@ var TraceMetricsRule = map[string]*schema.Schema{
 		Optional: true,
 	},
 	"trace_filter": TraceSearchFilterSchema,
+	"scope_filter": TraceScopeFilterSchema,
 	"group_by": {
 		Type:     schema.TypeList,
 		Optional: true,

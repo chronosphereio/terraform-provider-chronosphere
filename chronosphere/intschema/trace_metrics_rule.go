@@ -2,13 +2,14 @@
 package intschema
 
 import (
+	"io"
+
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/hclmarshal"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema/convertintschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"io"
 )
 
 var _ tfid.ID // Always use tfid for simplified import generation.
@@ -21,6 +22,7 @@ type TraceMetricsRule struct {
 	GroupBy                 []TraceMetricsRuleGroupBy `intschema:"group_by,optional"`
 	HistogramBucketsSeconds []float64                 `intschema:"histogram_buckets_seconds,optional"`
 	MetricLabels            map[string]string         `intschema:"metric_labels,optional"`
+	ScopeFilter             *TraceScopeFilter         `intschema:"scope_filter,optional,list_encoded_object"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
