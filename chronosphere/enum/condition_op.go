@@ -56,4 +56,8 @@ var ConditionOp = newEnum("ConditionOp", []value[configv1.ConditionOp]{
 		v1:    configv1.ConditionOpNOTEXISTS,
 		alias: "NOT_EXISTS",
 	},
+	{
+		v1:    configv1.ConditionOpSIGNALNOTEXISTS,
+		alias: "SIGNAL_NOT_EXISTS",
+	},
 })
