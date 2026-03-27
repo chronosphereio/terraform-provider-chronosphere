@@ -2,14 +2,13 @@
 package intschema
 
 import (
-	"io"
-
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/hclmarshal"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema/convertintschema"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"io"
 )
 
 var _ tfid.ID // Always use tfid for simplified import generation.
