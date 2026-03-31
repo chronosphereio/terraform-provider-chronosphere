@@ -21,6 +21,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_allocation_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_control_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_ingest_config"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_retention_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_action"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
@@ -1222,6 +1223,85 @@ func (generatedLogIngestConfig) delete(
 		Context: ctx,
 	}
 	_, err := clients.ConfigV1.LogIngestConfig.DeleteLogIngestConfig(req)
+	return err
+}
+
+type generatedLogRetentionConfig struct{}
+
+func (generatedLogRetentionConfig) slugOf(m *configv1models.Configv1LogRetentionConfig) string {
+	return m.Slug
+}
+
+func (generatedLogRetentionConfig) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1LogRetentionConfig,
+	dryRun bool,
+) (string, error) {
+	req := &log_retention_config.CreateLogRetentionConfigParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateLogRetentionConfigRequest{
+			LogRetentionConfig: m,
+			DryRun:             dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.LogRetentionConfig.CreateLogRetentionConfig(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.LogRetentionConfig
+	if e == nil {
+		return "", nil
+	}
+	return (generatedLogRetentionConfig{}).slugOf(e), nil
+}
+
+func (generatedLogRetentionConfig) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1LogRetentionConfig, error) {
+	req := &log_retention_config.ReadLogRetentionConfigParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigV1.LogRetentionConfig.ReadLogRetentionConfig(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.LogRetentionConfig, nil
+}
+
+func (generatedLogRetentionConfig) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1LogRetentionConfig,
+	params updateParams,
+) error {
+	req := &log_retention_config.UpdateLogRetentionConfigParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configv1models.ConfigV1UpdateLogRetentionConfigBody{
+
+			LogRetentionConfig: m,
+			CreateIfMissing:    params.createIfMissing,
+			DryRun:             params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.LogRetentionConfig.UpdateLogRetentionConfig(req)
+	return err
+}
+func (generatedLogRetentionConfig) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &log_retention_config.DeleteLogRetentionConfigParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigV1.LogRetentionConfig.DeleteLogRetentionConfig(req)
 	return err
 }
 

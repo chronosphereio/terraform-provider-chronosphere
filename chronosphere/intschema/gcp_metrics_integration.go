@@ -61,6 +61,29 @@ type GcpMetricsIntegrationServiceAccount struct {
 }
 
 type GcpMetricsIntegrationMetricGroups struct {
-	ProjectId string   `intschema:"project_id"`
-	Prefixes  []string `intschema:"prefixes,optional"`
+	ProjectId   string                                         `intschema:"project_id"`
+	Filters     []GcpMetricsIntegrationMetricGroupsFilters     `intschema:"filters,optional"`
+	Prefixes    []string                                       `intschema:"prefixes,optional"`
+	RollupRules []GcpMetricsIntegrationMetricGroupsRollupRules `intschema:"rollup_rules,optional"`
+}
+
+type GcpMetricsIntegrationMetricGroupsRollupRules struct {
+	Aggregation string                                                   `intschema:"aggregation,optional"`
+	LabelPolicy *GcpMetricsIntegrationMetricGroupsRollupRulesLabelPolicy `intschema:"label_policy,optional,list_encoded_object"`
+	MetricName  string                                                   `intschema:"metric_name,optional"`
+}
+
+type GcpMetricsIntegrationMetricGroupsRollupRulesLabelPolicy struct {
+	Keep []GcpMetricsIntegrationMetricGroupsRollupRulesLabelPolicyKeep `intschema:"keep,optional"`
+}
+
+type GcpMetricsIntegrationMetricGroupsRollupRulesLabelPolicyKeep struct {
+	Name    string `intschema:"name,optional"`
+	Context string `intschema:"context,optional"`
+}
+
+type GcpMetricsIntegrationMetricGroupsFilters struct {
+	Name      string `intschema:"name,optional"`
+	Context   string `intschema:"context,optional"`
+	ValueGlob string `intschema:"value_glob,optional"`
 }

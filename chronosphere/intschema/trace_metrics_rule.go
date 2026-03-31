@@ -21,6 +21,7 @@ type TraceMetricsRule struct {
 	GroupBy                 []TraceMetricsRuleGroupBy `intschema:"group_by,optional"`
 	HistogramBucketsSeconds []float64                 `intschema:"histogram_buckets_seconds,optional"`
 	MetricLabels            map[string]string         `intschema:"metric_labels,optional"`
+	ScopeFilter             *TraceScopeFilter         `intschema:"scope_filter,optional,list_encoded_object"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.

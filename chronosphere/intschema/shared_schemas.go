@@ -161,9 +161,27 @@ type TraceNumericFilter struct {
 	Value      float64 `intschema:"value"`
 }
 
+type TraceScopeFilter struct {
+	SpanScopes []TraceScopeFilterSpanScopes `intschema:"span_scopes,optional"`
+}
+
+type TraceScopeFilterSpanScopes struct {
+	Duration        *TraceDurationFilter  `intschema:"duration,optional,list_encoded_object"`
+	Error           *TraceBoolFilter      `intschema:"error,optional,list_encoded_object"`
+	IsRootSpan      *TraceBoolFilter      `intschema:"is_root_span,optional,list_encoded_object"`
+	MatchType       string                `intschema:"match_type,optional,default:include"`
+	Operation       *TraceStringFilter    `intschema:"operation,optional,list_encoded_object"`
+	ParentOperation *TraceStringFilter    `intschema:"parent_operation,optional,list_encoded_object"`
+	ParentService   *TraceStringFilter    `intschema:"parent_service,optional,list_encoded_object"`
+	Service         *TraceStringFilter    `intschema:"service,optional,list_encoded_object"`
+	SpanCount       *TraceSpanCountFilter `intschema:"span_count,optional,list_encoded_object"`
+	Tag             []TraceTagFilter      `intschema:"tag,optional"`
+}
+
 type TraceSearchFilter struct {
-	Span  []TraceSpanFilter `intschema:"span,optional"`
-	Trace *TraceFilter      `intschema:"trace,optional,list_encoded_object"`
+	ScopeFilter *TraceScopeFilter `intschema:"scope_filter,optional,list_encoded_object"`
+	Span        []TraceSpanFilter `intschema:"span,optional"`
+	Trace       *TraceFilter      `intschema:"trace,optional,list_encoded_object"`
 }
 
 type TraceSpanCountFilter struct {

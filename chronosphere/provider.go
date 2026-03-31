@@ -71,6 +71,7 @@ func Provider() *schema.Provider {
 		"chronosphere_slo":                                   resourceSLO(),
 		"chronosphere_log_ingest_config":                     resourceLogIngestConfig(),
 		"chronosphere_log_control_config":                    resourceLogControlConfig(),
+		"chronosphere_log_retention_config":                  resourceLogRetentionConfig(),
 		"chronosphere_consumption_config":                    resourceConsumptionConfig(),
 		"chronosphere_consumption_budget":                    resourceConsumptionBudget(),
 		"chronosphere_service_attribute":                     resourceServiceAttribute(),

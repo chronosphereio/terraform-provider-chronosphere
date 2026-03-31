@@ -69,6 +69,31 @@ func TestEnumConversions(t *testing.T) {
 	require.Equal(t,
 		configv1.CommonPromQLMatcherTypeMatchEqual,
 		PromQLMatcherType.V1("MatchEqual"))
+
+	// v1 -> v1
+	require.Equal(t,
+		configv1.Configv1LogRetentionConfigModeENABLED,
+		LogRetentionConfigMode.V1("ENABLED"))
+
+	// v1 -> v1
+	require.Equal(t,
+		configv1.Configv1LogRetentionConfigModeDISABLED,
+		LogRetentionConfigMode.V1("DISABLED"))
+
+	// unknown -> v1
+	require.Equal(t,
+		configv1.Configv1LogRetentionConfigMode("NOT_A_MODE"),
+		LogRetentionConfigMode.V1("NOT_A_MODE"))
+
+	// empty -> v1 w/ INVALID default (proto MODE_INVALID)
+	require.Equal(t,
+		configv1.Configv1LogRetentionConfigMode("INVALID"),
+		LogRetentionConfigMode.V1(""))
+
+	// v1 -> v1 (explicit INVALID sentinel)
+	require.Equal(t,
+		configv1.Configv1LogRetentionConfigMode("INVALID"),
+		LogRetentionConfigMode.V1("INVALID"))
 }
 
 func TestEnumValidateError(t *testing.T) {
@@ -76,6 +101,14 @@ func TestEnumValidateError(t *testing.T) {
 	require.NotNil(t, err)
 	require.Equal(t,
 		`"FOO_BAR_BAZ" is not a valid MatcherType value; valid values: "EXACT", "REGEX"`,
+		err[0].Summary)
+}
+
+func TestLogRetentionConfigModeValidateError(t *testing.T) {
+	err := LogRetentionConfigMode.ToStrings().Validate("INVALID_MODE", nil)
+	require.NotNil(t, err)
+	require.Equal(t,
+		`"INVALID_MODE" is not a valid LogRetentionConfigMode value; valid values: "ENABLED", "DISABLED"`,
 		err[0].Summary)
 }
 
@@ -137,6 +170,10 @@ func TestAllEnumsValidate(t *testing.T) {
 		{
 			v1SwaggerName: "SLITimeSliceSize",
 			enum:          SLITimeSliceSize.ToStrings(),
+		},
+		{
+			v1SwaggerName: "configv1LogRetentionConfigMode",
+			enum:          LogRetentionConfigMode.ToStrings(),
 		},
 	}
 	for _, tt := range tests {

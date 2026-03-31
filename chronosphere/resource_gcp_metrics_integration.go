@@ -85,8 +85,10 @@ func resourceToModelMetricGroups(
 	metricGroups := make([]*models.GcpMetricsIntegrationMetricGroup, len(mg))
 	for i, g := range mg {
 		metricGroups[i] = &models.GcpMetricsIntegrationMetricGroup{
-			Prefixes:  g.Prefixes,
-			ProjectID: g.ProjectId,
+			Prefixes:    g.Prefixes,
+			ProjectID:   g.ProjectId,
+			Filters:     resourceToModelFilters(g.Filters),
+			RollupRules: resourceToModelRollupRules(g.RollupRules),
 		}
 	}
 	return metricGroups
@@ -98,9 +100,103 @@ func resourceFromModelMetricGroups(
 	metricGroups := make([]intschema.GcpMetricsIntegrationMetricGroups, len(mg))
 	for i, g := range mg {
 		metricGroups[i] = intschema.GcpMetricsIntegrationMetricGroups{
-			Prefixes:  g.Prefixes,
-			ProjectId: g.ProjectID,
+			Prefixes:    g.Prefixes,
+			ProjectId:   g.ProjectID,
+			Filters:     resourceFromModelFilters(g.Filters),
+			RollupRules: resourceFromModelRollupRules(g.RollupRules),
 		}
 	}
 	return metricGroups
+}
+
+func resourceToModelFilters(
+	filters []intschema.GcpMetricsIntegrationMetricGroupsFilters,
+) []*models.Configv1GcpMetricsIntegrationFilter {
+	result := make([]*models.Configv1GcpMetricsIntegrationFilter, len(filters))
+	for i, f := range filters {
+		result[i] = &models.Configv1GcpMetricsIntegrationFilter{
+			Name:      f.Name,
+			ValueGlob: f.ValueGlob,
+			Context:   models.GcpMetricsIntegrationLabelContext(f.Context),
+		}
+	}
+	return result
+}
+
+func resourceFromModelFilters(
+	filters []*models.Configv1GcpMetricsIntegrationFilter,
+) []intschema.GcpMetricsIntegrationMetricGroupsFilters {
+	result := make([]intschema.GcpMetricsIntegrationMetricGroupsFilters, len(filters))
+	for i, f := range filters {
+		result[i] = intschema.GcpMetricsIntegrationMetricGroupsFilters{
+			Name:      f.Name,
+			ValueGlob: f.ValueGlob,
+			Context:   string(f.Context),
+		}
+	}
+	return result
+}
+
+func resourceToModelRollupRules(
+	rules []intschema.GcpMetricsIntegrationMetricGroupsRollupRules,
+) []*models.Configv1GcpMetricsIntegrationRollupRule {
+	result := make([]*models.Configv1GcpMetricsIntegrationRollupRule, len(rules))
+	for i, r := range rules {
+		result[i] = &models.Configv1GcpMetricsIntegrationRollupRule{
+			MetricName:  r.MetricName,
+			Aggregation: models.Configv1GcpMetricsIntegrationAggregation(r.Aggregation),
+			LabelPolicy: resourceToModelLabelPolicy(r.LabelPolicy),
+		}
+	}
+	return result
+}
+
+func resourceFromModelRollupRules(
+	rules []*models.Configv1GcpMetricsIntegrationRollupRule,
+) []intschema.GcpMetricsIntegrationMetricGroupsRollupRules {
+	result := make([]intschema.GcpMetricsIntegrationMetricGroupsRollupRules, len(rules))
+	for i, r := range rules {
+		result[i] = intschema.GcpMetricsIntegrationMetricGroupsRollupRules{
+			MetricName:  r.MetricName,
+			Aggregation: string(r.Aggregation),
+			LabelPolicy: resourceFromModelLabelPolicy(r.LabelPolicy),
+		}
+	}
+	return result
+}
+
+func resourceToModelLabelPolicy(
+	policy *intschema.GcpMetricsIntegrationMetricGroupsRollupRulesLabelPolicy,
+) *models.GcpMetricsIntegrationRollupRuleLabelPolicy {
+	if policy == nil {
+		return nil
+	}
+	keep := make([]*models.GcpMetricsIntegrationRollupRuleLabel, len(policy.Keep))
+	for i, k := range policy.Keep {
+		keep[i] = &models.GcpMetricsIntegrationRollupRuleLabel{
+			Name:    k.Name,
+			Context: models.GcpMetricsIntegrationLabelContext(k.Context),
+		}
+	}
+	return &models.GcpMetricsIntegrationRollupRuleLabelPolicy{
+		Keep: keep,
+	}
+}
+
+func resourceFromModelLabelPolicy(
+	policy *models.GcpMetricsIntegrationRollupRuleLabelPolicy,
+) *intschema.GcpMetricsIntegrationMetricGroupsRollupRulesLabelPolicy {
+	if policy == nil {
+		return nil
+	}
+	keep := make([]intschema.GcpMetricsIntegrationMetricGroupsRollupRulesLabelPolicyKeep, len(policy.Keep))
+	for i, k := range policy.Keep {
+		keep[i] = intschema.GcpMetricsIntegrationMetricGroupsRollupRulesLabelPolicyKeep{
+			Name:    k.Name,
+			Context: string(k.Context),
+		}
+	}
+	return &intschema.GcpMetricsIntegrationMetricGroupsRollupRulesLabelPolicy{
+		Keep: keep,
+	}
 }

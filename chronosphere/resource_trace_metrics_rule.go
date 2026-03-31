@@ -56,11 +56,16 @@ func (traceMetricsRuleConverter) toModel(r *intschema.TraceMetricsRule) (*models
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+	scopeFilter, err := scopeFilterToModel(r.ScopeFilter)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
 	return &models.Configv1TraceMetricsRule{
 		Slug:                 r.Slug,
 		Name:                 r.Name,
 		MetricName:           r.MetricName,
 		TraceFilter:          filter,
+		ScopeFilter:          scopeFilter,
 		HistogramBucketsSecs: r.HistogramBucketsSeconds,
 		MetricLabels:         r.MetricLabels,
 		GroupBy:              expandTraceMetricsRuleGroupBy(r.GroupBy),
@@ -73,6 +78,7 @@ func (traceMetricsRuleConverter) fromModel(r *models.Configv1TraceMetricsRule) (
 		Slug:                    r.Slug,
 		MetricName:              r.MetricName,
 		TraceFilter:             traceSearchFilterFromModel(r.TraceFilter),
+		ScopeFilter:             scopeFilterFromModel(r.ScopeFilter),
 		HistogramBucketsSeconds: r.HistogramBucketsSecs,
 		MetricLabels:            r.MetricLabels,
 		GroupBy:                 sliceutil.Map(r.GroupBy, traceMetricsRuleGroupByFromModel),
