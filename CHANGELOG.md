@@ -6,6 +6,7 @@ Added:
 * Add `chronosphere_log_retention_config` resource for configuring log retention rules.
 * Add `filters` and `rollup_rules` fields to `chronosphere_gcp_metrics_integration` metric groups.
 * Add `scope_filter` field to `chronosphere_trace_metrics_rule` resource.
+* Add `SIGNAL_NOT_EXISTS` condition op to `chronosphere_monitor` resource. This condition triggers when the monitored signal no longer exists.
 
 ## v1.21.0
 
