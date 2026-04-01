@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.22.0
+
 Added:
 * Add `chronosphere_log_retention_config` resource for configuring log retention rules.
 * Add `filters` and `rollup_rules` fields to `chronosphere_gcp_metrics_integration` metric groups.
