@@ -62,6 +62,7 @@ type MonitorSeriesCondition struct {
 	Op             string  `intschema:"op"`
 	Severity       string  `intschema:"severity"`
 	ResolveSustain string  `intschema:"resolve_sustain,optional"`
+	ResolveValue   float64 `intschema:"resolve_value,optional"`
 	Sustain        string  `intschema:"sustain,optional"`
 	Value          float64 `intschema:"value,optional,default:0"`
 }

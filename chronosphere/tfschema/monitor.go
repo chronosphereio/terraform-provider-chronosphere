@@ -166,5 +166,9 @@ var MonitorSeriesConditionSchema = typeset.Set{
 		"resolve_sustain": Duration{
 			Optional: true,
 		},
+		"resolve_value": typeset.NotNormalized(&schema.Schema{
+			Type:     schema.TypeFloat,
+			Optional: true,
+		}),
 	},
 }.Schema()
