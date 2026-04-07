@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.23.0
+
 Added:
 * Add `resolve_value` field to `chronosphere_monitor` conditions. Allows configuring a different threshold for resolving an alert.
 
