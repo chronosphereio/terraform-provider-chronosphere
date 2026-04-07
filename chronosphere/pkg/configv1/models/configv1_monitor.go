@@ -60,6 +60,9 @@ type Configv1Monitor struct {
 	// If omitted, the notification policy is inherited from the monitor.
 	NotificationPolicySlug string `json:"notification_policy_slug,omitempty"`
 
+	// notification template
+	NotificationTemplate *MonitorNotificationTemplate `json:"notification_template,omitempty"`
+
 	// PromQL query to evaluate for the alert. If set, no other queries can be set.
 	// Example: up{job=\"prometheus\"} == 0
 	PrometheusQuery string `json:"prometheus_query,omitempty"`
@@ -91,6 +94,10 @@ func (m *Configv1Monitor) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCreatedAt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNotificationTemplate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -142,6 +149,25 @@ func (m *Configv1Monitor) validateCreatedAt(formats strfmt.Registry) error {
 
 	if err := validate.FormatOf("created_at", "body", "date-time", m.CreatedAt.String(), formats); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1Monitor) validateNotificationTemplate(formats strfmt.Registry) error {
+	if swag.IsZero(m.NotificationTemplate) { // not required
+		return nil
+	}
+
+	if m.NotificationTemplate != nil {
+		if err := m.NotificationTemplate.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("notification_template")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("notification_template")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -228,6 +254,10 @@ func (m *Configv1Monitor) ContextValidate(ctx context.Context, formats strfmt.Re
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateNotificationTemplate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateSchedule(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -270,6 +300,22 @@ func (m *Configv1Monitor) contextValidateCreatedAt(ctx context.Context, formats 
 
 	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1Monitor) contextValidateNotificationTemplate(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.NotificationTemplate != nil {
+		if err := m.NotificationTemplate.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("notification_template")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("notification_template")
+			}
+			return err
+		}
 	}
 
 	return nil
