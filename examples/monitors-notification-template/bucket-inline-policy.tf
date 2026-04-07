@@ -1,0 +1,1 @@
+../bucket-inline-policy/main.tf
