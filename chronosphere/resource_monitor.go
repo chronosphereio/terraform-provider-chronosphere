@@ -365,12 +365,19 @@ func monitorConditionsToModel(
 		if err != nil {
 			return nil, err
 		}
-		bySev[c.Severity] = append(bySev[c.Severity], &models.Configv1MonitorCondition{
+		cond := &models.Configv1MonitorCondition{
 			Op:                 enum.ConditionOp.V1(c.Op),
 			SustainSecs:        sustainSecs,
 			ResolveSustainSecs: resolveSustainSecs,
 			Value:              c.Value,
-		})
+		}
+		if c.ResolveValue != nil {
+			cond.ResolveValue = &models.Configv1OptionalDouble{
+				Value:   c.ResolveValue.Value,
+				Enabled: c.ResolveValue.Enabled,
+			}
+		}
+		bySev[c.Severity] = append(bySev[c.Severity], cond)
 	}
 
 	load := func(sev string) *models.SeriesConditionsConditions {
@@ -402,13 +409,20 @@ func monitorConditionsFromModel(
 			return
 		}
 		for _, c := range f.Conditions {
-			out = append(out, intschema.MonitorSeriesCondition{
+			cond := intschema.MonitorSeriesCondition{
 				Severity:       sev,
 				Op:             string(c.Op),
 				Sustain:        durationFromSecs(c.SustainSecs),
 				ResolveSustain: durationFromSecs(c.ResolveSustainSecs),
 				Value:          c.Value,
-			})
+			}
+			if c.ResolveValue != nil {
+				cond.ResolveValue = &intschema.MonitorSeriesConditionResolveValue{
+					Value:   c.ResolveValue.Value,
+					Enabled: c.ResolveValue.Enabled,
+				}
+			}
+			out = append(out, cond)
 		}
 	}
 	load(warn, m.Warn)
