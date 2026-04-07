@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+Added:
+* Add `notification_template` field to `chronosphere_monitor` resource. Allows customizing notification title and description using Go templates.
+
 ## v1.23.0
 
 Added:

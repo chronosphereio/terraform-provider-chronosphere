@@ -131,6 +131,7 @@ func (monitorConverter) toModel(
 		Labels:                 m.Labels,
 		Name:                   m.Name,
 		NotificationPolicySlug: m.NotificationPolicyId.Slug(),
+		NotificationTemplate:   monitorNotificationTemplateToModel(m.NotificationTemplate),
 		PrometheusQuery:        m.Query.PrometheusExpr,
 		Schedule:               schedule,
 		SeriesConditions:       seriesConditions,
@@ -158,12 +159,13 @@ func (monitorConverter) fromModel(
 			PrometheusExpr: m.PrometheusQuery,
 			LoggingExpr:    m.LoggingQuery,
 		},
-		SeriesConditions: monitorSeriesConditionsFromModel(m.SeriesConditions),
-		Annotations:      m.Annotations,
-		Interval:         durationFromSecs(m.IntervalSecs),
-		Labels:           m.Labels,
-		Schedule:         schedule,
-		SignalGrouping:   monitorSignalGroupingFromModel(m.SignalGrouping),
+		SeriesConditions:     monitorSeriesConditionsFromModel(m.SeriesConditions),
+		Annotations:          m.Annotations,
+		Interval:             durationFromSecs(m.IntervalSecs),
+		Labels:               m.Labels,
+		NotificationTemplate: monitorNotificationTemplateFromModel(m.NotificationTemplate),
+		Schedule:             schedule,
+		SignalGrouping:       monitorSignalGroupingFromModel(m.SignalGrouping),
 	}, nil
 }
 
@@ -451,5 +453,29 @@ func monitorSignalGroupingFromModel(
 	return &intschema.SignalGrouping{
 		LabelNames:      g.LabelNames,
 		SignalPerSeries: g.SignalPerSeries,
+	}
+}
+
+func monitorNotificationTemplateToModel(
+	t *intschema.MonitorNotificationTemplate,
+) *models.MonitorNotificationTemplate {
+	if t == nil {
+		return nil
+	}
+	return &models.MonitorNotificationTemplate{
+		Title:       t.Title,
+		Description: t.Description,
+	}
+}
+
+func monitorNotificationTemplateFromModel(
+	t *models.MonitorNotificationTemplate,
+) *intschema.MonitorNotificationTemplate {
+	if t == nil {
+		return nil
+	}
+	return &intschema.MonitorNotificationTemplate{
+		Title:       t.Title,
+		Description: t.Description,
 	}
 }
