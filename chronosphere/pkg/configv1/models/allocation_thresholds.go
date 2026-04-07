@@ -25,7 +25,7 @@ type AllocationThresholds struct {
 	DefaultAndLowPriority *ResourcePoolsAllocationThreshold `json:"default_and_low_priority,omitempty"`
 
 	// license
-	License Configv1ResourcePoolsLicense `json:"license,omitempty"`
+	License ResourcePoolsLicense `json:"license,omitempty"`
 
 	// low priority
 	LowPriority *ResourcePoolsAllocationThreshold `json:"low_priority,omitempty"`

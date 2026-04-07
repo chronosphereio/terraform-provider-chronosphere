@@ -167,8 +167,21 @@ var MonitorSeriesConditionSchema = typeset.Set{
 			Optional: true,
 		},
 		"resolve_value": typeset.NotNormalized(&schema.Schema{
-			Type:     schema.TypeFloat,
+			Type:     schema.TypeList,
 			Optional: true,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"value": {
+						Type:     schema.TypeFloat,
+						Required: true,
+					},
+					"enabled": {
+						Type:     schema.TypeBool,
+						Required: true,
+					},
+				},
+			},
 		}),
 	},
 }.Schema()

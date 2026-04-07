@@ -371,8 +371,11 @@ func monitorConditionsToModel(
 			ResolveSustainSecs: resolveSustainSecs,
 			Value:              c.Value,
 		}
-		if c.ResolveValue != 0 {
-			cond.ResolveValue = &c.ResolveValue
+		if c.ResolveValue != nil {
+			cond.ResolveValue = &models.Configv1OptionalDouble{
+				Value:   c.ResolveValue.Value,
+				Enabled: c.ResolveValue.Enabled,
+			}
 		}
 		bySev[c.Severity] = append(bySev[c.Severity], cond)
 	}
@@ -414,7 +417,10 @@ func monitorConditionsFromModel(
 				Value:          c.Value,
 			}
 			if c.ResolveValue != nil {
-				cond.ResolveValue = *c.ResolveValue
+				cond.ResolveValue = &intschema.MonitorSeriesConditionResolveValue{
+					Value:   c.ResolveValue.Value,
+					Enabled: c.ResolveValue.Enabled,
+				}
 			}
 			out = append(out, cond)
 		}

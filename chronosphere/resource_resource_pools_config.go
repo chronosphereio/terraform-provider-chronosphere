@@ -354,7 +354,7 @@ func fixedValuesToModel(fixedValues []intschema.ResourcePoolAllocationSchemaFixe
 
 	return sliceutil.Map(fixedValues, func(f intschema.ResourcePoolAllocationSchemaFixedValue) *apimodels.AllocationFixedValue {
 		return &apimodels.AllocationFixedValue{
-			License: apimodels.Configv1ResourcePoolsLicense(f.License),
+			License: apimodels.ResourcePoolsLicense(f.License),
 			Value:   fmt.Sprint(f.Value),
 		}
 	})
@@ -366,7 +366,7 @@ func thresholdsToModel(thresholds []intschema.ResourcePoolAllocationThresholdsSc
 	}
 	return sliceutil.Map(thresholds, func(t intschema.ResourcePoolAllocationThresholdsSchema) *apimodels.AllocationThresholds {
 		return &apimodels.AllocationThresholds{
-			License:               apimodels.Configv1ResourcePoolsLicense(t.License),
+			License:               apimodels.ResourcePoolsLicense(t.License),
 			AllPriorities:         thresholdToModel(t.AllPriorities),
 			DefaultAndLowPriority: thresholdToModel(t.DefaultAndLowPriority),
 			LowPriority:           thresholdToModel(t.LowPriority),
