@@ -14,18 +14,19 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type Monitor struct {
-	Name                 string                  `intschema:"name"`
-	Slug                 string                  `intschema:"slug,optional,computed"`
-	BucketId             tfid.ID                 `intschema:"bucket_id,optional"`
-	CollectionId         tfid.ID                 `intschema:"collection_id,optional"`
-	NotificationPolicyId tfid.ID                 `intschema:"notification_policy_id,optional"`
-	Query                MonitorQuery            `intschema:"query,list_encoded_object"`
-	SeriesConditions     MonitorSeriesConditions `intschema:"series_conditions,list_encoded_object"`
-	Annotations          map[string]string       `intschema:"annotations,optional"`
-	Interval             string                  `intschema:"interval,optional"`
-	Labels               map[string]string       `intschema:"labels,optional"`
-	Schedule             *MonitorSchedule        `intschema:"schedule,optional,list_encoded_object"`
-	SignalGrouping       *SignalGrouping         `intschema:"signal_grouping,optional,list_encoded_object"`
+	Name                 string                       `intschema:"name"`
+	Slug                 string                       `intschema:"slug,optional,computed"`
+	BucketId             tfid.ID                      `intschema:"bucket_id,optional"`
+	CollectionId         tfid.ID                      `intschema:"collection_id,optional"`
+	NotificationPolicyId tfid.ID                      `intschema:"notification_policy_id,optional"`
+	Query                MonitorQuery                 `intschema:"query,list_encoded_object"`
+	SeriesConditions     MonitorSeriesConditions      `intschema:"series_conditions,list_encoded_object"`
+	Annotations          map[string]string            `intschema:"annotations,optional"`
+	Interval             string                       `intschema:"interval,optional"`
+	Labels               map[string]string            `intschema:"labels,optional"`
+	NotificationTemplate *MonitorNotificationTemplate `intschema:"notification_template,optional,list_encoded_object"`
+	Schedule             *MonitorSchedule             `intschema:"schedule,optional,list_encoded_object"`
+	SignalGrouping       *SignalGrouping              `intschema:"signal_grouping,optional,list_encoded_object"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -89,4 +90,9 @@ type MonitorQuery struct {
 	GraphiteExpr   string `intschema:"graphite_expr,optional"`
 	LoggingExpr    string `intschema:"logging_expr,optional"`
 	PrometheusExpr string `intschema:"prometheus_expr,optional"`
+}
+
+type MonitorNotificationTemplate struct {
+	Description string `intschema:"description,optional"`
+	Title       string `intschema:"title,optional"`
 }

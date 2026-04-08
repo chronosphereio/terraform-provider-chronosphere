@@ -112,6 +112,23 @@ var Monitor = map[string]*schema.Schema{
 	"interval": Duration{
 		Optional: true,
 	}.Schema(),
+	"notification_template": {
+		Type:     schema.TypeList,
+		MaxItems: 1,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"title": {
+					Type:     schema.TypeString,
+					Optional: true,
+				},
+				"description": {
+					Type:     schema.TypeString,
+					Optional: true,
+				},
+			},
+		},
+	},
 	"schedule": {
 		Type:     schema.TypeList,
 		MaxItems: 1,
