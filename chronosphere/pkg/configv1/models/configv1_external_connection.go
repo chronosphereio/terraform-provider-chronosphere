@@ -14,63 +14,46 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Configv1Notifier configv1 notifier
+// Configv1ExternalConnection configv1 external connection
 //
-// swagger:model configv1Notifier
-type Configv1Notifier struct {
+// swagger:model configv1ExternalConnection
+type Configv1ExternalConnection struct {
 
-	// Timestamp of when the Notifier was created. Cannot be set by clients.
-	// Read Only: true
+	// created at
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// If `true`, enables the `discard` integration, which discards all
-	// notifications. Cannot be set if another integration is set.
-	Discard bool `json:"discard,omitempty"`
-
-	// email
-	Email *NotifierEmailConfig `json:"email,omitempty"`
-
-	// The name of the Notifier. You can modify this value after the Notifier is created.
+	// name
 	Name string `json:"name,omitempty"`
 
 	// ops genie
-	OpsGenie *Configv1NotifierOpsGenieConfig `json:"ops_genie,omitempty"`
+	OpsGenie *Configv1ExternalConnectionOpsGenieConfig `json:"ops_genie,omitempty"`
 
 	// pagerduty
-	Pagerduty *Configv1NotifierPagerdutyConfig `json:"pagerduty,omitempty"`
-
-	// If `true`, disables notifications for resolved alerts. Cannot be set if
-	// `discard` equals `true`.
-	SkipResolved bool `json:"skip_resolved,omitempty"`
+	Pagerduty *Configv1ExternalConnectionPagerdutyConfig `json:"pagerduty,omitempty"`
 
 	// slack
-	Slack *Configv1NotifierSlackConfig `json:"slack,omitempty"`
+	Slack *Configv1ExternalConnectionSlackConfig `json:"slack,omitempty"`
 
-	// The unique identifier of the Notifier. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the Notifier is created.
+	// slug
 	Slug string `json:"slug,omitempty"`
 
-	// Timestamp of when the Notifier was last updated. Cannot be set by clients.
-	// Read Only: true
+	// updated at
 	// Format: date-time
 	UpdatedAt strfmt.DateTime `json:"updated_at,omitempty"`
 
 	// victor ops
-	VictorOps *Configv1NotifierVictorOpsConfig `json:"victor_ops,omitempty"`
+	VictorOps *Configv1ExternalConnectionVictorOpsConfig `json:"victor_ops,omitempty"`
 
 	// webhook
-	Webhook *Configv1NotifierWebhookConfig `json:"webhook,omitempty"`
+	Webhook *Configv1ExternalConnectionWebhookConfig `json:"webhook,omitempty"`
 }
 
-// Validate validates this configv1 notifier
-func (m *Configv1Notifier) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 external connection
+func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCreatedAt(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateEmail(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -104,7 +87,7 @@ func (m *Configv1Notifier) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1Notifier) validateCreatedAt(formats strfmt.Registry) error {
+func (m *Configv1ExternalConnection) validateCreatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.CreatedAt) { // not required
 		return nil
 	}
@@ -116,26 +99,7 @@ func (m *Configv1Notifier) validateCreatedAt(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1Notifier) validateEmail(formats strfmt.Registry) error {
-	if swag.IsZero(m.Email) { // not required
-		return nil
-	}
-
-	if m.Email != nil {
-		if err := m.Email.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("email")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("email")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Configv1Notifier) validateOpsGenie(formats strfmt.Registry) error {
+func (m *Configv1ExternalConnection) validateOpsGenie(formats strfmt.Registry) error {
 	if swag.IsZero(m.OpsGenie) { // not required
 		return nil
 	}
@@ -154,7 +118,7 @@ func (m *Configv1Notifier) validateOpsGenie(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1Notifier) validatePagerduty(formats strfmt.Registry) error {
+func (m *Configv1ExternalConnection) validatePagerduty(formats strfmt.Registry) error {
 	if swag.IsZero(m.Pagerduty) { // not required
 		return nil
 	}
@@ -173,7 +137,7 @@ func (m *Configv1Notifier) validatePagerduty(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1Notifier) validateSlack(formats strfmt.Registry) error {
+func (m *Configv1ExternalConnection) validateSlack(formats strfmt.Registry) error {
 	if swag.IsZero(m.Slack) { // not required
 		return nil
 	}
@@ -192,7 +156,7 @@ func (m *Configv1Notifier) validateSlack(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1Notifier) validateUpdatedAt(formats strfmt.Registry) error {
+func (m *Configv1ExternalConnection) validateUpdatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.UpdatedAt) { // not required
 		return nil
 	}
@@ -204,7 +168,7 @@ func (m *Configv1Notifier) validateUpdatedAt(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1Notifier) validateVictorOps(formats strfmt.Registry) error {
+func (m *Configv1ExternalConnection) validateVictorOps(formats strfmt.Registry) error {
 	if swag.IsZero(m.VictorOps) { // not required
 		return nil
 	}
@@ -223,7 +187,7 @@ func (m *Configv1Notifier) validateVictorOps(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1Notifier) validateWebhook(formats strfmt.Registry) error {
+func (m *Configv1ExternalConnection) validateWebhook(formats strfmt.Registry) error {
 	if swag.IsZero(m.Webhook) { // not required
 		return nil
 	}
@@ -242,17 +206,9 @@ func (m *Configv1Notifier) validateWebhook(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this configv1 notifier based on the context it is used
-func (m *Configv1Notifier) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 external connection based on the context it is used
+func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateEmail(ctx, formats); err != nil {
-		res = append(res, err)
-	}
 
 	if err := m.contextValidateOpsGenie(ctx, formats); err != nil {
 		res = append(res, err)
@@ -263,10 +219,6 @@ func (m *Configv1Notifier) ContextValidate(ctx context.Context, formats strfmt.R
 	}
 
 	if err := m.contextValidateSlack(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateUpdatedAt(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -284,32 +236,7 @@ func (m *Configv1Notifier) ContextValidate(ctx context.Context, formats strfmt.R
 	return nil
 }
 
-func (m *Configv1Notifier) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Configv1Notifier) contextValidateEmail(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Email != nil {
-		if err := m.Email.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("email")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("email")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Configv1Notifier) contextValidateOpsGenie(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ExternalConnection) contextValidateOpsGenie(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.OpsGenie != nil {
 		if err := m.OpsGenie.ContextValidate(ctx, formats); err != nil {
@@ -325,7 +252,7 @@ func (m *Configv1Notifier) contextValidateOpsGenie(ctx context.Context, formats 
 	return nil
 }
 
-func (m *Configv1Notifier) contextValidatePagerduty(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ExternalConnection) contextValidatePagerduty(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Pagerduty != nil {
 		if err := m.Pagerduty.ContextValidate(ctx, formats); err != nil {
@@ -341,7 +268,7 @@ func (m *Configv1Notifier) contextValidatePagerduty(ctx context.Context, formats
 	return nil
 }
 
-func (m *Configv1Notifier) contextValidateSlack(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ExternalConnection) contextValidateSlack(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Slack != nil {
 		if err := m.Slack.ContextValidate(ctx, formats); err != nil {
@@ -357,16 +284,7 @@ func (m *Configv1Notifier) contextValidateSlack(ctx context.Context, formats str
 	return nil
 }
 
-func (m *Configv1Notifier) contextValidateUpdatedAt(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := validate.ReadOnly(ctx, "updated_at", "body", strfmt.DateTime(m.UpdatedAt)); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Configv1Notifier) contextValidateVictorOps(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ExternalConnection) contextValidateVictorOps(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.VictorOps != nil {
 		if err := m.VictorOps.ContextValidate(ctx, formats); err != nil {
@@ -382,7 +300,7 @@ func (m *Configv1Notifier) contextValidateVictorOps(ctx context.Context, formats
 	return nil
 }
 
-func (m *Configv1Notifier) contextValidateWebhook(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ExternalConnection) contextValidateWebhook(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Webhook != nil {
 		if err := m.Webhook.ContextValidate(ctx, formats); err != nil {
@@ -399,7 +317,7 @@ func (m *Configv1Notifier) contextValidateWebhook(ctx context.Context, formats s
 }
 
 // MarshalBinary interface implementation
-func (m *Configv1Notifier) MarshalBinary() ([]byte, error) {
+func (m *Configv1ExternalConnection) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -407,8 +325,8 @@ func (m *Configv1Notifier) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Configv1Notifier) UnmarshalBinary(b []byte) error {
-	var res Configv1Notifier
+func (m *Configv1ExternalConnection) UnmarshalBinary(b []byte) error {
+	var res Configv1ExternalConnection
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

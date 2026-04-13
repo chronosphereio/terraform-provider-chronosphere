@@ -61,7 +61,7 @@ func (slackAlertNotifierConverter) toModel(
 		Name:         n.Name,
 		Slug:         n.Slug,
 		SkipResolved: !n.SendResolved,
-		Slack: &models.NotifierSlackConfig{
+		Slack: &models.Configv1NotifierSlackConfig{
 			Actions:    slackActionsToModel(n.Action),
 			APIURL:     n.ApiUrl,
 			CallbackID: n.CallbackId,
