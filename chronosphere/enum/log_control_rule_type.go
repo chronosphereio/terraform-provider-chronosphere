@@ -40,4 +40,8 @@ var LogControlRuleType = newEnum("LogControlRuleType", []value[configv1.Configv1
 		v1:    configv1.Configv1LogControlRuleTypeEMITMETRICS,
 		alias: "EMIT_METRICS",
 	},
+	{
+		v1:    configv1.Configv1LogControlRuleTypePARSEFIELD,
+		alias: "PARSE_FIELD",
+	},
 })

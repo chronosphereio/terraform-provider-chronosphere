@@ -112,6 +112,12 @@ func convertLogParserToModel(p *intschema.LogParser) *models.LogIngestConfigLogP
 		}
 	}
 
+	if p.GrokParser != nil {
+		result.GrokParser = &models.LogParserGrokParser{
+			Pattern: p.GrokParser.Pattern,
+		}
+	}
+
 	return result
 }
 
@@ -152,6 +158,9 @@ func (logIngestConfigConverter) fromModel(
 }
 
 func convertLogParserFromModel(p *models.LogIngestConfigLogParser) *intschema.LogParser {
+	if p == nil {
+		return nil
+	}
 	result := &intschema.LogParser{
 		ParserType: string(p.ParserType),
 	}
@@ -167,6 +176,12 @@ func convertLogParserFromModel(p *models.LogIngestConfigLogParser) *intschema.Lo
 			PairSeparator: p.KeyValueParser.PairSeparator,
 			Delimiter:     p.KeyValueParser.Delimiter,
 			TrimSet:       p.KeyValueParser.TrimSet,
+		}
+	}
+
+	if p.GrokParser != nil {
+		result.GrokParser = &intschema.LogParserGrokParser{
+			Pattern: p.GrokParser.Pattern,
 		}
 	}
 

@@ -59,6 +59,7 @@ type LogControlConfigRules struct {
 	EmitMetrics  *LogControlConfigRulesEmitMetrics  `intschema:"emit_metrics,optional,list_encoded_object"`
 	Filter       string                             `intschema:"filter,optional"`
 	Mode         string                             `intschema:"mode,optional"`
+	ParseField   *LogControlConfigRulesParseField   `intschema:"parse_field,optional,list_encoded_object"`
 	ReplaceField *LogControlConfigRulesReplaceField `intschema:"replace_field,optional,list_encoded_object"`
 	Sample       *LogControlConfigRulesSample       `intschema:"sample,optional,list_encoded_object"`
 	Type         string                             `intschema:"type,optional"`
@@ -90,6 +91,12 @@ type LogControlConfigRulesReplaceFieldMappedValue struct {
 type LogControlConfigRulesReplaceFieldMappedValuePairs struct {
 	Key   string `intschema:"key,optional"`
 	Value string `intschema:"value,optional"`
+}
+
+type LogControlConfigRulesParseField struct {
+	Destination *LogControlConfigFieldPath `intschema:"destination,optional,list_encoded_object"`
+	Parser      *LogParser                 `intschema:"parser,optional,list_encoded_object"`
+	Source      *LogControlConfigFieldPath `intschema:"source,optional,list_encoded_object"`
 }
 
 type LogControlConfigRulesEmitMetrics struct {

@@ -84,6 +84,7 @@ var LogParserSchema = &schema.Schema{
 			}.Schema(),
 			"regex_parser":     RegexLogParserSchema,
 			"key_value_parser": KeyValueLogParserSchema,
+			"grok_parser":      GrokLogParserSchema,
 		},
 	},
 	Required: true,
@@ -119,6 +120,20 @@ var KeyValueLogParserSchema = &schema.Schema{
 			"trim_set": {
 				Type:     schema.TypeString,
 				Optional: true,
+			},
+		},
+	},
+	Optional: true,
+	MaxItems: 1,
+}
+
+var GrokLogParserSchema = &schema.Schema{
+	Type: schema.TypeList,
+	Elem: &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"pattern": {
+				Type:     schema.TypeString,
+				Required: true,
 			},
 		},
 	},
