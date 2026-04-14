@@ -92,6 +92,14 @@ var ConsumptionBudgetSKUGroup = newEnum("ConsumptionBudgetSKUGroup", []value[con
 		v1:    configv1.ConsumptionBudgetSKUGroupLOGPROCESSEDBYTES,
 		alias: "LOG_PROCESSED_BYTES",
 	},
+	{
+		v1:    configv1.ConsumptionBudgetSKUGroupMETRICPERSISTEDSERIES,
+		alias: "METRIC_PERSISTED_SERIES",
+	},
+	{
+		v1:    configv1.ConsumptionBudgetSKUGroupMETRICALL,
+		alias: "METRIC_ALL",
+	},
 })
 
 // ConsumptionBudgetUnit is an enum.
@@ -99,5 +107,9 @@ var ConsumptionBudgetUnit = newEnum("ConsumptionBudgetUnit", []value[configv1.Co
 	{
 		v1:    configv1.ConsumptionBudgetUnitNATIVE,
 		alias: "NATIVE",
+	},
+	{
+		v1:    configv1.ConsumptionBudgetUnitCREDITS,
+		alias: "CREDITS",
 	},
 })
