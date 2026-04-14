@@ -22,6 +22,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_metric"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/external_connection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_allocation_config"
@@ -105,6 +106,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.DerivedLabel = derived_label.New(transport, formats)
 	cli.DerivedMetric = derived_metric.New(transport, formats)
 	cli.DropRule = drop_rule.New(transport, formats)
+	cli.ExternalConnection = external_connection.New(transport, formats)
 	cli.GcpMetricsIntegration = gcp_metrics_integration.New(transport, formats)
 	cli.GrafanaDashboard = grafana_dashboard.New(transport, formats)
 	cli.LogAllocationConfig = log_allocation_config.New(transport, formats)
@@ -200,6 +202,8 @@ type ConfigV1API struct {
 
 	DropRule drop_rule.ClientService
 
+	ExternalConnection external_connection.ClientService
+
 	GcpMetricsIntegration gcp_metrics_integration.ClientService
 
 	GrafanaDashboard grafana_dashboard.ClientService
@@ -272,6 +276,7 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.DerivedLabel.SetTransport(transport)
 	c.DerivedMetric.SetTransport(transport)
 	c.DropRule.SetTransport(transport)
+	c.ExternalConnection.SetTransport(transport)
 	c.GcpMetricsIntegration.SetTransport(transport)
 	c.GrafanaDashboard.SetTransport(transport)
 	c.LogAllocationConfig.SetTransport(transport)
