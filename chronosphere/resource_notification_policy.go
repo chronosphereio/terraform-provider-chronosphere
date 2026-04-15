@@ -379,6 +379,7 @@ func expandNotificationPolicyRoutes(routes []intschema.NotificationRoute) (*conf
 		notifierList.RepeatIntervalSecs = int32(duration.Seconds())
 
 		notifierList.GroupBy = notificationRouteGroupByToModel(r.GroupBy)
+		notifierList.Destinations = notificationDestinationsToModel(r.Destination)
 
 		if r.Severity == "warn" {
 			if out.Warn != nil {

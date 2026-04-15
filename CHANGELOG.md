@@ -8,6 +8,8 @@ Added:
 * Add `metric_filter` and `trace_filter` fields to `chronosphere_consumption_config` partition filter conditions. These fields allow partitioning by metric labels and trace queries.
 * Add `METRIC_PERSISTED_SERIES` and `METRIC_ALL` SKU groups to `chronosphere_consumption_budget` thresholds.
 * Add `CREDITS` unit to `chronosphere_consumption_budget` thresholds.
+* Add `chronosphere_slack_external_connection`, `chronosphere_pagerduty_external_connection`, `chronosphere_webhook_external_connection`, `chronosphere_victorops_external_connection`, and `chronosphere_opsgenie_external_connection` resources. Manages external connections for notification targets including Slack, PagerDuty, Webhook, VictorOps, and OpsGenie.
+* Update `chronosphere_notification_policy` to allow configuration of notification routing to an external connection.
 
 ## v1.24.0
 

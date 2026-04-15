@@ -120,6 +120,7 @@ func notificationRoutesToModel(
 			NotifierSlugs:      sliceutil.Map(r.Notifiers, (tfid.ID).Slug),
 			RepeatIntervalSecs: intervalSecs,
 			GroupBy:            notificationRouteGroupByToModel(r.GroupBy),
+			Destinations:       notificationDestinationsToModel(r.Destination),
 		}
 	}
 	return &models.RoutesSeverityNotifiers{
@@ -144,6 +145,7 @@ func notificationRoutesFromModel(
 			Notifiers:      sliceutil.Map(f.NotifierSlugs, tfid.Slug),
 			RepeatInterval: durationFromSecs(f.RepeatIntervalSecs),
 			GroupBy:        notificationRouteGroupByFromModel(f.GroupBy),
+			Destination:    notificationDestinationsFromModel(f.Destinations),
 		})
 	}
 	load(warn, m.Warn)
@@ -189,4 +191,114 @@ func notificationOverrideFromModel(
 		AlertLabelMatcher: matchersFromModel(o.AlertLabelMatchers),
 		Route:             notificationRoutesFromModel(o.Notifiers),
 	}
+}
+
+func notificationDestinationsToModel(
+	dests []intschema.NotificationRouteDestination,
+) []*models.RoutesDestination {
+	if len(dests) == 0 {
+		return nil
+	}
+	var out []*models.RoutesDestination
+	for _, d := range dests {
+		dest := &models.RoutesDestination{
+			DisableResolves: d.DisableResolves,
+		}
+		if d.Slack != nil {
+			dest.Slack = &models.DestinationSlackTarget{
+				ExternalConnectionSlug: d.Slack.ExternalConnectionSlug,
+				Channels:               d.Slack.Channels,
+			}
+		}
+		if d.Pagerduty != nil {
+			dest.Pagerduty = &models.DestinationPagerdutyTarget{
+				ExternalConnectionSlug: d.Pagerduty.ExternalConnectionSlug,
+			}
+		}
+		if d.Webhook != nil {
+			wh := &models.DestinationWebhookTarget{
+				ExternalConnectionSlug: d.Webhook.ExternalConnectionSlug,
+			}
+			for _, qp := range d.Webhook.QueryParameter {
+				wh.QueryParameters = append(wh.QueryParameters, &models.WebhookTargetQueryParameter{
+					Key:   qp.Key,
+					Value: qp.Value,
+				})
+			}
+			dest.Webhook = wh
+		}
+		if d.OpsGenie != nil {
+			dest.OpsGenie = &models.DestinationOpsGenieTarget{
+				ExternalConnectionSlug: d.OpsGenie.ExternalConnectionSlug,
+			}
+		}
+		if d.VictorOps != nil {
+			dest.VictorOps = &models.DestinationVictorOpsTarget{
+				ExternalConnectionSlug: d.VictorOps.ExternalConnectionSlug,
+				RoutingKey:             d.VictorOps.RoutingKey,
+			}
+		}
+		if d.Email != nil {
+			dest.Email = &models.DestinationEmailTarget{
+				Addresses: d.Email.Addresses,
+			}
+		}
+		out = append(out, dest)
+	}
+	return out
+}
+
+func notificationDestinationsFromModel(
+	dests []*models.RoutesDestination,
+) []intschema.NotificationRouteDestination {
+	if len(dests) == 0 {
+		return nil
+	}
+	var out []intschema.NotificationRouteDestination
+	for _, d := range dests {
+		dest := intschema.NotificationRouteDestination{
+			DisableResolves: d.DisableResolves,
+		}
+		if d.Slack != nil {
+			dest.Slack = &intschema.NotificationRouteDestinationSlack{
+				ExternalConnectionSlug: d.Slack.ExternalConnectionSlug,
+				Channels:               d.Slack.Channels,
+			}
+		}
+		if d.Pagerduty != nil {
+			dest.Pagerduty = &intschema.NotificationRouteDestinationPagerduty{
+				ExternalConnectionSlug: d.Pagerduty.ExternalConnectionSlug,
+			}
+		}
+		if d.Webhook != nil {
+			wh := &intschema.NotificationRouteDestinationWebhook{
+				ExternalConnectionSlug: d.Webhook.ExternalConnectionSlug,
+			}
+			for _, qp := range d.Webhook.QueryParameters {
+				wh.QueryParameter = append(wh.QueryParameter, intschema.NotificationRouteDestinationWebhookQueryParameter{
+					Key:   qp.Key,
+					Value: qp.Value,
+				})
+			}
+			dest.Webhook = wh
+		}
+		if d.OpsGenie != nil {
+			dest.OpsGenie = &intschema.NotificationRouteDestinationOpsGenie{
+				ExternalConnectionSlug: d.OpsGenie.ExternalConnectionSlug,
+			}
+		}
+		if d.VictorOps != nil {
+			dest.VictorOps = &intschema.NotificationRouteDestinationVictorOps{
+				ExternalConnectionSlug: d.VictorOps.ExternalConnectionSlug,
+				RoutingKey:             d.VictorOps.RoutingKey,
+			}
+		}
+		if d.Email != nil {
+			dest.Email = &intschema.NotificationRouteDestinationEmail{
+				Addresses: d.Email.Addresses,
+			}
+		}
+		out = append(out, dest)
+	}
+	return out
 }
