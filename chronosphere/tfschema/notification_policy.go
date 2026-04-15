@@ -99,6 +99,122 @@ var NotificationRouteSchema = typeset.Set{
 				},
 			},
 		}),
+		"destination": typeset.NotNormalized(&schema.Schema{
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"disable_resolves": {
+						Type:     schema.TypeBool,
+						Optional: true,
+					},
+					"slack": {
+						Type:     schema.TypeList,
+						MaxItems: 1,
+						Optional: true,
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"external_connection_slug": {
+									Type:     schema.TypeString,
+									Required: true,
+								},
+								"channels": {
+									Type:     schema.TypeList,
+									Optional: true,
+									Elem:     &schema.Schema{Type: schema.TypeString},
+								},
+							},
+						},
+					},
+					"pagerduty": {
+						Type:     schema.TypeList,
+						MaxItems: 1,
+						Optional: true,
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"external_connection_slug": {
+									Type:     schema.TypeString,
+									Required: true,
+								},
+							},
+						},
+					},
+					"webhook": {
+						Type:     schema.TypeList,
+						MaxItems: 1,
+						Optional: true,
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"external_connection_slug": {
+									Type:     schema.TypeString,
+									Required: true,
+								},
+								"query_parameter": {
+									Type:     schema.TypeList,
+									Optional: true,
+									Elem: &schema.Resource{
+										Schema: map[string]*schema.Schema{
+											"key": {
+												Type:     schema.TypeString,
+												Required: true,
+											},
+											"value": {
+												Type:     schema.TypeString,
+												Required: true,
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					"ops_genie": {
+						Type:     schema.TypeList,
+						MaxItems: 1,
+						Optional: true,
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"external_connection_slug": {
+									Type:     schema.TypeString,
+									Required: true,
+								},
+							},
+						},
+					},
+					"victor_ops": {
+						Type:     schema.TypeList,
+						MaxItems: 1,
+						Optional: true,
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"external_connection_slug": {
+									Type:     schema.TypeString,
+									Required: true,
+								},
+								"routing_key": {
+									Type:     schema.TypeString,
+									Optional: true,
+								},
+							},
+						},
+					},
+					"email": {
+						Type:     schema.TypeList,
+						MaxItems: 1,
+						Optional: true,
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"addresses": {
+									Type:     schema.TypeList,
+									Required: true,
+									Elem:     &schema.Schema{Type: schema.TypeString},
+								},
+							},
+						},
+					},
+				},
+			},
+		}),
 	},
 }.Schema()
 

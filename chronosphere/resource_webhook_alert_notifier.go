@@ -61,7 +61,7 @@ func (webhookAlertNotifierConverter) toModel(
 		Name:         n.Name,
 		Slug:         n.Slug,
 		SkipResolved: !n.SendResolved,
-		Webhook: &models.NotifierWebhookConfig{
+		Webhook: &models.Configv1NotifierWebhookConfig{
 			HTTPConfig: notifierHTTPConfig{
 				basicAuthUsername:     n.BasicAuthUsername,
 				basicAuthPassword:     n.BasicAuthPassword,

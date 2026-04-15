@@ -402,4 +402,34 @@ var Resources = mustValidate([]Resource{
 		Schema:                         tfschema.ServiceAttribute,
 		EntityLinkedSingletonSlugField: "ServiceSlug",
 	},
+	{
+		Name:   "slack_external_connection",
+		Entity: "ExternalConnection",
+		API:    V1,
+		Schema: tfschema.SlackExternalConnection,
+	},
+	{
+		Name:   "pagerduty_external_connection",
+		Entity: "ExternalConnection",
+		API:    V1,
+		Schema: tfschema.PagerdutyExternalConnection,
+	},
+	{
+		Name:   "webhook_external_connection",
+		Entity: "ExternalConnection",
+		API:    V1,
+		Schema: tfschema.WebhookExternalConnection,
+	},
+	{
+		Name:   "victorops_external_connection",
+		Entity: "ExternalConnection",
+		API:    V1,
+		Schema: tfschema.VictoropsExternalConnection,
+	},
+	{
+		Name:   "opsgenie_external_connection",
+		Entity: "ExternalConnection",
+		API:    V1,
+		Schema: tfschema.OpsgenieExternalConnection,
+	},
 })

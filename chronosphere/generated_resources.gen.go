@@ -16,6 +16,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_metric"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/external_connection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_allocation_config"
@@ -828,6 +829,85 @@ func (generatedDropRule) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.DropRule.DeleteDropRule(req)
+	return err
+}
+
+type generatedExternalConnection struct{}
+
+func (generatedExternalConnection) slugOf(m *configv1models.Configv1ExternalConnection) string {
+	return m.Slug
+}
+
+func (generatedExternalConnection) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1ExternalConnection,
+	dryRun bool,
+) (string, error) {
+	req := &external_connection.CreateExternalConnectionParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateExternalConnectionRequest{
+			ExternalConnection: m,
+			DryRun:             dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.ExternalConnection.CreateExternalConnection(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.ExternalConnection
+	if e == nil {
+		return "", nil
+	}
+	return (generatedExternalConnection{}).slugOf(e), nil
+}
+
+func (generatedExternalConnection) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1ExternalConnection, error) {
+	req := &external_connection.ReadExternalConnectionParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigV1.ExternalConnection.ReadExternalConnection(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.ExternalConnection, nil
+}
+
+func (generatedExternalConnection) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1ExternalConnection,
+	params updateParams,
+) error {
+	req := &external_connection.UpdateExternalConnectionParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configv1models.ConfigV1UpdateExternalConnectionBody{
+
+			ExternalConnection: m,
+			CreateIfMissing:    params.createIfMissing,
+			DryRun:             params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.ExternalConnection.UpdateExternalConnection(req)
+	return err
+}
+func (generatedExternalConnection) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &external_connection.DeleteExternalConnectionParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigV1.ExternalConnection.DeleteExternalConnection(req)
 	return err
 }
 

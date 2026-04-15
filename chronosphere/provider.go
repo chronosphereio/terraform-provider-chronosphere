@@ -75,6 +75,11 @@ func Provider() *schema.Provider {
 		"chronosphere_consumption_config":                    resourceConsumptionConfig(),
 		"chronosphere_consumption_budget":                    resourceConsumptionBudget(),
 		"chronosphere_service_attribute":                     resourceServiceAttribute(),
+		"chronosphere_slack_external_connection":             resourceSlackExternalConnection(),
+		"chronosphere_pagerduty_external_connection":         resourcePagerdutyExternalConnection(),
+		"chronosphere_webhook_external_connection":           resourceWebhookExternalConnection(),
+		"chronosphere_victorops_external_connection":         resourceVictoropsExternalConnection(),
+		"chronosphere_opsgenie_external_connection":          resourceOpsgenieExternalConnection(),
 	}
 
 	// Apply common CRUD wrappers to all resources.

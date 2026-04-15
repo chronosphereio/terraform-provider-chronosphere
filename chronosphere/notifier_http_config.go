@@ -26,16 +26,16 @@ type notifierHTTPConfig struct {
 	proxyURL              string
 }
 
-func (c notifierHTTPConfig) toModel() *configv1.NotifierHTTPConfig {
-	m := &configv1.NotifierHTTPConfig{
+func (c notifierHTTPConfig) toModel() *configv1.Configv1NotifierHTTPConfig {
+	m := &configv1.Configv1NotifierHTTPConfig{
 		BearerToken: c.bearerToken,
 		ProxyURL:    c.proxyURL,
-		TLSConfig: &configv1.HTTPConfigTLSConfig{
+		TLSConfig: &configv1.Configv1NotifierHTTPConfigTLSConfig{
 			InsecureSkipVerify: c.tlsInsecureSkipVerify,
 		},
 	}
 	if c.basicAuthUsername != "" && c.basicAuthPassword != "" {
-		m.BasicAuth = &configv1.HTTPConfigBasicAuth{
+		m.BasicAuth = &configv1.Configv1NotifierHTTPConfigBasicAuth{
 			Username: c.basicAuthUsername,
 			Password: c.basicAuthPassword,
 		}
@@ -43,7 +43,7 @@ func (c notifierHTTPConfig) toModel() *configv1.NotifierHTTPConfig {
 	return m
 }
 
-func notifierHTTPConfigFromModel(m *configv1.NotifierHTTPConfig) notifierHTTPConfig {
+func notifierHTTPConfigFromModel(m *configv1.Configv1NotifierHTTPConfig) notifierHTTPConfig {
 	c := notifierHTTPConfig{}
 	if m.BasicAuth != nil {
 		c.basicAuthUsername = m.BasicAuth.Username

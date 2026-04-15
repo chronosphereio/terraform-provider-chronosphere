@@ -2,6 +2,10 @@
 
 ## UNRELEASED
 
+Added:
+* Add `chronosphere_slack_external_connection`, `chronosphere_pagerduty_external_connection`, `chronosphere_webhook_external_connection`, `chronosphere_victorops_external_connection`, and `chronosphere_opsgenie_external_connection` resources. Manages external connections for notification targets including Slack, PagerDuty, Webhook, VictorOps, and OpsGenie.
+* Update `chronosphere_notification_policy` to allow configuration of notification routing to an external connection.
+
 ## v1.24.0
 
 Added:

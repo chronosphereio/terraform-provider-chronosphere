@@ -61,7 +61,7 @@ func (victoropsAlertNotifierConverter) toModel(
 		Name:         n.Name,
 		Slug:         n.Slug,
 		SkipResolved: !n.SendResolved,
-		VictorOps: &models.NotifierVictorOpsConfig{
+		VictorOps: &models.Configv1NotifierVictorOpsConfig{
 			APIKey:            n.ApiKey,
 			APIURL:            n.ApiUrl,
 			CustomFields:      n.CustomFields,
