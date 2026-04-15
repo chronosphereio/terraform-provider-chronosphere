@@ -61,7 +61,7 @@ func (pagerdutyAlertNotifierConverter) toModel(
 		Name:         n.Name,
 		Slug:         n.Slug,
 		SkipResolved: !n.SendResolved,
-		Pagerduty: &models.NotifierPagerdutyConfig{
+		Pagerduty: &models.Configv1NotifierPagerdutyConfig{
 			Class:       n.Class,
 			Client:      n.Client,
 			ClientURL:   n.ClientUrl,

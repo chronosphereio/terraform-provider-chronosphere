@@ -1,6 +1,7 @@
 # Releases
 
 ## UNRELEASED
+* Update swagger to be consistent with latest API changes.
 
 ## v1.24.0
 

@@ -65,7 +65,7 @@ func (opsgenieAlertNotifierConverter) toModel(
 		Slug:         n.Slug,
 		Name:         n.Name,
 		SkipResolved: !n.SendResolved,
-		OpsGenie: &models.NotifierOpsGenieConfig{
+		OpsGenie: &models.Configv1NotifierOpsGenieConfig{
 			APIKey:      n.ApiKey,
 			APIURL:      n.ApiUrl,
 			Description: n.Description,
