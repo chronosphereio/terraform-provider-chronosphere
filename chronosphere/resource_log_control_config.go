@@ -91,6 +91,7 @@ func (logControlConfigConverter) toModel(
 			}
 			rule.EmitMetrics = convertEmitMetricsToModel(r.EmitMetrics)
 			rule.ReplaceField = convertReplaceFieldToModel(r.ReplaceField)
+			rule.ParseField = convertParseFieldToModel(r.ParseField)
 
 			return rule
 		}),
@@ -133,6 +134,7 @@ func (logControlConfigConverter) fromModel(
 
 			rule.EmitMetrics = convertEmitMetricsFromModel(r.EmitMetrics)
 			rule.ReplaceField = convertReplaceFieldFromModel(r.ReplaceField)
+			rule.ParseField = convertParseFieldFromModel(r.ParseField)
 
 			return rule
 		}),
@@ -322,6 +324,54 @@ func convertReplaceFieldFromModel(rf *models.LogControlRuleReplaceField) *intsch
 	if rf.StaticValue != nil {
 		result.StaticValue = &intschema.LogControlConfigRulesReplaceFieldStaticValue{
 			Value: rf.StaticValue.Value,
+		}
+	}
+
+	return result
+}
+
+func convertParseFieldToModel(pf *intschema.LogControlConfigRulesParseField) *models.LogControlRuleParseField {
+	if pf == nil {
+		return nil
+	}
+
+	result := &models.LogControlRuleParseField{
+		Parser: convertLogParserToModel(pf.Parser),
+	}
+
+	if pf.Source != nil {
+		result.Source = &models.Configv1LogFieldPath{
+			Selector: pf.Source.Selector,
+		}
+	}
+
+	if pf.Destination != nil {
+		result.Destination = &models.Configv1LogFieldPath{
+			Selector: pf.Destination.Selector,
+		}
+	}
+
+	return result
+}
+
+func convertParseFieldFromModel(pf *models.LogControlRuleParseField) *intschema.LogControlConfigRulesParseField {
+	if pf == nil {
+		return nil
+	}
+
+	result := &intschema.LogControlConfigRulesParseField{
+		Parser: convertLogParserFromModel(pf.Parser),
+	}
+
+	if pf.Source != nil {
+		result.Source = &intschema.LogControlConfigFieldPath{
+			Selector: pf.Source.Selector,
+		}
+	}
+
+	if pf.Destination != nil {
+		result.Destination = &intschema.LogControlConfigFieldPath{
+			Selector: pf.Destination.Selector,
 		}
 	}
 

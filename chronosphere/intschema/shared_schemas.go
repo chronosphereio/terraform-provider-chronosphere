@@ -38,9 +38,14 @@ type LogIngestConfigStringNormalization struct {
 }
 
 type LogParser struct {
-	ParserType     string          `intschema:"parser_type"`
-	KeyValueParser *KeyValueParser `intschema:"key_value_parser,optional,list_encoded_object"`
-	RegexParser    *RegexParser    `intschema:"regex_parser,optional,list_encoded_object"`
+	ParserType     string               `intschema:"parser_type"`
+	GrokParser     *LogParserGrokParser `intschema:"grok_parser,optional,list_encoded_object"`
+	KeyValueParser *KeyValueParser      `intschema:"key_value_parser,optional,list_encoded_object"`
+	RegexParser    *RegexParser         `intschema:"regex_parser,optional,list_encoded_object"`
+}
+
+type LogParserGrokParser struct {
+	Pattern string `intschema:"pattern"`
 }
 
 type LogPrioritiesSchema struct {

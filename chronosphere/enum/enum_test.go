@@ -175,6 +175,10 @@ func TestAllEnumsValidate(t *testing.T) {
 			v1SwaggerName: "configv1LogRetentionConfigMode",
 			enum:          LogRetentionConfigMode.ToStrings(),
 		},
+		{
+			v1SwaggerName: "LogParserParserType",
+			enum:          LogParserType.ToStrings(),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.enum.Name(), func(t *testing.T) {

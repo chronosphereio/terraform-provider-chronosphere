@@ -70,6 +70,12 @@ var logControlRuleResource = &schema.Resource{
 			Optional: true,
 			MaxItems: 1,
 		},
+		"parse_field": {
+			Type:     schema.TypeList,
+			Elem:     logControlRuleParseFieldResource,
+			Optional: true,
+			MaxItems: 1,
+		},
 	},
 }
 
@@ -245,5 +251,13 @@ var logControlRuleReplaceFieldStaticValueResource = &schema.Resource{
 			Type:     schema.TypeString,
 			Optional: true,
 		},
+	},
+}
+
+var logControlRuleParseFieldResource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"source":      LogFieldPathSchema,
+		"destination": LogFieldPathSchema,
+		"parser":      LogParserSchema,
 	},
 }

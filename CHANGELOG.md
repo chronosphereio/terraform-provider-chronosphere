@@ -1,7 +1,8 @@
 # Releases
 
 ## UNRELEASED
-* Update swagger to be consistent with latest API changes.
+Added:
+* Add `parse_field` control rule type and `grok_parser` support to `chronosphere_log_control_config` and `chronosphere_log_ingest_config` resources.
 
 ## v1.24.0
 

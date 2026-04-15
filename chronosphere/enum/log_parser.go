@@ -56,4 +56,8 @@ var LogParserType = newEnum("LogParserType", []value[configv1.LogParserParserTyp
 		v1:    configv1.LogParserParserTypeKEYVALUE,
 		alias: "KEY_VALUE",
 	},
+	{
+		v1:    configv1.LogParserParserTypeGROK,
+		alias: "GROK",
+	},
 })
