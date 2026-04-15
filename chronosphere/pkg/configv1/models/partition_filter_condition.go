@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -18,11 +19,23 @@ import (
 // swagger:model PartitionFilterCondition
 type PartitionFilterCondition struct {
 
-	// Deprecated. Use `log_filter` instead.
+	// Deprecated. Use `log_filter`, `metric_filters`, or `trace_filter` instead.
 	DatasetSlug string `json:"dataset_slug,omitempty"`
 
 	// log filter
 	LogFilter *Configv1LogSearchFilter `json:"log_filter,omitempty"`
+
+	// If set, matches incoming metric data by label. If multiple label
+	// filters are specified, an incoming metric must match every label
+	// filter to match the condition. Label values support glob patterns,
+	// including matching multiple patterns with an `OR`, such as
+	// `service:{svc1,svc2}`.
+	//
+	// Exactly one of `log_filter`, `metric_filters`, or `trace_filter` must be set.
+	MetricFilters []*Configv1LabelFilter `json:"metric_filters"`
+
+	// trace filter
+	TraceFilter *Configv1TraceSearchFilter `json:"trace_filter,omitempty"`
 }
 
 // Validate validates this partition filter condition
@@ -30,6 +43,14 @@ func (m *PartitionFilterCondition) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateLogFilter(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMetricFilters(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTraceFilter(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -58,11 +79,64 @@ func (m *PartitionFilterCondition) validateLogFilter(formats strfmt.Registry) er
 	return nil
 }
 
+func (m *PartitionFilterCondition) validateMetricFilters(formats strfmt.Registry) error {
+	if swag.IsZero(m.MetricFilters) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.MetricFilters); i++ {
+		if swag.IsZero(m.MetricFilters[i]) { // not required
+			continue
+		}
+
+		if m.MetricFilters[i] != nil {
+			if err := m.MetricFilters[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("metric_filters" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("metric_filters" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *PartitionFilterCondition) validateTraceFilter(formats strfmt.Registry) error {
+	if swag.IsZero(m.TraceFilter) { // not required
+		return nil
+	}
+
+	if m.TraceFilter != nil {
+		if err := m.TraceFilter.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("trace_filter")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("trace_filter")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 // ContextValidate validate this partition filter condition based on the context it is used
 func (m *PartitionFilterCondition) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateLogFilter(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateMetricFilters(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTraceFilter(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -80,6 +154,42 @@ func (m *PartitionFilterCondition) contextValidateLogFilter(ctx context.Context,
 				return ve.ValidateName("log_filter")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("log_filter")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *PartitionFilterCondition) contextValidateMetricFilters(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.MetricFilters); i++ {
+
+		if m.MetricFilters[i] != nil {
+			if err := m.MetricFilters[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("metric_filters" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("metric_filters" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *PartitionFilterCondition) contextValidateTraceFilter(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.TraceFilter != nil {
+		if err := m.TraceFilter.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("trace_filter")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("trace_filter")
 			}
 			return err
 		}

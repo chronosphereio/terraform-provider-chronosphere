@@ -14,10 +14,10 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NotifierSlackConfig notifier slack config
+// Configv1NotifierSlackConfig configv1 notifier slack config
 //
-// swagger:model NotifierSlackConfig
-type NotifierSlackConfig struct {
+// swagger:model configv1NotifierSlackConfig
+type Configv1NotifierSlackConfig struct {
 
 	// actions
 	Actions []*NotifierSlackConfigAction `json:"actions"`
@@ -45,7 +45,7 @@ type NotifierSlackConfig struct {
 	Footer string `json:"footer,omitempty"`
 
 	// http config
-	HTTPConfig *NotifierHTTPConfig `json:"http_config,omitempty"`
+	HTTPConfig *Configv1NotifierHTTPConfig `json:"http_config,omitempty"`
 
 	// icon emoji
 	IconEmoji string `json:"icon_emoji,omitempty"`
@@ -84,8 +84,8 @@ type NotifierSlackConfig struct {
 	Username string `json:"username,omitempty"`
 }
 
-// Validate validates this notifier slack config
-func (m *NotifierSlackConfig) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 notifier slack config
+func (m *Configv1NotifierSlackConfig) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateActions(formats); err != nil {
@@ -106,7 +106,7 @@ func (m *NotifierSlackConfig) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *NotifierSlackConfig) validateActions(formats strfmt.Registry) error {
+func (m *Configv1NotifierSlackConfig) validateActions(formats strfmt.Registry) error {
 	if swag.IsZero(m.Actions) { // not required
 		return nil
 	}
@@ -132,7 +132,7 @@ func (m *NotifierSlackConfig) validateActions(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *NotifierSlackConfig) validateFields(formats strfmt.Registry) error {
+func (m *Configv1NotifierSlackConfig) validateFields(formats strfmt.Registry) error {
 	if swag.IsZero(m.Fields) { // not required
 		return nil
 	}
@@ -158,7 +158,7 @@ func (m *NotifierSlackConfig) validateFields(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *NotifierSlackConfig) validateHTTPConfig(formats strfmt.Registry) error {
+func (m *Configv1NotifierSlackConfig) validateHTTPConfig(formats strfmt.Registry) error {
 	if swag.IsZero(m.HTTPConfig) { // not required
 		return nil
 	}
@@ -177,8 +177,8 @@ func (m *NotifierSlackConfig) validateHTTPConfig(formats strfmt.Registry) error 
 	return nil
 }
 
-// ContextValidate validate this notifier slack config based on the context it is used
-func (m *NotifierSlackConfig) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 notifier slack config based on the context it is used
+func (m *Configv1NotifierSlackConfig) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateActions(ctx, formats); err != nil {
@@ -199,7 +199,7 @@ func (m *NotifierSlackConfig) ContextValidate(ctx context.Context, formats strfm
 	return nil
 }
 
-func (m *NotifierSlackConfig) contextValidateActions(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1NotifierSlackConfig) contextValidateActions(ctx context.Context, formats strfmt.Registry) error {
 
 	for i := 0; i < len(m.Actions); i++ {
 
@@ -219,7 +219,7 @@ func (m *NotifierSlackConfig) contextValidateActions(ctx context.Context, format
 	return nil
 }
 
-func (m *NotifierSlackConfig) contextValidateFields(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1NotifierSlackConfig) contextValidateFields(ctx context.Context, formats strfmt.Registry) error {
 
 	for i := 0; i < len(m.Fields); i++ {
 
@@ -239,7 +239,7 @@ func (m *NotifierSlackConfig) contextValidateFields(ctx context.Context, formats
 	return nil
 }
 
-func (m *NotifierSlackConfig) contextValidateHTTPConfig(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1NotifierSlackConfig) contextValidateHTTPConfig(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.HTTPConfig != nil {
 		if err := m.HTTPConfig.ContextValidate(ctx, formats); err != nil {
@@ -256,7 +256,7 @@ func (m *NotifierSlackConfig) contextValidateHTTPConfig(ctx context.Context, for
 }
 
 // MarshalBinary interface implementation
-func (m *NotifierSlackConfig) MarshalBinary() ([]byte, error) {
+func (m *Configv1NotifierSlackConfig) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -264,8 +264,8 @@ func (m *NotifierSlackConfig) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *NotifierSlackConfig) UnmarshalBinary(b []byte) error {
-	var res NotifierSlackConfig
+func (m *Configv1NotifierSlackConfig) UnmarshalBinary(b []byte) error {
+	var res Configv1NotifierSlackConfig
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

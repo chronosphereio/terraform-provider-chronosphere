@@ -34,6 +34,9 @@ type Configv1LogControlRule struct {
 	// User-defined name of the control rule.
 	Name string `json:"name,omitempty"`
 
+	// parse field
+	ParseField *LogControlRuleParseField `json:"parse_field,omitempty"`
+
 	// replace field
 	ReplaceField *LogControlRuleReplaceField `json:"replace_field,omitempty"`
 
@@ -57,6 +60,10 @@ func (m *Configv1LogControlRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMode(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateParseField(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -133,6 +140,25 @@ func (m *Configv1LogControlRule) validateMode(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Configv1LogControlRule) validateParseField(formats strfmt.Registry) error {
+	if swag.IsZero(m.ParseField) { // not required
+		return nil
+	}
+
+	if m.ParseField != nil {
+		if err := m.ParseField.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("parse_field")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("parse_field")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Configv1LogControlRule) validateReplaceField(formats strfmt.Registry) error {
 	if swag.IsZero(m.ReplaceField) { // not required
 		return nil
@@ -204,6 +230,10 @@ func (m *Configv1LogControlRule) ContextValidate(ctx context.Context, formats st
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateParseField(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateReplaceField(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -263,6 +293,22 @@ func (m *Configv1LogControlRule) contextValidateMode(ctx context.Context, format
 			return ce.ValidateName("mode")
 		}
 		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1LogControlRule) contextValidateParseField(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.ParseField != nil {
+		if err := m.ParseField.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("parse_field")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("parse_field")
+			}
+			return err
+		}
 	}
 
 	return nil

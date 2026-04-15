@@ -35,17 +35,17 @@ type Configv1Notifier struct {
 	Name string `json:"name,omitempty"`
 
 	// ops genie
-	OpsGenie *NotifierOpsGenieConfig `json:"ops_genie,omitempty"`
+	OpsGenie *Configv1NotifierOpsGenieConfig `json:"ops_genie,omitempty"`
 
 	// pagerduty
-	Pagerduty *NotifierPagerdutyConfig `json:"pagerduty,omitempty"`
+	Pagerduty *Configv1NotifierPagerdutyConfig `json:"pagerduty,omitempty"`
 
 	// If `true`, disables notifications for resolved alerts. Cannot be set if
 	// `discard` equals `true`.
 	SkipResolved bool `json:"skip_resolved,omitempty"`
 
 	// slack
-	Slack *NotifierSlackConfig `json:"slack,omitempty"`
+	Slack *Configv1NotifierSlackConfig `json:"slack,omitempty"`
 
 	// The unique identifier of the Notifier. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the Notifier is created.
 	Slug string `json:"slug,omitempty"`
@@ -56,10 +56,10 @@ type Configv1Notifier struct {
 	UpdatedAt strfmt.DateTime `json:"updated_at,omitempty"`
 
 	// victor ops
-	VictorOps *NotifierVictorOpsConfig `json:"victor_ops,omitempty"`
+	VictorOps *Configv1NotifierVictorOpsConfig `json:"victor_ops,omitempty"`
 
 	// webhook
-	Webhook *NotifierWebhookConfig `json:"webhook,omitempty"`
+	Webhook *Configv1NotifierWebhookConfig `json:"webhook,omitempty"`
 }
 
 // Validate validates this configv1 notifier

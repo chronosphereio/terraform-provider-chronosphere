@@ -13,13 +13,13 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NotifierHTTPConfig notifier HTTP config
+// Configv1NotifierHTTPConfig configv1 notifier HTTP config
 //
-// swagger:model NotifierHTTPConfig
-type NotifierHTTPConfig struct {
+// swagger:model configv1NotifierHTTPConfig
+type Configv1NotifierHTTPConfig struct {
 
 	// basic auth
-	BasicAuth *HTTPConfigBasicAuth `json:"basic_auth,omitempty"`
+	BasicAuth *Configv1NotifierHTTPConfigBasicAuth `json:"basic_auth,omitempty"`
 
 	// Sets a token for bearer authentication. Cannot be set if `basic_auth` is set.
 	BearerToken string `json:"bearer_token,omitempty"`
@@ -29,11 +29,11 @@ type NotifierHTTPConfig struct {
 	ProxyURL string `json:"proxy_url,omitempty"`
 
 	// tls config
-	TLSConfig *HTTPConfigTLSConfig `json:"tls_config,omitempty"`
+	TLSConfig *Configv1NotifierHTTPConfigTLSConfig `json:"tls_config,omitempty"`
 }
 
-// Validate validates this notifier HTTP config
-func (m *NotifierHTTPConfig) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 notifier HTTP config
+func (m *Configv1NotifierHTTPConfig) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateBasicAuth(formats); err != nil {
@@ -50,7 +50,7 @@ func (m *NotifierHTTPConfig) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *NotifierHTTPConfig) validateBasicAuth(formats strfmt.Registry) error {
+func (m *Configv1NotifierHTTPConfig) validateBasicAuth(formats strfmt.Registry) error {
 	if swag.IsZero(m.BasicAuth) { // not required
 		return nil
 	}
@@ -69,7 +69,7 @@ func (m *NotifierHTTPConfig) validateBasicAuth(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *NotifierHTTPConfig) validateTLSConfig(formats strfmt.Registry) error {
+func (m *Configv1NotifierHTTPConfig) validateTLSConfig(formats strfmt.Registry) error {
 	if swag.IsZero(m.TLSConfig) { // not required
 		return nil
 	}
@@ -88,8 +88,8 @@ func (m *NotifierHTTPConfig) validateTLSConfig(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this notifier HTTP config based on the context it is used
-func (m *NotifierHTTPConfig) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 notifier HTTP config based on the context it is used
+func (m *Configv1NotifierHTTPConfig) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateBasicAuth(ctx, formats); err != nil {
@@ -106,7 +106,7 @@ func (m *NotifierHTTPConfig) ContextValidate(ctx context.Context, formats strfmt
 	return nil
 }
 
-func (m *NotifierHTTPConfig) contextValidateBasicAuth(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1NotifierHTTPConfig) contextValidateBasicAuth(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.BasicAuth != nil {
 		if err := m.BasicAuth.ContextValidate(ctx, formats); err != nil {
@@ -122,7 +122,7 @@ func (m *NotifierHTTPConfig) contextValidateBasicAuth(ctx context.Context, forma
 	return nil
 }
 
-func (m *NotifierHTTPConfig) contextValidateTLSConfig(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1NotifierHTTPConfig) contextValidateTLSConfig(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.TLSConfig != nil {
 		if err := m.TLSConfig.ContextValidate(ctx, formats); err != nil {
@@ -139,7 +139,7 @@ func (m *NotifierHTTPConfig) contextValidateTLSConfig(ctx context.Context, forma
 }
 
 // MarshalBinary interface implementation
-func (m *NotifierHTTPConfig) MarshalBinary() ([]byte, error) {
+func (m *Configv1NotifierHTTPConfig) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -147,8 +147,8 @@ func (m *NotifierHTTPConfig) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *NotifierHTTPConfig) UnmarshalBinary(b []byte) error {
-	var res NotifierHTTPConfig
+func (m *Configv1NotifierHTTPConfig) UnmarshalBinary(b []byte) error {
+	var res Configv1NotifierHTTPConfig
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
