@@ -75,6 +75,33 @@ var PartitionFilterSchema = &schema.Schema{
 								Schema: LogSearchSchema,
 							},
 						},
+						"metric_filter": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"name": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"value_glob": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+								},
+							},
+						},
+						"trace_filter": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"trace": TraceFilterSchema,
+									"span":  TraceSpanFilterListSchema,
+								},
+							},
+						},
 					},
 				},
 			},

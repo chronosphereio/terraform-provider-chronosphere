@@ -53,37 +53,73 @@ type ConsumptionConfigConverter struct{}
 func (ConsumptionConfigConverter) toModel(
 	m *intschema.ConsumptionConfig,
 ) (*models.Configv1ConsumptionConfig, error) {
+	partitions, err := sliceutil.MapErr(m.Partition, partitionToModel)
+	if err != nil {
+		return nil, err
+	}
 	return &models.Configv1ConsumptionConfig{
-		Partitions: sliceutil.Map(m.Partition, partitionToModel),
+		Partitions: partitions,
 	}, nil
 }
 
-func partitionToModel(p intschema.ConsumptionConfigPartition) *models.ConsumptionConfigPartition {
+func partitionToModel(p intschema.ConsumptionConfigPartition) (*models.ConsumptionConfigPartition, error) {
+	filters, err := sliceutil.MapErr(p.Filter, filterToModel)
+	if err != nil {
+		return nil, err
+	}
+	partitions, err := sliceutil.MapErr(p.Partition, partitionToModel)
+	if err != nil {
+		return nil, err
+	}
 	return &models.ConsumptionConfigPartition{
 		Name:       p.Name,
 		Slug:       p.Slug,
-		Filters:    sliceutil.Map(p.Filter, filterToModel),
-		Partitions: sliceutil.Map(p.Partition, partitionToModel),
-	}
+		Filters:    filters,
+		Partitions: partitions,
+	}, nil
 }
 
-func filterToModel(f intschema.PartitionFilter) *models.ConsumptionConfigPartitionFilter {
+func filterToModel(f intschema.PartitionFilter) (*models.ConsumptionConfigPartitionFilter, error) {
+	conditions, err := sliceutil.MapErr(f.Condition, conditionToModel)
+	if err != nil {
+		return nil, err
+	}
 	return &models.ConsumptionConfigPartitionFilter{
 		Operator:   models.FilterOperator(f.Operator),
-		Conditions: sliceutil.Map(f.Condition, conditionToModel),
-	}
+		Conditions: conditions,
+	}, nil
 }
 
-func conditionToModel(c intschema.PartitionFilterCondition) *models.PartitionFilterCondition {
+func conditionToModel(c intschema.PartitionFilterCondition) (*models.PartitionFilterCondition, error) {
 	result := &models.PartitionFilterCondition{
-		DatasetSlug: c.DatasetId.Slug(),
+		DatasetSlug:   c.DatasetId.Slug(),
+		MetricFilters: metricFiltersToModel(c.MetricFilter),
 	}
 	if c.LogFilter != nil {
 		result.LogFilter = &models.Configv1LogSearchFilter{
 			Query: c.LogFilter.Query,
 		}
 	}
-	return result
+	if c.TraceFilter != nil {
+		tf, err := traceSearchFilterToModel(intschema.TraceSearchFilter{
+			Trace: c.TraceFilter.Trace,
+			Span:  c.TraceFilter.Span,
+		})
+		if err != nil {
+			return nil, err
+		}
+		result.TraceFilter = tf
+	}
+	return result, nil
+}
+
+func metricFiltersToModel(filters []intschema.PartitionFilterConditionMetricFilter) []*models.Configv1LabelFilter {
+	return sliceutil.Map(filters, func(f intschema.PartitionFilterConditionMetricFilter) *models.Configv1LabelFilter {
+		return &models.Configv1LabelFilter{
+			Name:      f.Name,
+			ValueGlob: f.ValueGlob,
+		}
+	})
 }
 
 func (ConsumptionConfigConverter) fromModel(
@@ -112,12 +148,29 @@ func filterFromModel(f *models.ConsumptionConfigPartitionFilter) intschema.Parti
 
 func conditionFromModel(c *models.PartitionFilterCondition) intschema.PartitionFilterCondition {
 	result := intschema.PartitionFilterCondition{
-		DatasetId: tfid.Slug(c.DatasetSlug),
+		DatasetId:    tfid.Slug(c.DatasetSlug),
+		MetricFilter: metricFiltersFromModel(c.MetricFilters),
 	}
 	if c.LogFilter != nil {
 		result.LogFilter = &intschema.PartitionFilterConditionLogFilter{
 			Query: c.LogFilter.Query,
 		}
 	}
+	if c.TraceFilter != nil {
+		tsf := traceSearchFilterFromModel(c.TraceFilter)
+		result.TraceFilter = &intschema.PartitionFilterConditionTraceFilter{
+			Trace: tsf.Trace,
+			Span:  tsf.Span,
+		}
+	}
 	return result
+}
+
+func metricFiltersFromModel(filters []*models.Configv1LabelFilter) []intschema.PartitionFilterConditionMetricFilter {
+	return sliceutil.Map(filters, func(f *models.Configv1LabelFilter) intschema.PartitionFilterConditionMetricFilter {
+		return intschema.PartitionFilterConditionMetricFilter{
+			Name:      f.Name,
+			ValueGlob: f.ValueGlob,
+		}
+	})
 }

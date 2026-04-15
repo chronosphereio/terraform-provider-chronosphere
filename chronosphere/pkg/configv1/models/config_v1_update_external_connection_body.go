@@ -18,10 +18,10 @@ import (
 // swagger:model ConfigV1UpdateExternalConnectionBody
 type ConfigV1UpdateExternalConnectionBody struct {
 
-	// create if missing
+	// If `true`, the ExternalConnection will be created if it does not already exist, identified by `slug`. If `false`, an error will be returned if the ExternalConnection does not already exist.
 	CreateIfMissing bool `json:"create_if_missing,omitempty"`
 
-	// dry run
+	// If `true`, validates the specified configuration without creating or updating the ExternalConnection. If the specified configuration is valid, the endpoint returns a partial response without the ExternalConnection. If the specified configuration is invalid, the endpoint returns an error.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// external connection

@@ -18,7 +18,7 @@ import (
 // swagger:model configv1CreateExternalConnectionRequest
 type Configv1CreateExternalConnectionRequest struct {
 
-	// dry run
+	// If `true`, validates the specified configuration without creating the ExternalConnection. If the specified configuration is valid, the endpoint returns a partial response without the ExternalConnection. If the specified configuration is invalid, the endpoint returns an error.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// external connection

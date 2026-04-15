@@ -279,9 +279,11 @@
           "$ref": "#/definitions/configv1ExternalConnection"
         },
         "create_if_missing": {
+          "description": "If `true`, the ExternalConnection will be created if it does not already exist, identified by `slug`. If `false`, an error will be returned if the ExternalConnection does not already exist.",
           "type": "boolean"
         },
         "dry_run": {
+          "description": "If `true`, validates the specified configuration without creating or updating the ExternalConnection. If the specified configuration is valid, the endpoint returns a partial response without the ExternalConnection. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -632,7 +634,7 @@
     "ConsumptionBudgetPriorityFilter": {
       "properties": {
         "dataset_slug": {
-          "description": "If set, matches incoming data that belongs to the specified dataset.\n\nExactly one of `dataset_slug` or `log_filter` must be set.",
+          "description": "Deprecated. Use `log_filter` instead.",
           "type": "string"
         },
         "log_filter": {
@@ -644,7 +646,9 @@
     "ConsumptionBudgetSKUGroup": {
       "enum": [
         "LOG_PERSISTED_BYTES",
-        "LOG_PROCESSED_BYTES"
+        "LOG_PROCESSED_BYTES",
+        "METRIC_PERSISTED_SERIES",
+        "METRIC_ALL"
       ],
       "type": "string"
     },
@@ -672,7 +676,8 @@
     },
     "ConsumptionBudgetUnit": {
       "enum": [
-        "NATIVE"
+        "NATIVE",
+        "CREDITS"
       ],
       "type": "string"
     },
@@ -858,6 +863,81 @@
           "description": "PromQL label selector, which must match the given variable name. If the\nvariable is not specified in the derived metric usage, then the default\nselector is used.",
           "example": "service=~\".*\"",
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DestinationEmailTarget": {
+      "properties": {
+        "addresses": {
+          "description": "The email addresses to send notifications to.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "DestinationOpsGenieTarget": {
+      "properties": {
+        "external_connection_slug": {
+          "description": "The slug of the ExternalConnection that holds OpsGenie credentials.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DestinationPagerdutyTarget": {
+      "properties": {
+        "external_connection_slug": {
+          "description": "The slug of the ExternalConnection that holds PagerDuty credentials.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DestinationSlackTarget": {
+      "properties": {
+        "external_connection_slug": {
+          "description": "The slug of the ExternalConnection that holds Slack credentials.",
+          "type": "string"
+        },
+        "channels": {
+          "description": "The Slack channels to send notifications to.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "DestinationVictorOpsTarget": {
+      "properties": {
+        "external_connection_slug": {
+          "description": "The slug of the ExternalConnection that holds VictorOps credentials.",
+          "type": "string"
+        },
+        "routing_key": {
+          "description": "The VictorOps routing key that determines where notifications are routed.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DestinationWebhookTarget": {
+      "properties": {
+        "external_connection_slug": {
+          "description": "The slug of the ExternalConnection that holds webhook credentials.",
+          "type": "string"
+        },
+        "query_parameters": {
+          "description": "Query parameters to add to the webhook URL.\nIf the webhook URL already contains parameters, these will be appended.",
+          "items": {
+            "$ref": "#/definitions/WebhookTargetQueryParameter"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -1977,11 +2057,18 @@
     "PartitionFilterCondition": {
       "properties": {
         "dataset_slug": {
-          "description": "Deprecated. Use `log_filter` instead.",
+          "description": "Deprecated. Use `log_filter`, `metric_filters`, or `trace_filter` instead.",
           "type": "string"
         },
         "log_filter": {
           "$ref": "#/definitions/configv1LogSearchFilter"
+        },
+        "metric_filters": {
+          "description": "If set, matches incoming metric data by label. If multiple label\nfilters are specified, an incoming metric must match every label\nfilter to match the condition. Label values support glob patterns,\nincluding matching multiple patterns with an `OR`, such as\n`service:{svc1,svc2}`.\n\nExactly one of `log_filter`, `metric_filters`, or `trace_filter` must be set.",
+          "items": {
+            "$ref": "#/definitions/configv1LabelFilter"
+          },
+          "type": "array"
         },
         "trace_filter": {
           "$ref": "#/definitions/configv1TraceSearchFilter"
@@ -2211,6 +2298,33 @@
       ],
       "type": "string"
     },
+    "RoutesDestination": {
+      "properties": {
+        "email": {
+          "$ref": "#/definitions/DestinationEmailTarget"
+        },
+        "slack": {
+          "$ref": "#/definitions/DestinationSlackTarget"
+        },
+        "pagerduty": {
+          "$ref": "#/definitions/DestinationPagerdutyTarget"
+        },
+        "webhook": {
+          "$ref": "#/definitions/DestinationWebhookTarget"
+        },
+        "ops_genie": {
+          "$ref": "#/definitions/DestinationOpsGenieTarget"
+        },
+        "victor_ops": {
+          "$ref": "#/definitions/DestinationVictorOpsTarget"
+        },
+        "disable_resolves": {
+          "description": "If true, do not send notifications when alerts resolve.\nDefaults to false (resolve notifications are sent).",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "RoutesNotifierList": {
       "properties": {
         "notifier_slugs": {
@@ -2227,6 +2341,13 @@
         },
         "group_by": {
           "$ref": "#/definitions/NotificationPolicyRoutesGroupBy"
+        },
+        "destinations": {
+          "description": "Notification destinations. Cannot be set if notifier_slugs is set.",
+          "items": {
+            "$ref": "#/definitions/RoutesDestination"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -2898,6 +3019,17 @@
       ],
       "type": "string"
     },
+    "WebhookTargetQueryParameter": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "apiError": {
       "properties": {
         "code": {
@@ -3442,6 +3574,7 @@
           "$ref": "#/definitions/configv1ExternalConnection"
         },
         "dry_run": {
+          "description": "If `true`, validates the specified configuration without creating the ExternalConnection. If the specified configuration is valid, the endpoint returns a partial response without the ExternalConnection. If the specified configuration is invalid, the endpoint returns an error.",
           "type": "boolean"
         }
       },
@@ -4346,17 +4479,23 @@
     "configv1ExternalConnection": {
       "properties": {
         "slug": {
+          "description": "The unique identifier of the ExternalConnection. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the ExternalConnection is created.",
           "type": "string"
         },
         "name": {
+          "description": "The name of the ExternalConnection. You can modify this value after the ExternalConnection is created.",
           "type": "string"
         },
         "created_at": {
+          "description": "Timestamp of when the ExternalConnection was created. Cannot be set by clients.",
           "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "updated_at": {
+          "description": "Timestamp of when the ExternalConnection was last updated. Cannot be set by clients.",
           "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "slack": {
@@ -10523,6 +10662,281 @@
         },
         "tags": [
           "DropRule"
+        ]
+      }
+    },
+    "/api/v1/config/external-connections": {
+      "get": {
+        "operationId": "ListExternalConnections",
+        "parameters": [
+          {
+            "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
+            "format": "int64",
+            "in": "query",
+            "name": "page.max_size",
+            "type": "integer"
+          },
+          {
+            "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
+            "in": "query",
+            "name": "page.token",
+            "type": "string"
+          },
+          {
+            "collectionFormat": "multi",
+            "description": "Filters results by slug, where any ExternalConnection with a matching slug in the given list (and matches all other filters) will be returned.",
+            "in": "query",
+            "items": {
+              "type": "string"
+            },
+            "name": "slugs",
+            "type": "array"
+          },
+          {
+            "collectionFormat": "multi",
+            "description": "Filters results by name, where any ExternalConnection with a matching name in the given list (and matches all other filters) will be returned.",
+            "in": "query",
+            "items": {
+              "type": "string"
+            },
+            "name": "names",
+            "type": "array"
+          },
+          {
+            "collectionFormat": "multi",
+            "in": "query",
+            "items": {
+              "enum": [
+                "SLACK",
+                "PAGERDUTY",
+                "WEBHOOK",
+                "VICTOROPS",
+                "OPSGENIE"
+              ],
+              "type": "string"
+            },
+            "name": "connection_types",
+            "type": "array"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1ListExternalConnectionsResponse"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "ExternalConnection"
+        ]
+      },
+      "post": {
+        "operationId": "CreateExternalConnection",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/configv1CreateExternalConnectionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the created ExternalConnection.",
+            "schema": {
+              "$ref": "#/definitions/configv1CreateExternalConnectionResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot create the ExternalConnection because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "409": {
+            "description": "Cannot create the ExternalConnection because there is a conflict with an existing ExternalConnection.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "ExternalConnection"
+        ]
+      }
+    },
+    "/api/v1/config/external-connections/{slug}": {
+      "delete": {
+        "operationId": "DeleteExternalConnection",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1DeleteExternalConnectionResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot delete the ExternalConnection because it is in use.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot delete the ExternalConnection because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "ExternalConnection"
+        ]
+      },
+      "get": {
+        "operationId": "ReadExternalConnection",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configv1ReadExternalConnectionResponse"
+            }
+          },
+          "404": {
+            "description": "Cannot read the ExternalConnection because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "ExternalConnection"
+        ]
+      },
+      "put": {
+        "operationId": "UpdateExternalConnection",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConfigV1UpdateExternalConnectionBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response containing the updated ExternalConnection.",
+            "schema": {
+              "$ref": "#/definitions/configv1UpdateExternalConnectionResponse"
+            }
+          },
+          "400": {
+            "description": "Cannot update the ExternalConnection because the request is invalid.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "404": {
+            "description": "Cannot update the ExternalConnection because the slug does not exist.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "409": {
+            "description": "Cannot update the ExternalConnection because there is a conflict with an existing ExternalConnection.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "500": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/apiError"
+            }
+          },
+          "default": {
+            "description": "An undefined error response.",
+            "schema": {
+              "$ref": "#/definitions/genericError"
+            }
+          }
+        },
+        "tags": [
+          "ExternalConnection"
         ]
       }
     },

@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -17,6 +18,9 @@ import (
 //
 // swagger:model RoutesNotifierList
 type RoutesNotifierList struct {
+
+	// Notification destinations. Cannot be set if notifier_slugs is set.
+	Destinations []*RoutesDestination `json:"destinations"`
 
 	// group by
 	GroupBy *NotificationPolicyRoutesGroupBy `json:"group_by,omitempty"`
@@ -32,6 +36,10 @@ type RoutesNotifierList struct {
 func (m *RoutesNotifierList) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateDestinations(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateGroupBy(formats); err != nil {
 		res = append(res, err)
 	}
@@ -39,6 +47,32 @@ func (m *RoutesNotifierList) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *RoutesNotifierList) validateDestinations(formats strfmt.Registry) error {
+	if swag.IsZero(m.Destinations) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Destinations); i++ {
+		if swag.IsZero(m.Destinations[i]) { // not required
+			continue
+		}
+
+		if m.Destinations[i] != nil {
+			if err := m.Destinations[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("destinations" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("destinations" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -65,6 +99,10 @@ func (m *RoutesNotifierList) validateGroupBy(formats strfmt.Registry) error {
 func (m *RoutesNotifierList) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateDestinations(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateGroupBy(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -72,6 +110,26 @@ func (m *RoutesNotifierList) ContextValidate(ctx context.Context, formats strfmt
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *RoutesNotifierList) contextValidateDestinations(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Destinations); i++ {
+
+		if m.Destinations[i] != nil {
+			if err := m.Destinations[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("destinations" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("destinations" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 

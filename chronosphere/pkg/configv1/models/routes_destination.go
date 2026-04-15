@@ -11,51 +11,41 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
-// Configv1ExternalConnection configv1 external connection
+// RoutesDestination routes destination
 //
-// swagger:model configv1ExternalConnection
-type Configv1ExternalConnection struct {
+// swagger:model RoutesDestination
+type RoutesDestination struct {
 
-	// Timestamp of when the ExternalConnection was created. Cannot be set by clients.
-	// Read Only: true
-	// Format: date-time
-	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
+	// If true, do not send notifications when alerts resolve.
+	// Defaults to false (resolve notifications are sent).
+	DisableResolves bool `json:"disable_resolves,omitempty"`
 
-	// The name of the ExternalConnection. You can modify this value after the ExternalConnection is created.
-	Name string `json:"name,omitempty"`
+	// email
+	Email *DestinationEmailTarget `json:"email,omitempty"`
 
 	// ops genie
-	OpsGenie *Configv1ExternalConnectionOpsGenieConfig `json:"ops_genie,omitempty"`
+	OpsGenie *DestinationOpsGenieTarget `json:"ops_genie,omitempty"`
 
 	// pagerduty
-	Pagerduty *Configv1ExternalConnectionPagerdutyConfig `json:"pagerduty,omitempty"`
+	Pagerduty *DestinationPagerdutyTarget `json:"pagerduty,omitempty"`
 
 	// slack
-	Slack *Configv1ExternalConnectionSlackConfig `json:"slack,omitempty"`
-
-	// The unique identifier of the ExternalConnection. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the ExternalConnection is created.
-	Slug string `json:"slug,omitempty"`
-
-	// Timestamp of when the ExternalConnection was last updated. Cannot be set by clients.
-	// Read Only: true
-	// Format: date-time
-	UpdatedAt strfmt.DateTime `json:"updated_at,omitempty"`
+	Slack *DestinationSlackTarget `json:"slack,omitempty"`
 
 	// victor ops
-	VictorOps *Configv1ExternalConnectionVictorOpsConfig `json:"victor_ops,omitempty"`
+	VictorOps *DestinationVictorOpsTarget `json:"victor_ops,omitempty"`
 
 	// webhook
-	Webhook *Configv1ExternalConnectionWebhookConfig `json:"webhook,omitempty"`
+	Webhook *DestinationWebhookTarget `json:"webhook,omitempty"`
 }
 
-// Validate validates this configv1 external connection
-func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
+// Validate validates this routes destination
+func (m *RoutesDestination) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateCreatedAt(formats); err != nil {
+	if err := m.validateEmail(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -68,10 +58,6 @@ func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSlack(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateUpdatedAt(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -89,19 +75,26 @@ func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Configv1ExternalConnection) validateCreatedAt(formats strfmt.Registry) error {
-	if swag.IsZero(m.CreatedAt) { // not required
+func (m *RoutesDestination) validateEmail(formats strfmt.Registry) error {
+	if swag.IsZero(m.Email) { // not required
 		return nil
 	}
 
-	if err := validate.FormatOf("created_at", "body", "date-time", m.CreatedAt.String(), formats); err != nil {
-		return err
+	if m.Email != nil {
+		if err := m.Email.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("email")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("email")
+			}
+			return err
+		}
 	}
 
 	return nil
 }
 
-func (m *Configv1ExternalConnection) validateOpsGenie(formats strfmt.Registry) error {
+func (m *RoutesDestination) validateOpsGenie(formats strfmt.Registry) error {
 	if swag.IsZero(m.OpsGenie) { // not required
 		return nil
 	}
@@ -120,7 +113,7 @@ func (m *Configv1ExternalConnection) validateOpsGenie(formats strfmt.Registry) e
 	return nil
 }
 
-func (m *Configv1ExternalConnection) validatePagerduty(formats strfmt.Registry) error {
+func (m *RoutesDestination) validatePagerduty(formats strfmt.Registry) error {
 	if swag.IsZero(m.Pagerduty) { // not required
 		return nil
 	}
@@ -139,7 +132,7 @@ func (m *Configv1ExternalConnection) validatePagerduty(formats strfmt.Registry) 
 	return nil
 }
 
-func (m *Configv1ExternalConnection) validateSlack(formats strfmt.Registry) error {
+func (m *RoutesDestination) validateSlack(formats strfmt.Registry) error {
 	if swag.IsZero(m.Slack) { // not required
 		return nil
 	}
@@ -158,19 +151,7 @@ func (m *Configv1ExternalConnection) validateSlack(formats strfmt.Registry) erro
 	return nil
 }
 
-func (m *Configv1ExternalConnection) validateUpdatedAt(formats strfmt.Registry) error {
-	if swag.IsZero(m.UpdatedAt) { // not required
-		return nil
-	}
-
-	if err := validate.FormatOf("updated_at", "body", "date-time", m.UpdatedAt.String(), formats); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Configv1ExternalConnection) validateVictorOps(formats strfmt.Registry) error {
+func (m *RoutesDestination) validateVictorOps(formats strfmt.Registry) error {
 	if swag.IsZero(m.VictorOps) { // not required
 		return nil
 	}
@@ -189,7 +170,7 @@ func (m *Configv1ExternalConnection) validateVictorOps(formats strfmt.Registry) 
 	return nil
 }
 
-func (m *Configv1ExternalConnection) validateWebhook(formats strfmt.Registry) error {
+func (m *RoutesDestination) validateWebhook(formats strfmt.Registry) error {
 	if swag.IsZero(m.Webhook) { // not required
 		return nil
 	}
@@ -208,11 +189,11 @@ func (m *Configv1ExternalConnection) validateWebhook(formats strfmt.Registry) er
 	return nil
 }
 
-// ContextValidate validate this configv1 external connection based on the context it is used
-func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this routes destination based on the context it is used
+func (m *RoutesDestination) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
+	if err := m.contextValidateEmail(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -225,10 +206,6 @@ func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, format
 	}
 
 	if err := m.contextValidateSlack(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateUpdatedAt(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -246,16 +223,23 @@ func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, format
 	return nil
 }
 
-func (m *Configv1ExternalConnection) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
+func (m *RoutesDestination) contextValidateEmail(ctx context.Context, formats strfmt.Registry) error {
 
-	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
-		return err
+	if m.Email != nil {
+		if err := m.Email.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("email")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("email")
+			}
+			return err
+		}
 	}
 
 	return nil
 }
 
-func (m *Configv1ExternalConnection) contextValidateOpsGenie(ctx context.Context, formats strfmt.Registry) error {
+func (m *RoutesDestination) contextValidateOpsGenie(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.OpsGenie != nil {
 		if err := m.OpsGenie.ContextValidate(ctx, formats); err != nil {
@@ -271,7 +255,7 @@ func (m *Configv1ExternalConnection) contextValidateOpsGenie(ctx context.Context
 	return nil
 }
 
-func (m *Configv1ExternalConnection) contextValidatePagerduty(ctx context.Context, formats strfmt.Registry) error {
+func (m *RoutesDestination) contextValidatePagerduty(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Pagerduty != nil {
 		if err := m.Pagerduty.ContextValidate(ctx, formats); err != nil {
@@ -287,7 +271,7 @@ func (m *Configv1ExternalConnection) contextValidatePagerduty(ctx context.Contex
 	return nil
 }
 
-func (m *Configv1ExternalConnection) contextValidateSlack(ctx context.Context, formats strfmt.Registry) error {
+func (m *RoutesDestination) contextValidateSlack(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Slack != nil {
 		if err := m.Slack.ContextValidate(ctx, formats); err != nil {
@@ -303,16 +287,7 @@ func (m *Configv1ExternalConnection) contextValidateSlack(ctx context.Context, f
 	return nil
 }
 
-func (m *Configv1ExternalConnection) contextValidateUpdatedAt(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := validate.ReadOnly(ctx, "updated_at", "body", strfmt.DateTime(m.UpdatedAt)); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Configv1ExternalConnection) contextValidateVictorOps(ctx context.Context, formats strfmt.Registry) error {
+func (m *RoutesDestination) contextValidateVictorOps(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.VictorOps != nil {
 		if err := m.VictorOps.ContextValidate(ctx, formats); err != nil {
@@ -328,7 +303,7 @@ func (m *Configv1ExternalConnection) contextValidateVictorOps(ctx context.Contex
 	return nil
 }
 
-func (m *Configv1ExternalConnection) contextValidateWebhook(ctx context.Context, formats strfmt.Registry) error {
+func (m *RoutesDestination) contextValidateWebhook(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Webhook != nil {
 		if err := m.Webhook.ContextValidate(ctx, formats); err != nil {
@@ -345,7 +320,7 @@ func (m *Configv1ExternalConnection) contextValidateWebhook(ctx context.Context,
 }
 
 // MarshalBinary interface implementation
-func (m *Configv1ExternalConnection) MarshalBinary() ([]byte, error) {
+func (m *RoutesDestination) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -353,8 +328,8 @@ func (m *Configv1ExternalConnection) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Configv1ExternalConnection) UnmarshalBinary(b []byte) error {
-	var res Configv1ExternalConnection
+func (m *RoutesDestination) UnmarshalBinary(b []byte) error {
+	var res RoutesDestination
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
