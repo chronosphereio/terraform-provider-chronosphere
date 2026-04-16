@@ -17,6 +17,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_label"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/derived_metric"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/drop_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/external_connection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/gcp_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/grafana_dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_allocation_config"
@@ -674,6 +675,75 @@ func ListDropRulesByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.DropRules {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListExternalConnections(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1ExternalConnection, error) {
+	return ListExternalConnectionsByFilter(ctx, client, Filter{})
+}
+
+func ListExternalConnectionsBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1ExternalConnection, error) {
+	return ListExternalConnectionsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListExternalConnectionsByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1ExternalConnection, error) {
+	return ListExternalConnectionsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListExternalConnectionsByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*external_connection.ListExternalConnectionsParams),
+) ([]*configv1models.Configv1ExternalConnection, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1ExternalConnection
+	)
+	for {
+		p := &external_connection.ListExternalConnectionsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.ExternalConnection.ListExternalConnections(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.ExternalConnections {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {

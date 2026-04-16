@@ -78,10 +78,53 @@ type MonitorSeriesConditionResolveValue struct {
 }
 
 type NotificationRoute struct {
-	Severity       string                    `intschema:"severity"`
-	GroupBy        *NotificationRouteGroupBy `intschema:"group_by,optional,list_encoded_object"`
-	Notifiers      []tfid.ID                 `intschema:"notifiers,optional"`
-	RepeatInterval string                    `intschema:"repeat_interval,optional"`
+	Severity       string                         `intschema:"severity"`
+	Destination    []NotificationRouteDestination `intschema:"destination,optional"`
+	GroupBy        *NotificationRouteGroupBy      `intschema:"group_by,optional,list_encoded_object"`
+	Notifiers      []tfid.ID                      `intschema:"notifiers,optional"`
+	RepeatInterval string                         `intschema:"repeat_interval,optional"`
+}
+
+type NotificationRouteDestination struct {
+	DisableResolves bool                                   `intschema:"disable_resolves,optional"`
+	Email           *NotificationRouteDestinationEmail     `intschema:"email,optional,list_encoded_object"`
+	OpsGenie        *NotificationRouteDestinationOpsGenie  `intschema:"ops_genie,optional,list_encoded_object"`
+	Pagerduty       *NotificationRouteDestinationPagerduty `intschema:"pagerduty,optional,list_encoded_object"`
+	Slack           *NotificationRouteDestinationSlack     `intschema:"slack,optional,list_encoded_object"`
+	VictorOps       *NotificationRouteDestinationVictorOps `intschema:"victor_ops,optional,list_encoded_object"`
+	Webhook         *NotificationRouteDestinationWebhook   `intschema:"webhook,optional,list_encoded_object"`
+}
+
+type NotificationRouteDestinationEmail struct {
+	Addresses []string `intschema:"addresses"`
+}
+
+type NotificationRouteDestinationOpsGenie struct {
+	ExternalConnectionSlug string `intschema:"external_connection_slug"`
+}
+
+type NotificationRouteDestinationPagerduty struct {
+	ExternalConnectionSlug string `intschema:"external_connection_slug"`
+}
+
+type NotificationRouteDestinationSlack struct {
+	ExternalConnectionSlug string   `intschema:"external_connection_slug"`
+	Channels               []string `intschema:"channels,optional"`
+}
+
+type NotificationRouteDestinationVictorOps struct {
+	ExternalConnectionSlug string `intschema:"external_connection_slug"`
+	RoutingKey             string `intschema:"routing_key,optional"`
+}
+
+type NotificationRouteDestinationWebhook struct {
+	ExternalConnectionSlug string                                              `intschema:"external_connection_slug"`
+	QueryParameter         []NotificationRouteDestinationWebhookQueryParameter `intschema:"query_parameter,optional"`
+}
+
+type NotificationRouteDestinationWebhookQueryParameter struct {
+	Key   string `intschema:"key"`
+	Value string `intschema:"value"`
 }
 
 type NotificationRouteGroupBy struct {
