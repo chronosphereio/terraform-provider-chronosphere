@@ -251,6 +251,16 @@ func (npr *notificationPolicyResourceMeta) resourceNotificationPolicyCustomizeDi
 		SetUnknownReferencesSkip: []string{
 			"route.[].notifiers.[]",
 			"override.[].route.[].notifiers.[]",
+			"route.[].destination.[].slack.[].external_connection_slug",
+			"route.[].destination.[].pagerduty.[].external_connection_slug",
+			"route.[].destination.[].webhook.[].external_connection_slug",
+			"route.[].destination.[].ops_genie.[].external_connection_slug",
+			"route.[].destination.[].victor_ops.[].external_connection_slug",
+			"override.[].route.[].destination.[].slack.[].external_connection_slug",
+			"override.[].route.[].destination.[].pagerduty.[].external_connection_slug",
+			"override.[].route.[].destination.[].webhook.[].external_connection_slug",
+			"override.[].route.[].destination.[].ops_genie.[].external_connection_slug",
+			"override.[].route.[].destination.[].victor_ops.[].external_connection_slug",
 		},
 
 		ModifyAPIModel: func(apiPolicy *configmodels.Configv1NotificationPolicy) {
