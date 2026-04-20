@@ -1,10 +1,11 @@
 # Releases
 
 ## UNRELEASED
-Added:
-* Add `parse_field` control rule type and `grok_parser` support to `chronosphere_log_control_config` and `chronosphere_log_ingest_config` resources.
+
+## v1.25.0
 
 Added:
+* Add `parse_field` control rule type and `grok_parser` support to `chronosphere_log_control_config` and `chronosphere_log_ingest_config` resources.
 * Add `metric_filter` and `trace_filter` fields to `chronosphere_consumption_config` partition filter conditions. These fields allow partitioning by metric labels and trace queries.
 * Add `METRIC_PERSISTED_SERIES` and `METRIC_ALL` SKU groups to `chronosphere_consumption_budget` thresholds.
 * Add `CREDITS` unit to `chronosphere_consumption_budget` thresholds.
