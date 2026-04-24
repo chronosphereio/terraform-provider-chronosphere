@@ -5,6 +5,9 @@
 Removed:
 * Remove `trace_filter` field from `chronosphere_consumption_config` partition filter conditions.
 
+Changed:
+* Changed the singular `routing_key` field in the VictorOps destination in `v1/config/NotificationPolicy` to be plural `routing_keys`
+
 ## v1.25.0
 
 Added:

@@ -235,7 +235,7 @@ func notificationDestinationsToModel(
 		if d.VictorOps != nil {
 			dest.VictorOps = &models.DestinationVictorOpsTarget{
 				ExternalConnectionSlug: d.VictorOps.ExternalConnectionSlug,
-				RoutingKey:             d.VictorOps.RoutingKey,
+				RoutingKeys:            d.VictorOps.RoutingKeys,
 			}
 		}
 		if d.Email != nil {
@@ -290,7 +290,7 @@ func notificationDestinationsFromModel(
 		if d.VictorOps != nil {
 			dest.VictorOps = &intschema.NotificationRouteDestinationVictorOps{
 				ExternalConnectionSlug: d.VictorOps.ExternalConnectionSlug,
-				RoutingKey:             d.VictorOps.RoutingKey,
+				RoutingKeys:            d.VictorOps.RoutingKeys,
 			}
 		}
 		if d.Email != nil {
