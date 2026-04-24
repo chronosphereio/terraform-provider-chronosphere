@@ -140,7 +140,6 @@ type PartitionFilterCondition struct {
 	DatasetId    tfid.ID                                `intschema:"dataset_id,optional"`
 	LogFilter    *PartitionFilterConditionLogFilter     `intschema:"log_filter,optional,list_encoded_object"`
 	MetricFilter []PartitionFilterConditionMetricFilter `intschema:"metric_filter,optional"`
-	TraceFilter  *PartitionFilterConditionTraceFilter   `intschema:"trace_filter,optional,list_encoded_object"`
 }
 
 type PartitionFilterConditionLogFilter struct {
@@ -150,11 +149,6 @@ type PartitionFilterConditionLogFilter struct {
 type PartitionFilterConditionMetricFilter struct {
 	Name      string `intschema:"name"`
 	ValueGlob string `intschema:"value_glob"`
-}
-
-type PartitionFilterConditionTraceFilter struct {
-	Span  []TraceSpanFilter `intschema:"span,optional"`
-	Trace *TraceFilter      `intschema:"trace,optional,list_encoded_object"`
 }
 
 type RegexParser struct {
