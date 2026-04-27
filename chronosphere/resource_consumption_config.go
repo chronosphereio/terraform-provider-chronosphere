@@ -100,16 +100,6 @@ func conditionToModel(c intschema.PartitionFilterCondition) (*models.PartitionFi
 			Query: c.LogFilter.Query,
 		}
 	}
-	if c.TraceFilter != nil {
-		tf, err := traceSearchFilterToModel(intschema.TraceSearchFilter{
-			Trace: c.TraceFilter.Trace,
-			Span:  c.TraceFilter.Span,
-		})
-		if err != nil {
-			return nil, err
-		}
-		result.TraceFilter = tf
-	}
 	return result, nil
 }
 
@@ -154,13 +144,6 @@ func conditionFromModel(c *models.PartitionFilterCondition) intschema.PartitionF
 	if c.LogFilter != nil {
 		result.LogFilter = &intschema.PartitionFilterConditionLogFilter{
 			Query: c.LogFilter.Query,
-		}
-	}
-	if c.TraceFilter != nil {
-		tsf := traceSearchFilterFromModel(c.TraceFilter)
-		result.TraceFilter = &intschema.PartitionFilterConditionTraceFilter{
-			Trace: tsf.Trace,
-			Span:  tsf.Span,
 		}
 	}
 	return result

@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+Removed:
+* Remove `trace_filter` field from `chronosphere_consumption_config` partition filter conditions.
+
 ## v1.25.0
 
 Added:

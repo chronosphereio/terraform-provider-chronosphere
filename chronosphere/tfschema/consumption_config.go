@@ -91,17 +91,6 @@ var PartitionFilterSchema = &schema.Schema{
 								},
 							},
 						},
-						"trace_filter": {
-							Type:     schema.TypeList,
-							Optional: true,
-							MaxItems: 1,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"trace": TraceFilterSchema,
-									"span":  TraceSpanFilterListSchema,
-								},
-							},
-						},
 					},
 				},
 			},
