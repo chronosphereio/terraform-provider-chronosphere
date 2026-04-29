@@ -81,7 +81,7 @@ func (slackExternalConnectionConverter) fromModel(
 		Name:   m.Name,
 		Slug:   m.Slug,
 		ApiUrl: s.APIURL,
-		Token:  clearRedactedSecret(s.Token),
+		Token:  s.Token,
 	}, nil
 }
 

@@ -80,7 +80,7 @@ func (victoropsExternalConnectionConverter) fromModel(
 	return &intschema.VictoropsExternalConnection{
 		Name:   m.Name,
 		Slug:   m.Slug,
-		ApiKey: clearRedactedSecret(v.APIKey),
+		ApiKey: v.APIKey,
 		ApiUrl: v.APIURL,
 	}, nil
 }

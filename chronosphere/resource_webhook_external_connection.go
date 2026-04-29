@@ -102,18 +102,6 @@ func (webhookExternalConnectionConverter) normalize(config, server *intschema.We
 	server.BearerToken = config.BearerToken
 }
 
-// redactedSecretSentinel is the placeholder the Chronosphere API returns for
-// secret fields on read. We strip it on fromModel so that export-config
-// produces TF without dummy secret values that would fail on create.
-const redactedSecretSentinel = "**REDACTED**"
-
-func clearRedactedSecret(s string) string {
-	if s == redactedSecretSentinel {
-		return ""
-	}
-	return s
-}
-
 // externalConnectionHTTPConfig is a helper for mapping external connection HTTP config fields.
 type externalConnectionHTTPConfig struct {
 	basicAuthUsername     string
@@ -143,11 +131,11 @@ func (c externalConnectionHTTPConfig) toModel() *models.Configv1ExternalConnecti
 
 func externalConnectionHTTPConfigFromModel(m *models.Configv1ExternalConnectionHTTPConfig) externalConnectionHTTPConfig {
 	c := externalConnectionHTTPConfig{
-		bearerToken: clearRedactedSecret(m.BearerToken),
+		bearerToken: m.BearerToken,
 	}
 	if m.BasicAuth != nil {
 		c.basicAuthUsername = m.BasicAuth.Username
-		c.basicAuthPassword = clearRedactedSecret(m.BasicAuth.Password)
+		c.basicAuthPassword = m.BasicAuth.Password
 	}
 	if m.TLSConfig != nil {
 		c.tlsInsecureSkipVerify = m.TLSConfig.InsecureSkipVerify

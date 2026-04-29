@@ -90,11 +90,11 @@ func (pagerdutyExternalConnectionConverter) fromModel(
 		Slug: m.Slug,
 	}
 	if p.Events != nil {
-		n.PagerdutyApiKey = clearRedactedSecret(p.Events.APIKey)
+		n.PagerdutyApiKey = p.Events.APIKey
 		n.PagerdutyEventsVersion = string(p.Events.Version)
 	}
 	if p.Rest != nil {
-		n.PagerdutyRestApiKey = clearRedactedSecret(p.Rest.APIKey)
+		n.PagerdutyRestApiKey = p.Rest.APIKey
 	}
 	return n, nil
 }

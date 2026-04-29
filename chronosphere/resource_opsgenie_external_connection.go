@@ -86,7 +86,7 @@ func (opsgenieExternalConnectionConverter) fromModel(
 	n := &intschema.OpsgenieExternalConnection{
 		Name:   m.Name,
 		Slug:   m.Slug,
-		ApiKey: clearRedactedSecret(o.APIKey),
+		ApiKey: o.APIKey,
 		ApiUrl: o.APIURL,
 	}
 	if o.HTTPConfig != nil {
