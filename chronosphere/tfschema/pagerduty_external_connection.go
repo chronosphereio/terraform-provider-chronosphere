@@ -28,12 +28,20 @@ var PagerdutyExternalConnection = map[string]*schema.Schema{
 		ForceNew: true,
 	},
 	"pagerduty_events_version": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:          schema.TypeString,
+		Optional:      true,
+		ConflictsWith: []string{"pagerduty_rest_api_key"},
 	},
 	"pagerduty_api_key": {
-		Type:      schema.TypeString,
-		Optional:  true,
-		Sensitive: true,
+		Type:          schema.TypeString,
+		Optional:      true,
+		Sensitive:     true,
+		ConflictsWith: []string{"pagerduty_rest_api_key"},
+	},
+	"pagerduty_rest_api_key": {
+		Type:          schema.TypeString,
+		Optional:      true,
+		Sensitive:     true,
+		ConflictsWith: []string{"pagerduty_api_key", "pagerduty_events_version"},
 	},
 }
