@@ -113,8 +113,8 @@ type NotificationRouteDestinationSlack struct {
 }
 
 type NotificationRouteDestinationVictorOps struct {
-	ExternalConnectionSlug string `intschema:"external_connection_slug"`
-	RoutingKey             string `intschema:"routing_key,optional"`
+	ExternalConnectionSlug string   `intschema:"external_connection_slug"`
+	RoutingKeys            []string `intschema:"routing_keys"`
 }
 
 type NotificationRouteDestinationWebhook struct {

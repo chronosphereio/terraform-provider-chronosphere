@@ -191,9 +191,10 @@ var NotificationRouteSchema = typeset.Set{
 									Type:     schema.TypeString,
 									Required: true,
 								},
-								"routing_key": {
-									Type:     schema.TypeString,
-									Optional: true,
+								"routing_keys": {
+									Type:     schema.TypeList,
+									Required: true,
+									Elem:     &schema.Schema{Type: schema.TypeString},
 								},
 							},
 						},
