@@ -57,15 +57,21 @@ type pagerdutyExternalConnectionConverter struct{}
 func (pagerdutyExternalConnectionConverter) toModel(
 	n *intschema.PagerdutyExternalConnection,
 ) (*models.Configv1ExternalConnection, error) {
+	pd := &models.Configv1ExternalConnectionPagerdutyConfig{}
+	if n.PagerdutyRestApiKey != "" {
+		pd.Rest = &models.PagerdutyConfigPagerdutyRESTConfig{
+			APIKey: n.PagerdutyRestApiKey,
+		}
+	} else {
+		pd.Events = &models.PagerdutyConfigPagerdutyEventsConfig{
+			APIKey:  n.PagerdutyApiKey,
+			Version: models.Configv1PagerdutyEventsVersion(n.PagerdutyEventsVersion),
+		}
+	}
 	return &models.Configv1ExternalConnection{
-		Name: n.Name,
-		Slug: n.Slug,
-		Pagerduty: &models.Configv1ExternalConnectionPagerdutyConfig{
-			Events: &models.PagerdutyConfigPagerdutyEventsConfig{
-				APIKey:  n.PagerdutyApiKey,
-				Version: models.Configv1PagerdutyEventsVersion(n.PagerdutyEventsVersion),
-			},
-		},
+		Name:      n.Name,
+		Slug:      n.Slug,
+		Pagerduty: pd,
 	}, nil
 }
 
@@ -87,9 +93,13 @@ func (pagerdutyExternalConnectionConverter) fromModel(
 		n.PagerdutyApiKey = p.Events.APIKey
 		n.PagerdutyEventsVersion = string(p.Events.Version)
 	}
+	if p.Rest != nil {
+		n.PagerdutyRestApiKey = p.Rest.APIKey
+	}
 	return n, nil
 }
 
 func (pagerdutyExternalConnectionConverter) normalize(config, server *intschema.PagerdutyExternalConnection) {
 	server.PagerdutyApiKey = config.PagerdutyApiKey
+	server.PagerdutyRestApiKey = config.PagerdutyRestApiKey
 }

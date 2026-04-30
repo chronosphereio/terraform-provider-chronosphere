@@ -18,6 +18,7 @@ type PagerdutyExternalConnection struct {
 	Slug                   string `intschema:"slug,optional,computed"`
 	PagerdutyApiKey        string `intschema:"pagerduty_api_key,optional"`
 	PagerdutyEventsVersion string `intschema:"pagerduty_events_version,optional"`
+	PagerdutyRestApiKey    string `intschema:"pagerduty_rest_api_key,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
