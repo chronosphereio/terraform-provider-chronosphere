@@ -2,11 +2,16 @@
 
 ## UNRELEASED
 
+## v1.27.0
+
 Removed:
 * Remove `trace_filter` field from `chronosphere_consumption_config` partition filter conditions.
 
 Changed:
 * Changed the singular `routing_key` field in the VictorOps destination in `v1/config/NotificationPolicy` to be plural `routing_keys`
+
+Bug fixes:
+* Fix `chronosphere_pagerduty_external_connection` to support PagerDuty REST API keys via a new `pagerduty_rest_api_key` field, mutually exclusive with the existing `pagerduty_api_key` and `pagerduty_events_version` fields.
 
 ## v1.25.0
 
