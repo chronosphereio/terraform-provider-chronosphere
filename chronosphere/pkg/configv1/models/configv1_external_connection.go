@@ -19,6 +19,9 @@ import (
 // swagger:model configv1ExternalConnection
 type Configv1ExternalConnection struct {
 
+	// cloudflare
+	Cloudflare *ExternalConnectionCloudflareConfig `json:"cloudflare,omitempty"`
+
 	// Timestamp of when the ExternalConnection was created. Cannot be set by clients.
 	// Read Only: true
 	// Format: date-time
@@ -55,6 +58,10 @@ type Configv1ExternalConnection struct {
 func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateCloudflare(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCreatedAt(formats); err != nil {
 		res = append(res, err)
 	}
@@ -86,6 +93,25 @@ func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Configv1ExternalConnection) validateCloudflare(formats strfmt.Registry) error {
+	if swag.IsZero(m.Cloudflare) { // not required
+		return nil
+	}
+
+	if m.Cloudflare != nil {
+		if err := m.Cloudflare.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("cloudflare")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("cloudflare")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -212,6 +238,10 @@ func (m *Configv1ExternalConnection) validateWebhook(formats strfmt.Registry) er
 func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateCloudflare(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -243,6 +273,22 @@ func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, format
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Configv1ExternalConnection) contextValidateCloudflare(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Cloudflare != nil {
+		if err := m.Cloudflare.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("cloudflare")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("cloudflare")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
