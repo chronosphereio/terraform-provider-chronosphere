@@ -5,6 +5,9 @@
 Added:
 * Add `ROLLING_30_MINUTE_VOLUME` threshold type to `chronosphere_consumption_budget` thresholds.
 
+Bug fixes:
+* Preserve configured secret values during refresh of `chronosphere_webhook_alert_notifier`, `chronosphere_slack_alert_notifier`, `chronosphere_pagerduty_alert_notifier`, `chronosphere_opsgenie_alert_notifier`, and `chronosphere_victorops_alert_notifier` when the Config API returns the redaction sentinel for secret fields. Real server-side changes still surface as drift.
+
 ## v1.27.0
 
 Removed:

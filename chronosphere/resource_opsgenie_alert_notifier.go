@@ -124,6 +124,12 @@ func (opsgenieAlertNotifierConverter) fromModel(
 	return n, nil
 }
 
+func (opsgenieAlertNotifierConverter) normalize(config, server *intschema.OpsgenieAlertNotifier) {
+	preserveRedactedSecret(&server.ApiKey, config.ApiKey)
+	preserveRedactedSecret(&server.BasicAuthPassword, config.BasicAuthPassword)
+	preserveRedactedSecret(&server.BearerToken, config.BearerToken)
+}
+
 func opsgenieResponderToModel(
 	r intschema.OpsgenieAlertNotifierResponder,
 ) *models.OpsGenieConfigResponder {
