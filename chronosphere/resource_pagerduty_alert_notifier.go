@@ -125,6 +125,13 @@ func (pagerdutyAlertNotifierConverter) fromModel(
 	return n, nil
 }
 
+func (pagerdutyAlertNotifierConverter) normalize(config, server *intschema.PagerdutyAlertNotifier) {
+	preserveRedactedSecret(&server.BasicAuthPassword, config.BasicAuthPassword)
+	preserveRedactedSecret(&server.BearerToken, config.BearerToken)
+	preserveRedactedSecret(&server.ServiceKey, config.ServiceKey)
+	preserveRedactedSecret(&server.RoutingKey, config.RoutingKey)
+}
+
 func pagerdutyImagesToModel(
 	images []intschema.PagerdutyAlertNotifierImage,
 ) []*models.PagerdutyConfigImage {

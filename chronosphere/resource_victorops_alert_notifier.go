@@ -114,3 +114,10 @@ func (victoropsAlertNotifierConverter) fromModel(
 	}
 	return n, nil
 }
+
+func (victoropsAlertNotifierConverter) normalize(config, server *intschema.VictoropsAlertNotifier) {
+	preserveRedactedSecret(&server.ApiKey, config.ApiKey)
+	preserveRedactedSecret(&server.RoutingKey, config.RoutingKey)
+	preserveRedactedSecret(&server.BasicAuthPassword, config.BasicAuthPassword)
+	preserveRedactedSecret(&server.BearerToken, config.BearerToken)
+}
