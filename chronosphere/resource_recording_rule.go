@@ -42,6 +42,7 @@ func resourceRecordingRule() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "Evaluates a PromQL expression at a fixed interval and writes the result to a new time series. Useful for precomputing expensive queries or producing derived metrics.",
 		Schema:        tfschema.RecordingRule,
 		CustomizeDiff: r.ValidateDryRunOptions(&RecordingRuleDryRunCount, ValidateDryRunOpts[*models.Configv1RecordingRule]{
 			ModifyAPIModel: func(rr *models.Configv1RecordingRule) {

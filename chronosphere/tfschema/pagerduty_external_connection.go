@@ -18,30 +18,35 @@ import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 var PagerdutyExternalConnection = map[string]*schema.Schema{
 	"name": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Display name of the external connection.",
 	},
 	"slug": {
-		Type:     schema.TypeString,
-		Optional: true,
-		Computed: true,
-		ForceNew: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Computed:    true,
+		ForceNew:    true,
+		Description: "Stable identifier for the connection. Generated from `name` if omitted. Immutable after creation.",
 	},
 	"pagerduty_events_version": {
 		Type:          schema.TypeString,
 		Optional:      true,
 		ConflictsWith: []string{"pagerduty_rest_api_key"},
+		Description:   "PagerDuty Events API version used to deliver alerts: `PAGERDUTY_EVENTS_VERSION_V1` (legacy) or `PAGERDUTY_EVENTS_VERSION_V2` (default, recommended). Mutually exclusive with `pagerduty_rest_api_key`.",
 	},
 	"pagerduty_api_key": {
 		Type:          schema.TypeString,
 		Optional:      true,
 		Sensitive:     true,
 		ConflictsWith: []string{"pagerduty_rest_api_key"},
+		Description:   "PagerDuty Events API integration key used to authenticate alert delivery. Called the routing key in Events v2 and the service key in Events v1. Treat as a secret. Mutually exclusive with `pagerduty_rest_api_key`.",
 	},
 	"pagerduty_rest_api_key": {
 		Type:          schema.TypeString,
 		Optional:      true,
 		Sensitive:     true,
 		ConflictsWith: []string{"pagerduty_api_key", "pagerduty_events_version"},
+		Description:   "PagerDuty REST API token used to authenticate incident note polling. Treat as a secret. Mutually exclusive with `pagerduty_api_key` and `pagerduty_events_version`.",
 	},
 }

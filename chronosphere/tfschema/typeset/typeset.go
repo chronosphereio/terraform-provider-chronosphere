@@ -61,8 +61,9 @@ func (f notNormalized) Normalize(v any) any {
 // that diff-ing is implemented correctly (TL;DR TypeSet has tons of bugs and
 // requires very specific configuration).
 type Set struct {
-	Required bool
-	MinItems int
+	Required    bool
+	MinItems    int
+	Description string
 
 	// ElemFields defines the element field schema, where the keys are the name
 	// of the element fields and the values are the schemas for said field.
@@ -73,12 +74,13 @@ type Set struct {
 func (s Set) Schema() *schema.Schema {
 	elemResource := s.elemResource()
 	return &schema.Schema{
-		Type:     schema.TypeSet,
-		Required: s.Required,
-		Optional: !s.Required,
-		MinItems: s.MinItems,
-		Elem:     elemResource,
-		Set:      s.setFunc(elemResource),
+		Type:        schema.TypeSet,
+		Required:    s.Required,
+		Optional:    !s.Required,
+		MinItems:    s.MinItems,
+		Description: s.Description,
+		Elem:        elemResource,
+		Set:         s.setFunc(elemResource),
 	}
 }
 

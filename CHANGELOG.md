@@ -4,6 +4,7 @@
 
 Added:
 * Add `ROLLING_30_MINUTE_VOLUME` threshold type to `chronosphere_consumption_budget` thresholds.
+* Add field-level descriptions across all resource and data-source schemas, and add a `make docs` target that runs `tfplugindocs` to generate `docs/` for the Terraform Registry. Schema helpers (`Duration`, `Enum`, `CaseInsensitiveString`, `Filter`, `typeset.Set`) now accept a `Description`.
 
 ## v1.27.0
 

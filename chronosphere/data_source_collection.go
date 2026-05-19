@@ -41,6 +41,7 @@ func DataCollectionFromModel(b *models.Configv1Collection) *intschema.DataCollec
 func dataSourceCollection() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceCollectionRead,
+		Description: "Looks up an existing collection by slug. Use this to reference collections created outside of Terraform.",
 		Schema:      tfschema.DataCollection,
 	}
 }

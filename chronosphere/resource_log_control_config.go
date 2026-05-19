@@ -48,7 +48,7 @@ func resourceLogControlConfig() *schema.Resource {
 		DeleteContext: r.DeleteContext,
 		CustomizeDiff: r.ValidateDryRun(&LogControlConfigDryRunCount),
 		SchemaVersion: 1,
-		Description:   "Config configuring log control in Chronosphere.",
+		Description:   "Singleton org-wide pipeline of rules that sample, drop, replace, parse, or emit metrics from logs at ingest.",
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},

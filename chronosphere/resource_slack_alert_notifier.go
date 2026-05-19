@@ -41,6 +41,7 @@ func resourceSlackAlertNotifier() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "Slack notifier that delivers monitor signals to a Slack channel via an incoming webhook. Referenced from notification policies.",
 		Schema:        tfschema.SlackAlertNotifier,
 		CustomizeDiff: r.ValidateDryRun(&SlackAlertNotifierDryRunCount),
 		Importer: &schema.ResourceImporter{

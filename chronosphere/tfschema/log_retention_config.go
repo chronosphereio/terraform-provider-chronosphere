@@ -22,25 +22,30 @@ import (
 
 var LogRetentionConfig = map[string]*schema.Schema{
 	"name": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Display name of the log retention config.",
 	},
 	"slug": {
-		Type:     schema.TypeString,
-		Optional: true,
-		Computed: true,
-		ForceNew: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Computed:    true,
+		ForceNew:    true,
+		Description: "Stable identifier for the log retention config. Generated from `name` if omitted. Immutable after creation.",
 	},
 	"mode": Enum{
-		Value:    enum.LogRetentionConfigMode.ToStrings(),
-		Required: true,
+		Value:       enum.LogRetentionConfigMode.ToStrings(),
+		Required:    true,
+		Description: "Mode that determines how matching logs are retained in long-term (Iceberg) storage.",
 	}.Schema(),
 	"filter": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Log query filter. The retention policy applies only to logs that match.",
 	},
 	"retention_days": {
-		Type:     schema.TypeInt,
-		Required: true,
+		Type:        schema.TypeInt,
+		Required:    true,
+		Description: "Number of days to retain matching logs in long-term (Iceberg) storage after they are exported. When multiple configs overlap, the longest retention wins.",
 	},
 }

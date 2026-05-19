@@ -40,6 +40,7 @@ func resourceTeam() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "A named group of users that can own collections, buckets, and other resources. Teams scope access control and serve as the ownership unit for resources across the platform.",
 		Schema:        tfschema.Team,
 		CustomizeDiff: r.ValidateDryRun(&TeamDryRunCount),
 		Importer: &schema.ResourceImporter{

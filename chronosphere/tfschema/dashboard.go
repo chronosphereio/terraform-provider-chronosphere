@@ -21,29 +21,34 @@ import (
 
 var Dashboard = map[string]*schema.Schema{
 	"name": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Display name of the dashboard. Can be changed after creation.",
 	},
 	"slug": {
-		Type:     schema.TypeString,
-		Optional: true,
-		Computed: true,
-		ForceNew: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Computed:    true,
+		ForceNew:    true,
+		Description: "Stable identifier for the dashboard. Generated from `name` if omitted. Immutable after creation.",
 	},
 	"collection_id": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "ID of the collection that owns this dashboard.",
 	},
 	"dashboard_json": {
 		Type:                  schema.TypeString,
 		Required:              true,
 		DiffSuppressFunc:      dashboardJSONDiffSuppress,
 		DiffSuppressOnRefresh: true,
+		Description:           "JSON payload describing the dashboard's panels, layouts, variables, and other content. Wrap with `jsonencode({...})` in HCL. The provider sanitizes the JSON before diffing, so cosmetic differences (key ordering, whitespace) do not cause spurious plans.",
 	},
 	"labels": {
-		Type:     schema.TypeMap,
-		Elem:     &schema.Schema{Type: schema.TypeString},
-		Optional: true,
+		Type:        schema.TypeMap,
+		Elem:        &schema.Schema{Type: schema.TypeString},
+		Optional:    true,
+		Description: "Key/value labels attached to the dashboard for organization and filtering.",
 	},
 }
 

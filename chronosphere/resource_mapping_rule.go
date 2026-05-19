@@ -46,6 +46,7 @@ func resourceMappingRule() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		CustomizeDiff: r.ValidateDryRun(&MappingRuleDryRunCount),
+		Description:   "Selects metrics by label filter and either drops them or applies an aggregation policy controlling their storage interval and aggregation function. Use `chronosphere_drop_rule` for drop-only rules and `chronosphere_rollup_rule` for label-reducing aggregations.",
 		Schema:        tfschema.MappingRule,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,

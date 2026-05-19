@@ -48,6 +48,7 @@ func resourceNotificationPolicy() *schema.Resource {
 		UpdateContext: npInlineOrIndependent("update", resourceInlineNotificationPolicyUpdate, independent.UpdateContext),
 		DeleteContext: npInlineOrIndependent("delete", resourceInlineNotificationPolicyDelete, independent.DeleteContext),
 		CustomizeDiff: npr.resourceNotificationPolicyCustomizeDiff,
+		Description:   "Routes alert signals from monitors and SLOs to notifiers, with per-severity routing and label-matcher-based overrides. If `name` is set the policy is independent (referenceable by ID); if `name` is omitted the policy is inline and can only be embedded in another resource (e.g. a bucket).",
 		Schema:        tfschema.NotificationPolicy,
 		Importer: &schema.ResourceImporter{
 			StateContext: npr.resourceNotificationPolicyImport,

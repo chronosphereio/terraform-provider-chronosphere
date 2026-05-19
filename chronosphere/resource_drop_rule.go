@@ -45,6 +45,7 @@ func resourceDropRule() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		CustomizeDiff: r.ValidateDryRun(&DropRuleDryRunCount),
+		Description:   "Discards matching metric data at ingest time before it is stored. Supports unconditional drops, NaN-value drops, value-based drops, and conditional drops that activate only when a cardinality threshold is exceeded.",
 		Schema:        tfschema.DropRule,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,

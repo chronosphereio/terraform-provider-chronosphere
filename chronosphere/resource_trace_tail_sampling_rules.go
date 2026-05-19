@@ -36,6 +36,7 @@ func resourceTraceTailSamplingRules() *schema.Resource {
 		generatedTraceTailSamplingRules{},
 	)
 	return &schema.Resource{
+		Description:   "Tail-sampling rules that match completed traces against filters and apply per-rule sample rates (with a default rate fallback) to decide which traces are retained after the full trace has been observed.",
 		Schema:        tfschema.TraceTailSamplingRules,
 		CreateContext: r.CreateContext,
 		ReadContext:   r.ReadContext,

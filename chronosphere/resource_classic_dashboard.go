@@ -42,6 +42,7 @@ func resourceClassicDashboard() *schema.Resource {
 			StateContext: schema.ImportStatePassthroughContext,
 		},
 		CustomizeDiff: r.ValidateDryRun(&ClassicDashboardDryRunCount),
+		Description:   "A Grafana-compatible dashboard rendered by Chronosphere. The dashboard's `name` and `slug` are derived from the `title` and `uid` fields inside `dashboard_json`. For native Chronosphere dashboards, use `chronosphere_dashboard` instead.",
 		Schema:        tfschema.ClassicDashboard,
 	}
 }

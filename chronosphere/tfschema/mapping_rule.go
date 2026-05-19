@@ -22,58 +22,68 @@ import (
 
 var MappingRule = map[string]*schema.Schema{
 	"name": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Display name of the mapping rule. Can be changed after creation.",
 	},
 	"slug": {
-		Type:     schema.TypeString,
-		Optional: true,
-		Computed: true,
-		ForceNew: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Computed:    true,
+		ForceNew:    true,
+		Description: "Stable identifier for the mapping rule. Generated from `name` if omitted. Immutable after creation.",
 	},
 	"bucket_id": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "ID of the bucket the mapping rule belongs to.",
 	},
 	"filter": Filter{
 		KVDelimiter: aggregationfilter.MappingRuleDelimiter,
+		Description: "Space-delimited list of `label=value_glob` matchers that select the metrics this rule applies to. A metric must match every filter to be considered.",
 	}.Schema(),
 	"aggregations": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MaxItems: 1,
+		Type:        schema.TypeList,
+		Optional:    true,
+		MaxItems:    1,
+		Description: "Aggregation type applied to matching metrics. Cannot be set if `drop` is `true`.",
 		Elem: Enum{
 			Value: enum.AggregationType.ToStrings(),
 		}.Schema(),
 	},
 	// Storage policies to apply to the mapped metrics.
 	"storage_policy": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MaxItems: 1,
+		Type:        schema.TypeList,
+		Optional:    true,
+		MaxItems:    1,
+		Description: "Storage policy controlling resolution and retention of mapped metrics. Deprecated: use `interval` instead.",
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"resolution": Duration{
-					Required: true,
+					Required:    true,
+					Description: "Resolution at which mapped data points are stored.",
 				}.Schema(),
 				"retention": Duration{
-					Required: true,
+					Required:    true,
+					Description: "Retention duration for mapped data points.",
 				}.Schema(),
 			},
 		},
 		Deprecated: "use `interval` instead",
 	},
 	"drop": {
-		Type:     schema.TypeBool,
-		Optional: true,
-		Default:  false,
+		Type:        schema.TypeBool,
+		Optional:    true,
+		Default:     false,
+		Description: "If `true`, drops the matching metrics instead of aggregating them. Cannot be set together with `aggregations`. Defaults to `false`.",
 	},
 	// Whether or not to drop the timestamp.
 	"drop_timestamp": {
-		Type:       schema.TypeBool,
-		Optional:   true,
-		Default:    false,
-		Deprecated: "drop timestamp is no longer supported",
+		Type:        schema.TypeBool,
+		Optional:    true,
+		Default:     false,
+		Deprecated:  "drop timestamp is no longer supported",
+		Description: "Deprecated: no longer supported.",
 	},
 	"interval": {
 		Type:     schema.TypeString,
@@ -81,9 +91,11 @@ var MappingRule = map[string]*schema.Schema{
 		// When no interval is specified, a server-side default is used.
 		Computed:      true,
 		ConflictsWith: []string{"storage_policy"},
+		Description:   "Interval between aggregated data points produced by this mapping rule. Defaults to a server-side value when unset. Conflicts with `storage_policy`.",
 	},
 	"mode": Enum{
-		Value:    enum.MappingModeType.ToStrings(),
-		Optional: true,
+		Value:       enum.MappingModeType.ToStrings(),
+		Optional:    true,
+		Description: "Mapping rule mode controlling whether it is active or in a preview state.",
 	}.Schema(),
 }

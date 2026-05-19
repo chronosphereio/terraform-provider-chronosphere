@@ -42,6 +42,7 @@ func resourceDerivedLabel() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "Defines a synthetic label whose value is derived from existing metric labels or trace span tags via mapping or constructed-value rules. The derived label can then be referenced in queries as if it were a real label on the source series.",
 		Schema:        tfschema.DerivedLabel,
 		CustomizeDiff: r.ValidateDryRun(&DerivedLabelDryRunCount),
 		Importer: &schema.ResourceImporter{

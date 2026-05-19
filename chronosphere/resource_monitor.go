@@ -51,7 +51,8 @@ func resourceMonitor() *schema.Resource {
 				"query.[0].prometheus_expr": "dry_run_unknown_query",
 			},
 		}),
-		Schema: tfschema.Monitor,
+		Description: "A monitor evaluates a query against time-series, log, or trace data and produces signals when configured thresholds are crossed. Signals are routed to notifiers via the referenced notification policy or the parent collection's default policy.",
+		Schema:      tfschema.Monitor,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},

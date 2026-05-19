@@ -36,6 +36,7 @@ func resourceConsumptionConfig() *schema.Resource {
 		generatedConsumptionConfig{},
 	)
 	return &schema.Resource{
+		Description:   "Singleton tree of consumption partitions that classify metric and log data into hierarchical groups so that consumption_budget resources can enforce quotas against them.",
 		Schema:        tfschema.ConsumptionConfig,
 		CreateContext: r.CreateContext,
 		ReadContext:   r.ReadContext,

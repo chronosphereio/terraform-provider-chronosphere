@@ -22,24 +22,28 @@ import (
 
 var Dataset = map[string]*schema.Schema{
 	"slug": {
-		Type:     schema.TypeString,
-		Optional: true,
-		Computed: true,
-		ForceNew: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Computed:    true,
+		ForceNew:    true,
+		Description: "Stable identifier for the dataset. Generated from `name` if omitted. Immutable after creation.",
 	},
 	"name": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Display name of the dataset. Can be changed after creation.",
 	},
 	"description": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Free-form description of the dataset.",
 	},
 	"configuration": {
-		Type:     schema.TypeList,
-		Required: true,
-		MinItems: 1,
-		MaxItems: 1,
+		Type:        schema.TypeList,
+		Required:    true,
+		MinItems:    1,
+		MaxItems:    1,
+		Description: "Configuration block selecting the dataset type and its match criteria.",
 		Elem: &schema.Resource{
 			Schema: datasetConfigurationSchema,
 		},
@@ -51,19 +55,22 @@ var datasetConfigurationSchema = map[string]*schema.Schema{
 		Type:             schema.TypeString,
 		Required:         true,
 		DiffSuppressFunc: diffSuppressDatasetType,
+		Description:      "Dataset type. Determines which of `trace_dataset` or `log_dataset` must be set.",
 	},
 	"trace_dataset": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MaxItems: 1,
+		Type:        schema.TypeList,
+		Optional:    true,
+		MaxItems:    1,
+		Description: "Trace-specific dataset configuration. Set only when `type` is a trace type.",
 		Elem: &schema.Resource{
 			Schema: traceDatasetConfigurationSchema,
 		},
 	},
 	"log_dataset": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MaxItems: 1,
+		Type:        schema.TypeList,
+		Optional:    true,
+		MaxItems:    1,
+		Description: "Log-specific dataset configuration. Set only when `type` is a log type.",
 		Elem: &schema.Resource{
 			Schema: logDatasetConfigurationSchema,
 		},
@@ -76,9 +83,10 @@ var traceDatasetConfigurationSchema = map[string]*schema.Schema{
 
 var logDatasetConfigurationSchema = map[string]*schema.Schema{
 	"match_criteria": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MaxItems: 1,
+		Type:        schema.TypeList,
+		Optional:    true,
+		MaxItems:    1,
+		Description: "Log search filter that defines which logs are included in this dataset.",
 		Elem: &schema.Resource{
 			Schema: LogSearchSchema,
 		},

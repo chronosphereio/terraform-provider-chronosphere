@@ -80,6 +80,15 @@ generatedresources: install-tools
 pagination: install-tools
 	$(GO_GENERATE) ./chronosphere/pagination
 
+.PHONY: install-tfplugindocs
+install-tfplugindocs:
+	mkdir -p $(TOOLS_BIN)
+	GOBIN=$(TOOLS_BIN) GOFLAGS=-mod=mod go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@latest
+
+.PHONY: docs
+docs: install-tfplugindocs
+	$(TOOLS_BIN)/tfplugindocs generate --provider-name chronosphere
+
 .PHONY: update-swagger
 update-swagger: install-tools
 	@[ -n "${SWAGGER_PATH}" ] || (echo "SWAGGER_PATH must be set, please set it and rerun this command"; exit 1)

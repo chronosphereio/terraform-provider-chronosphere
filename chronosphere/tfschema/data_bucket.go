@@ -23,19 +23,23 @@ var DataBucket = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Optional:     true,
 		ExactlyOneOf: dataBucketOneOfAddressFields,
+		Description:  "Slug of the bucket to look up. Exactly one of `slug` or `name` must be set.",
 	},
 	"name": {
 		Type:         schema.TypeString,
 		Optional:     true,
 		ExactlyOneOf: dataBucketOneOfAddressFields,
+		Description:  "Name of the bucket to look up. Exactly one of `slug` or `name` must be set.",
 	},
 	"description": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Read-only: free-form description of the bucket.",
 	},
 	"labels": {
-		Type:     schema.TypeMap,
-		Elem:     &schema.Schema{Type: schema.TypeString},
-		Optional: true,
+		Type:        schema.TypeMap,
+		Elem:        &schema.Schema{Type: schema.TypeString},
+		Optional:    true,
+		Description: "Read-only: key/value labels attached to the bucket.",
 	},
 }

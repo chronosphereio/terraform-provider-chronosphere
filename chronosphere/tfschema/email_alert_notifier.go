@@ -18,30 +18,36 @@ import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 var EmailAlertNotifier = map[string]*schema.Schema{
 	"name": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Display name of the notifier.",
 	},
 	"slug": {
-		Type:     schema.TypeString,
-		Optional: true,
-		Computed: true,
-		ForceNew: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Computed:    true,
+		ForceNew:    true,
+		Description: "Stable identifier for the notifier. Generated from `name` if omitted. Immutable after creation.",
 	},
 	"send_resolved": {
-		Type:     schema.TypeBool,
-		Optional: true,
-		Default:  true,
+		Type:        schema.TypeBool,
+		Optional:    true,
+		Default:     true,
+		Description: "Whether to send a follow-up notification when an alert is resolved. Defaults to true.",
 	},
 	"to": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Email address to send notifications to.",
 	},
 	"html": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Body of the email in HTML format. Supports Go templating.",
 	},
 	"text": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Body of the email in plain text format. Supports Go templating.",
 	},
 }

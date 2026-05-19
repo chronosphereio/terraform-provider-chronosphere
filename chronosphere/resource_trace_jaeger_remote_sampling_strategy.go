@@ -41,6 +41,7 @@ func resourceTraceJRSStrategy() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		Schema:        tfschema.TraceJaegerRemoteSamplingStrategy,
+		Description:   "Per-service Jaeger remote sampling strategy (probabilistic, rate-limiting, or per-operation) served to instrumented applications so they can sample traces at the configured rate.",
 		CustomizeDiff: r.ValidateDryRun(&TraceJaegerRemoteSamplingStrategyDryRunCount),
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,

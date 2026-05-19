@@ -18,22 +18,26 @@ import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 var SlackExternalConnection = map[string]*schema.Schema{
 	"name": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Display name of the external connection.",
 	},
 	"slug": {
-		Type:     schema.TypeString,
-		Optional: true,
-		Computed: true,
-		ForceNew: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Computed:    true,
+		ForceNew:    true,
+		Description: "Stable identifier for the connection. Generated from `name` if omitted. Immutable after creation.",
 	},
 	"api_url": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Slack incoming webhook URL used to deliver messages. Treat as a secret.",
 	},
 	"token": {
-		Type:      schema.TypeString,
-		Optional:  true,
-		Sensitive: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Sensitive:   true,
+		Description: "Slack bot or app token used to authenticate API calls when posting messages. Treat as a secret.",
 	},
 }

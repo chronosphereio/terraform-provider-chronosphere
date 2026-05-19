@@ -41,6 +41,7 @@ func resourcePagerdutyAlertNotifier() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "PagerDuty notifier that delivers monitor signals to PagerDuty as incidents via the Events API. Referenced from notification policies.",
 		Schema:        tfschema.PagerdutyAlertNotifier,
 		CustomizeDiff: r.ValidateDryRun(&PagerDutyAlertNotifierDryRunCount),
 		Importer: &schema.ResourceImporter{

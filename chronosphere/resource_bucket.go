@@ -74,6 +74,7 @@ func resourceBucket() *schema.Resource {
 		ReadContext:   resourceBucketRead,
 		UpdateContext: resourceBucketUpdate,
 		DeleteContext: resourceBucketDelete,
+		Description:   "A legacy container for monitors, dashboards, and other resources, predating collections. Buckets may also own an inline notification policy via `notification_policy_data`. New configurations should generally prefer `chronosphere_collection`.",
 		Schema:        tfschema.Bucket,
 		CustomizeDiff: r.ValidateDryRun(&BucketDryRunCount),
 		Importer: &schema.ResourceImporter{

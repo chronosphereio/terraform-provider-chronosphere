@@ -18,15 +18,18 @@ import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 var DataCollection = map[string]*schema.Schema{
 	"slug": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Slug of the collection to look up.",
 	},
 	"name": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Read-only: display name of the collection.",
 	},
 	"description": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Read-only: free-form description of the collection.",
 	},
 }

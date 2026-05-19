@@ -43,7 +43,7 @@ func resourceLogRetentionConfig() *schema.Resource {
 		DeleteContext: r.DeleteContext,
 		Schema:        tfschema.LogRetentionConfig,
 		CustomizeDiff: r.ValidateDryRun(&LogRetentionConfigDryRunCount),
-		Description:   "Configures long-term log retention for logs matching a filter.",
+		Description:   "A retention policy dictating how long logs matching a given filter are kept before being deleted.",
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},

@@ -41,6 +41,7 @@ func resourceGcpMetricsIntegration() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		Schema:        tfschema.GcpMetricsIntegration,
+		Description:   "Scrapes Google Cloud Monitoring metrics from the configured projects and metric prefixes using a GCP service-account credential, with optional filters and rollup rules.",
 		CustomizeDiff: r.ValidateDryRun(&GcpMetricsIntegrationDryRunCount),
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,

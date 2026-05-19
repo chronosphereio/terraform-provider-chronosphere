@@ -92,12 +92,14 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Required:    true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{cliutil.OrgEnvVar, cliutil.OrgNameEnvVar}, nil),
+				Description: "Chronosphere organization name (the subdomain of `<org>.chronosphere.io`). Falls back to the `CHRONOSPHERE_ORG` or `CHRONOSPHERE_ORG_NAME` environment variables.",
 			},
 			"api_token": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc(cliutil.ApiTokenEnvVar, nil),
+				Description: "API token used to authenticate against the Chronosphere API. Treat as a secret. Falls back to the `CHRONOSPHERE_API_TOKEN` environment variable.",
 			},
 			"unstable": {
 				Type:     schema.TypeBool,
@@ -105,11 +107,13 @@ func Provider() *schema.Provider {
 				DefaultFunc: func() (any, error) {
 					return os.Getenv(unstable.Env) == "1", nil
 				},
+				Description: "Opt into resources and behaviors backed by Chronosphere's unstable config API. Subject to breaking change without notice. Falls back to the `CHRONOSPHERE_UNSTABLE` environment variable (set to `1` to enable).",
 			},
 			"entity_namespace": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(cliutil.EntityNamespaceEnvVar, ""),
+				Description: "Optional namespace prefix applied to entity slugs managed by this provider instance, so multiple Terraform configurations can coexist in one Chronosphere org. Falls back to the `CHRONOSPHERE_ENTITY_NAMESPACE` environment variable.",
 			},
 			"disable_dryrun": {
 				Type:     schema.TypeBool,
@@ -117,6 +121,7 @@ func Provider() *schema.Provider {
 				DefaultFunc: func() (any, error) {
 					return os.Getenv("CHRONOSPHERE_DRY_RUN_VALIDATION_DISABLED") == "1", nil
 				},
+				Description: "Disable the dry-run validation step that runs before every apply. Falls back to the `CHRONOSPHERE_DRY_RUN_VALIDATION_DISABLED` environment variable (set to `1` to disable).",
 			},
 		},
 		ResourcesMap: allResources,

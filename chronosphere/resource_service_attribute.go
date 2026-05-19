@@ -45,7 +45,7 @@ func resourceServiceAttribute() *schema.Resource {
 		DeleteContext: r.DeleteContext,
 		Schema:        tfschema.ServiceAttribute,
 		CustomizeDiff: r.ValidateDryRun(&ServiceAttributeDryRunCount),
-		Description:   "Service attributes configuration for associating metadata with services",
+		Description:   "Associates metadata with an existing service, such as a human-readable name, description, owning team, and default notification policy. The service itself must already exist; this resource only attaches attributes to it.",
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},

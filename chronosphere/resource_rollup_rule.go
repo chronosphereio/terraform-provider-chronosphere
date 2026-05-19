@@ -56,7 +56,8 @@ func resourceRollupRule() *schema.Resource {
 			}
 			return r.ValidateDryRun(&RollupRuleDryRunCount)(ctx, d, m)
 		},
-		Schema: tfschema.RollupRule,
+		Description: "Aggregates matching input metrics into a lower-cardinality output series at ingest time, reducing storage cost and query load. Selects input series by filter, applies an aggregation function (e.g. `sum`, `max`), and emits a new metric grouped by the specified labels.",
+		Schema:      tfschema.RollupRule,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},

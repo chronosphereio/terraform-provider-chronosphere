@@ -47,6 +47,7 @@ func resourceLogscaleAlert() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		Schema:        tfschema.LogscaleAlert,
+		Description:   "A LogScale alert that runs a saved LogScale query on a schedule and fires the configured logscale_action targets when the query returns results.",
 		CustomizeDiff: r.ValidateDryRunOptions(
 			&LogscaleAlertDryRunCount,
 			// ignore the action_ids field for unknown references check

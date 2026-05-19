@@ -48,7 +48,7 @@ func resourceLogIngestConfig() *schema.Resource {
 		DeleteContext: r.DeleteContext,
 		CustomizeDiff: r.ValidateDryRun(&LogIngestConfigDryRunCount),
 		SchemaVersion: 1,
-		Description:   "Config configuring log ingestion in Chronosphere.",
+		Description:   "Singleton per-tenant parser configuration controlling how raw log payloads are parsed into structured fields and how timestamps, severities, services, and other fields are normalized.",
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},

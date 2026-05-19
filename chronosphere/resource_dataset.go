@@ -40,6 +40,7 @@ func resourceDataset() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "A saved selection of telemetry data, defined by match criteria over traces or logs, that can be referenced by other Chronosphere features such as dashboards and alerts.",
 		Schema:        tfschema.Dataset,
 		CustomizeDiff: r.ValidateDryRun(&DatasetDryRunCount),
 		Importer: &schema.ResourceImporter{

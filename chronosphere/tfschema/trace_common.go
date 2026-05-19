@@ -24,10 +24,11 @@ import (
 )
 
 var TraceSearchFilterSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	MinItems: 1,
-	MaxItems: 1,
-	Required: true,
+	Type:        schema.TypeList,
+	MinItems:    1,
+	MaxItems:    1,
+	Required:    true,
+	Description: "Filter that selects traces and spans. A trace matches when its trace-level conditions hold and every `span` block is satisfied by at least one span in the trace.",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"trace":        TraceFilterSchema,
@@ -38,10 +39,11 @@ var TraceSearchFilterSchema = &schema.Schema{
 }
 
 var TraceFilterSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	MinItems: 0,
-	MaxItems: 1,
-	Optional: true,
+	Type:        schema.TypeList,
+	MinItems:    0,
+	MaxItems:    1,
+	Optional:    true,
+	Description: "Trace-level conditions evaluated against the whole trace (aggregated duration and error status).",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"duration": TraceDurationFilterSchema,
@@ -51,8 +53,9 @@ var TraceFilterSchema = &schema.Schema{
 }
 
 var TraceSpanFilterListSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	Optional: true,
+	Type:        schema.TypeList,
+	Optional:    true,
+	Description: "Span-level conditions. Each block defines a set of conditions that must all be satisfied by a single span in the trace for the trace to match.",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"match_type": {
@@ -61,6 +64,7 @@ var TraceSpanFilterListSchema = &schema.Schema{
 				Default:          prettyenum.SpanFilterMatchTypeInclude,
 				ValidateDiagFunc: validateSpanFilterMatchType,
 				DiffSuppressFunc: diffSuppressSpanFilterMatchType,
+				Description:      "Whether matching spans are included (`INCLUDE`) or excluded (`EXCLUDE`) from the result. Defaults to `INCLUDE`.",
 			},
 			"service":          TraceStringFilterSchema,
 			"operation":        TraceStringFilterSchema,
@@ -77,15 +81,17 @@ var TraceSpanFilterListSchema = &schema.Schema{
 }
 
 var TraceScopeFilterSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	Optional: true,
-	MinItems: 0,
-	MaxItems: 1,
+	Type:        schema.TypeList,
+	Optional:    true,
+	MinItems:    0,
+	MaxItems:    1,
+	Description: "Scope filter that further restricts which spans within a matched trace contribute to metrics or sampling. Only spans matching `span_scopes` are included in aggregation.",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"span_scopes": {
-				Type:     schema.TypeList,
-				Optional: true,
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Span conditions that select which spans are aggregated. Spans must match at least one block to be included.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"match_type": {
@@ -94,6 +100,7 @@ var TraceScopeFilterSchema = &schema.Schema{
 							Default:          prettyenum.SpanFilterMatchTypeInclude,
 							ValidateDiagFunc: validateSpanFilterMatchType,
 							DiffSuppressFunc: diffSuppressSpanFilterMatchType,
+							Description:      "Whether matching spans are included (`INCLUDE`) or excluded (`EXCLUDE`) from the scope. Defaults to `INCLUDE`.",
 						},
 						"service":          TraceStringFilterSchema,
 						"operation":        TraceStringFilterSchema,
@@ -112,71 +119,81 @@ var TraceScopeFilterSchema = &schema.Schema{
 }
 
 var TraceTagFilterSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	Optional: true,
-	Elem:     traceTagFilterItemSchema,
+	Type:        schema.TypeList,
+	Optional:    true,
+	Description: "Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter.",
+	Elem:        traceTagFilterItemSchema,
 }
 
 var TraceSpanCountFilterSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	Optional: true,
-	MinItems: 0,
-	MaxItems: 1,
+	Type:        schema.TypeList,
+	Optional:    true,
+	MinItems:    0,
+	MaxItems:    1,
+	Description: "Matches traces where the number of spans satisfying the surrounding span conditions falls within the inclusive `[min, max]` range.",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"min": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  0,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Minimum number of matching spans, inclusive. Defaults to `0`.",
 			},
 			"max": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  0,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Maximum number of matching spans, inclusive. `0` means no upper bound.",
 			},
 		},
 	},
 }
 
 var TraceBoolFilterSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	Optional: true,
-	MinItems: 0,
-	MaxItems: 1,
+	Type:        schema.TypeList,
+	Optional:    true,
+	MinItems:    0,
+	MaxItems:    1,
+	Description: "Matches traces or spans where the target boolean field equals `value`.",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"value": {
-				Type:     schema.TypeBool,
-				Required: true,
+				Type:        schema.TypeBool,
+				Required:    true,
+				Description: "Boolean value the target field is compared against.",
 			},
 		},
 	},
 }
 
 var TraceDurationFilterSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	MaxItems: 1,
-	Optional: true,
+	Type:        schema.TypeList,
+	MaxItems:    1,
+	Optional:    true,
+	Description: "Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range.",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"min_secs": {
-				Type:     schema.TypeFloat,
-				Optional: true,
-				Default:  0.0,
+				Type:        schema.TypeFloat,
+				Optional:    true,
+				Default:     0.0,
+				Description: "Minimum duration in seconds, inclusive. Defaults to `0`.",
 			},
 			"max_secs": {
-				Type:     schema.TypeFloat,
-				Optional: true,
+				Type:        schema.TypeFloat,
+				Optional:    true,
+				Description: "Maximum duration in seconds, inclusive. Omit for no upper bound.",
 			},
 		},
 	},
 }
 
 var TraceStringFilterSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	Optional: true,
-	MinItems: 0,
-	MaxItems: 1,
+	Type:        schema.TypeList,
+	Optional:    true,
+	MinItems:    0,
+	MaxItems:    1,
+	Description: "Matches traces or spans where the target string field satisfies the match condition.",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"match": {
@@ -185,35 +202,41 @@ var TraceStringFilterSchema = &schema.Schema{
 				Default:          prettyenum.StringFilterMatchTypeExact,
 				ValidateDiagFunc: validateStringFilterMatchType,
 				DiffSuppressFunc: diffSuppressStringFilterMatchType,
+				Description:      "Match operator applied to `value` or `in_values`. One of `EXACT`, `REGEX`, `IN`, or `NOT_IN`. Defaults to `EXACT`.",
 			},
 			"value": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Single string compared against the target field. Used with `EXACT` and `REGEX` match types.",
 			},
 			"in_values": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MinItems: 0,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				Type:        schema.TypeList,
+				Optional:    true,
+				MinItems:    0,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Set of strings tested against the target field. Used with `IN` and `NOT_IN` match types.",
 			},
 		},
 	},
 }
 
 var TraceNumericFilterSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	Optional: true,
-	MinItems: 0,
-	MaxItems: 1,
+	Type:        schema.TypeList,
+	Optional:    true,
+	MinItems:    0,
+	MaxItems:    1,
+	Description: "Matches traces or spans where the target numeric field satisfies the comparison against `value`.",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"comparison": Enum{
-				Value:    enum.NumericFilterComparisonType.ToStrings(),
-				Required: true,
+				Value:       enum.NumericFilterComparisonType.ToStrings(),
+				Required:    true,
+				Description: "Numeric comparison operator (for example `EQUALS`, `GREATER_THAN`, `LESS_THAN_OR_EQUAL`).",
 			}.Schema(),
 			"value": {
-				Type:     schema.TypeFloat,
-				Required: true,
+				Type:        schema.TypeFloat,
+				Required:    true,
+				Description: "Numeric value the target field is compared against.",
 			},
 		},
 	},
@@ -222,8 +245,9 @@ var TraceNumericFilterSchema = &schema.Schema{
 var traceTagFilterItemSchema = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"key": {
-			Type:     schema.TypeString,
-			Optional: true,
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Name of the span tag (span attribute) inspected by this filter.",
 		},
 		"value":         TraceStringFilterSchema,
 		"numeric_value": TraceNumericFilterSchema,

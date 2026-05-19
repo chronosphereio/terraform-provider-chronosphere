@@ -43,8 +43,9 @@ func FormatDuration(d time.Duration) string {
 
 // Duration defines the parameters of a duration field in a Terraform schema.
 type Duration struct {
-	Required bool
-	Optional bool
+	Required    bool
+	Optional    bool
+	Description string
 }
 
 // Schema returns the Terraform schema of the duration.
@@ -54,6 +55,7 @@ func (d Duration) Schema() *schema.Schema {
 		ValidateDiagFunc: d.validate,
 		Required:         d.Required,
 		Optional:         d.Optional,
+		Description:      d.Description,
 	})
 }
 

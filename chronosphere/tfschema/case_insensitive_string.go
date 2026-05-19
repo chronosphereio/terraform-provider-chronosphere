@@ -23,15 +23,17 @@ import (
 // CaseInsensitiveString defines the parameters of a case-insensitive string
 // field in a Terraform schema.
 type CaseInsensitiveString struct {
-	Required bool
+	Required    bool
+	Description string
 }
 
 // Schema returns the Terraform schema of the string.
 func (s CaseInsensitiveString) Schema() *schema.Schema {
 	return withDiffSuppress(s, &schema.Schema{
-		Type:     schema.TypeString,
-		Required: s.Required,
-		Optional: !s.Required,
+		Type:        schema.TypeString,
+		Required:    s.Required,
+		Optional:    !s.Required,
+		Description: s.Description,
 	})
 }
 

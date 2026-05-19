@@ -28,6 +28,7 @@ import (
 // consecutive spaces would always produce a diff).
 type Filter struct {
 	KVDelimiter string
+	Description string
 }
 
 func (f Filter) Schema() *schema.Schema {
@@ -35,8 +36,9 @@ func (f Filter) Schema() *schema.Schema {
 		panic("KVDelimiter must be set")
 	}
 	return withDiffSuppress(f, &schema.Schema{
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: f.Description,
 	})
 }
 

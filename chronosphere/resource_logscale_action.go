@@ -47,6 +47,7 @@ func resourceLogscaleAction() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		Schema:        tfschema.LogscaleAction,
+		Description:   "A CrowdStrike Falcon LogScale (formerly Humio) action target (email, Slack, webhook, PagerDuty, OpsGenie, VictorOps, or upload-file) invoked by a logscale_alert when it fires.",
 		CustomizeDiff: r.ValidateDryRun(&LogscaleActionDryRunCount),
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,

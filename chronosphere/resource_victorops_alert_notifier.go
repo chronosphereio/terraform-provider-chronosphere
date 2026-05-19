@@ -41,6 +41,7 @@ func resourceVictorOpsAlertNotifier() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "VictorOps (Splunk On-Call) notifier that delivers monitor signals to a VictorOps routing key via its REST integration. Referenced from notification policies.",
 		Schema:        tfschema.VictoropsAlertNotifier,
 		CustomizeDiff: r.ValidateDryRun(&VictorOpsAlertNotifierDryRunCount),
 		Importer: &schema.ResourceImporter{

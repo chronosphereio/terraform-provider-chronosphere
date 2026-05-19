@@ -18,24 +18,28 @@ import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 var Team = map[string]*schema.Schema{
 	"name": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Display name of the team. Can be changed after creation.",
 	},
 	"slug": {
-		Type:     schema.TypeString,
-		Optional: true,
-		Computed: true,
-		ForceNew: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Computed:    true,
+		ForceNew:    true,
+		Description: "Stable identifier for the team. Generated from `name` if omitted. Immutable after creation.",
 	},
 	"description": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Free-form description of the team.",
 	},
 	"user_emails": {
 		Type: schema.TypeSet,
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
 		},
-		Optional: true,
+		Optional:    true,
+		Description: "Unordered set of email addresses identifying the users who are members of this team.",
 	},
 }

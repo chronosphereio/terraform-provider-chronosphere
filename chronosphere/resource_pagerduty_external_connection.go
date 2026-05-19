@@ -41,6 +41,7 @@ func resourcePagerdutyExternalConnection() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "Workspace-scoped PagerDuty credentials that downstream notifiers and LogScale actions can reference. Holds either a PagerDuty Events integration key (for alert delivery) or a REST API token (for incident note polling); modern equivalent of the per-notifier credentials.",
 		Schema:        tfschema.PagerdutyExternalConnection,
 		CustomizeDiff: r.ValidateDryRun(&PagerdutyExternalConnectionDryRunCount),
 		Importer: &schema.ResourceImporter{

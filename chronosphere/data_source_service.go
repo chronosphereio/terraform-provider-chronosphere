@@ -38,6 +38,7 @@ func DataServiceFromModel(s *configmodels.Configv1Service) *intschema.DataServic
 func dataSourceService() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceServiceRead,
+		Description: "Looks up an existing service by slug. Services are typically discovered automatically from incoming telemetry; use this data source to reference one from Terraform-managed resources.",
 		Schema:      tfschema.DataService,
 	}
 }
