@@ -89,6 +89,10 @@ install-tfplugindocs:
 docs: install-tfplugindocs
 	$(TOOLS_BIN)/tfplugindocs generate --provider-name chronosphere
 
+.PHONY: docs-validate
+docs-validate: install-tfplugindocs
+	$(TOOLS_BIN)/tfplugindocs validate --provider-name chronosphere
+
 .PHONY: update-swagger
 update-swagger: install-tools
 	@[ -n "${SWAGGER_PATH}" ] || (echo "SWAGGER_PATH must be set, please set it and rerun this command"; exit 1)
