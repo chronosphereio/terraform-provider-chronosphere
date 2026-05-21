@@ -35,7 +35,7 @@ func TestExamples(t *testing.T) {
 		"service-datasource": "datasources are not supported without a real tenant",
 	}
 
-	exampleRoot := "../examples"
+	exampleRoot := "../examples/scenarios"
 	examplesList, err := os.ReadDir(exampleRoot)
 	require.NoError(t, err)
 	for _, entry := range examplesList {
