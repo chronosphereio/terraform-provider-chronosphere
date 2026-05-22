@@ -56,7 +56,7 @@ var ConsumptionConfigPartitionResource = makeRecursiveResource(
 var PartitionFilterSchema = &schema.Schema{
 	Type:        schema.TypeList,
 	Optional:    true,
-	Description: "Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter may be specified.",
+	Description: "Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter can be specified.",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"operator": Enum{
@@ -67,7 +67,7 @@ var PartitionFilterSchema = &schema.Schema{
 			"condition": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` should be set per condition.",
+				Description: "Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` must be set per condition.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"dataset_id": {

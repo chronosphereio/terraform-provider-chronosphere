@@ -82,12 +82,12 @@ var LogscaleEmailActionSchema = &schema.Schema{
 			"subject_template": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Subject of the email. May be templated with values from the query result.",
+				Description: "Subject of the email. Supports Go template syntax with values from the query result.",
 			},
 			"body_template": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Body of the email. May be templated with values from the query result.",
+				Description: "Body of the email. Supports Go template syntax with values from the query result.",
 			},
 			"attach_csv": {
 				Type:        schema.TypeBool,
@@ -195,7 +195,7 @@ var LogscaleSlackActionSchema = &schema.Schema{
 				Type:        schema.TypeMap,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Optional:    true,
-				Description: "Fields to include in the Slack message. Values may be templated with the query result.",
+				Description: "Fields to include in the Slack message. Values support Go template syntax with the query result.",
 			},
 			"use_proxy": {
 				Type:        schema.TypeBool,
@@ -231,7 +231,7 @@ var LogscaleSlackPostMessageActionSchema = &schema.Schema{
 				Type:        schema.TypeMap,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Optional:    true,
-				Description: "Fields to include in the Slack message. Values may be templated with the query result.",
+				Description: "Fields to include in the Slack message. Values support Go template syntax with the query result.",
 			},
 			"use_proxy": {
 				Type:        schema.TypeBool,
@@ -316,7 +316,7 @@ var LogscaleWebhookActionSchema = &schema.Schema{
 			"body_template": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Body of the request. May be templated with values from the query result.",
+				Description: "Body of the request. Supports Go template syntax with values from the query result.",
 			},
 			"ignore_ssl": {
 				Type:        schema.TypeBool,

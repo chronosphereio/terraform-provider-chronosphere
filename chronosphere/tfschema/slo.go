@@ -249,7 +249,7 @@ var BurnRateDefinition = map[string]*schema.Schema{
 	"budget": {
 		Type:        schema.TypeFloat,
 		Required:    true,
-		Description: "Percentage of the error budget that may be consumed during `window` before the alert fires. Must be between 0.0 and 100.0 exclusive.",
+		Description: "Percentage of the error budget that can be consumed during `window` before the alert fires. Must be between 0.0 and 100.0 exclusive.",
 	},
 	"severity": {
 		Type:        schema.TypeString,

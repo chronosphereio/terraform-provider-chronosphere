@@ -28,7 +28,7 @@ Singleton tree of consumption partitions that classify metric and log data into 
 
 Optional:
 
-- `filter` (Block List) Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter may be specified. (see [below for nested schema](#nestedblock--partition--filter))
+- `filter` (Block List) Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter can be specified. (see [below for nested schema](#nestedblock--partition--filter))
 - `name` (String) Display name of the partition. Must be unique within its parent partition. Can be changed after creation.
 - `partition` (Block List) Child partitions of this partition. Evaluated in order; requests not matching any child fall into an implicit `default` child partition. (see [below for nested schema](#nestedblock--partition--partition))
 - `slug` (String) Stable identifier of the partition. Must be unique within its parent partition. Immutable after creation.
@@ -38,7 +38,7 @@ Optional:
 
 Optional:
 
-- `condition` (Block List) Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` should be set per condition. (see [below for nested schema](#nestedblock--partition--filter--condition))
+- `condition` (Block List) Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` must be set per condition. (see [below for nested schema](#nestedblock--partition--filter--condition))
 - `operator` (String) Match operator (e.g. `IN`, `NOT_IN`) applied to the filter conditions.
 
 <a id="nestedblock--partition--filter--condition"></a>
@@ -55,7 +55,7 @@ Optional:
 
 Required:
 
-- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator may be used.
+- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator can be used.
 
 
 <a id="nestedblock--partition--filter--condition--metric_filter"></a>
@@ -74,7 +74,7 @@ Required:
 
 Optional:
 
-- `filter` (Block List) Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter may be specified. (see [below for nested schema](#nestedblock--partition--partition--filter))
+- `filter` (Block List) Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter can be specified. (see [below for nested schema](#nestedblock--partition--partition--filter))
 - `name` (String) Display name of the partition. Must be unique within its parent partition. Can be changed after creation.
 - `partition` (Block List) Child partitions of this partition. Evaluated in order; requests not matching any child fall into an implicit `default` child partition. (see [below for nested schema](#nestedblock--partition--partition--partition))
 - `slug` (String) Stable identifier of the partition. Must be unique within its parent partition. Immutable after creation.
@@ -84,7 +84,7 @@ Optional:
 
 Optional:
 
-- `condition` (Block List) Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` should be set per condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition))
+- `condition` (Block List) Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` must be set per condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition))
 - `operator` (String) Match operator (e.g. `IN`, `NOT_IN`) applied to the filter conditions.
 
 <a id="nestedblock--partition--partition--filter--condition"></a>
@@ -101,7 +101,7 @@ Optional:
 
 Required:
 
-- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator may be used.
+- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator can be used.
 
 
 <a id="nestedblock--partition--partition--filter--condition--metric_filter"></a>
@@ -120,7 +120,7 @@ Required:
 
 Optional:
 
-- `filter` (Block List) Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter may be specified. (see [below for nested schema](#nestedblock--partition--partition--partition--filter))
+- `filter` (Block List) Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter can be specified. (see [below for nested schema](#nestedblock--partition--partition--partition--filter))
 - `name` (String) Display name of the partition. Must be unique within its parent partition. Can be changed after creation.
 - `partition` (Block List) Child partitions of this partition. Evaluated in order; requests not matching any child fall into an implicit `default` child partition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition))
 - `slug` (String) Stable identifier of the partition. Must be unique within its parent partition. Immutable after creation.
@@ -130,7 +130,7 @@ Optional:
 
 Optional:
 
-- `condition` (Block List) Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` should be set per condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition))
+- `condition` (Block List) Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` must be set per condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition))
 - `operator` (String) Match operator (e.g. `IN`, `NOT_IN`) applied to the filter conditions.
 
 <a id="nestedblock--partition--partition--partition--filter--condition"></a>
@@ -147,7 +147,7 @@ Optional:
 
 Required:
 
-- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator may be used.
+- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator can be used.
 
 
 <a id="nestedblock--partition--partition--partition--filter--condition--metric_filter"></a>
@@ -166,7 +166,7 @@ Required:
 
 Optional:
 
-- `filter` (Block List) Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter may be specified. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter))
+- `filter` (Block List) Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter can be specified. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter))
 - `name` (String) Display name of the partition. Must be unique within its parent partition. Can be changed after creation.
 - `partition` (Block List) Child partitions of this partition. Evaluated in order; requests not matching any child fall into an implicit `default` child partition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition))
 - `slug` (String) Stable identifier of the partition. Must be unique within its parent partition. Immutable after creation.
@@ -176,7 +176,7 @@ Optional:
 
 Optional:
 
-- `condition` (Block List) Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` should be set per condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition))
+- `condition` (Block List) Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` must be set per condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition))
 - `operator` (String) Match operator (e.g. `IN`, `NOT_IN`) applied to the filter conditions.
 
 <a id="nestedblock--partition--partition--partition--partition--filter--condition"></a>
@@ -193,7 +193,7 @@ Optional:
 
 Required:
 
-- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator may be used.
+- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator can be used.
 
 
 <a id="nestedblock--partition--partition--partition--partition--filter--condition--metric_filter"></a>
@@ -212,7 +212,7 @@ Required:
 
 Optional:
 
-- `filter` (Block List) Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter may be specified. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter))
+- `filter` (Block List) Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter can be specified. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter))
 - `name` (String) Display name of the partition. Must be unique within its parent partition. Can be changed after creation.
 - `partition` (Block List) Child partitions of this partition. Evaluated in order; requests not matching any child fall into an implicit `default` child partition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition))
 - `slug` (String) Stable identifier of the partition. Must be unique within its parent partition. Immutable after creation.
@@ -222,7 +222,7 @@ Optional:
 
 Optional:
 
-- `condition` (Block List) Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` should be set per condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition))
+- `condition` (Block List) Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` must be set per condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition))
 - `operator` (String) Match operator (e.g. `IN`, `NOT_IN`) applied to the filter conditions.
 
 <a id="nestedblock--partition--partition--partition--partition--partition--filter--condition"></a>
@@ -239,7 +239,7 @@ Optional:
 
 Required:
 
-- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator may be used.
+- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator can be used.
 
 
 <a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--metric_filter"></a>
@@ -258,7 +258,7 @@ Required:
 
 Optional:
 
-- `filter` (Block List) Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter may be specified. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter))
+- `filter` (Block List) Filters identifying which data belongs to this partition. Filters are AND-ed together: a request must match every filter to be assigned to the partition. At most one `IN` filter and one `NOT_IN` filter can be specified. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter))
 - `name` (String) Display name of the partition. Must be unique within its parent partition. Can be changed after creation.
 - `slug` (String) Stable identifier of the partition. Must be unique within its parent partition. Immutable after creation.
 
@@ -267,7 +267,7 @@ Optional:
 
 Optional:
 
-- `condition` (Block List) Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` should be set per condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition))
+- `condition` (Block List) Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` must be set per condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition))
 - `operator` (String) Match operator (e.g. `IN`, `NOT_IN`) applied to the filter conditions.
 
 <a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition"></a>
@@ -284,7 +284,7 @@ Optional:
 
 Required:
 
-- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator may be used.
+- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator can be used.
 
 
 <a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--metric_filter"></a>

@@ -203,7 +203,7 @@ var SlackAlertNotifier = map[string]*schema.Schema{
 	"mrkdwn_in": {
 		Type:        schema.TypeList,
 		Optional:    true,
-		Description: "Attachment fields in which Slack should parse `mrkdwn` formatting. Common values: `pretext`, `text`, `fields`.",
+		Description: "Attachment fields in which Slack parses `mrkdwn` formatting. Common values: `pretext`, `text`, `fields`.",
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
 		},

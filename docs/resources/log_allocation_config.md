@@ -78,7 +78,7 @@ Optional:
 
 Required:
 
-- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator may be used.
+- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator can be used.
 
 
 <a id="nestedblock--default_dataset--priorities--low_priority_filter"></a>
@@ -86,7 +86,7 @@ Required:
 
 Required:
 
-- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator may be used.
+- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator can be used.
 
 
 
@@ -124,7 +124,7 @@ Optional:
 
 Required:
 
-- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator may be used.
+- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator can be used.
 
 
 <a id="nestedblock--dataset_allocation--priorities--low_priority_filter"></a>
@@ -132,4 +132,4 @@ Required:
 
 Required:
 
-- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator may be used.
+- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator can be used.

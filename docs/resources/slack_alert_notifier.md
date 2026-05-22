@@ -44,7 +44,7 @@ resource "chronosphere_slack_alert_notifier" "slack" {
 - `icon_url` (String) URL of an image to use as the bot avatar.
 - `image_url` (String) URL of an image attached to the message.
 - `link_names` (Boolean) If true, find and link channel names and usernames in the message text.
-- `mrkdwn_in` (List of String) Attachment fields in which Slack should parse `mrkdwn` formatting. Common values: `pretext`, `text`, `fields`.
+- `mrkdwn_in` (List of String) Attachment fields in which Slack parses `mrkdwn` formatting. Common values: `pretext`, `text`, `fields`.
 - `pretext` (String) Text shown above the attachment. Supports Go templating.
 - `proxy_url` (String, Deprecated) Deprecated and ignored. Custom proxy URLs are not supported.
 - `send_resolved` (Boolean) Whether to send a follow-up notification when an alert is resolved. Defaults to true.

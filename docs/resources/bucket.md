@@ -3,12 +3,12 @@
 page_title: "chronosphere_bucket Resource - chronosphere"
 subcategory: ""
 description: |-
-  A legacy container for monitors, dashboards, and other resources, predating collections. Buckets may also own an inline notification policy via notification_policy_data. New configurations should generally prefer chronosphere_collection.
+  A legacy container for monitors, dashboards, and other resources, predating collections. Buckets can also own an inline notification policy via notification_policy_data. New configurations should generally use chronosphere_collection.
 ---
 
 # chronosphere_bucket (Resource)
 
-A legacy container for monitors, dashboards, and other resources, predating collections. Buckets may also own an inline notification policy via `notification_policy_data`. New configurations should generally prefer `chronosphere_collection`.
+A legacy container for monitors, dashboards, and other resources, predating collections. Buckets can also own an inline notification policy via `notification_policy_data`. New configurations should generally use `chronosphere_collection`.
 
 ## Example Usage
 
@@ -31,7 +31,7 @@ resource "chronosphere_bucket" "b" {
 
 - `description` (String) Free-form description of the bucket.
 - `labels` (Map of String) Key/value labels attached to the bucket for organization and filtering.
-- `notification_policy_data` (String) Inline notification policy serialized as JSON. Conflicts with `notification_policy_id`; prefer referencing a named policy when possible.
+- `notification_policy_data` (String) Inline notification policy serialized as JSON. Conflicts with `notification_policy_id`. For reusability, reference a named policy instead.
 - `notification_policy_id` (String) ID of the default notification policy applied to monitors in this bucket that do not explicitly reference one. Conflicts with `notification_policy_data`.
 - `slug` (String) Stable identifier for the bucket. Generated from `name` if omitted. Immutable after creation.
 - `team_id` (String) ID of the team that owns this bucket.

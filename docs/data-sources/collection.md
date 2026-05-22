@@ -3,12 +3,12 @@
 page_title: "chronosphere_collection Data Source - chronosphere"
 subcategory: ""
 description: |-
-  Looks up an existing collection by slug. Use this to reference collections created outside of Terraform.
+  Read-only data source that retrieves an existing collection by slug. References collections created outside of Terraform.
 ---
 
 # chronosphere_collection (Data Source)
 
-Looks up an existing collection by slug. Use this to reference collections created outside of Terraform.
+Read-only data source that retrieves an existing collection by slug. References collections created outside of Terraform.
 
 ## Example Usage
 

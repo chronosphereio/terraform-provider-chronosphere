@@ -37,7 +37,7 @@ var RollupRule = map[string]*schema.Schema{
 		// This is intentionally different from other resources due to unique issues with Rollup Rules
 		Required:    true,
 		ForceNew:    true,
-		Description: "Stable identifier for the rollup rule. Immutable after creation. Unlike most resources, this field is required and is not auto-generated from `name`.",
+		Description: "Stable identifier for the rollup rule. Immutable after creation. Unlike most resources, the slug is required and is not auto-generated from `name`.",
 	},
 	"filter": Filter{
 		KVDelimiter: aggregationfilter.RollupRuleDelimiter,

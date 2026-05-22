@@ -73,8 +73,8 @@ Required:
 Optional:
 
 - `attach_csv` (Boolean) If `true`, attaches the query result set as a CSV file.
-- `body_template` (String) Body of the email. May be templated with values from the query result.
-- `subject_template` (String) Subject of the email. May be templated with values from the query result.
+- `body_template` (String) Body of the email. Supports Go template syntax with values from the query result.
+- `subject_template` (String) Subject of the email. Supports Go template syntax with values from the query result.
 - `use_proxy` (Boolean) If `true`, sends the request through the configured outbound proxy.
 
 
@@ -121,7 +121,7 @@ Required:
 
 Optional:
 
-- `fields` (Map of String) Fields to include in the Slack message. Values may be templated with the query result.
+- `fields` (Map of String) Fields to include in the Slack message. Values support Go template syntax with the query result.
 - `use_proxy` (Boolean) If `true`, sends the request through the configured outbound proxy.
 
 
@@ -135,7 +135,7 @@ Required:
 
 Optional:
 
-- `fields` (Map of String) Fields to include in the Slack message. Values may be templated with the query result.
+- `fields` (Map of String) Fields to include in the Slack message. Values support Go template syntax with the query result.
 - `use_proxy` (Boolean) If `true`, sends the request through the configured outbound proxy.
 
 
@@ -170,7 +170,7 @@ Required:
 
 Optional:
 
-- `body_template` (String) Body of the request. May be templated with values from the query result.
+- `body_template` (String) Body of the request. Supports Go template syntax with values from the query result.
 - `headers` (Map of String) Headers to include on the HTTP or HTTPS request.
 - `ignore_ssl` (Boolean) If `true`, skips SSL certificate verification for the request.
 - `use_proxy` (Boolean) If `true`, sends the request through the configured outbound proxy.

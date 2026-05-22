@@ -3,12 +3,12 @@
 page_title: "chronosphere_service Data Source - chronosphere"
 subcategory: ""
 description: |-
-  Looks up an existing service by slug. Services are typically discovered automatically from incoming telemetry; use this data source to reference one from Terraform-managed resources.
+  Read-only data source that retrieves an existing service by slug. Services are typically discovered automatically from incoming telemetry; use this data source to reference one from Terraform-managed resources.
 ---
 
 # chronosphere_service (Data Source)
 
-Looks up an existing service by slug. Services are typically discovered automatically from incoming telemetry; use this data source to reference one from Terraform-managed resources.
+Read-only data source that retrieves an existing service by slug. Services are typically discovered automatically from incoming telemetry; use this data source to reference one from Terraform-managed resources.
 
 ## Example Usage
 

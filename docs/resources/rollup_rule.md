@@ -48,7 +48,7 @@ resource "chronosphere_rollup_rule" "rollup_rule" {
 - `filter` (String) Space-delimited list of `label:value_glob` matchers that select the input series. Supports glob patterns and special filters like `__name__`, `__metric_type__`, and `__metric_source__`.
 - `metric_type` (String) Type of the source metric being rolled up (e.g. `gauge`, `counter`, `histogram`).
 - `name` (String) Display name of the rollup rule. Can be changed after creation.
-- `slug` (String) Stable identifier for the rollup rule. Immutable after creation. Unlike most resources, this field is required and is not auto-generated from `name`.
+- `slug` (String) Stable identifier for the rollup rule. Immutable after creation. Unlike most resources, the slug is required and is not auto-generated from `name`.
 
 ### Optional
 

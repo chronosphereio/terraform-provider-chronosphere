@@ -99,7 +99,7 @@ Optional:
 
 Required:
 
-- `budget` (Number) Percentage of the error budget that may be consumed during `window` before the alert fires. Must be between 0.0 and 100.0 exclusive.
+- `budget` (Number) Percentage of the error budget that can be consumed during `window` before the alert fires. Must be between 0.0 and 100.0 exclusive.
 - `severity` (String) Severity assigned when the burn rate fires. Must be `critical` or `warn`.
 - `window` (String) Time window for the burn-rate calculation (e.g. `1h`, `6h`).
 

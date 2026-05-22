@@ -3,12 +3,12 @@
 page_title: "chronosphere_bucket Data Source - chronosphere"
 subcategory: ""
 description: |-
-  Looks up an existing bucket by name or slug. Use this to reference buckets created outside of Terraform.
+  Read-only data source that retrieves an existing bucket by name or slug. References buckets created outside of Terraform.
 ---
 
 # chronosphere_bucket (Data Source)
 
-Looks up an existing bucket by name or slug. Use this to reference buckets created outside of Terraform.
+Read-only data source that retrieves an existing bucket by name or slug. References buckets created outside of Terraform.
 
 ## Example Usage
 

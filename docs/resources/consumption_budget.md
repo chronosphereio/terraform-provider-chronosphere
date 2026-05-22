@@ -66,7 +66,7 @@ Optional:
 
 Required:
 
-- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator may be used.
+- `query` (String) Log search query that selects matching logs. Supports only top-level operations; nested clauses are not allowed and only one type of `AND` or `OR` operator can be used.
 
 
 

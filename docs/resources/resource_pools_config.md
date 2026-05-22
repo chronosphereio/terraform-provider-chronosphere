@@ -131,8 +131,8 @@ Optional:
 
 Optional:
 
-- `high_priority_match_rules` (List of String) Matchers selecting metrics within the pool that should be treated as high priority and dropped last.
-- `low_priority_match_rules` (List of String) Matchers selecting metrics within the pool that should be treated as low priority and dropped first.
+- `high_priority_match_rules` (List of String) Matchers selecting metrics within the pool that are treated as high priority and dropped last.
+- `low_priority_match_rules` (List of String) Matchers selecting metrics within the pool that are treated as low priority and dropped first.
 
 
 <a id="nestedblock--default_pool--priority_thresholds"></a>
@@ -256,8 +256,8 @@ Optional:
 
 Optional:
 
-- `high_priority_match_rules` (List of String) Matchers selecting metrics within the pool that should be treated as high priority and dropped last.
-- `low_priority_match_rules` (List of String) Matchers selecting metrics within the pool that should be treated as low priority and dropped first.
+- `high_priority_match_rules` (List of String) Matchers selecting metrics within the pool that are treated as high priority and dropped last.
+- `low_priority_match_rules` (List of String) Matchers selecting metrics within the pool that are treated as low priority and dropped first.
 
 
 
@@ -340,5 +340,5 @@ Optional:
 
 Optional:
 
-- `high_priority_match_rules` (List of String) Matchers selecting metrics within the pool that should be treated as high priority and dropped last.
-- `low_priority_match_rules` (List of String) Matchers selecting metrics within the pool that should be treated as low priority and dropped first.
+- `high_priority_match_rules` (List of String) Matchers selecting metrics within the pool that are treated as high priority and dropped last.
+- `low_priority_match_rules` (List of String) Matchers selecting metrics within the pool that are treated as low priority and dropped first.

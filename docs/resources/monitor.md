@@ -54,7 +54,7 @@ resource "chronosphere_monitor" "namespace_up" {
 
 ### Optional
 
-- `annotations` (Map of String) Free-form key/value pairs attached to every signal, intended for human consumption (runbook URLs, descriptions, etc.).
+- `annotations` (Map of String) Free-form key/value pairs attached to every signal, intended for human consumption such as runbook URLs and descriptions.
 - `bucket_id` (String) ID of the bucket the monitor belongs to. Exactly one of `bucket_id` or `collection_id` must be set.
 - `collection_id` (String) ID of the collection the monitor belongs to. Exactly one of `bucket_id` or `collection_id` must be set.
 - `interval` (String) Evaluation interval (e.g. `30s`, `1m`). Defaults to the system default if unset.

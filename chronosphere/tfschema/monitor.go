@@ -70,7 +70,7 @@ var Monitor = map[string]*schema.Schema{
 		Type:        schema.TypeMap,
 		Elem:        &schema.Schema{Type: schema.TypeString},
 		Optional:    true,
-		Description: "Free-form key/value pairs attached to every signal, intended for human consumption (runbook URLs, descriptions, etc.).",
+		Description: "Free-form key/value pairs attached to every signal, intended for human consumption such as runbook URLs and descriptions.",
 	},
 	"query": {
 		Type:        schema.TypeList,

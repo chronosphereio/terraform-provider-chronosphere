@@ -64,6 +64,6 @@ var Bucket = map[string]*schema.Schema{
 		Optional:         true,
 		DiffSuppressFunc: JSONNotificationPolicyDiffSuppress,
 		ValidateFunc:     ValidateNotificationPolicyData,
-		Description:      "Inline notification policy serialized as JSON. Conflicts with `notification_policy_id`; prefer referencing a named policy when possible.",
+		Description:      "Inline notification policy serialized as JSON. Conflicts with `notification_policy_id`. For reusability, reference a named policy instead.",
 	},
 }
