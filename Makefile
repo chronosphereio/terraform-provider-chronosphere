@@ -93,6 +93,11 @@ docs: install-tfplugindocs
 docs-validate: install-tfplugindocs
 	$(TOOLS_BIN)/tfplugindocs validate --provider-name chronosphere
 
+.PHONY: test-docs
+test-docs: generate docs
+	@echo "--- :git: Testing docs are up to date"
+	@[ -z "$$(git status --porcelain)" ] || ((set -x; git status --porcelain; git diff); echo -e "^^^ +++\nCheck git status + diff above, docs are out of date; run 'make docs'"; exit 1)
+
 .PHONY: update-swagger
 update-swagger: install-tools
 	@[ -n "${SWAGGER_PATH}" ] || (echo "SWAGGER_PATH must be set, please set it and rerun this command"; exit 1)

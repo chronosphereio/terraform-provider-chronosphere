@@ -41,6 +41,9 @@ jobs:
       - name: Validate Generated Code
         run: make test-generate
 
+      - name: Validate Docs
+        run: make test-docs
+
       - name: Test
         run: make test
 
