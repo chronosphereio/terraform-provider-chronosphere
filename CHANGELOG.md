@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.28.0
+
 Added:
 * Add `ROLLING_30_MINUTE_VOLUME` threshold type to `chronosphere_consumption_budget` thresholds.
 
