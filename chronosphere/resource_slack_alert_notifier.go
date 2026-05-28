@@ -139,6 +139,13 @@ func (slackAlertNotifierConverter) fromModel(
 	return n, nil
 }
 
+func (slackAlertNotifierConverter) normalize(config, server *intschema.SlackAlertNotifier) {
+	// ApiUrl is intentionally not normalized: the Config API does not redact
+	// URL fields, so a server value should always flow through as-is.
+	preserveRedactedSecret(&server.BasicAuthPassword, config.BasicAuthPassword)
+	preserveRedactedSecret(&server.BearerToken, config.BearerToken)
+}
+
 func slackActionsToModel(
 	actions []intschema.SlackAlertNotifierAction,
 ) []*models.NotifierSlackConfigAction {

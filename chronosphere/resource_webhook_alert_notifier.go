@@ -100,3 +100,8 @@ func (webhookAlertNotifierConverter) fromModel(
 	}
 	return n, nil
 }
+
+func (webhookAlertNotifierConverter) normalize(config, server *intschema.WebhookAlertNotifier) {
+	preserveRedactedSecret(&server.BasicAuthPassword, config.BasicAuthPassword)
+	preserveRedactedSecret(&server.BearerToken, config.BearerToken)
+}
