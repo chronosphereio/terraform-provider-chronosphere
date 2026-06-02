@@ -21,12 +21,13 @@ import (
 
 // Enum defines the parameters of an enum field in a Terraform schema.
 type Enum struct {
-	Value      enum.Enum[string]
-	Required   bool
-	Optional   bool
-	ForceNew   bool
-	Default    any
-	Deprecated string
+	Value       enum.Enum[string]
+	Required    bool
+	Optional    bool
+	ForceNew    bool
+	Default     any
+	Deprecated  string
+	Description string
 }
 
 // Schema returns the Terraform of the enum.
@@ -39,6 +40,7 @@ func (e Enum) Schema() *schema.Schema {
 		ValidateDiagFunc: e.Value.Validate,
 		Default:          e.Default,
 		Deprecated:       e.Deprecated,
+		Description:      e.Description,
 	})
 }
 

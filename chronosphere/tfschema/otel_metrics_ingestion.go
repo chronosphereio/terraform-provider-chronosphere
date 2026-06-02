@@ -21,18 +21,21 @@ import (
 
 var OtelMetricsIngestion = map[string]*schema.Schema{
 	"resource_attributes": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MaxItems: 1,
+		Type:        schema.TypeList,
+		Optional:    true,
+		MaxItems:    1,
+		Description: "Controls how OpenTelemetry resource attributes are mapped to Prometheus labels at ingest.",
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"flatten_mode": Enum{
-					Value:    enum.ResourceAttributesFlattenMode.ToStrings(),
-					Optional: true,
+					Value:       enum.ResourceAttributesFlattenMode.ToStrings(),
+					Optional:    true,
+					Description: "Controls how OTel resource attributes are flattened onto each metric's labels.",
 				}.Schema(),
 				"filter_mode": Enum{
-					Value:    enum.ResourceAttributesFilterMode.ToStrings(),
-					Optional: true,
+					Value:       enum.ResourceAttributesFilterMode.ToStrings(),
+					Optional:    true,
+					Description: "Controls how `exclude_keys` is interpreted (e.g. allow-list vs. block-list semantics).",
 				}.Schema(),
 				"exclude_keys": {
 					Type:     schema.TypeList,
@@ -40,10 +43,12 @@ var OtelMetricsIngestion = map[string]*schema.Schema{
 					Elem: &schema.Schema{
 						Type: schema.TypeString,
 					},
+					Description: "Resource attribute keys to exclude from the flatten operation, interpreted according to `filter_mode`.",
 				},
 				"generate_target_info": {
-					Type:     schema.TypeBool,
-					Optional: true,
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "If true, generates a `target_info` time series with labels derived from resource attributes. `filter_mode` and `exclude_keys` apply identically to this series. Defaults to false.",
 				},
 			},
 		},

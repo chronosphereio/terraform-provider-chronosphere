@@ -42,6 +42,7 @@ func resourceEmailAlertNotifier() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		CustomizeDiff: r.ValidateDryRun(&EmailAlertNotifierDryRunCount),
+		Description:   "Email notifier that delivers monitor signals to a recipient address with templated HTML and/or plain-text bodies. Referenced from notification policies.",
 		Schema:        tfschema.EmailAlertNotifier,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,

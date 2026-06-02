@@ -42,6 +42,7 @@ func DataBucketFromModel(b *models.Configv1Bucket) *intschema.DataBucket {
 func dataSourceBucket() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceBucketRead,
+		Description: "Read-only data source that retrieves an existing bucket by name or slug. References buckets created outside of Terraform.",
 		Schema:      tfschema.DataBucket,
 	}
 }

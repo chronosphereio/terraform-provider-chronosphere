@@ -43,6 +43,7 @@ func resourceSLO() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "A service-level objective that tracks the ratio of good to total events produced by an SLI over a configured time window, with optional multi-window burn-rate alerting.",
 		Schema:        tfschema.Slo,
 		CustomizeDiff: r.ValidateDryRun(&SLODryRunCount),
 		Importer: &schema.ResourceImporter{

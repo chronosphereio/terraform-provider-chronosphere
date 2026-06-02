@@ -80,6 +80,24 @@ generatedresources: install-tools
 pagination: install-tools
 	$(GO_GENERATE) ./chronosphere/pagination
 
+.PHONY: install-tfplugindocs
+install-tfplugindocs:
+	mkdir -p $(TOOLS_BIN)
+	GOBIN=$(TOOLS_BIN) GOFLAGS=-mod=mod go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@latest
+
+.PHONY: docs
+docs: install-tfplugindocs
+	$(TOOLS_BIN)/tfplugindocs generate --provider-name chronosphere
+
+.PHONY: docs-validate
+docs-validate: install-tfplugindocs
+	$(TOOLS_BIN)/tfplugindocs validate --provider-name chronosphere
+
+.PHONY: test-docs
+test-docs: generate docs
+	@echo "--- :git: Testing docs are up to date"
+	@[ -z "$$(git status --porcelain)" ] || ((set -x; git status --porcelain; git diff); echo -e "^^^ +++\nCheck git status + diff above, docs are out of date; run 'make docs'"; exit 1)
+
 .PHONY: update-swagger
 update-swagger: install-tools
 	@[ -n "${SWAGGER_PATH}" ] || (echo "SWAGGER_PATH must be set, please set it and rerun this command"; exit 1)

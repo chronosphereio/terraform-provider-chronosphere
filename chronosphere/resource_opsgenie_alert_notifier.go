@@ -45,6 +45,7 @@ func resourceOpsGenieAlertNotifier() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "OpsGenie notifier that delivers monitor signals to OpsGenie as alerts via its API integration. Referenced from notification policies.",
 		Schema:        tfschema.OpsgenieAlertNotifier,
 		CustomizeDiff: r.ValidateDryRun(&OpsGenieAlertNotifierDryRunCount),
 		Importer: &schema.ResourceImporter{

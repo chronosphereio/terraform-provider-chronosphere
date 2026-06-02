@@ -44,6 +44,7 @@ func resourceConsumptionBudget() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		Schema:        tfschema.ConsumptionBudget,
+		Description:   "A per-partition quota on a consumption_config partition with thresholds that trigger drop, alert, or pause actions when metric or log usage breaches them.",
 		CustomizeDiff: r.ValidateDryRunOptions(&ConsumptionBudgetDryRunCount, ValidateDryRunOpts[*models.Configv1ConsumptionBudget]{
 			SetUnknownReferencesSkip: []string{
 				// Because this isn't a real API reference.

@@ -44,6 +44,7 @@ func resourceCollection() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "A logical grouping of monitors, dashboards, SLOs, and other resources, typically aligned with a team or system. Provides a default notification policy for contained monitors and SLOs that do not explicitly reference one.",
 		Schema:        tfschema.Collection,
 		CustomizeDiff: r.ValidateDryRun(&CollectionDryRunCount),
 		Importer: &schema.ResourceImporter{

@@ -20,7 +20,8 @@ const maxResourcePools = 128
 
 var ResourcePoolsConfig = map[string]*schema.Schema{
 	"default_pool": {
-		Type: schema.TypeList,
+		Type:        schema.TypeList,
+		Description: "Catch-all pool that receives metrics not matched by any other pool. Also receives any license allocation left unassigned by the other pools.",
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"allocation":          ResourcePoolAllocationSchema,
@@ -38,6 +39,7 @@ var ResourcePoolsConfig = map[string]*schema.Schema{
 		Optional:      true,
 		ConflictsWith: []string{"pool"},
 		Deprecated:    "Use pool instead of pools",
+		Description:   "Deprecated: use `pool` instead. Set of named pools that partition the license.",
 		MaxItems:      maxResourcePools,
 	},
 	"pool": {
@@ -45,23 +47,27 @@ var ResourcePoolsConfig = map[string]*schema.Schema{
 		Elem:          ResourcePoolElemSchema,
 		ConflictsWith: []string{"pools"},
 		Optional:      true,
+		Description:   "Named pools that partition each license across teams or workloads. Pools are matched in declaration order via their `match_rules`.",
 		MaxItems:      maxResourcePools,
 	},
 }
 
 var ResourcePoolAllocationSchema = &schema.Schema{
-	Type: schema.TypeList,
+	Type:        schema.TypeList,
+	Description: "License allocation for the pool. Can be expressed as a percentage of the license (`percent_of_license`) or as per-license fixed values (`fixed_value`).",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"percent_of_license": {
-				Type:     schema.TypeFloat,
-				Optional: true,
+				Type:        schema.TypeFloat,
+				Optional:    true,
+				Description: "Percent of each license to allocate to this pool, between 0 and 100. Across non-default pools, the sum must not exceed 100; the default pool receives the remainder.",
 			},
 			"fixed_value": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem:     ResourcePoolAllocationFixedValueSchema,
-				MinItems: 1,
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem:        ResourcePoolAllocationFixedValueSchema,
+				MinItems:    1,
+				Description: "Per-license fixed allocations that override `percent_of_license` for the named licenses. When any pool sets a fixed value for a license, every pool must also set one for that license.",
 			},
 			"priority_thresholds": ResourcePoolAllocationThresholdsSchema,
 		},
@@ -73,12 +79,14 @@ var ResourcePoolAllocationSchema = &schema.Schema{
 var ResourcePoolAllocationFixedValueSchema = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"license": {
-			Type:     schema.TypeString,
-			Required: true,
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "License this fixed-value allocation applies to (e.g. `PERSISTED_WRITES`).",
 		},
 		"value": {
-			Type:     schema.TypeInt,
-			Required: true,
+			Type:        schema.TypeInt,
+			Required:    true,
+			Description: "Fixed amount of the license to allocate, in the license's native unit.",
 		},
 	},
 }
@@ -86,40 +94,46 @@ var ResourcePoolAllocationFixedValueSchema = &schema.Resource{
 var ResourcePoolElemSchema = &schema.Resource{
 	Schema: map[string]*schema.Schema{
 		"name": {
-			Type:     schema.TypeString,
-			Required: true,
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Unique name of the pool.",
 		},
 		"allocation": ResourcePoolAllocationSchema,
 		"match_rule": {
-			Type:       schema.TypeString,
-			Optional:   true,
-			Deprecated: "use match_rules",
+			Type:        schema.TypeString,
+			Optional:    true,
+			Deprecated:  "use match_rules",
+			Description: "Deprecated: use `match_rules` instead. Single matcher selecting metrics that belong to this pool.",
 		},
 		"match_rules": {
-			Type:     schema.TypeList,
-			Elem:     &schema.Schema{Type: schema.TypeString},
-			MinItems: 1,
-			Optional: true,
+			Type:        schema.TypeList,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			MinItems:    1,
+			Optional:    true,
+			Description: "Matchers selecting metrics that map to this pool. A metric matching any rule is assigned to the pool.",
 		},
 		"priorities": ResourcePoolPrioritiesSchema,
 	},
 }
 
 var ResourcePoolPrioritiesSchema = &schema.Schema{
-	Type: schema.TypeList,
+	Type:        schema.TypeList,
+	Description: "Optional high/low priority sub-classifications within the pool. Low-priority metrics are dropped first; high-priority metrics are dropped last when limits are hit.",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"high_priority_match_rules": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				MinItems: 1,
-				Optional: true,
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				MinItems:    1,
+				Optional:    true,
+				Description: "Matchers selecting metrics within the pool that are treated as high priority and dropped last.",
 			},
 			"low_priority_match_rules": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				MinItems: 1,
-				Optional: true,
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				MinItems:    1,
+				Optional:    true,
+				Description: "Matchers selecting metrics within the pool that are treated as low priority and dropped first.",
 			},
 		},
 	},
@@ -128,12 +142,14 @@ var ResourcePoolPrioritiesSchema = &schema.Schema{
 }
 
 var ResourcePoolAllocationThresholdsSchema = &schema.Schema{
-	Type: schema.TypeList,
+	Type:        schema.TypeList,
+	Description: "Per-license drop thresholds for `PERSISTED_CARDINALITY_STANDARD` and `PERSISTED_CARDINALITY_HISTOGRAM` only. Defines strict upper bounds beyond which new consumption is dropped, optionally segmented by priority class.",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"license": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "License the thresholds apply to.",
 			},
 			"all_priorities":           ResourcePoolAllocationThresholdSchema,
 			"default_and_low_priority": ResourcePoolAllocationThresholdSchema,
@@ -145,16 +161,19 @@ var ResourcePoolAllocationThresholdsSchema = &schema.Schema{
 }
 
 var ResourcePoolAllocationThresholdSchema = &schema.Schema{
-	Type: schema.TypeList,
+	Type:        schema.TypeList,
+	Description: "Threshold value, expressed as either a percent of the pool's allocation or as a fixed value in license units.",
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"percent_of_pool_allocation": {
-				Type:     schema.TypeFloat,
-				Optional: true,
+				Type:        schema.TypeFloat,
+				Optional:    true,
+				Description: "Threshold as a percent of the pool's allocation. `100` equals the full allocation; values above 100 allow the pool to exceed its baseline allocation.",
 			},
 			"fixed_value": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Threshold expressed as a fixed value of the license, in the license's native unit.",
 			},
 		},
 	},

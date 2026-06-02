@@ -41,6 +41,7 @@ func resourceSlackExternalConnection() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "Workspace-scoped Slack credentials that downstream notifiers and LogScale actions can reference. Centralizes webhook URLs and bot tokens so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.",
 		Schema:        tfschema.SlackExternalConnection,
 		CustomizeDiff: r.ValidateDryRun(&SlackExternalConnectionDryRunCount),
 		Importer: &schema.ResourceImporter{

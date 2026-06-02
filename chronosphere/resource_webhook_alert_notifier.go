@@ -41,6 +41,7 @@ func resourceWebhookAlertNotifier() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "Webhook notifier that POSTs monitor signal payloads to an arbitrary HTTP endpoint. Referenced from notification policies.",
 		Schema:        tfschema.WebhookAlertNotifier,
 		CustomizeDiff: r.ValidateDryRun(&WebhookAlertNotifierDryRunCount),
 		Importer: &schema.ResourceImporter{

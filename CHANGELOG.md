@@ -6,6 +6,7 @@
 
 Added:
 * Add `ROLLING_30_MINUTE_VOLUME` threshold type to `chronosphere_consumption_budget` thresholds.
+* Add field-level descriptions across all resource and data-source schemas, and add a `make docs` target that runs `tfplugindocs` to generate `docs/` for the Terraform Registry. Schema helpers (`Duration`, `Enum`, `CaseInsensitiveString`, `Filter`, `typeset.Set`) now accept a `Description`.
 
 Bug fixes:
 * Preserve configured secret values during refresh of `chronosphere_webhook_alert_notifier`, `chronosphere_slack_alert_notifier`, `chronosphere_pagerduty_alert_notifier`, `chronosphere_opsgenie_alert_notifier`, and `chronosphere_victorops_alert_notifier` when the Config API returns the redaction sentinel for secret fields. Real server-side changes still surface as drift.

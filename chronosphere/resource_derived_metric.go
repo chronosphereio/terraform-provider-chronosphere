@@ -43,6 +43,7 @@ func resourceDerivedMetric() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "A virtual metric whose value is computed on demand from one of several underlying PromQL queries. The query selected at evaluation time is determined by matching the usage's labels against the configured selectors.",
 		Schema:        tfschema.DerivedMetric,
 		CustomizeDiff: r.ValidateDryRun(&DerivedMetricDryRunCount),
 		Importer: &schema.ResourceImporter{

@@ -41,6 +41,7 @@ func resourceOpsgenieExternalConnection() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "Workspace-scoped OpsGenie credentials that downstream notifiers and LogScale actions can reference. Centralizes the OpsGenie API key so it isn't duplicated across individual notifiers; modern equivalent of the per-notifier credentials.",
 		Schema:        tfschema.OpsgenieExternalConnection,
 		CustomizeDiff: r.ValidateDryRun(&OpsGenieExternalConnectionDryRunCount),
 		Importer: &schema.ResourceImporter{

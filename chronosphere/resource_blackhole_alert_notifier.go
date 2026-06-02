@@ -40,6 +40,7 @@ func resourceBlackHoleAlertNotifier() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "Blackhole notifier that discards every signal routed to it. Reference from a notification policy route to silence alerts without delivering them anywhere.",
 		Schema:        tfschema.BlackholeAlertNotifier,
 		CustomizeDiff: r.ValidateDryRun(&BlackHoleAlertNotifierDryRunCount),
 		Importer: &schema.ResourceImporter{

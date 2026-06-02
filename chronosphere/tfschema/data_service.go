@@ -18,15 +18,18 @@ import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 var DataService = map[string]*schema.Schema{
 	"slug": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Slug of the service to look up.",
 	},
 	"name": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Read-only: display name of the service.",
 	},
 	"description": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Read-only: free-form description of the service.",
 	},
 }

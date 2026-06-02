@@ -42,6 +42,7 @@ func resourceAzureMetricsIntegration() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		Schema:        tfschema.AzureMetricsIntegration,
+		Description:   "Scrapes Azure Monitor metrics from the configured subscriptions, locations, and resource types using a service-principal credential.",
 		CustomizeDiff: r.ValidateDryRun(&AzureMetricsIntegrationDryRunCount),
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,

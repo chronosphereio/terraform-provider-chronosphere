@@ -44,6 +44,7 @@ func resourceServiceAccount() *schema.Resource {
 		CreateContext: resourceServiceAccountCreate,
 		ReadContext:   resourceServiceAccountRead,
 		DeleteContext: resourceServiceAccountDelete,
+		Description:   "A non-human identity used to authenticate API requests against Chronosphere. An API token is generated at creation and returned only once; store it securely, as a lost token requires recreating the service account.",
 		Schema:        tfschema.ServiceAccount,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,

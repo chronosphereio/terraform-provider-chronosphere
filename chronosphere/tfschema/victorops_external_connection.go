@@ -18,22 +18,26 @@ import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 var VictoropsExternalConnection = map[string]*schema.Schema{
 	"name": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Display name of the external connection.",
 	},
 	"slug": {
-		Type:     schema.TypeString,
-		Optional: true,
-		Computed: true,
-		ForceNew: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Computed:    true,
+		ForceNew:    true,
+		Description: "Stable identifier for the connection. Generated from `name` if omitted. Immutable after creation.",
 	},
 	"api_key": {
-		Type:      schema.TypeString,
-		Optional:  true,
-		Sensitive: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Sensitive:   true,
+		Description: "VictorOps (Splunk On-Call) REST integration API key used to authenticate alert delivery. Treat as a secret.",
 	},
 	"api_url": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "VictorOps REST endpoint URL that receives alert payloads. Override to target a custom endpoint.",
 	},
 }

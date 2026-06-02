@@ -18,13 +18,15 @@ import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 var BlackholeAlertNotifier = map[string]*schema.Schema{
 	"name": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Display name of the notifier.",
 	},
 	"slug": {
-		Type:     schema.TypeString,
-		Optional: true,
-		Computed: true,
-		ForceNew: true,
+		Type:        schema.TypeString,
+		Optional:    true,
+		Computed:    true,
+		ForceNew:    true,
+		Description: "Stable identifier for the notifier. Generated from `name` if omitted. Immutable after creation.",
 	},
 }

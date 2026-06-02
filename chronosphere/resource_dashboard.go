@@ -43,6 +43,7 @@ func resourceDashboard() *schema.Resource {
 		ReadContext:   resource.ReadContext,
 		UpdateContext: resource.UpdateContext,
 		DeleteContext: resource.DeleteContext,
+		Description:   "A Chronosphere dashboard composed of panels, layouts, and variables defined by `dashboard_json`. For Grafana-compatible dashboards, use `chronosphere_classic_dashboard` instead.",
 		Schema:        tfschema.Dashboard,
 		CustomizeDiff: resource.ValidateDryRun(&DashboardDryRunCount),
 		Importer: &schema.ResourceImporter{

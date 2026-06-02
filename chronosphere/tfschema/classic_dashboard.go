@@ -27,16 +27,19 @@ var ClassicDashboard = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Optional:     true,
 		AtLeastOneOf: []string{"bucket_id", "collection_id"},
+		Description:  "ID of the bucket the dashboard belongs to. Exactly one of `bucket_id` or `collection_id` must be set.",
 	},
 	"collection_id": {
 		Type:         schema.TypeString,
 		Optional:     true,
 		AtLeastOneOf: []string{"bucket_id", "collection_id"},
+		Description:  "ID of the collection the dashboard belongs to. Exactly one of `bucket_id` or `collection_id` must be set.",
 	},
 	"dashboard_json": {
 		Type:             schema.TypeString,
 		Required:         true,
 		DiffSuppressFunc: classicDashboardJSONDiffSuppress,
+		Description:      "Grafana-compatible dashboard definition serialized as JSON. The `id` and `version` fields are stripped before diffing.",
 	},
 }
 

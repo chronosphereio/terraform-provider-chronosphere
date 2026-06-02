@@ -41,6 +41,7 @@ func resourceVictoropsExternalConnection() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
+		Description:   "Workspace-scoped VictorOps (Splunk On-Call) credentials that downstream notifiers and LogScale actions can reference. Centralizes the REST integration API key so it isn't duplicated across notifiers; modern equivalent of the per-notifier credentials.",
 		Schema:        tfschema.VictoropsExternalConnection,
 		CustomizeDiff: r.ValidateDryRun(&VictorOpsExternalConnectionDryRunCount),
 		Importer: &schema.ResourceImporter{

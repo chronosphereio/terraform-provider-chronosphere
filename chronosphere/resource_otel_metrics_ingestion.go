@@ -36,6 +36,7 @@ func resourceOtelMetricsIngestion() *schema.Resource {
 		generatedOtelMetricsIngestion{},
 	)
 	return &schema.Resource{
+		Description:   "Configures how incoming OTLP metric payloads have their OpenTelemetry resource attributes flattened, filtered, and mapped onto Prometheus-style labels at ingestion.",
 		Schema:        tfschema.OtelMetricsIngestion,
 		CreateContext: r.CreateContext,
 		ReadContext:   r.ReadContext,

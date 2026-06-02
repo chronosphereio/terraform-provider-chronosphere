@@ -42,6 +42,7 @@ func resourceLogAllocationConfig() *schema.Resource {
 	)
 
 	return &schema.Resource{
+		Description:   "Singleton config that allocates a portion of the org's log ingest quota to each dataset by priority, controlling which logs are kept when the quota is exceeded.",
 		Schema:        tfschema.LogAllocationConfig,
 		CreateContext: r.CreateContext,
 		ReadContext:   r.ReadContext,

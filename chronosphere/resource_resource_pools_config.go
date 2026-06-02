@@ -49,7 +49,7 @@ func resourceResourcePoolsConfig() *schema.Resource {
 		Schema:        tfschema.ResourcePoolsConfig,
 		CustomizeDiff: r.ValidateDryRun(&ResourcePoolsConfigDryRunCount),
 		SchemaVersion: 1,
-		Description:   "Shared admin config controlling quota usage in Chronosphere",
+		Description:   "Singleton allocation of metric license capacity into named pools that match metrics by label filter, each with priority-based dropping when the pool's allocation is exceeded.",
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},

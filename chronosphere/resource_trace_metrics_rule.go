@@ -38,6 +38,7 @@ func resourceTraceMetricsRule() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		Schema:        tfschema.TraceMetricsRule,
+		Description:   "A rule that extracts a histogram metric from spans matching a trace filter, with configurable group-by keys and histogram buckets.",
 		CustomizeDiff: r.ValidateDryRun(&TraceMetricsRuleDryRunCount),
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
