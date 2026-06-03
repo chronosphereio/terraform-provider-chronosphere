@@ -24,8 +24,11 @@ type Configv1ConsumptionBudgetThreshold struct {
 	// instant rate
 	InstantRate *ThresholdInstantRate `json:"instant_rate,omitempty"`
 
+	// resource group
+	ResourceGroup ConsumptionBudgetResourceGroup `json:"resource_group,omitempty"`
+
 	// sku group
-	SkuGroup ConsumptionBudgetSKUGroup `json:"sku_group,omitempty"`
+	SkuGroup ConsumptionBudgetResourceGroup `json:"sku_group,omitempty"`
 
 	// type
 	Type ConsumptionBudgetThresholdType `json:"type,omitempty"`
@@ -46,6 +49,10 @@ func (m *Configv1ConsumptionBudgetThreshold) Validate(formats strfmt.Registry) e
 	}
 
 	if err := m.validateInstantRate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateResourceGroup(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -102,6 +109,23 @@ func (m *Configv1ConsumptionBudgetThreshold) validateInstantRate(formats strfmt.
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Configv1ConsumptionBudgetThreshold) validateResourceGroup(formats strfmt.Registry) error {
+	if swag.IsZero(m.ResourceGroup) { // not required
+		return nil
+	}
+
+	if err := m.ResourceGroup.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("resource_group")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("resource_group")
+		}
+		return err
 	}
 
 	return nil
@@ -189,6 +213,10 @@ func (m *Configv1ConsumptionBudgetThreshold) ContextValidate(ctx context.Context
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateResourceGroup(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateSkuGroup(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -236,6 +264,20 @@ func (m *Configv1ConsumptionBudgetThreshold) contextValidateInstantRate(ctx cont
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Configv1ConsumptionBudgetThreshold) contextValidateResourceGroup(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.ResourceGroup.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("resource_group")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("resource_group")
+		}
+		return err
 	}
 
 	return nil

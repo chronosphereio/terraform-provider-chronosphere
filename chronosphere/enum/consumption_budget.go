@@ -19,9 +19,9 @@ import (
 )
 
 // ConsumptionBudgetResource is an enum.
-var ConsumptionBudgetResource = newEnum("ConsumptionBudgetResource", []value[configv1.ConsumptionBudgetSKUGroup]{
+var ConsumptionBudgetResource = newEnum("ConsumptionBudgetResource", []value[configv1.ConsumptionBudgetResourceGroup]{
 	{
-		v1:    configv1.ConsumptionBudgetSKUGroupLOGPERSISTEDBYTES,
+		v1:    configv1.ConsumptionBudgetResourceGroupLOGPERSISTEDBYTES,
 		alias: "LOG_PERSISTED_BYTES",
 	},
 })
@@ -86,22 +86,22 @@ var ConsumptionBudgetThresholdAction = newEnum("ConsumptionBudgetThresholdAction
 	},
 })
 
-// ConsumptionBudgetSKUGroup is an enum.
-var ConsumptionBudgetSKUGroup = newEnum("ConsumptionBudgetSKUGroup", []value[configv1.ConsumptionBudgetSKUGroup]{
+// ConsumptionBudgetResourceGroup is an enum.
+var ConsumptionBudgetResourceGroup = newEnum("ConsumptionBudgetResourceGroup", []value[configv1.ConsumptionBudgetResourceGroup]{
 	{
-		v1:    configv1.ConsumptionBudgetSKUGroupLOGPERSISTEDBYTES,
+		v1:    configv1.ConsumptionBudgetResourceGroupLOGPERSISTEDBYTES,
 		alias: "LOG_PERSISTED_BYTES",
 	},
 	{
-		v1:    configv1.ConsumptionBudgetSKUGroupLOGPROCESSEDBYTES,
+		v1:    configv1.ConsumptionBudgetResourceGroupLOGPROCESSEDBYTES,
 		alias: "LOG_PROCESSED_BYTES",
 	},
 	{
-		v1:    configv1.ConsumptionBudgetSKUGroupMETRICPERSISTEDSERIES,
+		v1:    configv1.ConsumptionBudgetResourceGroupMETRICPERSISTEDSERIES,
 		alias: "METRIC_PERSISTED_SERIES",
 	},
 	{
-		v1:    configv1.ConsumptionBudgetSKUGroupMETRICALL,
+		v1:    configv1.ConsumptionBudgetResourceGroupMETRICALL,
 		alias: "METRIC_ALL",
 	},
 })
