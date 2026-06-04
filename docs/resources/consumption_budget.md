@@ -78,7 +78,8 @@ Optional:
 
 - `action` (String) Action to take when this threshold is exceeded (e.g. drop traffic, fire warning/critical alert).
 - `instant_rate` (Block List, Max: 1) Configures an instant-rate threshold value. Set when `type` is an instant-rate type. (see [below for nested schema](#nestedblock--threshold--instant_rate))
-- `sku_group` (String) SKU group the threshold applies to (e.g. metrics, logs, traces). Replaces the deprecated top-level `resource` field.
+- `resource_group` (String) Resource group the threshold applies to (e.g. metrics, logs, traces). Replaces the deprecated top-level `resource` field.
+- `sku_group` (String, Deprecated) SKU group the threshold applies to (e.g. metrics, logs, traces). Replaces the deprecated top-level `resource` field.
 - `type` (String) Measurement window over which the threshold is evaluated (e.g. instant rate vs. rolling volume).
 - `unit` (String) Unit in which the threshold value is denominated (e.g. bytes, datapoints).
 - `volume` (Block List, Max: 1) Configures a volume threshold value. Set when `type` is a volume type. (see [below for nested schema](#nestedblock--threshold--volume))

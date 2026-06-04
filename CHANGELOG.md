@@ -2,6 +2,15 @@
 
 ## UNRELEASED
 
+Added:
+* Add `resource_group` field to `chronosphere_consumption_budget` thresholds as
+  a replacement for the deprecated `sku_group` field. Both accept the same
+  values; `resource_group` is preferred.
+
+Deprecated:
+* Deprecate the `sku_group` field on `chronosphere_consumption_budget`
+  thresholds. Use `resource_group` instead.
+
 ## v1.28.0
 
 Added:

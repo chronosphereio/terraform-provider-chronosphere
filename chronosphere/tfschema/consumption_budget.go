@@ -163,9 +163,15 @@ var consumptionBudgetThresholdSchema = map[string]*schema.Schema{
 		},
 	},
 	"sku_group": Enum{
-		Value:       enum.ConsumptionBudgetSKUGroup.ToStrings(),
+		Value:       enum.ConsumptionBudgetResourceGroup.ToStrings(),
 		Optional:    true,
+		Deprecated:  "use resource_group instead",
 		Description: "SKU group the threshold applies to (e.g. metrics, logs, traces). Replaces the deprecated top-level `resource` field.",
+	}.Schema(),
+	"resource_group": Enum{
+		Value:       enum.ConsumptionBudgetResourceGroup.ToStrings(),
+		Optional:    true,
+		Description: "Resource group the threshold applies to (e.g. metrics, logs, traces). Replaces the deprecated top-level `resource` field.",
 	}.Schema(),
 	"unit": Enum{
 		Value:       enum.ConsumptionBudgetUnit.ToStrings(),
