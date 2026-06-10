@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.29.1
+
 ## v1.29.0
 
 Added:
