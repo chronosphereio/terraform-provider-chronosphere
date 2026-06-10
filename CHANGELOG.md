@@ -2,6 +2,11 @@
 
 ## UNRELEASED
 
+Removed:
+* Remove the deprecated `sku_group` field from
+  `chronosphere_consumption_budget` thresholds. Use `resource_group`
+  instead.
+
 ## v1.29.0
 
 Added:

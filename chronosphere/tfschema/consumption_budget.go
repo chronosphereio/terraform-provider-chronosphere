@@ -37,8 +37,8 @@ var ConsumptionBudget = map[string]*schema.Schema{
 	"resource": Enum{
 		Value:       enum.ConsumptionBudgetResource.ToStrings(),
 		Optional:    true,
-		Deprecated:  "use threshold.sku_group and threshold.unit instead",
-		Description: "Deprecated: use `threshold.sku_group` and `threshold.unit` instead. Identifies the resource type the budget governs.",
+		Deprecated:  "use threshold.resource_group and threshold.unit instead",
+		Description: "Deprecated: use `threshold.resource_group` and `threshold.unit` instead. Identifies the resource type the budget governs.",
 	}.Schema(),
 	"partition_slug_path": {
 		Type:        schema.TypeString,
@@ -162,12 +162,6 @@ var consumptionBudgetThresholdSchema = map[string]*schema.Schema{
 			Schema: consumptionBudgetVolumeSchema,
 		},
 	},
-	"sku_group": Enum{
-		Value:       enum.ConsumptionBudgetResourceGroup.ToStrings(),
-		Optional:    true,
-		Deprecated:  "use resource_group instead",
-		Description: "SKU group the threshold applies to (e.g. metrics, logs, traces). Replaces the deprecated top-level `resource` field.",
-	}.Schema(),
 	"resource_group": Enum{
 		Value:       enum.ConsumptionBudgetResourceGroup.ToStrings(),
 		Optional:    true,

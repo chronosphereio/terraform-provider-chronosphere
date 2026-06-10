@@ -66,7 +66,6 @@ type ConsumptionBudgetThreshold struct {
 	Action        string                                 `intschema:"action,optional"`
 	InstantRate   *ConsumptionBudgetThresholdInstantRate `intschema:"instant_rate,optional,list_encoded_object"`
 	ResourceGroup string                                 `intschema:"resource_group,optional"`
-	SkuGroup      string                                 `intschema:"sku_group,optional"`
 	Type          string                                 `intschema:"type,optional"`
 	Unit          string                                 `intschema:"unit,optional"`
 	Volume        *ConsumptionBudgetThresholdVolume      `intschema:"volume,optional,list_encoded_object"`
