@@ -2,6 +2,10 @@
 
 ## UNRELEASED
 
+Added:
+* Add `PARENT_SERVICE`, `PARENT_OPERATION`, `ROOT_SERVICE`, and
+  `ROOT_OPERATION` group-by key types to `chronosphere_trace_metrics_rule`.
+
 Removed:
 * Remove the deprecated `sku_group` field from
   `chronosphere_consumption_budget` thresholds. Use `resource_group`
