@@ -13,22 +13,23 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// SyntheticTestStatusCodeAssertion Asserts that the HTTP response status code matches the target.
-// `target` is a string so regex patterns (e.g. "2..") can share the field
-// with literal codes (e.g. "200").
+// SyntheticTestHeaderAssertion Asserts that the named response header satisfies the operator.
 //
-// swagger:model SyntheticTestStatusCodeAssertion
-type SyntheticTestStatusCodeAssertion struct {
+// swagger:model SyntheticTestHeaderAssertion
+type SyntheticTestHeaderAssertion struct {
+
+	// name
+	Name string `json:"name,omitempty"`
 
 	// operator
-	Operator SyntheticTestStatusCodeAssertionOperator `json:"operator,omitempty"`
+	Operator SyntheticTestHeaderAssertionOperator `json:"operator,omitempty"`
 
 	// target
 	Target string `json:"target,omitempty"`
 }
 
-// Validate validates this synthetic test status code assertion
-func (m *SyntheticTestStatusCodeAssertion) Validate(formats strfmt.Registry) error {
+// Validate validates this synthetic test header assertion
+func (m *SyntheticTestHeaderAssertion) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateOperator(formats); err != nil {
@@ -41,7 +42,7 @@ func (m *SyntheticTestStatusCodeAssertion) Validate(formats strfmt.Registry) err
 	return nil
 }
 
-func (m *SyntheticTestStatusCodeAssertion) validateOperator(formats strfmt.Registry) error {
+func (m *SyntheticTestHeaderAssertion) validateOperator(formats strfmt.Registry) error {
 	if swag.IsZero(m.Operator) { // not required
 		return nil
 	}
@@ -58,8 +59,8 @@ func (m *SyntheticTestStatusCodeAssertion) validateOperator(formats strfmt.Regis
 	return nil
 }
 
-// ContextValidate validate this synthetic test status code assertion based on the context it is used
-func (m *SyntheticTestStatusCodeAssertion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this synthetic test header assertion based on the context it is used
+func (m *SyntheticTestHeaderAssertion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateOperator(ctx, formats); err != nil {
@@ -72,7 +73,7 @@ func (m *SyntheticTestStatusCodeAssertion) ContextValidate(ctx context.Context, 
 	return nil
 }
 
-func (m *SyntheticTestStatusCodeAssertion) contextValidateOperator(ctx context.Context, formats strfmt.Registry) error {
+func (m *SyntheticTestHeaderAssertion) contextValidateOperator(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := m.Operator.ContextValidate(ctx, formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
@@ -87,7 +88,7 @@ func (m *SyntheticTestStatusCodeAssertion) contextValidateOperator(ctx context.C
 }
 
 // MarshalBinary interface implementation
-func (m *SyntheticTestStatusCodeAssertion) MarshalBinary() ([]byte, error) {
+func (m *SyntheticTestHeaderAssertion) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -95,8 +96,8 @@ func (m *SyntheticTestStatusCodeAssertion) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *SyntheticTestStatusCodeAssertion) UnmarshalBinary(b []byte) error {
-	var res SyntheticTestStatusCodeAssertion
+func (m *SyntheticTestHeaderAssertion) UnmarshalBinary(b []byte) error {
+	var res SyntheticTestHeaderAssertion
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
