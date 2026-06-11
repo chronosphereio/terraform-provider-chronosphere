@@ -204,7 +204,6 @@ func consumptionBudgetThresholdToModel(b intschema.ConsumptionBudgetThreshold) *
 	return &models.Configv1ConsumptionBudgetThreshold{
 		Action:        models.ConsumptionBudgetThresholdAction(b.Action),
 		Type:          models.ConsumptionBudgetThresholdType(b.Type),
-		SkuGroup:      models.ConsumptionBudgetResourceGroup(b.SkuGroup),
 		ResourceGroup: models.ConsumptionBudgetResourceGroup(b.ResourceGroup),
 		Unit:          models.ConsumptionBudgetUnit(b.Unit),
 		InstantRate:   instantRate,
@@ -216,7 +215,6 @@ func consumptionBudgetThresholdFromModel(b *models.Configv1ConsumptionBudgetThre
 	behavior := intschema.ConsumptionBudgetThreshold{
 		Action:        string(b.Action),
 		Type:          string(b.Type),
-		SkuGroup:      string(b.SkuGroup),
 		ResourceGroup: string(b.ResourceGroup),
 		Unit:          string(b.Unit),
 	}
