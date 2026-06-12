@@ -52,6 +52,9 @@ type ConfigunstableSyntheticTest struct {
 	// test type
 	TestType SyntheticTestTestType `json:"test_type,omitempty"`
 
+	// optional — 1-60s; defaults to 60s
+	TimeoutSecs int32 `json:"timeout_secs,omitempty"`
+
 	// Timestamp of when the SyntheticTest was last updated. Cannot be set by clients.
 	// Read Only: true
 	// Format: date-time

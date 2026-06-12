@@ -67,13 +67,13 @@ var PartitionFilterSchema = &schema.Schema{
 			"condition": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` must be set per condition.",
+				Description: "Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, `trace_filter`, or `dataset_id` must be set per condition.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"dataset_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Deprecated: use `log_filter`, `metric_filter`, or trace filters instead. Slug of the dataset to match.",
+							Description: "Deprecated: use `log_filter`, `metric_filter`, or `trace_filter` instead. Slug of the dataset to match.",
 						},
 						"log_filter": {
 							Type:        schema.TypeList,
@@ -99,6 +99,33 @@ var PartitionFilterSchema = &schema.Schema{
 										Type:        schema.TypeString,
 										Required:    true,
 										Description: "Glob pattern matched against the label's value.",
+									},
+								},
+							},
+						},
+						"trace_filter": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Trace filter matching incoming trace data for this condition. Matching happens at the span level. Preview: requires the `enable-consumption-trace-api` feature flag to be enabled on the tenant.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"span_filter": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. If multiple `span_filter` blocks are specified, a span must satisfy every block to match the condition. Express alternatives with an `IN` matcher or with separate `condition` blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent).",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"service":          TraceStringFilterSchema,
+												"operation":        TraceStringFilterSchema,
+												"parent_service":   TraceStringFilterSchema,
+												"parent_operation": TraceStringFilterSchema,
+												"duration":         TraceDurationFilterSchema,
+												"error":            TraceBoolFilterSchema,
+												"tag":              TraceTagFilterSchema,
+												"is_root_span":     TraceBoolFilterSchema,
+											},
+										},
 									},
 								},
 							},

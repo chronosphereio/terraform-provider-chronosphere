@@ -36,7 +36,7 @@ func resourceConsumptionConfig() *schema.Resource {
 		generatedConsumptionConfig{},
 	)
 	return &schema.Resource{
-		Description:   "Singleton tree of consumption partitions that classify metric and log data into hierarchical groups so that consumption_budget resources can enforce quotas against them.",
+		Description:   "Singleton tree of consumption partitions that classify metric, log, and trace data into hierarchical groups so that consumption_budget resources can enforce quotas against them.",
 		Schema:        tfschema.ConsumptionConfig,
 		CreateContext: r.CreateContext,
 		ReadContext:   r.ReadContext,
@@ -101,6 +101,11 @@ func conditionToModel(c intschema.PartitionFilterCondition) (*models.PartitionFi
 			Query: c.LogFilter.Query,
 		}
 	}
+	if c.TraceFilter != nil {
+		result.TraceFilter = &models.Configv1ConsumptionTraceFilter{
+			SpanFilters: sliceutil.Map(c.TraceFilter.SpanFilter, consumptionSpanFilterToModel),
+		}
+	}
 	return result, nil
 }
 
@@ -111,6 +116,21 @@ func metricFiltersToModel(filters []intschema.PartitionFilterConditionMetricFilt
 			ValueGlob: f.ValueGlob,
 		}
 	})
+}
+
+func consumptionSpanFilterToModel(
+	s intschema.PartitionFilterConditionTraceFilterSpanFilter,
+) *models.ConsumptionTraceFilterConsumptionSpanFilter {
+	return &models.ConsumptionTraceFilterConsumptionSpanFilter{
+		Service:         stringFilterToModel(s.Service),
+		Operation:       stringFilterToModel(s.Operation),
+		ParentService:   stringFilterToModel(s.ParentService),
+		ParentOperation: stringFilterToModel(s.ParentOperation),
+		Duration:        durationFilterToModel(s.Duration),
+		Error:           boolFilterToModel(s.Error),
+		Tags:            sliceutil.Map(s.Tag, tagFilterToModel),
+		IsRootSpan:      boolFilterToModel(s.IsRootSpan),
+	}
 }
 
 func (ConsumptionConfigConverter) fromModel(
@@ -147,6 +167,11 @@ func conditionFromModel(c *models.PartitionFilterCondition) intschema.PartitionF
 			Query: c.LogFilter.Query,
 		}
 	}
+	if c.TraceFilter != nil {
+		result.TraceFilter = &intschema.PartitionFilterConditionTraceFilter{
+			SpanFilter: sliceutil.Map(c.TraceFilter.SpanFilters, consumptionSpanFilterFromModel),
+		}
+	}
 	return result
 }
 
@@ -157,4 +182,19 @@ func metricFiltersFromModel(filters []*models.Configv1LabelFilter) []intschema.P
 			ValueGlob: f.ValueGlob,
 		}
 	})
+}
+
+func consumptionSpanFilterFromModel(
+	s *models.ConsumptionTraceFilterConsumptionSpanFilter,
+) intschema.PartitionFilterConditionTraceFilterSpanFilter {
+	return intschema.PartitionFilterConditionTraceFilterSpanFilter{
+		Service:         stringFilterFromModel(s.Service),
+		Operation:       stringFilterFromModel(s.Operation),
+		ParentService:   stringFilterFromModel(s.ParentService),
+		ParentOperation: stringFilterFromModel(s.ParentOperation),
+		Duration:        durationFilterFromModel(s.Duration),
+		Error:           boolFilterFromModel(s.Error),
+		Tag:             sliceutil.Map(s.Tags, tagFilterFromModel),
+		IsRootSpan:      boolFilterFromModel(s.IsRootSpan),
+	}
 }
