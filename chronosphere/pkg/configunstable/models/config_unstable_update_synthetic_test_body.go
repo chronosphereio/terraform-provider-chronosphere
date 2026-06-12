@@ -21,6 +21,9 @@ type ConfigUnstableUpdateSyntheticTestBody struct {
 	// If `true`, the SyntheticTest will be created if it does not already exist, identified by `slug`. If `false`, an error will be returned if the SyntheticTest does not already exist.
 	CreateIfMissing bool `json:"create_if_missing,omitempty"`
 
+	// If `true`, validates the specified configuration without creating or updating the SyntheticTest. If the specified configuration is valid, the endpoint returns a partial response without the SyntheticTest. If the specified configuration is invalid, the endpoint returns an error.
+	DryRun bool `json:"dry_run,omitempty"`
+
 	// synthetic test
 	SyntheticTest *ConfigunstableSyntheticTest `json:"synthetic_test,omitempty"`
 }

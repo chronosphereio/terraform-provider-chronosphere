@@ -27,9 +27,6 @@ type Configv1ConsumptionBudgetThreshold struct {
 	// resource group
 	ResourceGroup ConsumptionBudgetResourceGroup `json:"resource_group,omitempty"`
 
-	// sku group
-	SkuGroup ConsumptionBudgetResourceGroup `json:"sku_group,omitempty"`
-
 	// type
 	Type ConsumptionBudgetThresholdType `json:"type,omitempty"`
 
@@ -53,10 +50,6 @@ func (m *Configv1ConsumptionBudgetThreshold) Validate(formats strfmt.Registry) e
 	}
 
 	if err := m.validateResourceGroup(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSkuGroup(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -124,23 +117,6 @@ func (m *Configv1ConsumptionBudgetThreshold) validateResourceGroup(formats strfm
 			return ve.ValidateName("resource_group")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("resource_group")
-		}
-		return err
-	}
-
-	return nil
-}
-
-func (m *Configv1ConsumptionBudgetThreshold) validateSkuGroup(formats strfmt.Registry) error {
-	if swag.IsZero(m.SkuGroup) { // not required
-		return nil
-	}
-
-	if err := m.SkuGroup.Validate(formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("sku_group")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
-			return ce.ValidateName("sku_group")
 		}
 		return err
 	}
@@ -217,10 +193,6 @@ func (m *Configv1ConsumptionBudgetThreshold) ContextValidate(ctx context.Context
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateSkuGroup(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.contextValidateType(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -276,20 +248,6 @@ func (m *Configv1ConsumptionBudgetThreshold) contextValidateResourceGroup(ctx co
 			return ve.ValidateName("resource_group")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("resource_group")
-		}
-		return err
-	}
-
-	return nil
-}
-
-func (m *Configv1ConsumptionBudgetThreshold) contextValidateSkuGroup(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := m.SkuGroup.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("sku_group")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
-			return ce.ValidateName("sku_group")
 		}
 		return err
 	}
