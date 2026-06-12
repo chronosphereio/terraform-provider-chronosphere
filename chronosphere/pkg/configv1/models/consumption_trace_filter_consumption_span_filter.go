@@ -41,7 +41,9 @@ type ConsumptionTraceFilterConsumptionSpanFilter struct {
 	// service
 	Service *TraceSearchFilterStringFilter `json:"service,omitempty"`
 
-	// Matches the tags of the candidate span.
+	// Matches the tags of the candidate span. A numeric matcher also
+	// compares numeric-looking string tag values. To match alternatives,
+	// use separate conditions.
 	Tags []*TraceSearchFilterTagFilter `json:"tags"`
 }
 
