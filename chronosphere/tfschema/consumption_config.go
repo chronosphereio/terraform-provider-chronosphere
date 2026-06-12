@@ -67,7 +67,7 @@ var PartitionFilterSchema = &schema.Schema{
 			"condition": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` must be set per condition.",
+				Description: "Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, `trace_filter`, or `dataset_id` must be set per condition.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"dataset_id": {
@@ -99,6 +99,33 @@ var PartitionFilterSchema = &schema.Schema{
 										Type:        schema.TypeString,
 										Required:    true,
 										Description: "Glob pattern matched against the label's value.",
+									},
+								},
+							},
+						},
+						"trace_filter": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Trace filter matching incoming trace data for this condition. Matching happens at the span level. Preview: requires the `enable-consumption-trace-api` feature flag to be enabled on the tenant.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"span_filters": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"service":          TraceStringFilterSchema,
+												"operation":        TraceStringFilterSchema,
+												"parent_service":   TraceStringFilterSchema,
+												"parent_operation": TraceStringFilterSchema,
+												"duration":         TraceDurationFilterSchema,
+												"error":            TraceBoolFilterSchema,
+												"tags":             TraceTagFilterSchema,
+												"is_root_span":     TraceBoolFilterSchema,
+											},
+										},
 									},
 								},
 							},

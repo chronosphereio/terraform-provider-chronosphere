@@ -2,6 +2,13 @@
 
 ## UNRELEASED
 
+Added:
+* Add `trace_filter` block to `chronosphere_consumption_config` partition
+  filter conditions. The block holds a list of `span_filters`; trace data is
+  matched at the span level, and a span matches if it satisfies any one of the
+  filters. This field is in preview and only takes effect on tenants with the
+  `enable-consumption-trace-api` feature flag enabled.
+
 Removed:
 * Remove the deprecated `sku_group` field from
   `chronosphere_consumption_budget` thresholds. Use `resource_group`
