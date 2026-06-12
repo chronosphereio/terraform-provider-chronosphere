@@ -103,7 +103,7 @@ func conditionToModel(c intschema.PartitionFilterCondition) (*models.PartitionFi
 	}
 	if c.TraceFilter != nil {
 		result.TraceFilter = &models.Configv1ConsumptionTraceFilter{
-			SpanFilters: sliceutil.Map(c.TraceFilter.SpanFilters, consumptionSpanFilterToModel),
+			SpanFilters: sliceutil.Map(c.TraceFilter.SpanFilter, consumptionSpanFilterToModel),
 		}
 	}
 	return result, nil
@@ -119,7 +119,7 @@ func metricFiltersToModel(filters []intschema.PartitionFilterConditionMetricFilt
 }
 
 func consumptionSpanFilterToModel(
-	s intschema.PartitionFilterConditionTraceFilterSpanFilters,
+	s intschema.PartitionFilterConditionTraceFilterSpanFilter,
 ) *models.ConsumptionTraceFilterConsumptionSpanFilter {
 	return &models.ConsumptionTraceFilterConsumptionSpanFilter{
 		Service:         stringFilterToModel(s.Service),
@@ -128,7 +128,7 @@ func consumptionSpanFilterToModel(
 		ParentOperation: stringFilterToModel(s.ParentOperation),
 		Duration:        durationFilterToModel(s.Duration),
 		Error:           boolFilterToModel(s.Error),
-		Tags:            sliceutil.Map(s.Tags, tagFilterToModel),
+		Tags:            sliceutil.Map(s.Tag, tagFilterToModel),
 		IsRootSpan:      boolFilterToModel(s.IsRootSpan),
 	}
 }
@@ -169,7 +169,7 @@ func conditionFromModel(c *models.PartitionFilterCondition) intschema.PartitionF
 	}
 	if c.TraceFilter != nil {
 		result.TraceFilter = &intschema.PartitionFilterConditionTraceFilter{
-			SpanFilters: sliceutil.Map(c.TraceFilter.SpanFilters, consumptionSpanFilterFromModel),
+			SpanFilter: sliceutil.Map(c.TraceFilter.SpanFilters, consumptionSpanFilterFromModel),
 		}
 	}
 	return result
@@ -186,15 +186,15 @@ func metricFiltersFromModel(filters []*models.Configv1LabelFilter) []intschema.P
 
 func consumptionSpanFilterFromModel(
 	s *models.ConsumptionTraceFilterConsumptionSpanFilter,
-) intschema.PartitionFilterConditionTraceFilterSpanFilters {
-	return intschema.PartitionFilterConditionTraceFilterSpanFilters{
+) intschema.PartitionFilterConditionTraceFilterSpanFilter {
+	return intschema.PartitionFilterConditionTraceFilterSpanFilter{
 		Service:         stringFilterFromModel(s.Service),
 		Operation:       stringFilterFromModel(s.Operation),
 		ParentService:   stringFilterFromModel(s.ParentService),
 		ParentOperation: stringFilterFromModel(s.ParentOperation),
 		Duration:        durationFilterFromModel(s.Duration),
 		Error:           boolFilterFromModel(s.Error),
-		Tags:            sliceutil.Map(s.Tags, tagFilterFromModel),
+		Tag:             sliceutil.Map(s.Tags, tagFilterFromModel),
 		IsRootSpan:      boolFilterFromModel(s.IsRootSpan),
 	}
 }

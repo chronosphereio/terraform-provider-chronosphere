@@ -46,7 +46,7 @@ Optional:
 
 Optional:
 
-- `dataset_id` (String) Deprecated: use `log_filter`, `metric_filter`, or trace filters instead. Slug of the dataset to match.
+- `dataset_id` (String) Deprecated: use `log_filter`, `metric_filter`, or `trace_filter` instead. Slug of the dataset to match.
 - `log_filter` (Block List, Max: 1) Log search filter matching log data for this condition. (see [below for nested schema](#nestedblock--partition--filter--condition--log_filter))
 - `metric_filter` (Block List) Metric label filters matched against incoming metric data. Multiple filters are AND-ed together; values support glob patterns including `service:{svc1,svc2}` style alternations. (see [below for nested schema](#nestedblock--partition--filter--condition--metric_filter))
 - `trace_filter` (Block List, Max: 1) Trace filter matching incoming trace data for this condition. Matching happens at the span level. Preview: requires the `enable-consumption-trace-api` feature flag to be enabled on the tenant. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter))
@@ -73,24 +73,24 @@ Required:
 
 Optional:
 
-- `span_filters` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filters))
+- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter))
 
-<a id="nestedblock--partition--filter--condition--trace_filter--span_filters"></a>
-### Nested Schema for `partition.filter.condition.trace_filter.span_filters`
+<a id="nestedblock--partition--filter--condition--trace_filter--span_filter"></a>
+### Nested Schema for `partition.filter.condition.trace_filter.span_filter`
 
 Optional:
 
-- `duration` (Block List, Max: 1) Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filters--duration))
-- `error` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filters--error))
-- `is_root_span` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filters--is_root_span))
-- `operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filters--operation))
-- `parent_operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filters--parent_operation))
-- `parent_service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filters--parent_service))
-- `service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filters--service))
-- `tags` (Block List) Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filters--tags))
+- `duration` (Block List, Max: 1) Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter--duration))
+- `error` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter--error))
+- `is_root_span` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter--is_root_span))
+- `operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter--operation))
+- `parent_operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter--parent_operation))
+- `parent_service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter--parent_service))
+- `service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter--service))
+- `tag` (Block List) Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter--tag))
 
-<a id="nestedblock--partition--filter--condition--trace_filter--span_filters--duration"></a>
-### Nested Schema for `partition.filter.condition.trace_filter.span_filters.duration`
+<a id="nestedblock--partition--filter--condition--trace_filter--span_filter--duration"></a>
+### Nested Schema for `partition.filter.condition.trace_filter.span_filter.duration`
 
 Optional:
 
@@ -98,24 +98,24 @@ Optional:
 - `min_secs` (Number) Minimum duration in seconds, inclusive. Defaults to `0`.
 
 
-<a id="nestedblock--partition--filter--condition--trace_filter--span_filters--error"></a>
-### Nested Schema for `partition.filter.condition.trace_filter.span_filters.error`
+<a id="nestedblock--partition--filter--condition--trace_filter--span_filter--error"></a>
+### Nested Schema for `partition.filter.condition.trace_filter.span_filter.error`
 
 Required:
 
 - `value` (Boolean) Boolean value the target field is compared against.
 
 
-<a id="nestedblock--partition--filter--condition--trace_filter--span_filters--is_root_span"></a>
-### Nested Schema for `partition.filter.condition.trace_filter.span_filters.is_root_span`
+<a id="nestedblock--partition--filter--condition--trace_filter--span_filter--is_root_span"></a>
+### Nested Schema for `partition.filter.condition.trace_filter.span_filter.is_root_span`
 
 Required:
 
 - `value` (Boolean) Boolean value the target field is compared against.
 
 
-<a id="nestedblock--partition--filter--condition--trace_filter--span_filters--operation"></a>
-### Nested Schema for `partition.filter.condition.trace_filter.span_filters.operation`
+<a id="nestedblock--partition--filter--condition--trace_filter--span_filter--operation"></a>
+### Nested Schema for `partition.filter.condition.trace_filter.span_filter.operation`
 
 Optional:
 
@@ -124,8 +124,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--filter--condition--trace_filter--span_filters--parent_operation"></a>
-### Nested Schema for `partition.filter.condition.trace_filter.span_filters.parent_operation`
+<a id="nestedblock--partition--filter--condition--trace_filter--span_filter--parent_operation"></a>
+### Nested Schema for `partition.filter.condition.trace_filter.span_filter.parent_operation`
 
 Optional:
 
@@ -134,8 +134,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--filter--condition--trace_filter--span_filters--parent_service"></a>
-### Nested Schema for `partition.filter.condition.trace_filter.span_filters.parent_service`
+<a id="nestedblock--partition--filter--condition--trace_filter--span_filter--parent_service"></a>
+### Nested Schema for `partition.filter.condition.trace_filter.span_filter.parent_service`
 
 Optional:
 
@@ -144,8 +144,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--filter--condition--trace_filter--span_filters--service"></a>
-### Nested Schema for `partition.filter.condition.trace_filter.span_filters.service`
+<a id="nestedblock--partition--filter--condition--trace_filter--span_filter--service"></a>
+### Nested Schema for `partition.filter.condition.trace_filter.span_filter.service`
 
 Optional:
 
@@ -154,17 +154,17 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--filter--condition--trace_filter--span_filters--tags"></a>
-### Nested Schema for `partition.filter.condition.trace_filter.span_filters.tags`
+<a id="nestedblock--partition--filter--condition--trace_filter--span_filter--tag"></a>
+### Nested Schema for `partition.filter.condition.trace_filter.span_filter.tag`
 
 Optional:
 
 - `key` (String) Name of the span tag (span attribute) inspected by this filter.
-- `numeric_value` (Block List, Max: 1) Matches traces or spans where the target numeric field satisfies the comparison against `value`. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filters--tags--numeric_value))
-- `value` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filters--tags--value))
+- `numeric_value` (Block List, Max: 1) Matches traces or spans where the target numeric field satisfies the comparison against `value`. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter--tag--numeric_value))
+- `value` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter--tag--value))
 
-<a id="nestedblock--partition--filter--condition--trace_filter--span_filters--tags--numeric_value"></a>
-### Nested Schema for `partition.filter.condition.trace_filter.span_filters.tags.numeric_value`
+<a id="nestedblock--partition--filter--condition--trace_filter--span_filter--tag--numeric_value"></a>
+### Nested Schema for `partition.filter.condition.trace_filter.span_filter.tag.numeric_value`
 
 Required:
 
@@ -172,8 +172,8 @@ Required:
 - `value` (Number) Numeric value the target field is compared against.
 
 
-<a id="nestedblock--partition--filter--condition--trace_filter--span_filters--tags--value"></a>
-### Nested Schema for `partition.filter.condition.trace_filter.span_filters.tags.value`
+<a id="nestedblock--partition--filter--condition--trace_filter--span_filter--tag--value"></a>
+### Nested Schema for `partition.filter.condition.trace_filter.span_filter.tag.value`
 
 Optional:
 
@@ -210,7 +210,7 @@ Optional:
 
 Optional:
 
-- `dataset_id` (String) Deprecated: use `log_filter`, `metric_filter`, or trace filters instead. Slug of the dataset to match.
+- `dataset_id` (String) Deprecated: use `log_filter`, `metric_filter`, or `trace_filter` instead. Slug of the dataset to match.
 - `log_filter` (Block List, Max: 1) Log search filter matching log data for this condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--log_filter))
 - `metric_filter` (Block List) Metric label filters matched against incoming metric data. Multiple filters are AND-ed together; values support glob patterns including `service:{svc1,svc2}` style alternations. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--metric_filter))
 - `trace_filter` (Block List, Max: 1) Trace filter matching incoming trace data for this condition. Matching happens at the span level. Preview: requires the `enable-consumption-trace-api` feature flag to be enabled on the tenant. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter))
@@ -237,24 +237,24 @@ Required:
 
 Optional:
 
-- `span_filters` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filters))
+- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter))
 
-<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filters"></a>
-### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filters`
+<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filter"></a>
+### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filter`
 
 Optional:
 
-- `duration` (Block List, Max: 1) Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filters--duration))
-- `error` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filters--error))
-- `is_root_span` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filters--is_root_span))
-- `operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filters--operation))
-- `parent_operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filters--parent_operation))
-- `parent_service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filters--parent_service))
-- `service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filters--service))
-- `tags` (Block List) Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filters--tags))
+- `duration` (Block List, Max: 1) Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter--duration))
+- `error` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter--error))
+- `is_root_span` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter--is_root_span))
+- `operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter--operation))
+- `parent_operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter--parent_operation))
+- `parent_service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter--parent_service))
+- `service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter--service))
+- `tag` (Block List) Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter--tag))
 
-<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filters--duration"></a>
-### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filters.duration`
+<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filter--duration"></a>
+### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filter.duration`
 
 Optional:
 
@@ -262,24 +262,24 @@ Optional:
 - `min_secs` (Number) Minimum duration in seconds, inclusive. Defaults to `0`.
 
 
-<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filters--error"></a>
-### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filters.error`
+<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filter--error"></a>
+### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filter.error`
 
 Required:
 
 - `value` (Boolean) Boolean value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filters--is_root_span"></a>
-### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filters.is_root_span`
+<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filter--is_root_span"></a>
+### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filter.is_root_span`
 
 Required:
 
 - `value` (Boolean) Boolean value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filters--operation"></a>
-### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filters.operation`
+<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filter--operation"></a>
+### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filter.operation`
 
 Optional:
 
@@ -288,8 +288,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filters--parent_operation"></a>
-### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filters.parent_operation`
+<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filter--parent_operation"></a>
+### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filter.parent_operation`
 
 Optional:
 
@@ -298,8 +298,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filters--parent_service"></a>
-### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filters.parent_service`
+<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filter--parent_service"></a>
+### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filter.parent_service`
 
 Optional:
 
@@ -308,8 +308,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filters--service"></a>
-### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filters.service`
+<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filter--service"></a>
+### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filter.service`
 
 Optional:
 
@@ -318,17 +318,17 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filters--tags"></a>
-### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filters.tags`
+<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filter--tag"></a>
+### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filter.tag`
 
 Optional:
 
 - `key` (String) Name of the span tag (span attribute) inspected by this filter.
-- `numeric_value` (Block List, Max: 1) Matches traces or spans where the target numeric field satisfies the comparison against `value`. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filters--tags--numeric_value))
-- `value` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filters--tags--value))
+- `numeric_value` (Block List, Max: 1) Matches traces or spans where the target numeric field satisfies the comparison against `value`. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter--tag--numeric_value))
+- `value` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter--tag--value))
 
-<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filters--tags--numeric_value"></a>
-### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filters.tags.numeric_value`
+<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filter--tag--numeric_value"></a>
+### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filter.tag.numeric_value`
 
 Required:
 
@@ -336,8 +336,8 @@ Required:
 - `value` (Number) Numeric value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filters--tags--value"></a>
-### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filters.tags.value`
+<a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filter--tag--value"></a>
+### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filter.tag.value`
 
 Optional:
 
@@ -374,7 +374,7 @@ Optional:
 
 Optional:
 
-- `dataset_id` (String) Deprecated: use `log_filter`, `metric_filter`, or trace filters instead. Slug of the dataset to match.
+- `dataset_id` (String) Deprecated: use `log_filter`, `metric_filter`, or `trace_filter` instead. Slug of the dataset to match.
 - `log_filter` (Block List, Max: 1) Log search filter matching log data for this condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--log_filter))
 - `metric_filter` (Block List) Metric label filters matched against incoming metric data. Multiple filters are AND-ed together; values support glob patterns including `service:{svc1,svc2}` style alternations. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--metric_filter))
 - `trace_filter` (Block List, Max: 1) Trace filter matching incoming trace data for this condition. Matching happens at the span level. Preview: requires the `enable-consumption-trace-api` feature flag to be enabled on the tenant. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter))
@@ -401,24 +401,24 @@ Required:
 
 Optional:
 
-- `span_filters` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters))
+- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter))
 
-<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters"></a>
-### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filters`
+<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter"></a>
+### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filter`
 
 Optional:
 
-- `duration` (Block List, Max: 1) Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--duration))
-- `error` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--error))
-- `is_root_span` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--is_root_span))
-- `operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--operation))
-- `parent_operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_operation))
-- `parent_service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_service))
-- `service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--service))
-- `tags` (Block List) Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--tags))
+- `duration` (Block List, Max: 1) Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--duration))
+- `error` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--error))
+- `is_root_span` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--is_root_span))
+- `operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--operation))
+- `parent_operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_operation))
+- `parent_service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_service))
+- `service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--service))
+- `tag` (Block List) Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--tag))
 
-<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--duration"></a>
-### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filters.duration`
+<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--duration"></a>
+### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filter.duration`
 
 Optional:
 
@@ -426,24 +426,24 @@ Optional:
 - `min_secs` (Number) Minimum duration in seconds, inclusive. Defaults to `0`.
 
 
-<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--error"></a>
-### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filters.error`
+<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--error"></a>
+### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filter.error`
 
 Required:
 
 - `value` (Boolean) Boolean value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--is_root_span"></a>
-### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filters.is_root_span`
+<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--is_root_span"></a>
+### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filter.is_root_span`
 
 Required:
 
 - `value` (Boolean) Boolean value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--operation"></a>
-### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filters.operation`
+<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--operation"></a>
+### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filter.operation`
 
 Optional:
 
@@ -452,8 +452,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_operation"></a>
-### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filters.parent_operation`
+<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_operation"></a>
+### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filter.parent_operation`
 
 Optional:
 
@@ -462,8 +462,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_service"></a>
-### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filters.parent_service`
+<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_service"></a>
+### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filter.parent_service`
 
 Optional:
 
@@ -472,8 +472,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--service"></a>
-### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filters.service`
+<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--service"></a>
+### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filter.service`
 
 Optional:
 
@@ -482,17 +482,17 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--tags"></a>
-### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filters.tags`
+<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--tag"></a>
+### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filter.tag`
 
 Optional:
 
 - `key` (String) Name of the span tag (span attribute) inspected by this filter.
-- `numeric_value` (Block List, Max: 1) Matches traces or spans where the target numeric field satisfies the comparison against `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--numeric_value))
-- `value` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--value))
+- `numeric_value` (Block List, Max: 1) Matches traces or spans where the target numeric field satisfies the comparison against `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--numeric_value))
+- `value` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--value))
 
-<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--numeric_value"></a>
-### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filters.tags.numeric_value`
+<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--numeric_value"></a>
+### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filter.tag.numeric_value`
 
 Required:
 
@@ -500,8 +500,8 @@ Required:
 - `value` (Number) Numeric value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--value"></a>
-### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filters.tags.value`
+<a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--value"></a>
+### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filter.tag.value`
 
 Optional:
 
@@ -538,7 +538,7 @@ Optional:
 
 Optional:
 
-- `dataset_id` (String) Deprecated: use `log_filter`, `metric_filter`, or trace filters instead. Slug of the dataset to match.
+- `dataset_id` (String) Deprecated: use `log_filter`, `metric_filter`, or `trace_filter` instead. Slug of the dataset to match.
 - `log_filter` (Block List, Max: 1) Log search filter matching log data for this condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--log_filter))
 - `metric_filter` (Block List) Metric label filters matched against incoming metric data. Multiple filters are AND-ed together; values support glob patterns including `service:{svc1,svc2}` style alternations. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--metric_filter))
 - `trace_filter` (Block List, Max: 1) Trace filter matching incoming trace data for this condition. Matching happens at the span level. Preview: requires the `enable-consumption-trace-api` feature flag to be enabled on the tenant. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter))
@@ -565,24 +565,24 @@ Required:
 
 Optional:
 
-- `span_filters` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters))
+- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter))
 
-<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters"></a>
-### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filters`
+<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter"></a>
+### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filter`
 
 Optional:
 
-- `duration` (Block List, Max: 1) Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--duration))
-- `error` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--error))
-- `is_root_span` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--is_root_span))
-- `operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--operation))
-- `parent_operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_operation))
-- `parent_service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_service))
-- `service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--service))
-- `tags` (Block List) Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags))
+- `duration` (Block List, Max: 1) Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--duration))
+- `error` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--error))
+- `is_root_span` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--is_root_span))
+- `operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--operation))
+- `parent_operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_operation))
+- `parent_service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_service))
+- `service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--service))
+- `tag` (Block List) Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag))
 
-<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--duration"></a>
-### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filters.duration`
+<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--duration"></a>
+### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filter.duration`
 
 Optional:
 
@@ -590,24 +590,24 @@ Optional:
 - `min_secs` (Number) Minimum duration in seconds, inclusive. Defaults to `0`.
 
 
-<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--error"></a>
-### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filters.error`
+<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--error"></a>
+### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filter.error`
 
 Required:
 
 - `value` (Boolean) Boolean value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--is_root_span"></a>
-### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filters.is_root_span`
+<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--is_root_span"></a>
+### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filter.is_root_span`
 
 Required:
 
 - `value` (Boolean) Boolean value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--operation"></a>
-### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filters.operation`
+<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--operation"></a>
+### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filter.operation`
 
 Optional:
 
@@ -616,8 +616,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_operation"></a>
-### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filters.parent_operation`
+<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_operation"></a>
+### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filter.parent_operation`
 
 Optional:
 
@@ -626,8 +626,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_service"></a>
-### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filters.parent_service`
+<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_service"></a>
+### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filter.parent_service`
 
 Optional:
 
@@ -636,8 +636,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--service"></a>
-### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filters.service`
+<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--service"></a>
+### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filter.service`
 
 Optional:
 
@@ -646,17 +646,17 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags"></a>
-### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filters.tags`
+<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag"></a>
+### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filter.tag`
 
 Optional:
 
 - `key` (String) Name of the span tag (span attribute) inspected by this filter.
-- `numeric_value` (Block List, Max: 1) Matches traces or spans where the target numeric field satisfies the comparison against `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--numeric_value))
-- `value` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--value))
+- `numeric_value` (Block List, Max: 1) Matches traces or spans where the target numeric field satisfies the comparison against `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--numeric_value))
+- `value` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--value))
 
-<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--numeric_value"></a>
-### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filters.tags.numeric_value`
+<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--numeric_value"></a>
+### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filter.tag.numeric_value`
 
 Required:
 
@@ -664,8 +664,8 @@ Required:
 - `value` (Number) Numeric value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--value"></a>
-### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filters.tags.value`
+<a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--value"></a>
+### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filter.tag.value`
 
 Optional:
 
@@ -702,7 +702,7 @@ Optional:
 
 Optional:
 
-- `dataset_id` (String) Deprecated: use `log_filter`, `metric_filter`, or trace filters instead. Slug of the dataset to match.
+- `dataset_id` (String) Deprecated: use `log_filter`, `metric_filter`, or `trace_filter` instead. Slug of the dataset to match.
 - `log_filter` (Block List, Max: 1) Log search filter matching log data for this condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--log_filter))
 - `metric_filter` (Block List) Metric label filters matched against incoming metric data. Multiple filters are AND-ed together; values support glob patterns including `service:{svc1,svc2}` style alternations. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--metric_filter))
 - `trace_filter` (Block List, Max: 1) Trace filter matching incoming trace data for this condition. Matching happens at the span level. Preview: requires the `enable-consumption-trace-api` feature flag to be enabled on the tenant. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter))
@@ -729,24 +729,24 @@ Required:
 
 Optional:
 
-- `span_filters` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters))
+- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter))
 
-<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters`
+<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter`
 
 Optional:
 
-- `duration` (Block List, Max: 1) Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--duration))
-- `error` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--error))
-- `is_root_span` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--is_root_span))
-- `operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--operation))
-- `parent_operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_operation))
-- `parent_service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_service))
-- `service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--service))
-- `tags` (Block List) Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags))
+- `duration` (Block List, Max: 1) Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--duration))
+- `error` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--error))
+- `is_root_span` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--is_root_span))
+- `operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--operation))
+- `parent_operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_operation))
+- `parent_service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_service))
+- `service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--service))
+- `tag` (Block List) Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag))
 
-<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--duration"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.duration`
+<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--duration"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.duration`
 
 Optional:
 
@@ -754,24 +754,24 @@ Optional:
 - `min_secs` (Number) Minimum duration in seconds, inclusive. Defaults to `0`.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--error"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.error`
+<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--error"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.error`
 
 Required:
 
 - `value` (Boolean) Boolean value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--is_root_span"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.is_root_span`
+<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--is_root_span"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.is_root_span`
 
 Required:
 
 - `value` (Boolean) Boolean value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--operation"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.operation`
+<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--operation"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.operation`
 
 Optional:
 
@@ -780,8 +780,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_operation"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.parent_operation`
+<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_operation"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.parent_operation`
 
 Optional:
 
@@ -790,8 +790,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_service"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.parent_service`
+<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_service"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.parent_service`
 
 Optional:
 
@@ -800,8 +800,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--service"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.service`
+<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--service"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.service`
 
 Optional:
 
@@ -810,17 +810,17 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.tags`
+<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.tag`
 
 Optional:
 
 - `key` (String) Name of the span tag (span attribute) inspected by this filter.
-- `numeric_value` (Block List, Max: 1) Matches traces or spans where the target numeric field satisfies the comparison against `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--numeric_value))
-- `value` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--value))
+- `numeric_value` (Block List, Max: 1) Matches traces or spans where the target numeric field satisfies the comparison against `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--numeric_value))
+- `value` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--value))
 
-<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--numeric_value"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.tags.numeric_value`
+<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--numeric_value"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.tag.numeric_value`
 
 Required:
 
@@ -828,8 +828,8 @@ Required:
 - `value` (Number) Numeric value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--value"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.tags.value`
+<a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--value"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.tag.value`
 
 Optional:
 
@@ -865,7 +865,7 @@ Optional:
 
 Optional:
 
-- `dataset_id` (String) Deprecated: use `log_filter`, `metric_filter`, or trace filters instead. Slug of the dataset to match.
+- `dataset_id` (String) Deprecated: use `log_filter`, `metric_filter`, or `trace_filter` instead. Slug of the dataset to match.
 - `log_filter` (Block List, Max: 1) Log search filter matching log data for this condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--log_filter))
 - `metric_filter` (Block List) Metric label filters matched against incoming metric data. Multiple filters are AND-ed together; values support glob patterns including `service:{svc1,svc2}` style alternations. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--metric_filter))
 - `trace_filter` (Block List, Max: 1) Trace filter matching incoming trace data for this condition. Matching happens at the span level. Preview: requires the `enable-consumption-trace-api` feature flag to be enabled on the tenant. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter))
@@ -892,24 +892,24 @@ Required:
 
 Optional:
 
-- `span_filters` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters))
+- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter))
 
-<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters`
+<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter`
 
 Optional:
 
-- `duration` (Block List, Max: 1) Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--duration))
-- `error` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--error))
-- `is_root_span` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--is_root_span))
-- `operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--operation))
-- `parent_operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_operation))
-- `parent_service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_service))
-- `service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--service))
-- `tags` (Block List) Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags))
+- `duration` (Block List, Max: 1) Matches traces or spans whose duration in seconds falls within the inclusive `[min_secs, max_secs]` range. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--duration))
+- `error` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--error))
+- `is_root_span` (Block List, Max: 1) Matches traces or spans where the target boolean field equals `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--is_root_span))
+- `operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--operation))
+- `parent_operation` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_operation))
+- `parent_service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_service))
+- `service` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--service))
+- `tag` (Block List) Matches spans whose tag (span attribute) with the given `key` has a value satisfying the nested string or numeric filter. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag))
 
-<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--duration"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.duration`
+<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--duration"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.duration`
 
 Optional:
 
@@ -917,24 +917,24 @@ Optional:
 - `min_secs` (Number) Minimum duration in seconds, inclusive. Defaults to `0`.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--error"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.error`
+<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--error"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.error`
 
 Required:
 
 - `value` (Boolean) Boolean value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--is_root_span"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.is_root_span`
+<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--is_root_span"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.is_root_span`
 
 Required:
 
 - `value` (Boolean) Boolean value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--operation"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.operation`
+<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--operation"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.operation`
 
 Optional:
 
@@ -943,8 +943,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_operation"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.parent_operation`
+<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_operation"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.parent_operation`
 
 Optional:
 
@@ -953,8 +953,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--parent_service"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.parent_service`
+<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--parent_service"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.parent_service`
 
 Optional:
 
@@ -963,8 +963,8 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--service"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.service`
+<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--service"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.service`
 
 Optional:
 
@@ -973,17 +973,17 @@ Optional:
 - `value` (String) Single string compared against the target field. Used with `EXACT` and `REGEX` match types.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.tags`
+<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.tag`
 
 Optional:
 
 - `key` (String) Name of the span tag (span attribute) inspected by this filter.
-- `numeric_value` (Block List, Max: 1) Matches traces or spans where the target numeric field satisfies the comparison against `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--numeric_value))
-- `value` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--value))
+- `numeric_value` (Block List, Max: 1) Matches traces or spans where the target numeric field satisfies the comparison against `value`. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--numeric_value))
+- `value` (Block List, Max: 1) Matches traces or spans where the target string field satisfies the match condition. (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--value))
 
-<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--numeric_value"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.tags.numeric_value`
+<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--numeric_value"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.tag.numeric_value`
 
 Required:
 
@@ -991,8 +991,8 @@ Required:
 - `value` (Number) Numeric value the target field is compared against.
 
 
-<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filters--tags--value"></a>
-### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filters.tags.value`
+<a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter--tag--value"></a>
+### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter.tag.value`
 
 Optional:
 

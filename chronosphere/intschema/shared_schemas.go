@@ -153,10 +153,10 @@ type PartitionFilterConditionMetricFilter struct {
 }
 
 type PartitionFilterConditionTraceFilter struct {
-	SpanFilters []PartitionFilterConditionTraceFilterSpanFilters `intschema:"span_filters,optional"`
+	SpanFilter []PartitionFilterConditionTraceFilterSpanFilter `intschema:"span_filter,optional"`
 }
 
-type PartitionFilterConditionTraceFilterSpanFilters struct {
+type PartitionFilterConditionTraceFilterSpanFilter struct {
 	Duration        *TraceDurationFilter `intschema:"duration,optional,list_encoded_object"`
 	Error           *TraceBoolFilter     `intschema:"error,optional,list_encoded_object"`
 	IsRootSpan      *TraceBoolFilter     `intschema:"is_root_span,optional,list_encoded_object"`
@@ -164,7 +164,7 @@ type PartitionFilterConditionTraceFilterSpanFilters struct {
 	ParentOperation *TraceStringFilter   `intschema:"parent_operation,optional,list_encoded_object"`
 	ParentService   *TraceStringFilter   `intschema:"parent_service,optional,list_encoded_object"`
 	Service         *TraceStringFilter   `intschema:"service,optional,list_encoded_object"`
-	Tags            []TraceTagFilter     `intschema:"tags,optional"`
+	Tag             []TraceTagFilter     `intschema:"tag,optional"`
 }
 
 type RegexParser struct {

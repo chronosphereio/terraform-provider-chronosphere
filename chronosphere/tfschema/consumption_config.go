@@ -73,7 +73,7 @@ var PartitionFilterSchema = &schema.Schema{
 						"dataset_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Deprecated: use `log_filter`, `metric_filter`, or trace filters instead. Slug of the dataset to match.",
+							Description: "Deprecated: use `log_filter`, `metric_filter`, or `trace_filter` instead. Slug of the dataset to match.",
 						},
 						"log_filter": {
 							Type:        schema.TypeList,
@@ -110,10 +110,10 @@ var PartitionFilterSchema = &schema.Schema{
 							Description: "Trace filter matching incoming trace data for this condition. Matching happens at the span level. Preview: requires the `enable-consumption-trace-api` feature flag to be enabled on the tenant.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"span_filters": {
+									"span_filter": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: "Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks.",
+										Description: "Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent).",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"service":          TraceStringFilterSchema,
@@ -122,7 +122,7 @@ var PartitionFilterSchema = &schema.Schema{
 												"parent_operation": TraceStringFilterSchema,
 												"duration":         TraceDurationFilterSchema,
 												"error":            TraceBoolFilterSchema,
-												"tags":             TraceTagFilterSchema,
+												"tag":              TraceTagFilterSchema,
 												"is_root_span":     TraceBoolFilterSchema,
 											},
 										},
