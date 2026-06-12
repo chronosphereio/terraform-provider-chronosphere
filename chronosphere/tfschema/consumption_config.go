@@ -113,7 +113,7 @@ var PartitionFilterSchema = &schema.Schema{
 									"span_filter": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: "Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent).",
+										Description: "Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. If multiple `span_filter` blocks are specified, a span must satisfy every block to match the condition. Express alternatives with an `IN` matcher or with separate `condition` blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent).",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"service":          TraceStringFilterSchema,

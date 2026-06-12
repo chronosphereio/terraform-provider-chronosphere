@@ -34,9 +34,9 @@ resource "chronosphere_consumption_config" "config" {
     filter {
       operator = "IN"
       condition {
-        # A span matches the trace_filter if it satisfies ANY one
-        # span_filter block: blocks OR together, while the conditions
-        # within a block must all hold on the same span (AND).
+        # span_filter blocks AND together: a single span must satisfy
+        # every block (and every filter within a block) to match the
+        # condition.
         trace_filter {
           span_filter {
             service {
@@ -46,7 +46,16 @@ resource "chronosphere_consumption_config" "config" {
             error {
               value = true
             }
+            duration {
+              min_secs = 0.5
+            }
           }
+        }
+      }
+      # Express alternatives with an `in` matcher or with a separate
+      # condition block, like this one.
+      condition {
+        trace_filter {
           span_filter {
             parent_service {
               match     = "in"
@@ -128,7 +137,7 @@ Required:
 
 Optional:
 
-- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter))
+- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. If multiple `span_filter` blocks are specified, a span must satisfy every block to match the condition. Express alternatives with an `IN` matcher or with separate `condition` blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--filter--condition--trace_filter--span_filter))
 
 <a id="nestedblock--partition--filter--condition--trace_filter--span_filter"></a>
 ### Nested Schema for `partition.filter.condition.trace_filter.span_filter`
@@ -292,7 +301,7 @@ Required:
 
 Optional:
 
-- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter))
+- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. If multiple `span_filter` blocks are specified, a span must satisfy every block to match the condition. Express alternatives with an `IN` matcher or with separate `condition` blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--filter--condition--trace_filter--span_filter))
 
 <a id="nestedblock--partition--partition--filter--condition--trace_filter--span_filter"></a>
 ### Nested Schema for `partition.partition.filter.condition.trace_filter.span_filter`
@@ -456,7 +465,7 @@ Required:
 
 Optional:
 
-- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter))
+- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. If multiple `span_filter` blocks are specified, a span must satisfy every block to match the condition. Express alternatives with an `IN` matcher or with separate `condition` blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter))
 
 <a id="nestedblock--partition--partition--partition--filter--condition--trace_filter--span_filter"></a>
 ### Nested Schema for `partition.partition.partition.filter.condition.trace_filter.span_filter`
@@ -620,7 +629,7 @@ Required:
 
 Optional:
 
-- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter))
+- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. If multiple `span_filter` blocks are specified, a span must satisfy every block to match the condition. Express alternatives with an `IN` matcher or with separate `condition` blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter))
 
 <a id="nestedblock--partition--partition--partition--partition--filter--condition--trace_filter--span_filter"></a>
 ### Nested Schema for `partition.partition.partition.partition.filter.condition.trace_filter.span_filter`
@@ -784,7 +793,7 @@ Required:
 
 Optional:
 
-- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter))
+- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. If multiple `span_filter` blocks are specified, a span must satisfy every block to match the condition. Express alternatives with an `IN` matcher or with separate `condition` blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter))
 
 <a id="nestedblock--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter"></a>
 ### Nested Schema for `partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter`
@@ -947,7 +956,7 @@ Required:
 
 Optional:
 
-- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. A span matches if it satisfies any of the blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter))
+- `span_filter` (Block List) Span-level filters. Each block matches one span at a time: every condition in the block must hold on the same candidate span. If multiple `span_filter` blocks are specified, a span must satisfy every block to match the condition. Express alternatives with an `IN` matcher or with separate `condition` blocks. Filters on `parent_service` and `parent_operation` match against the span's parent span; spans without a parent, including root spans, never match them. `is_root_span` matches whether the span is its trace's root span (the span with no parent). (see [below for nested schema](#nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter))
 
 <a id="nestedblock--partition--partition--partition--partition--partition--partition--filter--condition--trace_filter--span_filter"></a>
 ### Nested Schema for `partition.partition.partition.partition.partition.partition.filter.condition.trace_filter.span_filter`

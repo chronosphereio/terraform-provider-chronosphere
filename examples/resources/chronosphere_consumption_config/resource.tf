@@ -19,9 +19,9 @@ resource "chronosphere_consumption_config" "config" {
     filter {
       operator = "IN"
       condition {
-        # A span matches the trace_filter if it satisfies ANY one
-        # span_filter block: blocks OR together, while the conditions
-        # within a block must all hold on the same span (AND).
+        # span_filter blocks AND together: a single span must satisfy
+        # every block (and every filter within a block) to match the
+        # condition.
         trace_filter {
           span_filter {
             service {
@@ -31,7 +31,16 @@ resource "chronosphere_consumption_config" "config" {
             error {
               value = true
             }
+            duration {
+              min_secs = 0.5
+            }
           }
+        }
+      }
+      # Express alternatives with an `in` matcher or with a separate
+      # condition block, like this one.
+      condition {
+        trace_filter {
           span_filter {
             parent_service {
               match     = "in"
