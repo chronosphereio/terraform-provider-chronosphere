@@ -32,4 +32,20 @@ var TraceMetricsRuleGroupByType = newEnum("TraceMetricsRuleGroupByType", []value
 		v1:    models.GroupByKeyGroupByKeyTypeSERVICE,
 		alias: "SERVICE",
 	},
+	{
+		v1:    models.GroupByKeyGroupByKeyTypePARENTSERVICE,
+		alias: "PARENT_SERVICE",
+	},
+	{
+		v1:    models.GroupByKeyGroupByKeyTypePARENTOPERATION,
+		alias: "PARENT_OPERATION",
+	},
+	{
+		v1:    models.GroupByKeyGroupByKeyTypeROOTSERVICE,
+		alias: "ROOT_SERVICE",
+	},
+	{
+		v1:    models.GroupByKeyGroupByKeyTypeROOTOPERATION,
+		alias: "ROOT_OPERATION",
+	},
 })

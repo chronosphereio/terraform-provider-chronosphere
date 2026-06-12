@@ -19,11 +19,36 @@ import (
 // swagger:model SyntheticTestHttpTestConfig
 type SyntheticTestHTTPTestConfig struct {
 
+	// assertions
+	Assertions []*HTTPTestConfigAssertion `json:"assertions"`
+
+	// authentication
+	Authentication *HTTPTestConfigHTTPAuth `json:"authentication,omitempty"`
+
+	// content type
+	ContentType HTTPTestConfigContentType `json:"content_type,omitempty"`
+
+	// follow redirects
+	FollowRedirects bool `json:"follow_redirects,omitempty"`
+
+	// headers
+	Headers []*HTTPTestConfigHeader `json:"headers"`
+
+	// http version
+	HTTPVersion HTTPTestConfigHTTPVersion `json:"http_version,omitempty"`
+
+	// optional — 0-10; defaults to 10 when follow_redirects is set
+	MaxRedirects int32 `json:"max_redirects,omitempty"`
+
 	// method
 	Method HTTPTestConfigHTTPMethod `json:"method,omitempty"`
 
-	// status code assertions
-	StatusCodeAssertions []*SyntheticTestStatusCodeAssertion `json:"status_code_assertions"`
+	// query params
+	QueryParams map[string]string `json:"query_params,omitempty"`
+
+	// request body
+	// Format: byte
+	RequestBody strfmt.Base64 `json:"request_body,omitempty"`
 
 	// url
 	URL string `json:"url,omitempty"`
@@ -33,17 +58,138 @@ type SyntheticTestHTTPTestConfig struct {
 func (m *SyntheticTestHTTPTestConfig) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateMethod(formats); err != nil {
+	if err := m.validateAssertions(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateStatusCodeAssertions(formats); err != nil {
+	if err := m.validateAuthentication(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateContentType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHeaders(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPVersion(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMethod(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *SyntheticTestHTTPTestConfig) validateAssertions(formats strfmt.Registry) error {
+	if swag.IsZero(m.Assertions) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Assertions); i++ {
+		if swag.IsZero(m.Assertions[i]) { // not required
+			continue
+		}
+
+		if m.Assertions[i] != nil {
+			if err := m.Assertions[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("assertions" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("assertions" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *SyntheticTestHTTPTestConfig) validateAuthentication(formats strfmt.Registry) error {
+	if swag.IsZero(m.Authentication) { // not required
+		return nil
+	}
+
+	if m.Authentication != nil {
+		if err := m.Authentication.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("authentication")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("authentication")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *SyntheticTestHTTPTestConfig) validateContentType(formats strfmt.Registry) error {
+	if swag.IsZero(m.ContentType) { // not required
+		return nil
+	}
+
+	if err := m.ContentType.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("content_type")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("content_type")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *SyntheticTestHTTPTestConfig) validateHeaders(formats strfmt.Registry) error {
+	if swag.IsZero(m.Headers) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Headers); i++ {
+		if swag.IsZero(m.Headers[i]) { // not required
+			continue
+		}
+
+		if m.Headers[i] != nil {
+			if err := m.Headers[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("headers" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("headers" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *SyntheticTestHTTPTestConfig) validateHTTPVersion(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPVersion) { // not required
+		return nil
+	}
+
+	if err := m.HTTPVersion.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_version")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_version")
+		}
+		return err
+	}
+
 	return nil
 }
 
@@ -64,22 +210,50 @@ func (m *SyntheticTestHTTPTestConfig) validateMethod(formats strfmt.Registry) er
 	return nil
 }
 
-func (m *SyntheticTestHTTPTestConfig) validateStatusCodeAssertions(formats strfmt.Registry) error {
-	if swag.IsZero(m.StatusCodeAssertions) { // not required
-		return nil
+// ContextValidate validate this synthetic test Http test config based on the context it is used
+func (m *SyntheticTestHTTPTestConfig) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateAssertions(ctx, formats); err != nil {
+		res = append(res, err)
 	}
 
-	for i := 0; i < len(m.StatusCodeAssertions); i++ {
-		if swag.IsZero(m.StatusCodeAssertions[i]) { // not required
-			continue
-		}
+	if err := m.contextValidateAuthentication(ctx, formats); err != nil {
+		res = append(res, err)
+	}
 
-		if m.StatusCodeAssertions[i] != nil {
-			if err := m.StatusCodeAssertions[i].Validate(formats); err != nil {
+	if err := m.contextValidateContentType(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateHeaders(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateHTTPVersion(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateMethod(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *SyntheticTestHTTPTestConfig) contextValidateAssertions(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Assertions); i++ {
+
+		if m.Assertions[i] != nil {
+			if err := m.Assertions[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("status_code_assertions" + "." + strconv.Itoa(i))
+					return ve.ValidateName("assertions" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("status_code_assertions" + "." + strconv.Itoa(i))
+					return ce.ValidateName("assertions" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -90,21 +264,67 @@ func (m *SyntheticTestHTTPTestConfig) validateStatusCodeAssertions(formats strfm
 	return nil
 }
 
-// ContextValidate validate this synthetic test Http test config based on the context it is used
-func (m *SyntheticTestHTTPTestConfig) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	var res []error
+func (m *SyntheticTestHTTPTestConfig) contextValidateAuthentication(ctx context.Context, formats strfmt.Registry) error {
 
-	if err := m.contextValidateMethod(ctx, formats); err != nil {
-		res = append(res, err)
+	if m.Authentication != nil {
+		if err := m.Authentication.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("authentication")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("authentication")
+			}
+			return err
+		}
 	}
 
-	if err := m.contextValidateStatusCodeAssertions(ctx, formats); err != nil {
-		res = append(res, err)
+	return nil
+}
+
+func (m *SyntheticTestHTTPTestConfig) contextValidateContentType(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.ContentType.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("content_type")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("content_type")
+		}
+		return err
 	}
 
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
+	return nil
+}
+
+func (m *SyntheticTestHTTPTestConfig) contextValidateHeaders(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Headers); i++ {
+
+		if m.Headers[i] != nil {
+			if err := m.Headers[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("headers" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("headers" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
+
+	return nil
+}
+
+func (m *SyntheticTestHTTPTestConfig) contextValidateHTTPVersion(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.HTTPVersion.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_version")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_version")
+		}
+		return err
+	}
+
 	return nil
 }
 
@@ -117,26 +337,6 @@ func (m *SyntheticTestHTTPTestConfig) contextValidateMethod(ctx context.Context,
 			return ce.ValidateName("method")
 		}
 		return err
-	}
-
-	return nil
-}
-
-func (m *SyntheticTestHTTPTestConfig) contextValidateStatusCodeAssertions(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.StatusCodeAssertions); i++ {
-
-		if m.StatusCodeAssertions[i] != nil {
-			if err := m.StatusCodeAssertions[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("status_code_assertions" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("status_code_assertions" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
 	}
 
 	return nil

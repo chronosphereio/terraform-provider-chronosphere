@@ -18,6 +18,9 @@ import (
 // swagger:model configunstableCreateSyntheticTestRequest
 type ConfigunstableCreateSyntheticTestRequest struct {
 
+	// If `true`, validates the specified configuration without creating the SyntheticTest. If the specified configuration is valid, the endpoint returns a partial response without the SyntheticTest. If the specified configuration is invalid, the endpoint returns an error.
+	DryRun bool `json:"dry_run,omitempty"`
+
 	// synthetic test
 	SyntheticTest *ConfigunstableSyntheticTest `json:"synthetic_test,omitempty"`
 }
