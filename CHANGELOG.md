@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.30.0
+
 Added:
 * Add `PARENT_SERVICE`, `PARENT_OPERATION`, `ROOT_SERVICE`, and
   `ROOT_OPERATION` group-by key types to `chronosphere_trace_metrics_rule`.
