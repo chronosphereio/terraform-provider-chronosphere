@@ -3,12 +3,12 @@
 page_title: "chronosphere_consumption_config Resource - chronosphere"
 subcategory: ""
 description: |-
-  Singleton tree of consumption partitions that classify metric and log data into hierarchical groups so that consumption_budget resources can enforce quotas against them.
+  Singleton tree of consumption partitions that classify metric, log, and trace data into hierarchical groups so that consumption_budget resources can enforce quotas against them.
 ---
 
 # chronosphere_consumption_config (Resource)
 
-Singleton tree of consumption partitions that classify metric and log data into hierarchical groups so that consumption_budget resources can enforce quotas against them.
+Singleton tree of consumption partitions that classify metric, log, and trace data into hierarchical groups so that consumption_budget resources can enforce quotas against them.
 
 
 
