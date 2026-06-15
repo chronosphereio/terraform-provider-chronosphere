@@ -101,10 +101,8 @@ func conditionToModel(c intschema.PartitionFilterCondition) (*models.PartitionFi
 			Query: c.LogFilter.Query,
 		}
 	}
-	if c.TraceFilter != nil {
-		result.TraceFilter = &models.Configv1ConsumptionTraceFilter{
-			SpanFilters: sliceutil.Map(c.TraceFilter.SpanFilter, consumptionSpanFilterToModel),
-		}
+	if len(c.TraceSpanFilter) > 0 {
+		result.TraceSpanFilters = sliceutil.Map(c.TraceSpanFilter, consumptionSpanFilterToModel)
 	}
 	return result, nil
 }
@@ -119,9 +117,9 @@ func metricFiltersToModel(filters []intschema.PartitionFilterConditionMetricFilt
 }
 
 func consumptionSpanFilterToModel(
-	s intschema.PartitionFilterConditionTraceFilterSpanFilter,
-) *models.ConsumptionTraceFilterConsumptionSpanFilter {
-	return &models.ConsumptionTraceFilterConsumptionSpanFilter{
+	s intschema.PartitionFilterConditionTraceSpanFilter,
+) *models.Configv1ConsumptionSpanFilter {
+	return &models.Configv1ConsumptionSpanFilter{
 		Service:         stringFilterToModel(s.Service),
 		Operation:       stringFilterToModel(s.Operation),
 		ParentService:   stringFilterToModel(s.ParentService),
@@ -167,10 +165,8 @@ func conditionFromModel(c *models.PartitionFilterCondition) intschema.PartitionF
 			Query: c.LogFilter.Query,
 		}
 	}
-	if c.TraceFilter != nil {
-		result.TraceFilter = &intschema.PartitionFilterConditionTraceFilter{
-			SpanFilter: sliceutil.Map(c.TraceFilter.SpanFilters, consumptionSpanFilterFromModel),
-		}
+	if len(c.TraceSpanFilters) > 0 {
+		result.TraceSpanFilter = sliceutil.Map(c.TraceSpanFilters, consumptionSpanFilterFromModel)
 	}
 	return result
 }
@@ -185,9 +181,9 @@ func metricFiltersFromModel(filters []*models.Configv1LabelFilter) []intschema.P
 }
 
 func consumptionSpanFilterFromModel(
-	s *models.ConsumptionTraceFilterConsumptionSpanFilter,
-) intschema.PartitionFilterConditionTraceFilterSpanFilter {
-	return intschema.PartitionFilterConditionTraceFilterSpanFilter{
+	s *models.Configv1ConsumptionSpanFilter,
+) intschema.PartitionFilterConditionTraceSpanFilter {
+	return intschema.PartitionFilterConditionTraceSpanFilter{
 		Service:         stringFilterFromModel(s.Service),
 		Operation:       stringFilterFromModel(s.Operation),
 		ParentService:   stringFilterFromModel(s.ParentService),

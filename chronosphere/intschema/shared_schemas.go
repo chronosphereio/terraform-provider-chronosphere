@@ -137,10 +137,10 @@ type PartitionFilter struct {
 }
 
 type PartitionFilterCondition struct {
-	DatasetId    tfid.ID                                `intschema:"dataset_id,optional"`
-	LogFilter    *PartitionFilterConditionLogFilter     `intschema:"log_filter,optional,list_encoded_object"`
-	MetricFilter []PartitionFilterConditionMetricFilter `intschema:"metric_filter,optional"`
-	TraceFilter  *PartitionFilterConditionTraceFilter   `intschema:"trace_filter,optional,list_encoded_object"`
+	DatasetId       tfid.ID                                   `intschema:"dataset_id,optional"`
+	LogFilter       *PartitionFilterConditionLogFilter        `intschema:"log_filter,optional,list_encoded_object"`
+	MetricFilter    []PartitionFilterConditionMetricFilter    `intschema:"metric_filter,optional"`
+	TraceSpanFilter []PartitionFilterConditionTraceSpanFilter `intschema:"trace_span_filter,optional"`
 }
 
 type PartitionFilterConditionLogFilter struct {
@@ -152,11 +152,7 @@ type PartitionFilterConditionMetricFilter struct {
 	ValueGlob string `intschema:"value_glob"`
 }
 
-type PartitionFilterConditionTraceFilter struct {
-	SpanFilter []PartitionFilterConditionTraceFilterSpanFilter `intschema:"span_filter,optional"`
-}
-
-type PartitionFilterConditionTraceFilterSpanFilter struct {
+type PartitionFilterConditionTraceSpanFilter struct {
 	Duration        *TraceDurationFilter `intschema:"duration,optional,list_encoded_object"`
 	Error           *TraceBoolFilter     `intschema:"error,optional,list_encoded_object"`
 	IsRootSpan      *TraceBoolFilter     `intschema:"is_root_span,optional,list_encoded_object"`
