@@ -27,6 +27,9 @@ type Configv1ExternalConnection struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
+	// mongodb atlas
+	MongodbAtlas *ExternalConnectionMongoDbAtlasConfig `json:"mongodb_atlas,omitempty"`
+
 	// The name of the ExternalConnection. You can modify this value after the ExternalConnection is created.
 	Name string `json:"name,omitempty"`
 
@@ -63,6 +66,10 @@ func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCreatedAt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMongodbAtlas(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -122,6 +129,25 @@ func (m *Configv1ExternalConnection) validateCreatedAt(formats strfmt.Registry) 
 
 	if err := validate.FormatOf("created_at", "body", "date-time", m.CreatedAt.String(), formats); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) validateMongodbAtlas(formats strfmt.Registry) error {
+	if swag.IsZero(m.MongodbAtlas) { // not required
+		return nil
+	}
+
+	if m.MongodbAtlas != nil {
+		if err := m.MongodbAtlas.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("mongodb_atlas")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("mongodb_atlas")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -246,6 +272,10 @@ func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, format
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateMongodbAtlas(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateOpsGenie(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -296,6 +326,22 @@ func (m *Configv1ExternalConnection) contextValidateCreatedAt(ctx context.Contex
 
 	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) contextValidateMongodbAtlas(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.MongodbAtlas != nil {
+		if err := m.MongodbAtlas.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("mongodb_atlas")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("mongodb_atlas")
+			}
+			return err
+		}
 	}
 
 	return nil

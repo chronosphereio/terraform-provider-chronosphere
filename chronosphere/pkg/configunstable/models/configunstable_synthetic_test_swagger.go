@@ -20,6 +20,13 @@ import (
 // swagger:model configunstableSyntheticTest
 type ConfigunstableSyntheticTest struct {
 
+	// collection
+	Collection *Configv1CollectionReference `json:"collection,omitempty"`
+
+	// Slug of the collection that owns the test. Required if `collection` isn't
+	// set.
+	CollectionSlug string `json:"collection_slug,omitempty"`
+
 	// Timestamp of when the SyntheticTest was created. Cannot be set by clients.
 	// Read Only: true
 	// Format: date-time
@@ -39,6 +46,9 @@ type ConfigunstableSyntheticTest struct {
 
 	// locations
 	Locations []SyntheticTestTestLocation `json:"locations"`
+
+	// monitor config
+	MonitorConfig *SyntheticTestMonitorConfig `json:"monitor_config,omitempty"`
 
 	// The name of the SyntheticTest. You can modify this value after the SyntheticTest is created.
 	Name string `json:"name,omitempty"`
@@ -65,6 +75,10 @@ type ConfigunstableSyntheticTest struct {
 func (m *ConfigunstableSyntheticTest) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateCollection(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCreatedAt(formats); err != nil {
 		res = append(res, err)
 	}
@@ -74,6 +88,10 @@ func (m *ConfigunstableSyntheticTest) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLocations(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMonitorConfig(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -92,6 +110,25 @@ func (m *ConfigunstableSyntheticTest) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *ConfigunstableSyntheticTest) validateCollection(formats strfmt.Registry) error {
+	if swag.IsZero(m.Collection) { // not required
+		return nil
+	}
+
+	if m.Collection != nil {
+		if err := m.Collection.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("collection")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("collection")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -147,6 +184,25 @@ func (m *ConfigunstableSyntheticTest) validateLocations(formats strfmt.Registry)
 	return nil
 }
 
+func (m *ConfigunstableSyntheticTest) validateMonitorConfig(formats strfmt.Registry) error {
+	if swag.IsZero(m.MonitorConfig) { // not required
+		return nil
+	}
+
+	if m.MonitorConfig != nil {
+		if err := m.MonitorConfig.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("monitor_config")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("monitor_config")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *ConfigunstableSyntheticTest) validateStatus(formats strfmt.Registry) error {
 	if swag.IsZero(m.Status) { // not required
 		return nil
@@ -197,6 +253,10 @@ func (m *ConfigunstableSyntheticTest) validateUpdatedAt(formats strfmt.Registry)
 func (m *ConfigunstableSyntheticTest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateCollection(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -206,6 +266,10 @@ func (m *ConfigunstableSyntheticTest) ContextValidate(ctx context.Context, forma
 	}
 
 	if err := m.contextValidateLocations(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateMonitorConfig(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -224,6 +288,22 @@ func (m *ConfigunstableSyntheticTest) ContextValidate(ctx context.Context, forma
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *ConfigunstableSyntheticTest) contextValidateCollection(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Collection != nil {
+		if err := m.Collection.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("collection")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("collection")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -265,6 +345,22 @@ func (m *ConfigunstableSyntheticTest) contextValidateLocations(ctx context.Conte
 			return err
 		}
 
+	}
+
+	return nil
+}
+
+func (m *ConfigunstableSyntheticTest) contextValidateMonitorConfig(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.MonitorConfig != nil {
+		if err := m.MonitorConfig.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("monitor_config")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("monitor_config")
+			}
+			return err
+		}
 	}
 
 	return nil

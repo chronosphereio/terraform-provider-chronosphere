@@ -11,6 +11,7 @@ import (
 	"github.com/go-openapi/strfmt"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/cloud_integration"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/command_center_group"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/link_template"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_primary_key"
@@ -70,6 +71,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli := new(ConfigUnstableAPI)
 	cli.Transport = transport
 	cli.CloudIntegration = cloud_integration.New(transport, formats)
+	cli.CommandCenterGroup = command_center_group.New(transport, formats)
 	cli.Dashboard = dashboard.New(transport, formats)
 	cli.LinkTemplate = link_template.New(transport, formats)
 	cli.LogPrimaryKey = log_primary_key.New(transport, formats)
@@ -130,6 +132,8 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 type ConfigUnstableAPI struct {
 	CloudIntegration cloud_integration.ClientService
 
+	CommandCenterGroup command_center_group.ClientService
+
 	Dashboard dashboard.ClientService
 
 	LinkTemplate link_template.ClientService
@@ -165,6 +169,7 @@ type ConfigUnstableAPI struct {
 func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 	c.CloudIntegration.SetTransport(transport)
+	c.CommandCenterGroup.SetTransport(transport)
 	c.Dashboard.SetTransport(transport)
 	c.LinkTemplate.SetTransport(transport)
 	c.LogPrimaryKey.SetTransport(transport)
