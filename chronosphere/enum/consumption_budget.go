@@ -104,6 +104,10 @@ var ConsumptionBudgetResourceGroup = newEnum("ConsumptionBudgetResourceGroup", [
 		v1:    configv1.ConsumptionBudgetResourceGroupMETRICALL,
 		alias: "METRIC_ALL",
 	},
+	{
+		v1:    configv1.ConsumptionBudgetResourceGroupLOGALL,
+		alias: "LOG_ALL",
+	},
 })
 
 // ConsumptionBudgetUnit is an enum.
