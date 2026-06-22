@@ -137,9 +137,10 @@ type PartitionFilter struct {
 }
 
 type PartitionFilterCondition struct {
-	DatasetId    tfid.ID                                `intschema:"dataset_id,optional"`
-	LogFilter    *PartitionFilterConditionLogFilter     `intschema:"log_filter,optional,list_encoded_object"`
-	MetricFilter []PartitionFilterConditionMetricFilter `intschema:"metric_filter,optional"`
+	DatasetId        tfid.ID                                    `intschema:"dataset_id,optional"`
+	LogFilter        *PartitionFilterConditionLogFilter         `intschema:"log_filter,optional,list_encoded_object"`
+	MetricFilter     []PartitionFilterConditionMetricFilter     `intschema:"metric_filter,optional"`
+	TraceSpanFilters []PartitionFilterConditionTraceSpanFilters `intschema:"trace_span_filters,optional"`
 }
 
 type PartitionFilterConditionLogFilter struct {
@@ -149,6 +150,17 @@ type PartitionFilterConditionLogFilter struct {
 type PartitionFilterConditionMetricFilter struct {
 	Name      string `intschema:"name"`
 	ValueGlob string `intschema:"value_glob"`
+}
+
+type PartitionFilterConditionTraceSpanFilters struct {
+	Duration        *TraceDurationFilter `intschema:"duration,optional,list_encoded_object"`
+	Error           *TraceBoolFilter     `intschema:"error,optional,list_encoded_object"`
+	IsRootSpan      *TraceBoolFilter     `intschema:"is_root_span,optional,list_encoded_object"`
+	Operation       *TraceStringFilter   `intschema:"operation,optional,list_encoded_object"`
+	ParentOperation *TraceStringFilter   `intschema:"parent_operation,optional,list_encoded_object"`
+	ParentService   *TraceStringFilter   `intschema:"parent_service,optional,list_encoded_object"`
+	Service         *TraceStringFilter   `intschema:"service,optional,list_encoded_object"`
+	Tag             []TraceTagFilter     `intschema:"tag,optional"`
 }
 
 type RegexParser struct {

@@ -67,7 +67,7 @@ var PartitionFilterSchema = &schema.Schema{
 			"condition": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, or `dataset_id` must be set per condition.",
+				Description: "Conditions evaluated by the filter. Each condition matches by dataset, logs, metrics, or trace data; exactly one of `log_filter`, `metric_filter`, `trace_span_filters`, or `dataset_id` must be set per condition.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"dataset_id": {
@@ -100,6 +100,23 @@ var PartitionFilterSchema = &schema.Schema{
 										Required:    true,
 										Description: "Glob pattern matched against the label's value.",
 									},
+								},
+							},
+						},
+						"trace_span_filters": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Span-level trace filters matched against incoming trace data. A span matches the condition only if it satisfies every filter in the block.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"service":          TraceStringFilterSchema,
+									"operation":        TraceStringFilterSchema,
+									"parent_service":   TraceStringFilterSchema,
+									"parent_operation": TraceStringFilterSchema,
+									"duration":         TraceDurationFilterSchema,
+									"error":            TraceBoolFilterSchema,
+									"tag":              TraceTagFilterSchema,
+									"is_root_span":     TraceBoolFilterSchema,
 								},
 							},
 						},

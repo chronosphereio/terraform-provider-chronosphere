@@ -5,6 +5,9 @@
 Added:
 * Add the `LOG_ALL` value to the `resource_group` field on
   `chronosphere_consumption_budget` thresholds.
+* Add the `trace_span_filters` field to `chronosphere_consumption_config`
+  partition filter conditions, matching incoming trace data at the span
+  level.
 
 ## v1.30.0
 

@@ -93,8 +93,9 @@ func filterToModel(f intschema.PartitionFilter) (*models.ConsumptionConfigPartit
 
 func conditionToModel(c intschema.PartitionFilterCondition) (*models.PartitionFilterCondition, error) {
 	result := &models.PartitionFilterCondition{
-		DatasetSlug:   c.DatasetId.Slug(),
-		MetricFilters: metricFiltersToModel(c.MetricFilter),
+		DatasetSlug:      c.DatasetId.Slug(),
+		MetricFilters:    metricFiltersToModel(c.MetricFilter),
+		TraceSpanFilters: sliceutil.Map(c.TraceSpanFilters, consumptionSpanFilterToModel),
 	}
 	if c.LogFilter != nil {
 		result.LogFilter = &models.Configv1LogSearchFilter{
@@ -102,6 +103,21 @@ func conditionToModel(c intschema.PartitionFilterCondition) (*models.PartitionFi
 		}
 	}
 	return result, nil
+}
+
+func consumptionSpanFilterToModel(
+	f intschema.PartitionFilterConditionTraceSpanFilters,
+) *models.Configv1ConsumptionSpanFilter {
+	return &models.Configv1ConsumptionSpanFilter{
+		Duration:        durationFilterToModel(f.Duration),
+		Error:           boolFilterToModel(f.Error),
+		IsRootSpan:      boolFilterToModel(f.IsRootSpan),
+		Operation:       stringFilterToModel(f.Operation),
+		ParentOperation: stringFilterToModel(f.ParentOperation),
+		ParentService:   stringFilterToModel(f.ParentService),
+		Service:         stringFilterToModel(f.Service),
+		Tags:            sliceutil.Map(f.Tag, tagFilterToModel),
+	}
 }
 
 func metricFiltersToModel(filters []intschema.PartitionFilterConditionMetricFilter) []*models.Configv1LabelFilter {
@@ -139,8 +155,9 @@ func filterFromModel(f *models.ConsumptionConfigPartitionFilter) intschema.Parti
 
 func conditionFromModel(c *models.PartitionFilterCondition) intschema.PartitionFilterCondition {
 	result := intschema.PartitionFilterCondition{
-		DatasetId:    tfid.Slug(c.DatasetSlug),
-		MetricFilter: metricFiltersFromModel(c.MetricFilters),
+		DatasetId:        tfid.Slug(c.DatasetSlug),
+		MetricFilter:     metricFiltersFromModel(c.MetricFilters),
+		TraceSpanFilters: sliceutil.Map(c.TraceSpanFilters, consumptionSpanFilterFromModel),
 	}
 	if c.LogFilter != nil {
 		result.LogFilter = &intschema.PartitionFilterConditionLogFilter{
@@ -148,6 +165,21 @@ func conditionFromModel(c *models.PartitionFilterCondition) intschema.PartitionF
 		}
 	}
 	return result
+}
+
+func consumptionSpanFilterFromModel(
+	f *models.Configv1ConsumptionSpanFilter,
+) intschema.PartitionFilterConditionTraceSpanFilters {
+	return intschema.PartitionFilterConditionTraceSpanFilters{
+		Duration:        durationFilterFromModel(f.Duration),
+		Error:           boolFilterFromModel(f.Error),
+		IsRootSpan:      boolFilterFromModel(f.IsRootSpan),
+		Operation:       stringFilterFromModel(f.Operation),
+		ParentOperation: stringFilterFromModel(f.ParentOperation),
+		ParentService:   stringFilterFromModel(f.ParentService),
+		Service:         stringFilterFromModel(f.Service),
+		Tag:             sliceutil.Map(f.Tags, tagFilterFromModel),
+	}
 }
 
 func metricFiltersFromModel(filters []*models.Configv1LabelFilter) []intschema.PartitionFilterConditionMetricFilter {
