@@ -2,6 +2,10 @@
 
 ## UNRELEASED
 
+Added:
+* Add the `LOG_ALL` value to the `resource_group` field on
+  `chronosphere_consumption_budget` thresholds.
+
 ## v1.30.0
 
 Added:
