@@ -20,3 +20,9 @@ tmp/
 
 # test output from CI targets
 test.log
+
+# Claude
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+.claude/worktrees/
+CLAUDE.local.md
