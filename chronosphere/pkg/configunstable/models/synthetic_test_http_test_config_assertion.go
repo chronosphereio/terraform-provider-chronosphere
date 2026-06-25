@@ -13,13 +13,13 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// HTTPTestConfigAssertion Wraps the assertion types valid for HTTP tests. Exactly one assertion
+// SyntheticTestHTTPTestConfigAssertion Wraps the assertion types valid for HTTP tests. Exactly one assertion
 // field must be set per entry; enforced by validation. Each test type
 // declares its own Assertion wrapper enumerating the subset of
 // SyntheticTest-level assertion messages valid for it.
 //
-// swagger:model HttpTestConfigAssertion
-type HTTPTestConfigAssertion struct {
+// swagger:model SyntheticTestHttpTestConfigAssertion
+type SyntheticTestHTTPTestConfigAssertion struct {
 
 	// body assertion
 	BodyAssertion *SyntheticTestBodyAssertion `json:"body_assertion,omitempty"`
@@ -46,8 +46,8 @@ type HTTPTestConfigAssertion struct {
 	StatusCodeAssertion *SyntheticTestStatusCodeAssertion `json:"status_code_assertion,omitempty"`
 }
 
-// Validate validates this Http test config assertion
-func (m *HTTPTestConfigAssertion) Validate(formats strfmt.Registry) error {
+// Validate validates this synthetic test Http test config assertion
+func (m *SyntheticTestHTTPTestConfigAssertion) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateBodyAssertion(formats); err != nil {
@@ -88,7 +88,7 @@ func (m *HTTPTestConfigAssertion) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) validateBodyAssertion(formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) validateBodyAssertion(formats strfmt.Registry) error {
 	if swag.IsZero(m.BodyAssertion) { // not required
 		return nil
 	}
@@ -107,7 +107,7 @@ func (m *HTTPTestConfigAssertion) validateBodyAssertion(formats strfmt.Registry)
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) validateBodyHashAssertion(formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) validateBodyHashAssertion(formats strfmt.Registry) error {
 	if swag.IsZero(m.BodyHashAssertion) { // not required
 		return nil
 	}
@@ -126,7 +126,7 @@ func (m *HTTPTestConfigAssertion) validateBodyHashAssertion(formats strfmt.Regis
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) validateBodyJSONPathAssertion(formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) validateBodyJSONPathAssertion(formats strfmt.Registry) error {
 	if swag.IsZero(m.BodyJSONPathAssertion) { // not required
 		return nil
 	}
@@ -145,7 +145,7 @@ func (m *HTTPTestConfigAssertion) validateBodyJSONPathAssertion(formats strfmt.R
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) validateBodyJSONSchemaAssertion(formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) validateBodyJSONSchemaAssertion(formats strfmt.Registry) error {
 	if swag.IsZero(m.BodyJSONSchemaAssertion) { // not required
 		return nil
 	}
@@ -164,7 +164,7 @@ func (m *HTTPTestConfigAssertion) validateBodyJSONSchemaAssertion(formats strfmt
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) validateBodyXpathAssertion(formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) validateBodyXpathAssertion(formats strfmt.Registry) error {
 	if swag.IsZero(m.BodyXpathAssertion) { // not required
 		return nil
 	}
@@ -183,7 +183,7 @@ func (m *HTTPTestConfigAssertion) validateBodyXpathAssertion(formats strfmt.Regi
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) validateHeaderAssertion(formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) validateHeaderAssertion(formats strfmt.Registry) error {
 	if swag.IsZero(m.HeaderAssertion) { // not required
 		return nil
 	}
@@ -202,7 +202,7 @@ func (m *HTTPTestConfigAssertion) validateHeaderAssertion(formats strfmt.Registr
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) validateResponseTimeAssertion(formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) validateResponseTimeAssertion(formats strfmt.Registry) error {
 	if swag.IsZero(m.ResponseTimeAssertion) { // not required
 		return nil
 	}
@@ -221,7 +221,7 @@ func (m *HTTPTestConfigAssertion) validateResponseTimeAssertion(formats strfmt.R
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) validateStatusCodeAssertion(formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) validateStatusCodeAssertion(formats strfmt.Registry) error {
 	if swag.IsZero(m.StatusCodeAssertion) { // not required
 		return nil
 	}
@@ -240,8 +240,8 @@ func (m *HTTPTestConfigAssertion) validateStatusCodeAssertion(formats strfmt.Reg
 	return nil
 }
 
-// ContextValidate validate this Http test config assertion based on the context it is used
-func (m *HTTPTestConfigAssertion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this synthetic test Http test config assertion based on the context it is used
+func (m *SyntheticTestHTTPTestConfigAssertion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateBodyAssertion(ctx, formats); err != nil {
@@ -282,7 +282,7 @@ func (m *HTTPTestConfigAssertion) ContextValidate(ctx context.Context, formats s
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) contextValidateBodyAssertion(ctx context.Context, formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) contextValidateBodyAssertion(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.BodyAssertion != nil {
 		if err := m.BodyAssertion.ContextValidate(ctx, formats); err != nil {
@@ -298,7 +298,7 @@ func (m *HTTPTestConfigAssertion) contextValidateBodyAssertion(ctx context.Conte
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) contextValidateBodyHashAssertion(ctx context.Context, formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) contextValidateBodyHashAssertion(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.BodyHashAssertion != nil {
 		if err := m.BodyHashAssertion.ContextValidate(ctx, formats); err != nil {
@@ -314,7 +314,7 @@ func (m *HTTPTestConfigAssertion) contextValidateBodyHashAssertion(ctx context.C
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) contextValidateBodyJSONPathAssertion(ctx context.Context, formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) contextValidateBodyJSONPathAssertion(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.BodyJSONPathAssertion != nil {
 		if err := m.BodyJSONPathAssertion.ContextValidate(ctx, formats); err != nil {
@@ -330,7 +330,7 @@ func (m *HTTPTestConfigAssertion) contextValidateBodyJSONPathAssertion(ctx conte
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) contextValidateBodyJSONSchemaAssertion(ctx context.Context, formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) contextValidateBodyJSONSchemaAssertion(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.BodyJSONSchemaAssertion != nil {
 		if err := m.BodyJSONSchemaAssertion.ContextValidate(ctx, formats); err != nil {
@@ -346,7 +346,7 @@ func (m *HTTPTestConfigAssertion) contextValidateBodyJSONSchemaAssertion(ctx con
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) contextValidateBodyXpathAssertion(ctx context.Context, formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) contextValidateBodyXpathAssertion(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.BodyXpathAssertion != nil {
 		if err := m.BodyXpathAssertion.ContextValidate(ctx, formats); err != nil {
@@ -362,7 +362,7 @@ func (m *HTTPTestConfigAssertion) contextValidateBodyXpathAssertion(ctx context.
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) contextValidateHeaderAssertion(ctx context.Context, formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) contextValidateHeaderAssertion(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.HeaderAssertion != nil {
 		if err := m.HeaderAssertion.ContextValidate(ctx, formats); err != nil {
@@ -378,7 +378,7 @@ func (m *HTTPTestConfigAssertion) contextValidateHeaderAssertion(ctx context.Con
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) contextValidateResponseTimeAssertion(ctx context.Context, formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) contextValidateResponseTimeAssertion(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.ResponseTimeAssertion != nil {
 		if err := m.ResponseTimeAssertion.ContextValidate(ctx, formats); err != nil {
@@ -394,7 +394,7 @@ func (m *HTTPTestConfigAssertion) contextValidateResponseTimeAssertion(ctx conte
 	return nil
 }
 
-func (m *HTTPTestConfigAssertion) contextValidateStatusCodeAssertion(ctx context.Context, formats strfmt.Registry) error {
+func (m *SyntheticTestHTTPTestConfigAssertion) contextValidateStatusCodeAssertion(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.StatusCodeAssertion != nil {
 		if err := m.StatusCodeAssertion.ContextValidate(ctx, formats); err != nil {
@@ -411,7 +411,7 @@ func (m *HTTPTestConfigAssertion) contextValidateStatusCodeAssertion(ctx context
 }
 
 // MarshalBinary interface implementation
-func (m *HTTPTestConfigAssertion) MarshalBinary() ([]byte, error) {
+func (m *SyntheticTestHTTPTestConfigAssertion) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -419,8 +419,8 @@ func (m *HTTPTestConfigAssertion) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *HTTPTestConfigAssertion) UnmarshalBinary(b []byte) error {
-	var res HTTPTestConfigAssertion
+func (m *SyntheticTestHTTPTestConfigAssertion) UnmarshalBinary(b []byte) error {
+	var res SyntheticTestHTTPTestConfigAssertion
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
