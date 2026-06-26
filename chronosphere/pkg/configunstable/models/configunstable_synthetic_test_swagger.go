@@ -35,6 +35,9 @@ type ConfigunstableSyntheticTest struct {
 	// description
 	Description string `json:"description,omitempty"`
 
+	// dns test
+	DNSTest *SyntheticTestDNSTestConfig `json:"dns_test,omitempty"`
+
 	// http test
 	HTTPTest *SyntheticTestHTTPTestConfig `json:"http_test,omitempty"`
 
@@ -59,11 +62,17 @@ type ConfigunstableSyntheticTest struct {
 	// status
 	Status ConfigunstableSyntheticTestStatus `json:"status,omitempty"`
 
+	// tcp test
+	TCPTest *SyntheticTestTCPTestConfig `json:"tcp_test,omitempty"`
+
 	// test type
 	TestType SyntheticTestTestType `json:"test_type,omitempty"`
 
 	// optional — 1-60s; defaults to 60s
 	TimeoutSecs int32 `json:"timeout_secs,omitempty"`
+
+	// tls test
+	TLSTest *SyntheticTestTLSTestConfig `json:"tls_test,omitempty"`
 
 	// Timestamp of when the SyntheticTest was last updated. Cannot be set by clients.
 	// Read Only: true
@@ -83,6 +92,10 @@ func (m *ConfigunstableSyntheticTest) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateDNSTest(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPTest(formats); err != nil {
 		res = append(res, err)
 	}
@@ -99,7 +112,15 @@ func (m *ConfigunstableSyntheticTest) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateTCPTest(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateTestType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTLSTest(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -139,6 +160,25 @@ func (m *ConfigunstableSyntheticTest) validateCreatedAt(formats strfmt.Registry)
 
 	if err := validate.FormatOf("created_at", "body", "date-time", m.CreatedAt.String(), formats); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *ConfigunstableSyntheticTest) validateDNSTest(formats strfmt.Registry) error {
+	if swag.IsZero(m.DNSTest) { // not required
+		return nil
+	}
+
+	if m.DNSTest != nil {
+		if err := m.DNSTest.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("dns_test")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("dns_test")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -220,6 +260,25 @@ func (m *ConfigunstableSyntheticTest) validateStatus(formats strfmt.Registry) er
 	return nil
 }
 
+func (m *ConfigunstableSyntheticTest) validateTCPTest(formats strfmt.Registry) error {
+	if swag.IsZero(m.TCPTest) { // not required
+		return nil
+	}
+
+	if m.TCPTest != nil {
+		if err := m.TCPTest.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tcp_test")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tcp_test")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *ConfigunstableSyntheticTest) validateTestType(formats strfmt.Registry) error {
 	if swag.IsZero(m.TestType) { // not required
 		return nil
@@ -232,6 +291,25 @@ func (m *ConfigunstableSyntheticTest) validateTestType(formats strfmt.Registry) 
 			return ce.ValidateName("test_type")
 		}
 		return err
+	}
+
+	return nil
+}
+
+func (m *ConfigunstableSyntheticTest) validateTLSTest(formats strfmt.Registry) error {
+	if swag.IsZero(m.TLSTest) { // not required
+		return nil
+	}
+
+	if m.TLSTest != nil {
+		if err := m.TLSTest.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tls_test")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tls_test")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -261,6 +339,10 @@ func (m *ConfigunstableSyntheticTest) ContextValidate(ctx context.Context, forma
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateDNSTest(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateHTTPTest(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -277,7 +359,15 @@ func (m *ConfigunstableSyntheticTest) ContextValidate(ctx context.Context, forma
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateTCPTest(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateTestType(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTLSTest(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -311,6 +401,22 @@ func (m *ConfigunstableSyntheticTest) contextValidateCreatedAt(ctx context.Conte
 
 	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *ConfigunstableSyntheticTest) contextValidateDNSTest(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.DNSTest != nil {
+		if err := m.DNSTest.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("dns_test")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("dns_test")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -380,6 +486,22 @@ func (m *ConfigunstableSyntheticTest) contextValidateStatus(ctx context.Context,
 	return nil
 }
 
+func (m *ConfigunstableSyntheticTest) contextValidateTCPTest(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.TCPTest != nil {
+		if err := m.TCPTest.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tcp_test")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tcp_test")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *ConfigunstableSyntheticTest) contextValidateTestType(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := m.TestType.ContextValidate(ctx, formats); err != nil {
@@ -389,6 +511,22 @@ func (m *ConfigunstableSyntheticTest) contextValidateTestType(ctx context.Contex
 			return ce.ValidateName("test_type")
 		}
 		return err
+	}
+
+	return nil
+}
+
+func (m *ConfigunstableSyntheticTest) contextValidateTLSTest(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.TLSTest != nil {
+		if err := m.TLSTest.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tls_test")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tls_test")
+			}
+			return err
+		}
 	}
 
 	return nil
