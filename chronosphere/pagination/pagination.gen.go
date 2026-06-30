@@ -5,6 +5,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/command_center_group"
+	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
@@ -42,6 +45,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_tail_sampling_rules"
 	configv1models "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/unstable"
 )
 
 func ListAzureMetricsIntegrations(
@@ -2116,6 +2120,78 @@ func ListClassicDashboardsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.ClassicDashboards {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListUnstableCommandCenterGroups(
+	ctx context.Context,
+	client *configunstable.Client,
+) ([]*configunstablemodels.ConfigunstableCommandCenterGroup, error) {
+	return ListUnstableCommandCenterGroupsByFilter(ctx, client, Filter{})
+}
+
+func ListUnstableCommandCenterGroupsBySlugs(
+	ctx context.Context,
+	client *configunstable.Client,
+	slugs []string,
+) ([]*configunstablemodels.ConfigunstableCommandCenterGroup, error) {
+	return ListUnstableCommandCenterGroupsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListUnstableCommandCenterGroupsByNames(
+	ctx context.Context,
+	client *configunstable.Client,
+	names []string,
+) ([]*configunstablemodels.ConfigunstableCommandCenterGroup, error) {
+	return ListUnstableCommandCenterGroupsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListUnstableCommandCenterGroupsByFilter(
+	ctx context.Context,
+	client *configunstable.Client,
+	f Filter,
+	opts ...func(*command_center_group.ListCommandCenterGroupsParams),
+) ([]*configunstablemodels.ConfigunstableCommandCenterGroup, error) {
+	if !unstable.Enabled() {
+		return nil, nil
+	}
+	var (
+		nextToken string
+		result    []*configunstablemodels.ConfigunstableCommandCenterGroup
+	)
+	for {
+		p := &command_center_group.ListCommandCenterGroupsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.CommandCenterGroup.ListCommandCenterGroups(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.CommandCenterGroups {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
