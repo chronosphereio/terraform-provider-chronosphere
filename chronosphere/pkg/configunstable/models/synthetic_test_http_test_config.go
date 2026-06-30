@@ -19,14 +19,20 @@ import (
 // swagger:model SyntheticTestHttpTestConfig
 type SyntheticTestHTTPTestConfig struct {
 
+	// Skip TLS certificate verification for HTTPS requests.
+	AllowInsecureTLS bool `json:"allow_insecure_tls,omitempty"`
+
 	// assertions
-	Assertions []*HTTPTestConfigAssertion `json:"assertions"`
+	Assertions []*SyntheticTestHTTPTestConfigAssertion `json:"assertions"`
 
 	// authentication
 	Authentication *HTTPTestConfigHTTPAuth `json:"authentication,omitempty"`
 
 	// content type
 	ContentType HTTPTestConfigContentType `json:"content_type,omitempty"`
+
+	// When set, the captured body is not persisted on failed executions.
+	DoNotSaveResponseBodyOnFailure bool `json:"do_not_save_response_body_on_failure,omitempty"`
 
 	// follow redirects
 	FollowRedirects bool `json:"follow_redirects,omitempty"`
@@ -39,6 +45,9 @@ type SyntheticTestHTTPTestConfig struct {
 
 	// optional — 0-10; defaults to 10 when follow_redirects is set
 	MaxRedirects int32 `json:"max_redirects,omitempty"`
+
+	// Cap on captured response-body size in bytes; 0 means use the default.
+	MaxResponseBodyBytes int64 `json:"max_response_body_bytes,omitempty"`
 
 	// method
 	Method HTTPTestConfigHTTPMethod `json:"method,omitempty"`

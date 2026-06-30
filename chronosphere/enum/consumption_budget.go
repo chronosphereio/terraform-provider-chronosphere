@@ -108,6 +108,18 @@ var ConsumptionBudgetResourceGroup = newEnum("ConsumptionBudgetResourceGroup", [
 		v1:    configv1.ConsumptionBudgetResourceGroupLOGALL,
 		alias: "LOG_ALL",
 	},
+	{
+		v1:    configv1.ConsumptionBudgetResourceGroupTRACEPROCESSEDBYTES,
+		alias: "TRACE_PROCESSED_BYTES",
+	},
+	{
+		v1:    configv1.ConsumptionBudgetResourceGroupTRACEPERSISTEDBYTES,
+		alias: "TRACE_PERSISTED_BYTES",
+	},
+	{
+		v1:    configv1.ConsumptionBudgetResourceGroupTRACEALL,
+		alias: "TRACE_ALL",
+	},
 })
 
 // ConsumptionBudgetUnit is an enum.

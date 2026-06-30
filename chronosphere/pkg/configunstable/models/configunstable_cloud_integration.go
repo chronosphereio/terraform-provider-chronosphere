@@ -25,6 +25,10 @@ type ConfigunstableCloudIntegration struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
+	// Slug of the ExternalConnection used for credentials. Optional — providers
+	// that use workload identity (e.g. GCP) leave this empty.
+	ExternalConnectionSlug string `json:"external_connection_slug,omitempty"`
+
 	// gcp
 	Gcp *CloudintegrationconfigGcpConfig `json:"gcp,omitempty"`
 
