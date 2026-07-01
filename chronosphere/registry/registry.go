@@ -432,4 +432,10 @@ var Resources = mustValidate([]Resource{
 		API:    V1,
 		Schema: tfschema.OpsgenieExternalConnection,
 	},
+	{
+		Name:   "command_center_group",
+		Entity: "CommandCenterGroup",
+		API:    Unstable,
+		Schema: tfschema.CommandCenterGroup,
+	},
 })

@@ -3,6 +3,7 @@
 ## UNRELEASED
 
 Added:
+* Add unstable `chronosphere_command_center_group` resource.
 * Add the `TRACE_PROCESSED_BYTES`, `TRACE_PERSISTED_BYTES`, and `TRACE_ALL`
   values to the `resource_group` field on `chronosphere_consumption_budget`
   thresholds.

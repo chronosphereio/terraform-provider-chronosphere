@@ -5,6 +5,8 @@ import (
 	"context"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/command_center_group"
+	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
@@ -2706,5 +2708,84 @@ func (generatedTraceTailSamplingRules) delete(
 		Context: ctx,
 	}
 	_, err := clients.ConfigV1.TraceTailSamplingRules.DeleteTraceTailSamplingRules(req)
+	return err
+}
+
+type generatedUnstableCommandCenterGroup struct{}
+
+func (generatedUnstableCommandCenterGroup) slugOf(m *configunstablemodels.ConfigunstableCommandCenterGroup) string {
+	return m.Slug
+}
+
+func (generatedUnstableCommandCenterGroup) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableCommandCenterGroup,
+	dryRun bool,
+) (string, error) {
+	req := &command_center_group.CreateCommandCenterGroupParams{
+		Context: ctx,
+		Body: &configunstablemodels.ConfigunstableCreateCommandCenterGroupRequest{
+			CommandCenterGroup: m,
+			DryRun:             dryRun,
+		},
+	}
+	resp, err := clients.ConfigUnstable.CommandCenterGroup.CreateCommandCenterGroup(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.CommandCenterGroup
+	if e == nil {
+		return "", nil
+	}
+	return (generatedUnstableCommandCenterGroup{}).slugOf(e), nil
+}
+
+func (generatedUnstableCommandCenterGroup) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configunstablemodels.ConfigunstableCommandCenterGroup, error) {
+	req := &command_center_group.ReadCommandCenterGroupParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigUnstable.CommandCenterGroup.ReadCommandCenterGroup(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.CommandCenterGroup, nil
+}
+
+func (generatedUnstableCommandCenterGroup) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableCommandCenterGroup,
+	params updateParams,
+) error {
+	req := &command_center_group.UpdateCommandCenterGroupParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configunstablemodels.ConfigUnstableUpdateCommandCenterGroupBody{
+
+			CommandCenterGroup: m,
+			CreateIfMissing:    params.createIfMissing,
+			DryRun:             params.dryRun,
+		},
+	}
+	_, err := clients.ConfigUnstable.CommandCenterGroup.UpdateCommandCenterGroup(req)
+	return err
+}
+func (generatedUnstableCommandCenterGroup) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &command_center_group.DeleteCommandCenterGroupParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigUnstable.CommandCenterGroup.DeleteCommandCenterGroup(req)
 	return err
 }
