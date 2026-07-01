@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.32.0
+
 Added:
 * Add the `TRACE_PROCESSED_BYTES`, `TRACE_PERSISTED_BYTES`, and `TRACE_ALL`
   values to the `resource_group` field on `chronosphere_consumption_budget`
