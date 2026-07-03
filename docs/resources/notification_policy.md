@@ -84,9 +84,10 @@ Required:
 Optional:
 
 - `destination` (Block List) Inline notification destinations defined directly on the route. Each block sets at most one of `slack`, `pagerduty`, `webhook`, `ops_genie`, `victor_ops`, or `email`. Cannot be combined with `notifiers`. (see [below for nested schema](#nestedblock--override--route--destination))
+- `disable_repeat` (Boolean) If true, alerts are notified once and on state changes (new firing alerts, resolves) but are never re-sent on the `repeat_interval` timer. Defaults to false.
 - `group_by` (Block List, Max: 1) Optional grouping configuration controlling how alerts are batched before delivery. (see [below for nested schema](#nestedblock--override--route--group_by))
 - `notifiers` (Set of String) Slugs of notifier resources that receive alerts at this severity. Cannot be combined with `destination`.
-- `repeat_interval` (String) How often to resend unresolved alerts at this severity (e.g. `4h`).
+- `repeat_interval` (String) How often to resend unresolved alerts at this severity (e.g. `4h`). Ignored when `disable_repeat` is true.
 
 <a id="nestedblock--override--route--destination"></a>
 ### Nested Schema for `override.route.destination`
@@ -188,9 +189,10 @@ Required:
 Optional:
 
 - `destination` (Block List) Inline notification destinations defined directly on the route. Each block sets at most one of `slack`, `pagerduty`, `webhook`, `ops_genie`, `victor_ops`, or `email`. Cannot be combined with `notifiers`. (see [below for nested schema](#nestedblock--route--destination))
+- `disable_repeat` (Boolean) If true, alerts are notified once and on state changes (new firing alerts, resolves) but are never re-sent on the `repeat_interval` timer. Defaults to false.
 - `group_by` (Block List, Max: 1) Optional grouping configuration controlling how alerts are batched before delivery. (see [below for nested schema](#nestedblock--route--group_by))
 - `notifiers` (Set of String) Slugs of notifier resources that receive alerts at this severity. Cannot be combined with `destination`.
-- `repeat_interval` (String) How often to resend unresolved alerts at this severity (e.g. `4h`).
+- `repeat_interval` (String) How often to resend unresolved alerts at this severity (e.g. `4h`). Ignored when `disable_repeat` is true.
 
 <a id="nestedblock--route--destination"></a>
 ### Nested Schema for `route.destination`
