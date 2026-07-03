@@ -22,13 +22,18 @@ type RoutesNotifierList struct {
 	// Notification destinations. Cannot be set if notifier_slugs is set.
 	Destinations []*RoutesDestination `json:"destinations"`
 
+	// If true, alerts are notified once and on state changes (new firing alerts,
+	// resolves) but are never re-sent on the repeat_interval timer.
+	// Defaults to false (alerts repeat on repeat_interval_secs).
+	DisableRepeat bool `json:"disable_repeat,omitempty"`
+
 	// group by
 	GroupBy *NotificationPolicyRoutesGroupBy `json:"group_by,omitempty"`
 
 	// The slugs of the notifiers that will receive the alerts.
 	NotifierSlugs []string `json:"notifier_slugs"`
 
-	// The frequency at which to resend alerts.
+	// The frequency at which to resend alerts. Ignored when disable_repeat is true.
 	RepeatIntervalSecs int32 `json:"repeat_interval_secs,omitempty"`
 }
 
