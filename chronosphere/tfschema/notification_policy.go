@@ -93,8 +93,13 @@ var NotificationRouteSchema = typeset.Set{
 		}),
 		"repeat_interval": Duration{
 			Optional:    true,
-			Description: "How often to resend unresolved alerts at this severity (e.g. `4h`).",
+			Description: "How often to resend unresolved alerts at this severity (e.g. `4h`). Ignored when `disable_repeat` is true.",
 		},
+		"disable_repeat": typeset.NotNormalized(&schema.Schema{
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "If true, alerts are notified once and on state changes (new firing alerts, resolves) but are never re-sent on the `repeat_interval` timer. Defaults to false.",
+		}),
 		"group_by": typeset.NotNormalized(&schema.Schema{
 			Type:        schema.TypeList,
 			MaxItems:    1,
