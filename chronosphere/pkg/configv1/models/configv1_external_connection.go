@@ -39,6 +39,9 @@ type Configv1ExternalConnection struct {
 	// pagerduty
 	Pagerduty *Configv1ExternalConnectionPagerdutyConfig `json:"pagerduty,omitempty"`
 
+	// sendgrid
+	Sendgrid *ExternalConnectionSendgridConfig `json:"sendgrid,omitempty"`
+
 	// slack
 	Slack *Configv1ExternalConnectionSlackConfig `json:"slack,omitempty"`
 
@@ -78,6 +81,10 @@ func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePagerduty(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSendgrid(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -191,6 +198,25 @@ func (m *Configv1ExternalConnection) validatePagerduty(formats strfmt.Registry) 
 	return nil
 }
 
+func (m *Configv1ExternalConnection) validateSendgrid(formats strfmt.Registry) error {
+	if swag.IsZero(m.Sendgrid) { // not required
+		return nil
+	}
+
+	if m.Sendgrid != nil {
+		if err := m.Sendgrid.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("sendgrid")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("sendgrid")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Configv1ExternalConnection) validateSlack(formats strfmt.Registry) error {
 	if swag.IsZero(m.Slack) { // not required
 		return nil
@@ -284,6 +310,10 @@ func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, format
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateSendgrid(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateSlack(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -371,6 +401,22 @@ func (m *Configv1ExternalConnection) contextValidatePagerduty(ctx context.Contex
 				return ve.ValidateName("pagerduty")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("pagerduty")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) contextValidateSendgrid(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Sendgrid != nil {
+		if err := m.Sendgrid.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("sendgrid")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("sendgrid")
 			}
 			return err
 		}

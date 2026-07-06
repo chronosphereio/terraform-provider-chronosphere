@@ -388,6 +388,7 @@ func expandNotificationPolicyRoutes(routes []intschema.NotificationRoute) (*conf
 			panic(fmt.Sprintf("invalid repeat interval %q", r.RepeatInterval))
 		}
 		notifierList.RepeatIntervalSecs = int32(duration.Seconds())
+		notifierList.DisableRepeat = r.DisableRepeat
 
 		notifierList.GroupBy = notificationRouteGroupByToModel(r.GroupBy)
 		notifierList.Destinations = notificationDestinationsToModel(r.Destination)

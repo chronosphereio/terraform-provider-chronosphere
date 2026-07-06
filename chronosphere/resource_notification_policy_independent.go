@@ -119,6 +119,7 @@ func notificationRoutesToModel(
 		bySev[sev] = &models.RoutesNotifierList{
 			NotifierSlugs:      sliceutil.Map(r.Notifiers, (tfid.ID).Slug),
 			RepeatIntervalSecs: intervalSecs,
+			DisableRepeat:      r.DisableRepeat,
 			GroupBy:            notificationRouteGroupByToModel(r.GroupBy),
 			Destinations:       notificationDestinationsToModel(r.Destination),
 		}
@@ -144,6 +145,7 @@ func notificationRoutesFromModel(
 			Severity:       sev,
 			Notifiers:      sliceutil.Map(f.NotifierSlugs, tfid.Slug),
 			RepeatInterval: durationFromSecs(f.RepeatIntervalSecs),
+			DisableRepeat:  f.DisableRepeat,
 			GroupBy:        notificationRouteGroupByFromModel(f.GroupBy),
 			Destination:    notificationDestinationsFromModel(f.Destinations),
 		})

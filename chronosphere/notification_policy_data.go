@@ -53,6 +53,7 @@ type Routes struct {
 type RoutesNotifierList struct {
 	Notifiers      []*RoutesNotifierListNotifier `json:"notifiers"`
 	RepeatInterval string                        `json:"repeat_interval,omitempty"`
+	DisableRepeat  bool                          `json:"disable_repeat,omitempty"`
 	GroupBy        *RoutesNotifierListGroupBy    `json:"group_by,omitempty"`
 }
 
@@ -185,6 +186,7 @@ func notifierListMapToModel(notifierList RoutesNotifierList) (*configmodels.Rout
 	return &configmodels.RoutesNotifierList{
 		NotifierSlugs:      sliceutil.Map(notifierList.Notifiers, func(n *RoutesNotifierListNotifier) string { return n.Slug }),
 		RepeatIntervalSecs: durationInSecs,
+		DisableRepeat:      notifierList.DisableRepeat,
 		GroupBy:            notifierListGroupByToModel(notifierList.GroupBy),
 	}, nil
 }
@@ -263,6 +265,7 @@ func routesNotifierListFromModel(m *configmodels.RoutesNotifierList) RoutesNotif
 	return RoutesNotifierList{
 		Notifiers:      sliceutil.Map(m.NotifierSlugs, routesNotifierListNotifierFromSlug),
 		RepeatInterval: durationFromSecs(m.RepeatIntervalSecs),
+		DisableRepeat:  m.DisableRepeat,
 		GroupBy:        routesNotifierListGroupByFromModel(m.GroupBy),
 	}
 }

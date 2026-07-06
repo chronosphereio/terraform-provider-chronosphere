@@ -80,6 +80,7 @@ type MonitorSeriesConditionResolveValue struct {
 type NotificationRoute struct {
 	Severity       string                         `intschema:"severity"`
 	Destination    []NotificationRouteDestination `intschema:"destination,optional"`
+	DisableRepeat  bool                           `intschema:"disable_repeat,optional"`
 	GroupBy        *NotificationRouteGroupBy      `intschema:"group_by,optional,list_encoded_object"`
 	Notifiers      []tfid.ID                      `intschema:"notifiers,optional"`
 	RepeatInterval string                         `intschema:"repeat_interval,optional"`
