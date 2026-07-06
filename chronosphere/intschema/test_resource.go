@@ -31,6 +31,7 @@ type TestResource struct {
 	OptionalBoolWithDefault bool                        `intschema:"optional_bool_with_default,optional,default:true"`
 	OptionalObject          *TestResourceOptionalObject `intschema:"optional_object,optional,list_encoded_object"`
 	OptionalStringList      []string                    `intschema:"optional_string_list,optional"`
+	SomeWriteOnly           string                      `intschema:"some_write_only,optional,write_only"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -81,4 +82,5 @@ type TestResourceSomeObject struct {
 
 type TestResourceOptionalObject struct {
 	InnerStringList []string `intschema:"inner_string_list"`
+	InnerWriteOnly  string   `intschema:"inner_write_only,optional,write_only"`
 }

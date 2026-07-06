@@ -331,11 +331,17 @@ func (f *fileData) newStructDef(
 	for _, name := range sortedKeys(objSchema) {
 		fieldName := upperCamelCase(name)
 		typeInfo := f.loadType(typeName, fieldName, name, objSchema[name], nil /* container */, inRecursiveField)
+		if objSchema[name].WriteOnly && objSchema[name].Type != schema.TypeString {
+			panic(fmt.Sprintf(
+				"%s.%s: write-only attributes are only supported for strings, got %s",
+				typeName, name, objSchema[name].Type))
+		}
 		tag := intschematag.Tag{
 			TFName:            name,
 			Optional:          objSchema[name].Optional || typeInfo.optionalListEncodedObject,
 			Computed:          objSchema[name].Computed,
 			ListEncodedObject: typeInfo.listEncodedObject,
+			WriteOnly:         objSchema[name].WriteOnly,
 		}
 		if d := objSchema[name].Default; d != nil {
 			tag.Default = fmt.Sprint(d)

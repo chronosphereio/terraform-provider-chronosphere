@@ -36,7 +36,8 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "1.8.0"
+          # Write-only attributes require Terraform >= 1.11.
+          terraform_version: "1.11.4"
 
       - name: Validate Generated Code
         run: make test-generate

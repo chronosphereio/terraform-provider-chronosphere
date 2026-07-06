@@ -79,8 +79,18 @@ var TestResource = map[string]*schema.Schema{
 						Type: schema.TypeString,
 					},
 				},
+				"inner_write_only": {
+					Type:      schema.TypeString,
+					Optional:  true,
+					WriteOnly: true,
+				},
 			},
 		},
+	},
+	"some_write_only": {
+		Type:      schema.TypeString,
+		Optional:  true,
+		WriteOnly: true,
 	},
 	"optional_string_list": {
 		Type: schema.TypeList,
