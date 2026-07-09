@@ -3,12 +3,12 @@
 page_title: "chronosphere_command_center_group Resource - chronosphere"
 subcategory: ""
 description: |-
-  A named group of signals tracked in the command center.
+  A named group of signals tracked in the command center. This resource is backed by Chronosphere's unstable config API and is subject to breaking change without notice.
 ---
 
 # chronosphere_command_center_group (Resource)
 
-A named group of signals tracked in the command center.
+A named group of signals tracked in the command center. This resource is backed by Chronosphere's unstable config API and is subject to breaking change without notice.
 
 
 

@@ -34,7 +34,7 @@ func resourceCommandCenterGroup() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
-		Description:   "A named group of signals tracked in the command center.",
+		Description:   "A named group of signals tracked in the command center. This resource is backed by Chronosphere's unstable config API and is subject to breaking change without notice.",
 		Schema:        tfschema.CommandCenterGroup,
 		CustomizeDiff: r.ValidateDryRun(&CommandCenterGroupDryRunCount),
 		Importer: &schema.ResourceImporter{
