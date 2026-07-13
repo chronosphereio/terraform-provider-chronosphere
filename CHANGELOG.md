@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.33.0
+
 Added:
 * Add the `disable_repeat` field to `chronosphere_notification_policy` routes.
   When true, alerts are notified once and on state changes but are never
