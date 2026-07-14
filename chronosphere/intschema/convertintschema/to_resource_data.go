@@ -63,6 +63,11 @@ func unloadStruct(
 			continue
 		}
 
+		// Write-only attribute values are never persisted to state.
+		if tag.WriteOnly {
+			continue
+		}
+
 		if shouldSet != nil && !shouldSet(tag, field) {
 			continue
 		}

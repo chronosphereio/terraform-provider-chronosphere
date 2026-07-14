@@ -79,6 +79,32 @@ var TestResource = map[string]*schema.Schema{
 						Type: schema.TypeString,
 					},
 				},
+				"inner_write_only": {
+					Type:      schema.TypeString,
+					Optional:  true,
+					WriteOnly: true,
+				},
+			},
+		},
+	},
+	"some_write_only": {
+		Type:      schema.TypeString,
+		Optional:  true,
+		WriteOnly: true,
+	},
+	"repeated_object": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"inner_string": {
+					Type: schema.TypeString,
+				},
+				"inner_write_only": {
+					Type:      schema.TypeString,
+					Optional:  true,
+					WriteOnly: true,
+				},
 			},
 		},
 	},

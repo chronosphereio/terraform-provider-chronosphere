@@ -18,6 +18,8 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/hashicorp/go-cty/cty"
+
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema/intschematag"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
@@ -31,14 +33,28 @@ type ResourceGetter interface {
 	Id() string
 }
 
+// rawConfigGetter is implemented by schema.ResourceData and
+// schema.ResourceDiff. Write-only attribute values exist only in the raw
+// config — never in the state or plan data behind Get. The raw config is
+// navigated by hand rather than with the SDK's GetRawConfigAt, which walks
+// the whole config per lookup and errors on absent raw config, the normal
+// case on Read.
+type rawConfigGetter interface {
+	GetRawConfig() cty.Value
+}
+
 // FromResourceData unloads d into outObj, where outObj is a generated intschema
 // struct and objSchema is its Terraform schema.
 func FromResourceData(
 	objSchema map[string]*schema.Schema, d ResourceGetter, outObj any,
 ) error {
+	rawConfig := cty.NilVal
+	if rg, ok := d.(rawConfigGetter); ok {
+		rawConfig = rg.GetRawConfig()
+	}
 	outVal := reflect.ValueOf(outObj).Elem()
 	outVal.FieldByName(intschematag.StateIDField).SetString(d.Id())
-	return loadObject(objSchema, dataAsMap(objSchema, d), outVal)
+	return loadObject(objSchema, dataAsMap(objSchema, d), outVal, rawConfig)
 }
 
 func dataAsMap(objSchema map[string]*schema.Schema, d ResourceGetter) map[string]any {
@@ -51,6 +67,7 @@ func dataAsMap(objSchema map[string]*schema.Schema, d ResourceGetter) map[string
 
 func loadObject(
 	objSchema map[string]*schema.Schema, data map[string]any, outVal reflect.Value,
+	rawConfig cty.Value,
 ) error {
 	for i := 0; i < outVal.NumField(); i++ {
 		tag := intschematag.Unmarshal(outVal.Type().Field(i))
@@ -62,14 +79,50 @@ func loadObject(
 			return fmt.Errorf("no field schema for %q", tag.TFName)
 		}
 		f := outVal.Field(i)
-		if err := loadSchema(s, data[tag.TFName], f); err != nil {
+		if tag.WriteOnly {
+			loadWriteOnly(rawAttr(rawConfig, tag.TFName), f)
+			continue
+		}
+		if err := loadSchema(s, data[tag.TFName], f, rawAttr(rawConfig, tag.TFName)); err != nil {
 			return fmt.Errorf("load %q schema: %s", tag.TFName, err)
 		}
 	}
 	return nil
 }
 
-func loadSchema(s *schema.Schema, data any, outVal reflect.Value) error {
+func loadWriteOnly(raw cty.Value, outVal reflect.Value) {
+	if !rawKnown(raw) {
+		return
+	}
+	outVal.SetString(raw.AsString())
+}
+
+func rawKnown(raw cty.Value) bool {
+	return raw != cty.NilVal && !raw.IsNull() && raw.IsKnown()
+}
+
+func rawAttr(raw cty.Value, name string) cty.Value {
+	if !rawKnown(raw) || !raw.Type().IsObjectType() || !raw.Type().HasAttribute(name) {
+		return cty.NilVal
+	}
+	return raw.GetAttr(name)
+}
+
+func rawElems(raw cty.Value) []cty.Value {
+	if !rawKnown(raw) || !raw.CanIterateElements() {
+		return nil
+	}
+	return raw.AsValueSlice()
+}
+
+func rawIndex(elems []cty.Value, i int) cty.Value {
+	if i >= len(elems) {
+		return cty.NilVal
+	}
+	return elems[i]
+}
+
+func loadSchema(s *schema.Schema, data any, outVal reflect.Value, raw cty.Value) error {
 	switch s.Type {
 	case schema.TypeBool:
 		outVal.SetBool(data.(bool))
@@ -86,17 +139,19 @@ func loadSchema(s *schema.Schema, data any, outVal reflect.Value) error {
 		outVal.SetInt(int64(data.(int)))
 	case schema.TypeSet:
 		l := data.(*schema.Set).List()
-		if err := loadSlice(s, outVal, l); err != nil {
+		// Write-only attributes are not permitted in sets, so raw config is
+		// not threaded through them.
+		if err := loadSlice(s, outVal, l, cty.NilVal); err != nil {
 			return err
 		}
 	case schema.TypeList:
 		l := data.([]any)
 		if tfschema.IsListEncodedObject(s) {
-			if err := loadListEncodedObject(s, outVal, l); err != nil {
+			if err := loadListEncodedObject(s, outVal, l, raw); err != nil {
 				return err
 			}
 		} else {
-			if err := loadSlice(s, outVal, l); err != nil {
+			if err := loadSlice(s, outVal, l, raw); err != nil {
 				return err
 			}
 		}
@@ -110,14 +165,15 @@ func loadSchema(s *schema.Schema, data any, outVal reflect.Value) error {
 	return nil
 }
 
-func loadSlice(s *schema.Schema, field reflect.Value, data []any) error {
+func loadSlice(s *schema.Schema, field reflect.Value, data []any, raw cty.Value) error {
 	if len(data) == 0 {
 		return nil
 	}
+	rawEls := rawElems(raw)
 	slice := reflect.MakeSlice(field.Type(), 0, len(data))
 	for i := 0; i < len(data); i++ {
 		v := reflect.New(field.Type().Elem())
-		if err := loadElem(s, v, data[i]); err != nil {
+		if err := loadElem(s, v, data[i], rawIndex(rawEls, i)); err != nil {
 			return err
 		}
 		slice = reflect.Append(slice, v.Elem())
@@ -133,7 +189,8 @@ func loadMap(s *schema.Schema, field reflect.Value, data map[string]any) error {
 	m := reflect.MakeMap(field.Type())
 	for k := range data {
 		v := reflect.New(field.Type().Elem())
-		if err := loadElem(s, v, data[k]); err != nil {
+		// Map elements are scalars, so no write-only value can nest here.
+		if err := loadElem(s, v, data[k], cty.NilVal); err != nil {
 			return err
 		}
 		m.SetMapIndex(reflect.ValueOf(k), v.Elem())
@@ -142,7 +199,7 @@ func loadMap(s *schema.Schema, field reflect.Value, data map[string]any) error {
 	return nil
 }
 
-func loadListEncodedObject(s *schema.Schema, v reflect.Value, data []any) error {
+func loadListEncodedObject(s *schema.Schema, v reflect.Value, data []any, raw cty.Value) error {
 	if len(data) == 0 {
 		return nil
 	}
@@ -155,20 +212,20 @@ func loadListEncodedObject(s *schema.Schema, v reflect.Value, data []any) error 
 	} else {
 		ptr = v.Addr()
 	}
-	return loadElem(s, ptr, data[0])
+	return loadElem(s, ptr, data[0], rawIndex(rawElems(raw), 0))
 }
 
-func loadElem(s *schema.Schema, v reflect.Value, data any) error {
+func loadElem(s *schema.Schema, v reflect.Value, data any, raw cty.Value) error {
 	if data == nil {
 		return nil
 	}
 	switch t := s.Elem.(type) {
 	case *schema.Resource:
-		if err := loadObject(t.Schema, data.(map[string]any), v.Elem()); err != nil {
+		if err := loadObject(t.Schema, data.(map[string]any), v.Elem(), raw); err != nil {
 			return err
 		}
 	case *schema.Schema:
-		if err := loadSchema(t, data, v.Elem()); err != nil {
+		if err := loadSchema(t, data, v.Elem(), raw); err != nil {
 			return err
 		}
 	default:

@@ -18,6 +18,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/go-cty/cty"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/stretchr/testify/require"
 
@@ -235,4 +237,75 @@ func TestCannotSetInternalFields(t *testing.T) {
 			})
 		})
 	}
+}
+
+// rawConfigResourceData simulates write-only values in the raw config,
+// which schema.TestResourceDataRaw cannot populate.
+type rawConfigResourceData struct {
+	*schema.ResourceData
+	raw cty.Value
+}
+
+func (d rawConfigResourceData) GetRawConfig() cty.Value {
+	return d.raw
+}
+
+func TestWriteOnly(t *testing.T) {
+	input := dict{
+		"some_string": "hello",
+		"optional_object": []any{
+			dict{"inner_string_list": []any{"foo"}},
+		},
+		"repeated_object": []any{
+			dict{"inner_string": "first"},
+			dict{"inner_string": "second"},
+		},
+	}
+	d := schema.TestResourceDataRaw(t, tfschema.TestResource, input)
+	d.SetId("some-state-id")
+	raw := cty.ObjectVal(map[string]cty.Value{
+		"some_write_only": cty.StringVal("top-secret"),
+		"optional_object": cty.TupleVal([]cty.Value{
+			cty.ObjectVal(map[string]cty.Value{
+				"inner_write_only": cty.StringVal("nested-secret"),
+			}),
+		}),
+		"repeated_object": cty.TupleVal([]cty.Value{
+			cty.ObjectVal(map[string]cty.Value{
+				"inner_write_only": cty.StringVal("first-secret"),
+			}),
+			cty.ObjectVal(map[string]cty.Value{
+				"inner_write_only": cty.StringVal("second-secret"),
+			}),
+		}),
+	})
+
+	var r intschema.TestResource
+	require.NoError(t, r.FromResourceData(rawConfigResourceData{d, raw}))
+	require.Equal(t, "top-secret", r.SomeWriteOnly)
+	require.Equal(t, "nested-secret", r.OptionalObject.InnerWriteOnly)
+	require.Equal(t, "first-secret", r.RepeatedObject[0].InnerWriteOnly)
+	require.Equal(t, "second-secret", r.RepeatedObject[1].InnerWriteOnly)
+
+	// Write-only values are never persisted back to state.
+	out := schema.TestResourceDataRaw(t, tfschema.TestResource, nil)
+	r.StateID = ""
+	require.Nil(t, r.ToResourceData(out))
+	require.Empty(t, out.Get("some_write_only"))
+	require.Empty(t, out.Get("optional_object.0.inner_write_only"))
+	require.Empty(t, out.Get("repeated_object.0.inner_write_only"))
+	require.Empty(t, out.Get("repeated_object.1.inner_write_only"))
+}
+
+func TestWriteOnlyWithoutRawConfig(t *testing.T) {
+	// Read/refresh paths have no raw config; write-only fields load as empty.
+	d := schema.TestResourceDataRaw(t, tfschema.TestResource, dict{
+		"some_string": "hello",
+	})
+	d.SetId("some-state-id")
+
+	var r intschema.TestResource
+	require.NoError(t, r.FromResourceData(d))
+	require.Empty(t, r.SomeWriteOnly)
+	require.Equal(t, "hello", r.SomeString)
 }

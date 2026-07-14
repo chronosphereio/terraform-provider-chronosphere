@@ -36,6 +36,7 @@ const (
 	listEncodedObjectFlag = "list_encoded_object"
 	fileFieldType         = "file"
 	defaultFlag           = "default"
+	writeOnlyFlag         = "write_only"
 )
 
 // Tag contains metadata for a intschema struct tag.
@@ -46,6 +47,7 @@ type Tag struct {
 	ListEncodedObject bool
 	Default           string
 	File              bool
+	WriteOnly         bool
 }
 
 // IgnoreResourceData returns true for fields that should not be
@@ -77,6 +79,9 @@ func (t Tag) Marshal() string {
 	if t.ListEncodedObject {
 		vs = append(vs, listEncodedObjectFlag)
 	}
+	if t.WriteOnly {
+		vs = append(vs, writeOnlyFlag)
+	}
 	if t.Default != "" {
 		if strings.ContainsAny(t.Default, `'", `) {
 			panic(fmt.Sprintf("field %q has default %q with unsupported characters", t.TFName, t.Default))
@@ -103,6 +108,9 @@ func Unmarshal(f reflect.StructField) Tag {
 		}
 		if v == listEncodedObjectFlag {
 			t.ListEncodedObject = true
+		}
+		if v == writeOnlyFlag {
+			t.WriteOnly = true
 		}
 		if key, val, ok := KeyVal(v); ok {
 			switch key {

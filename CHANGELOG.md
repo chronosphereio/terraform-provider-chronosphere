@@ -9,6 +9,9 @@ Added:
   When true, alerts are notified once and on state changes but are never
   re-sent on the `repeat_interval` timer.
 * Add unstable `chronosphere_command_center_group` resource.
+* Add provider support for write-only (`*_wo`) attributes, used for secret
+  fields whose values should never be persisted in Terraform state.
+  Configuring a write-only attribute requires Terraform 1.11 or later.
 
 ## v1.32.0
 
