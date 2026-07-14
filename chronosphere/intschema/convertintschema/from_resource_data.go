@@ -79,7 +79,7 @@ func loadObject(
 			return fmt.Errorf("no field schema for %q", tag.TFName)
 		}
 		f := outVal.Field(i)
-		if s.WriteOnly {
+		if tag.WriteOnly {
 			loadWriteOnly(rawAttr(rawConfig, tag.TFName), f)
 			continue
 		}

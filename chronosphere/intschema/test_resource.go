@@ -14,24 +14,25 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type TestResource struct {
-	CollectionId            tfid.ID                     `intschema:"collection_id"`
-	ComputedAndNotOptional  string                      `intschema:"computed_and_not_optional,computed"`
-	DashboardJson           string                      `intschema:"dashboard_json"`
-	HCLFileDashboardJson    string                      `intschema:"dashboard_json,file"`
-	SomeBool                bool                        `intschema:"some_bool"`
-	SomeFloat               float64                     `intschema:"some_float"`
-	SomeInt                 int64                       `intschema:"some_int"`
-	SomeObject              TestResourceSomeObject      `intschema:"some_object,list_encoded_object"`
-	SomeObjectSet           []TestResourceSomeObjectSet `intschema:"some_object_set"`
-	SomeString              string                      `intschema:"some_string"`
-	SomeStringList          []string                    `intschema:"some_string_list"`
-	SomeStringMap           map[string]string           `intschema:"some_string_map"`
-	ComputedAndOptional     string                      `intschema:"computed_and_optional,optional,computed"`
-	Notifiers               []tfid.ID                   `intschema:"notifiers,optional"`
-	OptionalBoolWithDefault bool                        `intschema:"optional_bool_with_default,optional,default:true"`
-	OptionalObject          *TestResourceOptionalObject `intschema:"optional_object,optional,list_encoded_object"`
-	OptionalStringList      []string                    `intschema:"optional_string_list,optional"`
-	SomeWriteOnly           string                      `intschema:"some_write_only,optional,write_only"`
+	CollectionId            tfid.ID                      `intschema:"collection_id"`
+	ComputedAndNotOptional  string                       `intschema:"computed_and_not_optional,computed"`
+	DashboardJson           string                       `intschema:"dashboard_json"`
+	HCLFileDashboardJson    string                       `intschema:"dashboard_json,file"`
+	SomeBool                bool                         `intschema:"some_bool"`
+	SomeFloat               float64                      `intschema:"some_float"`
+	SomeInt                 int64                        `intschema:"some_int"`
+	SomeObject              TestResourceSomeObject       `intschema:"some_object,list_encoded_object"`
+	SomeObjectSet           []TestResourceSomeObjectSet  `intschema:"some_object_set"`
+	SomeString              string                       `intschema:"some_string"`
+	SomeStringList          []string                     `intschema:"some_string_list"`
+	SomeStringMap           map[string]string            `intschema:"some_string_map"`
+	ComputedAndOptional     string                       `intschema:"computed_and_optional,optional,computed"`
+	Notifiers               []tfid.ID                    `intschema:"notifiers,optional"`
+	OptionalBoolWithDefault bool                         `intschema:"optional_bool_with_default,optional,default:true"`
+	OptionalObject          *TestResourceOptionalObject  `intschema:"optional_object,optional,list_encoded_object"`
+	OptionalStringList      []string                     `intschema:"optional_string_list,optional"`
+	RepeatedObject          []TestResourceRepeatedObject `intschema:"repeated_object,optional"`
+	SomeWriteOnly           string                       `intschema:"some_write_only,optional,write_only"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -78,6 +79,11 @@ type TestResourceSomeObjectSet struct {
 type TestResourceSomeObject struct {
 	InnerBool   bool   `intschema:"inner_bool"`
 	InnerString string `intschema:"inner_string"`
+}
+
+type TestResourceRepeatedObject struct {
+	InnerString    string `intschema:"inner_string"`
+	InnerWriteOnly string `intschema:"inner_write_only,optional,write_only"`
 }
 
 type TestResourceOptionalObject struct {

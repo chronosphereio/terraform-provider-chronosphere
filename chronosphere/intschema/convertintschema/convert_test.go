@@ -256,6 +256,10 @@ func TestWriteOnly(t *testing.T) {
 		"optional_object": []any{
 			dict{"inner_string_list": []any{"foo"}},
 		},
+		"repeated_object": []any{
+			dict{"inner_string": "first"},
+			dict{"inner_string": "second"},
+		},
 	}
 	d := schema.TestResourceDataRaw(t, tfschema.TestResource, input)
 	d.SetId("some-state-id")
@@ -266,12 +270,22 @@ func TestWriteOnly(t *testing.T) {
 				"inner_write_only": cty.StringVal("nested-secret"),
 			}),
 		}),
+		"repeated_object": cty.TupleVal([]cty.Value{
+			cty.ObjectVal(map[string]cty.Value{
+				"inner_write_only": cty.StringVal("first-secret"),
+			}),
+			cty.ObjectVal(map[string]cty.Value{
+				"inner_write_only": cty.StringVal("second-secret"),
+			}),
+		}),
 	})
 
 	var r intschema.TestResource
 	require.NoError(t, r.FromResourceData(rawConfigResourceData{d, raw}))
 	require.Equal(t, "top-secret", r.SomeWriteOnly)
 	require.Equal(t, "nested-secret", r.OptionalObject.InnerWriteOnly)
+	require.Equal(t, "first-secret", r.RepeatedObject[0].InnerWriteOnly)
+	require.Equal(t, "second-secret", r.RepeatedObject[1].InnerWriteOnly)
 
 	// Write-only values are never persisted back to state.
 	out := schema.TestResourceDataRaw(t, tfschema.TestResource, nil)
@@ -279,6 +293,8 @@ func TestWriteOnly(t *testing.T) {
 	require.Nil(t, r.ToResourceData(out))
 	require.Empty(t, out.Get("some_write_only"))
 	require.Empty(t, out.Get("optional_object.0.inner_write_only"))
+	require.Empty(t, out.Get("repeated_object.0.inner_write_only"))
+	require.Empty(t, out.Get("repeated_object.1.inner_write_only"))
 }
 
 func TestWriteOnlyWithoutRawConfig(t *testing.T) {
