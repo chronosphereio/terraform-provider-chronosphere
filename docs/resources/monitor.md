@@ -101,9 +101,22 @@ Required:
 Optional:
 
 - `resolve_sustain` (String) Duration the condition must remain false continuously before an active signal resolves.
+- `resolve_sustain_for_no_data` (Block List, Max: 1) Controls how a firing condition resolves once its series stops returning data, independently of `resolve_sustain` (which governs recovery while data is still present). (see [below for nested schema](#nestedblock--series_conditions--condition--resolve_sustain_for_no_data))
 - `resolve_value` (Block List, Max: 1) Optional separate threshold used for resolution, enabling hysteresis (e.g. fire at >90, resolve at <80). (see [below for nested schema](#nestedblock--series_conditions--condition--resolve_value))
 - `sustain` (String) Duration the condition must hold continuously before a signal fires.
 - `value` (Number) Threshold compared against the query result using `op`. Defaults to 0.
+
+<a id="nestedblock--series_conditions--condition--resolve_sustain_for_no_data"></a>
+### Nested Schema for `series_conditions.condition.resolve_sustain_for_no_data`
+
+Required:
+
+- `enabled` (Boolean) When false (default), missing data is treated the same as passing data and `resolve_sustain` governs recovery. When true, a firing signal keeps firing while its data is missing and auto-resolves once data has been missing for `sustain`.
+
+Optional:
+
+- `sustain` (String) How long a firing signal keeps firing after its data goes missing before auto-resolving. Only applies when `enabled` is true. Omitted or `0` resolves immediately on missing data. Must be less than 3 days.
+
 
 <a id="nestedblock--series_conditions--condition--resolve_value"></a>
 ### Nested Schema for `series_conditions.condition.resolve_value`
@@ -134,9 +147,22 @@ Required:
 Optional:
 
 - `resolve_sustain` (String) Duration the condition must remain false continuously before an active signal resolves.
+- `resolve_sustain_for_no_data` (Block List, Max: 1) Controls how a firing condition resolves once its series stops returning data, independently of `resolve_sustain` (which governs recovery while data is still present). (see [below for nested schema](#nestedblock--series_conditions--override--condition--resolve_sustain_for_no_data))
 - `resolve_value` (Block List, Max: 1) Optional separate threshold used for resolution, enabling hysteresis (e.g. fire at >90, resolve at <80). (see [below for nested schema](#nestedblock--series_conditions--override--condition--resolve_value))
 - `sustain` (String) Duration the condition must hold continuously before a signal fires.
 - `value` (Number) Threshold compared against the query result using `op`. Defaults to 0.
+
+<a id="nestedblock--series_conditions--override--condition--resolve_sustain_for_no_data"></a>
+### Nested Schema for `series_conditions.override.condition.resolve_sustain_for_no_data`
+
+Required:
+
+- `enabled` (Boolean) When false (default), missing data is treated the same as passing data and `resolve_sustain` governs recovery. When true, a firing signal keeps firing while its data is missing and auto-resolves once data has been missing for `sustain`.
+
+Optional:
+
+- `sustain` (String) How long a firing signal keeps firing after its data goes missing before auto-resolving. Only applies when `enabled` is true. Omitted or `0` resolves immediately on missing data. Must be less than 3 days.
+
 
 <a id="nestedblock--series_conditions--override--condition--resolve_value"></a>
 ### Nested Schema for `series_conditions.override.condition.resolve_value`

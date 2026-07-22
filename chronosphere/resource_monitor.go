@@ -380,6 +380,16 @@ func monitorConditionsToModel(
 				Enabled: c.ResolveValue.Enabled,
 			}
 		}
+		if c.ResolveSustainForNoData != nil {
+			secs, err := durationToSecs(c.ResolveSustainForNoData.Sustain)
+			if err != nil {
+				return nil, err
+			}
+			cond.ResolveSustainForNoData = &models.Configv1ResolveSustainForNoData{
+				Enabled: c.ResolveSustainForNoData.Enabled,
+				Seconds: secs,
+			}
+		}
 		bySev[c.Severity] = append(bySev[c.Severity], cond)
 	}
 
@@ -423,6 +433,12 @@ func monitorConditionsFromModel(
 				cond.ResolveValue = &intschema.MonitorSeriesConditionResolveValue{
 					Value:   c.ResolveValue.Value,
 					Enabled: c.ResolveValue.Enabled,
+				}
+			}
+			if c.ResolveSustainForNoData != nil {
+				cond.ResolveSustainForNoData = &intschema.MonitorSeriesConditionResolveSustainForNoData{
+					Enabled: c.ResolveSustainForNoData.Enabled,
+					Sustain: durationFromSecs(c.ResolveSustainForNoData.Seconds),
 				}
 			}
 			out = append(out, cond)

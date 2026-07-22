@@ -2,6 +2,11 @@
 
 ## UNRELEASED
 
+Added:
+* Add the `resolve_sustain_for_no_data` block to `chronosphere_monitor`
+  series conditions, controlling how a firing condition resolves once its
+  series stops returning data.
+
 ## v1.33.0
 
 Added:
