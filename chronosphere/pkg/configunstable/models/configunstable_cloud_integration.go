@@ -35,6 +35,9 @@ type ConfigunstableCloudIntegration struct {
 	// Labels applied to all metrics emitted from this integration.
 	MetricLabels map[string]string `json:"metric_labels,omitempty"`
 
+	// mongodb atlas metrics
+	MongodbAtlasMetrics *CloudintegrationconfigMongoDbAtlasMetricsConfig `json:"mongodb_atlas_metrics,omitempty"`
+
 	// Unique name of the CloudIntegration.
 	Name string `json:"name,omitempty"`
 
@@ -62,6 +65,10 @@ func (m *ConfigunstableCloudIntegration) Validate(formats strfmt.Registry) error
 	}
 
 	if err := m.validateGcp(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMongodbAtlasMetrics(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -106,6 +113,25 @@ func (m *ConfigunstableCloudIntegration) validateGcp(formats strfmt.Registry) er
 				return ve.ValidateName("gcp")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("gcp")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *ConfigunstableCloudIntegration) validateMongodbAtlasMetrics(formats strfmt.Registry) error {
+	if swag.IsZero(m.MongodbAtlasMetrics) { // not required
+		return nil
+	}
+
+	if m.MongodbAtlasMetrics != nil {
+		if err := m.MongodbAtlasMetrics.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("mongodb_atlas_metrics")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("mongodb_atlas_metrics")
 			}
 			return err
 		}
@@ -172,6 +198,10 @@ func (m *ConfigunstableCloudIntegration) ContextValidate(ctx context.Context, fo
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateMongodbAtlasMetrics(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateProviderType(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -207,6 +237,22 @@ func (m *ConfigunstableCloudIntegration) contextValidateGcp(ctx context.Context,
 				return ve.ValidateName("gcp")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("gcp")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *ConfigunstableCloudIntegration) contextValidateMongodbAtlasMetrics(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.MongodbAtlasMetrics != nil {
+		if err := m.MongodbAtlasMetrics.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("mongodb_atlas_metrics")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("mongodb_atlas_metrics")
 			}
 			return err
 		}

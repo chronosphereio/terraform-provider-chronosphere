@@ -14,8 +14,7 @@ import (
 )
 
 // SyntheticTestTLSVersionAssertion Asserts on the negotiated TLS version. bound selects whether the assertion
-// constrains the maximum or minimum acceptable version. target is a version
-// string, e.g. "1.2".
+// constrains the maximum or minimum acceptable version.
 //
 // swagger:model SyntheticTestTlsVersionAssertion
 type SyntheticTestTLSVersionAssertion struct {
@@ -27,7 +26,7 @@ type SyntheticTestTLSVersionAssertion struct {
 	Operator SyntheticTestTLSVersionAssertionOperator `json:"operator,omitempty"`
 
 	// target
-	Target string `json:"target,omitempty"`
+	Target TLSVersionAssertionVersion `json:"target,omitempty"`
 }
 
 // Validate validates this synthetic test Tls version assertion
@@ -39,6 +38,10 @@ func (m *SyntheticTestTLSVersionAssertion) Validate(formats strfmt.Registry) err
 	}
 
 	if err := m.validateOperator(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTarget(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -82,6 +85,23 @@ func (m *SyntheticTestTLSVersionAssertion) validateOperator(formats strfmt.Regis
 	return nil
 }
 
+func (m *SyntheticTestTLSVersionAssertion) validateTarget(formats strfmt.Registry) error {
+	if swag.IsZero(m.Target) { // not required
+		return nil
+	}
+
+	if err := m.Target.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("target")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("target")
+		}
+		return err
+	}
+
+	return nil
+}
+
 // ContextValidate validate this synthetic test Tls version assertion based on the context it is used
 func (m *SyntheticTestTLSVersionAssertion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
@@ -91,6 +111,10 @@ func (m *SyntheticTestTLSVersionAssertion) ContextValidate(ctx context.Context, 
 	}
 
 	if err := m.contextValidateOperator(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTarget(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -121,6 +145,20 @@ func (m *SyntheticTestTLSVersionAssertion) contextValidateOperator(ctx context.C
 			return ve.ValidateName("operator")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("operator")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *SyntheticTestTLSVersionAssertion) contextValidateTarget(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.Target.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("target")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("target")
 		}
 		return err
 	}

@@ -64,12 +64,18 @@ type Matcher struct {
 }
 
 type MonitorSeriesCondition struct {
-	Op             string                              `intschema:"op"`
-	Severity       string                              `intschema:"severity"`
-	ResolveSustain string                              `intschema:"resolve_sustain,optional"`
-	ResolveValue   *MonitorSeriesConditionResolveValue `intschema:"resolve_value,optional,list_encoded_object"`
-	Sustain        string                              `intschema:"sustain,optional"`
-	Value          float64                             `intschema:"value,optional,default:0"`
+	Op                      string                                         `intschema:"op"`
+	Severity                string                                         `intschema:"severity"`
+	ResolveSustain          string                                         `intschema:"resolve_sustain,optional"`
+	ResolveSustainForNoData *MonitorSeriesConditionResolveSustainForNoData `intschema:"resolve_sustain_for_no_data,optional,list_encoded_object"`
+	ResolveValue            *MonitorSeriesConditionResolveValue            `intschema:"resolve_value,optional,list_encoded_object"`
+	Sustain                 string                                         `intschema:"sustain,optional"`
+	Value                   float64                                        `intschema:"value,optional,default:0"`
+}
+
+type MonitorSeriesConditionResolveSustainForNoData struct {
+	Enabled bool   `intschema:"enabled"`
+	Sustain string `intschema:"sustain,optional"`
 }
 
 type MonitorSeriesConditionResolveValue struct {
