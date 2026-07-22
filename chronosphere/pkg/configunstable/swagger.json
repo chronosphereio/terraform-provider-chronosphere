@@ -337,7 +337,7 @@
       "type": "object"
     },
     "HttpTestConfigHttpAuth": {
-      "description": "Any combination of these auth mechanisms may be set; additional auth types\n(APITokenAuth) will be added as siblings. Validation checks the required\nfields of whichever methods are set.",
+      "description": "Any combination of these auth mechanisms may be set; additional auth types\nwill be added as siblings. Validation checks the required fields of\nwhichever methods are set.",
       "properties": {
         "basic_auth": {
           "$ref": "#/definitions/configunstableBasicAuth"
@@ -347,6 +347,9 @@
         },
         "oauth2_resource_owner_password": {
           "$ref": "#/definitions/configunstableOAuth2ResourceOwnerPassword"
+        },
+        "api_token_auth": {
+          "$ref": "#/definitions/configunstableAPITokenAuth"
         }
       },
       "type": "object"
@@ -396,6 +399,112 @@
         "source": {
           "description": "source is the name of the source field",
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MongoDbAtlasMetricsConfigClusterDatabaseGroup": {
+      "description": "A group of databases to scrape, optionally pinned to one cluster (mirrors the\nAtlas UI). Order-insensitive.",
+      "properties": {
+        "cluster_name": {
+          "description": "Optional; empty = every in-scope cluster; unique across groups (\u003c=1 empty group).",
+          "type": "string"
+        },
+        "database_names": {
+          "description": "Required non-empty allowlist; scraped verbatim (incl. admin/local/config).",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "MongoDbAtlasMetricsConfigDatabaseMetrics": {
+      "description": "Per-database storage (dbStats; mongodb.atlas.dbstats.*). No bounded core:\nenabling collects nothing on its own — cluster_databases is a required allowlist.",
+      "properties": {
+        "enabled": {
+          "description": "Category gate; absent/false = off (collects nothing alone).",
+          "type": "boolean"
+        },
+        "cluster_databases": {
+          "description": "Required non-empty when enabled (enabled + empty = validation error).",
+          "items": {
+            "$ref": "#/definitions/MongoDbAtlasMetricsConfigClusterDatabaseGroup"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "MongoDbAtlasMetricsConfigProjectConfig": {
+      "description": "One Atlas project's scope and opt-in categories; self-contained (no inheritance).",
+      "properties": {
+        "project_id": {
+          "description": "Required — Atlas project (group) ID, 24-hex; unique within projects.",
+          "type": "string"
+        },
+        "include_cluster_names": {
+          "description": "Cluster scope: bounded selector pair; both empty = all + auto-onboard.\ninclude pins a fixed set (no auto-onboard); exclude drops names, keeps it.\nOptional; XOR with exclude_cluster_names; order-insensitive.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "exclude_cluster_names": {
+          "description": "Optional; XOR with include_cluster_names; order-insensitive.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "database_metrics": {
+          "$ref": "#/definitions/MongoDbAtlasMetricsConfigDatabaseMetrics"
+        },
+        "search_metrics": {
+          "$ref": "#/definitions/MongoDbAtlasMetricsConfigSearchMetrics"
+        }
+      },
+      "type": "object"
+    },
+    "MongoDbAtlasMetricsConfigSearchMetrics": {
+      "description": "Atlas Search (FTS). Bounded core: enabling alone collects per-process health\n(mongodb.atlas.search.*); namespaces adds unbounded per-index stats on top.",
+      "properties": {
+        "enabled": {
+          "description": "Category gate; absent/false = off (enabling alone = FTS core).",
+          "type": "boolean"
+        },
+        "namespaces": {
+          "description": "Optional allowlist; empty = core only (NOT all indexes).",
+          "items": {
+            "$ref": "#/definitions/MongoDbAtlasMetricsConfigSearchNamespace"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "MongoDbAtlasMetricsConfigSearchNamespace": {
+      "description": "One Atlas Search namespace (cluster \u003e database \u003e collection \u003e index) for\nper-index stats (mongodb.atlas.search.index.stats.*).",
+      "properties": {
+        "cluster_name": {
+          "description": "Optional; empty = every in-scope cluster with this namespace.",
+          "type": "string"
+        },
+        "database_name": {
+          "description": "Required.",
+          "type": "string"
+        },
+        "collection_name": {
+          "description": "Required.",
+          "type": "string"
+        },
+        "index_names": {
+          "description": "Required non-empty allowlist.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -1190,7 +1299,7 @@
       "type": "object"
     },
     "SyntheticTestTlsVersionAssertion": {
-      "description": "Asserts on the negotiated TLS version. bound selects whether the assertion\nconstrains the maximum or minimum acceptable version. target is a version\nstring, e.g. \"1.2\".",
+      "description": "Asserts on the negotiated TLS version. bound selects whether the assertion\nconstrains the maximum or minimum acceptable version.",
       "properties": {
         "bound": {
           "$ref": "#/definitions/TlsVersionAssertionBound"
@@ -1199,7 +1308,7 @@
           "$ref": "#/definitions/SyntheticTestTlsVersionAssertionOperator"
         },
         "target": {
-          "type": "string"
+          "$ref": "#/definitions/TlsVersionAssertionVersion"
         }
       },
       "type": "object"
@@ -1218,6 +1327,15 @@
       "enum": [
         "MAX",
         "MIN"
+      ],
+      "type": "string"
+    },
+    "TlsVersionAssertionVersion": {
+      "enum": [
+        "TLS_1_0",
+        "TLS_1_1",
+        "TLS_1_2",
+        "TLS_1_3"
       ],
       "type": "string"
     },
@@ -1473,6 +1591,35 @@
       },
       "type": "object"
     },
+    "cloudintegrationconfigMongoDbAtlasMetricsConfig": {
+      "description": "MongoDbAtlasMetricsConfig configures scraping of MongoDB Atlas metrics. The\ncredential lives on a MONGODB_ATLAS ExternalConnection (by slug). Process and\ndisk metrics are always collected for in-scope clusters; database and search\nmetrics are opt-in per project. Selection is endpoint/shard-level, not per-metric.",
+      "properties": {
+        "organization_id": {
+          "description": "Required — Atlas org ID (24-hex); emitted as the org_id label.",
+          "type": "string"
+        },
+        "projects": {
+          "description": "Optional; empty = all accessible projects, auto-onboarded (process+disk only).",
+          "items": {
+            "$ref": "#/definitions/MongoDbAtlasMetricsConfigProjectConfig"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "configunstableAPITokenAuth": {
+      "description": "APITokenAuth configures static API-token authentication: each request\ncarries a `\u003ckey\u003e: \u003ctoken\u003e` header, where key is the header name (e.g.\n\"Authorization\", \"X-API-Key\") and token is the full header value (e.g.\n\"Bearer \u003csecret\u003e\"), treated as a secret in its entirety. Top-level so\nfuture non-HTTP test types can reuse it.",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "configunstableBasicAuth": {
       "description": "BasicAuth carries HTTP basic auth credentials used by a SyntheticTest.\nTop-level so future non-HTTP test types can reuse it.",
       "properties": {
@@ -1528,6 +1675,9 @@
         },
         "gcp": {
           "$ref": "#/definitions/cloudintegrationconfigGcpConfig"
+        },
+        "mongodb_atlas_metrics": {
+          "$ref": "#/definitions/cloudintegrationconfigMongoDbAtlasMetricsConfig"
         }
       },
       "type": "object"
@@ -1542,9 +1692,10 @@
       "type": "string"
     },
     "configunstableCloudIntegrationType": {
-      "description": "CloudIntegrationType identifies the cloud provider for a CloudIntegration.\nThis is server-derived from whichever provider config is set.\n\n - GCP: Google Cloud Platform.",
+      "description": "CloudIntegrationType identifies the cloud provider for a CloudIntegration.\nThis is server-derived from whichever provider config is set.\n\n - GCP: Google Cloud Platform.\n - MONGODB_ATLAS: MongoDB Atlas.",
       "enum": [
-        "GCP"
+        "GCP",
+        "MONGODB_ATLAS"
       ],
       "type": "string"
     },
@@ -3225,11 +3376,12 @@
           },
           {
             "collectionFormat": "multi",
-            "description": "Filter by provider type.\n\n - GCP: Google Cloud Platform.",
+            "description": "Filter by provider type.\n\n - GCP: Google Cloud Platform.\n - MONGODB_ATLAS: MongoDB Atlas.",
             "in": "query",
             "items": {
               "enum": [
-                "GCP"
+                "GCP",
+                "MONGODB_ATLAS"
               ],
               "type": "string"
             },

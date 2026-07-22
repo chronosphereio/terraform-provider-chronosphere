@@ -14,11 +14,14 @@ import (
 )
 
 // HTTPTestConfigHTTPAuth Any combination of these auth mechanisms may be set; additional auth types
-// (APITokenAuth) will be added as siblings. Validation checks the required
-// fields of whichever methods are set.
+// will be added as siblings. Validation checks the required fields of
+// whichever methods are set.
 //
 // swagger:model HttpTestConfigHttpAuth
 type HTTPTestConfigHTTPAuth struct {
+
+	// api token auth
+	APITokenAuth *ConfigunstableAPITokenAuth `json:"api_token_auth,omitempty"`
 
 	// basic auth
 	BasicAuth *ConfigunstableBasicAuth `json:"basic_auth,omitempty"`
@@ -33,6 +36,10 @@ type HTTPTestConfigHTTPAuth struct {
 // Validate validates this Http test config Http auth
 func (m *HTTPTestConfigHTTPAuth) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateAPITokenAuth(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateBasicAuth(formats); err != nil {
 		res = append(res, err)
@@ -49,6 +56,25 @@ func (m *HTTPTestConfigHTTPAuth) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *HTTPTestConfigHTTPAuth) validateAPITokenAuth(formats strfmt.Registry) error {
+	if swag.IsZero(m.APITokenAuth) { // not required
+		return nil
+	}
+
+	if m.APITokenAuth != nil {
+		if err := m.APITokenAuth.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("api_token_auth")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("api_token_auth")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -113,6 +139,10 @@ func (m *HTTPTestConfigHTTPAuth) validateOauth2ResourceOwnerPassword(formats str
 func (m *HTTPTestConfigHTTPAuth) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateAPITokenAuth(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateBasicAuth(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -128,6 +158,22 @@ func (m *HTTPTestConfigHTTPAuth) ContextValidate(ctx context.Context, formats st
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *HTTPTestConfigHTTPAuth) contextValidateAPITokenAuth(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.APITokenAuth != nil {
+		if err := m.APITokenAuth.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("api_token_auth")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("api_token_auth")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
