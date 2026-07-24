@@ -232,5 +232,61 @@ var MonitorSeriesConditionSchema = typeset.Set{
 				},
 			},
 		}),
+		"resolve_sustain_for_no_data": resolveSustainForNoData{},
 	},
 }.Schema()
+
+// resolveSustainForNoData is the ElemField for the resolve_sustain_for_no_data
+// block. It implements Normalize (rather than typeset.NotNormalized) because
+// the nested value duration must hash stably inside the condition set.
+type resolveSustainForNoData struct{}
+
+func (resolveSustainForNoData) Schema() *schema.Schema {
+	return &schema.Schema{
+		Type:        schema.TypeList,
+		Optional:    true,
+		MaxItems:    1,
+		Description: "Controls how a firing condition resolves once its series stops returning data. When this block is omitted (or `enabled` is false), missing data is treated exactly like passing data: `resolve_sustain` governs recovery for both. When enabled, resolution on missing data is governed independently of `resolve_sustain` by `value`.",
+		DiffSuppressFunc: func(_, old, new string, _ *schema.ResourceData) bool {
+			return Duration{}.Normalize(old) == Duration{}.Normalize(new)
+		},
+		DiffSuppressOnRefresh: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"enabled": {
+					Type:        schema.TypeBool,
+					Required:    true,
+					Description: "Whether missing data is treated distinctly from passing data. When false (the default when the block is omitted), a missing data point is treated exactly like a passing one and `resolve_sustain` governs recovery for both. When true, a firing signal keeps firing while its data is missing and auto-resolves once data has been missing for `value`, independently of `resolve_sustain`.",
+				},
+				"value": Duration{
+					Optional:    true,
+					Description: "How long a firing signal keeps firing after its data goes missing before auto-resolving. Only applies when `enabled` is true. Must be at most 1 year.",
+				}.Schema(),
+			},
+		},
+	}
+}
+
+func (resolveSustainForNoData) Normalize(v any) any {
+	list, ok := v.([]any)
+	if !ok {
+		return v
+	}
+	out := make([]any, 0, len(list))
+	for _, e := range list {
+		elem, ok := e.(map[string]any)
+		if !ok {
+			out = append(out, e)
+			continue
+		}
+		normalized := make(map[string]any, len(elem))
+		for k, ev := range elem {
+			if s, isStr := ev.(string); isStr && k == "value" {
+				ev = Duration{}.Normalize(s)
+			}
+			normalized[k] = ev
+		}
+		out = append(out, normalized)
+	}
+	return out
+}
