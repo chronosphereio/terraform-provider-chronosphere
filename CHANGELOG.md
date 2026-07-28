@@ -6,6 +6,9 @@ Added:
 * Add the `resolve_sustain_for_no_data` block to `chronosphere_monitor`
   series conditions, controlling how a firing condition resolves once its
   series stops returning data.
+* Add the `new_series_delay` field to `chronosphere_monitor` series
+  conditions, suppressing a newly observed series until the delay has
+  elapsed since it was first seen.
 
 ## v1.33.0
 

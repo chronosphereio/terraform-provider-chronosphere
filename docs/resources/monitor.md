@@ -100,6 +100,7 @@ Required:
 
 Optional:
 
+- `new_series_delay` (String) How long a newly observed series is suppressed before it can trigger a signal. A series counts as new until this duration has elapsed since it was first seen; it need not report continuously, but a series absent for more than 24 hours is forgotten and counts as new again when it returns. Additive with `sustain`, which only starts counting once the delay has elapsed. Omitted (or `0`) disables the delay. Must be at most 1 week. Only supported for Prometheus monitors, and not for the `exists`, `not_exists`, or `signal_not_exists` operators.
 - `resolve_sustain` (String) Duration the condition must remain false continuously before an active signal resolves.
 - `resolve_sustain_for_no_data` (Block List, Max: 1) Controls how a firing condition resolves once its series stops returning data. When this block is omitted (or `enabled` is false), missing data is treated exactly like passing data: `resolve_sustain` governs recovery for both. When enabled, resolution on missing data is governed independently of `resolve_sustain` by `value`. (see [below for nested schema](#nestedblock--series_conditions--condition--resolve_sustain_for_no_data))
 - `resolve_value` (Block List, Max: 1) Optional separate threshold used for resolution, enabling hysteresis (e.g. fire at >90, resolve at <80). (see [below for nested schema](#nestedblock--series_conditions--condition--resolve_value))
@@ -146,6 +147,7 @@ Required:
 
 Optional:
 
+- `new_series_delay` (String) How long a newly observed series is suppressed before it can trigger a signal. A series counts as new until this duration has elapsed since it was first seen; it need not report continuously, but a series absent for more than 24 hours is forgotten and counts as new again when it returns. Additive with `sustain`, which only starts counting once the delay has elapsed. Omitted (or `0`) disables the delay. Must be at most 1 week. Only supported for Prometheus monitors, and not for the `exists`, `not_exists`, or `signal_not_exists` operators.
 - `resolve_sustain` (String) Duration the condition must remain false continuously before an active signal resolves.
 - `resolve_sustain_for_no_data` (Block List, Max: 1) Controls how a firing condition resolves once its series stops returning data. When this block is omitted (or `enabled` is false), missing data is treated exactly like passing data: `resolve_sustain` governs recovery for both. When enabled, resolution on missing data is governed independently of `resolve_sustain` by `value`. (see [below for nested schema](#nestedblock--series_conditions--override--condition--resolve_sustain_for_no_data))
 - `resolve_value` (Block List, Max: 1) Optional separate threshold used for resolution, enabling hysteresis (e.g. fire at >90, resolve at <80). (see [below for nested schema](#nestedblock--series_conditions--override--condition--resolve_value))

@@ -66,6 +66,7 @@ type Matcher struct {
 type MonitorSeriesCondition struct {
 	Op                      string                                         `intschema:"op"`
 	Severity                string                                         `intschema:"severity"`
+	NewSeriesDelay          string                                         `intschema:"new_series_delay,optional"`
 	ResolveSustain          string                                         `intschema:"resolve_sustain,optional"`
 	ResolveSustainForNoData *MonitorSeriesConditionResolveSustainForNoData `intschema:"resolve_sustain_for_no_data,optional,list_encoded_object"`
 	ResolveValue            *MonitorSeriesConditionResolveValue            `intschema:"resolve_value,optional,list_encoded_object"`

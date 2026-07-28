@@ -233,6 +233,10 @@ var MonitorSeriesConditionSchema = typeset.Set{
 			},
 		}),
 		"resolve_sustain_for_no_data": resolveSustainForNoData{},
+		"new_series_delay": Duration{
+			Optional:    true,
+			Description: "How long a newly observed series is suppressed before it can trigger a signal. A series counts as new until this duration has elapsed since it was first seen; it need not report continuously, but a series absent for more than 24 hours is forgotten and counts as new again when it returns. Additive with `sustain`, which only starts counting once the delay has elapsed. Omitted (or `0`) disables the delay. Must be at most 1 week. Only supported for Prometheus monitors, and not for the `exists`, `not_exists`, or `signal_not_exists` operators.",
+		},
 	},
 }.Schema()
 
