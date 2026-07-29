@@ -368,10 +368,15 @@ func monitorConditionsToModel(
 		if err != nil {
 			return nil, err
 		}
+		newSeriesDelaySecs, err := durationToSecs(c.NewSeriesDelay)
+		if err != nil {
+			return nil, err
+		}
 		cond := &models.Configv1MonitorCondition{
 			Op:                 enum.ConditionOp.V1(c.Op),
 			SustainSecs:        sustainSecs,
 			ResolveSustainSecs: resolveSustainSecs,
+			NewSeriesDelaySecs: newSeriesDelaySecs,
 			Value:              c.Value,
 		}
 		if c.ResolveValue != nil {
@@ -427,6 +432,7 @@ func monitorConditionsFromModel(
 				Op:             string(c.Op),
 				Sustain:        durationFromSecs(c.SustainSecs),
 				ResolveSustain: durationFromSecs(c.ResolveSustainSecs),
+				NewSeriesDelay: durationFromSecs(c.NewSeriesDelaySecs),
 				Value:          c.Value,
 			}
 			if c.ResolveValue != nil {
