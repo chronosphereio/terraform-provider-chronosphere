@@ -2,7 +2,12 @@
 
 ## UNRELEASED
 
+## v1.34.0
+
 Added:
+* Add provider support for write-only (`*_wo`) attributes, used for secret
+  fields whose values should never be persisted in Terraform state.
+  Configuring a write-only attribute requires Terraform 1.11 or later.
 * Add the `resolve_sustain_for_no_data` block to `chronosphere_monitor`
   series conditions, controlling how a firing condition resolves once its
   series stops returning data.
@@ -17,9 +22,6 @@ Added:
   When true, alerts are notified once and on state changes but are never
   re-sent on the `repeat_interval` timer.
 * Add unstable `chronosphere_command_center_group` resource.
-* Add provider support for write-only (`*_wo`) attributes, used for secret
-  fields whose values should never be persisted in Terraform state.
-  Configuring a write-only attribute requires Terraform 1.11 or later.
 
 ## v1.32.0
 
