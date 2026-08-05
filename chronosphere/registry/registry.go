@@ -438,4 +438,14 @@ var Resources = mustValidate([]Resource{
 		API:    Unstable,
 		Schema: tfschema.CommandCenterGroup,
 	},
+	{
+		Name:   "notebook",
+		Entity: "Notebook",
+		API:    Unstable,
+		Schema: tfschema.Notebook,
+		// The notebook API takes no dry_run on create or update -- the field is
+		// absent from the proto, not just from the vendored client -- so there
+		// is nothing to validate a plan against.
+		DisableDryRun: true,
+	},
 })

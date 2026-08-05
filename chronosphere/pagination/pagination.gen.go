@@ -7,6 +7,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/command_center_group"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/notebook"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
@@ -2192,6 +2193,78 @@ func ListUnstableCommandCenterGroupsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.CommandCenterGroups {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListUnstableNotebooks(
+	ctx context.Context,
+	client *configunstable.Client,
+) ([]*configunstablemodels.ConfigunstableNotebook, error) {
+	return ListUnstableNotebooksByFilter(ctx, client, Filter{})
+}
+
+func ListUnstableNotebooksBySlugs(
+	ctx context.Context,
+	client *configunstable.Client,
+	slugs []string,
+) ([]*configunstablemodels.ConfigunstableNotebook, error) {
+	return ListUnstableNotebooksByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListUnstableNotebooksByNames(
+	ctx context.Context,
+	client *configunstable.Client,
+	names []string,
+) ([]*configunstablemodels.ConfigunstableNotebook, error) {
+	return ListUnstableNotebooksByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListUnstableNotebooksByFilter(
+	ctx context.Context,
+	client *configunstable.Client,
+	f Filter,
+	opts ...func(*notebook.ListNotebooksParams),
+) ([]*configunstablemodels.ConfigunstableNotebook, error) {
+	if !unstable.Enabled() {
+		return nil, nil
+	}
+	var (
+		nextToken string
+		result    []*configunstablemodels.ConfigunstableNotebook
+	)
+	for {
+		p := &notebook.ListNotebooksParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.Notebook.ListNotebooks(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.Notebooks {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
