@@ -81,6 +81,7 @@ func Provider() *schema.Provider {
 		"chronosphere_victorops_external_connection":         resourceVictoropsExternalConnection(),
 		"chronosphere_opsgenie_external_connection":          resourceOpsgenieExternalConnection(),
 		"chronosphere_command_center_group":                  resourceCommandCenterGroup(),
+		"chronosphere_notebook":                              resourceNotebook(),
 	}
 
 	// Apply common CRUD wrappers to all resources.

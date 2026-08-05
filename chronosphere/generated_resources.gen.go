@@ -4,8 +4,11 @@ package chronosphere
 import (
 	"context"
 
+	"fmt"
+
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/command_center_group"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/notebook"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
@@ -2787,5 +2790,88 @@ func (generatedUnstableCommandCenterGroup) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigUnstable.CommandCenterGroup.DeleteCommandCenterGroup(req)
+	return err
+}
+
+type generatedUnstableNotebook struct{}
+
+func (generatedUnstableNotebook) slugOf(m *configunstablemodels.ConfigunstableNotebook) string {
+	return m.Slug
+}
+
+func (generatedUnstableNotebook) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableNotebook,
+	dryRun bool,
+) (string, error) {
+	if dryRun {
+		return "", fmt.Errorf("dry run not supported for this entity type")
+	}
+	req := &notebook.CreateNotebookParams{
+		Context: ctx,
+		Body: &configunstablemodels.ConfigunstableCreateNotebookRequest{
+			Notebook: m,
+		},
+	}
+	resp, err := clients.ConfigUnstable.Notebook.CreateNotebook(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.Notebook
+	if e == nil {
+		return "", nil
+	}
+	return (generatedUnstableNotebook{}).slugOf(e), nil
+}
+
+func (generatedUnstableNotebook) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configunstablemodels.ConfigunstableNotebook, error) {
+	req := &notebook.ReadNotebookParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigUnstable.Notebook.ReadNotebook(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.Notebook, nil
+}
+
+func (generatedUnstableNotebook) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableNotebook,
+	params updateParams,
+) error {
+	if params.dryRun {
+		return fmt.Errorf("dry run not supported for this entity type")
+	}
+	req := &notebook.UpdateNotebookParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configunstablemodels.ConfigUnstableUpdateNotebookBody{
+
+			Notebook:        m,
+			CreateIfMissing: params.createIfMissing,
+		},
+	}
+	_, err := clients.ConfigUnstable.Notebook.UpdateNotebook(req)
+	return err
+}
+func (generatedUnstableNotebook) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &notebook.DeleteNotebookParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigUnstable.Notebook.DeleteNotebook(req)
 	return err
 }

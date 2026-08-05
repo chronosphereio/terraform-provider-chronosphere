@@ -2,6 +2,11 @@
 
 ## UNRELEASED
 
+Added:
+* Add the `chronosphere_notebook` resource, backed by Chronosphere's unstable
+  config API. Notebook content is supplied as `notebook_json` and compared
+  semantically, so key ordering and whitespace do not produce spurious plans.
+
 ## v1.34.0
 
 Added:
