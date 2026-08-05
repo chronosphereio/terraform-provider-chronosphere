@@ -426,4 +426,10 @@ var Resources = mustValidate([]Resource{
 		API:    Unstable,
 		Schema: tfschema.CommandCenterGroup,
 	},
+	{
+		Name:   "synthetic_test",
+		Entity: "SyntheticTest",
+		API:    Unstable,
+		Schema: tfschema.SyntheticTest,
+	},
 })

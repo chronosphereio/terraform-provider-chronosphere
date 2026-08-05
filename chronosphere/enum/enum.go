@@ -41,6 +41,10 @@ type Enum[V1 swaggerEnum] interface {
 	// registered, it is simply propagated as an L type.
 	V1(s string) V1
 
+	// Alias resolves a V1 value into its user-facing Terraform alias. Values
+	// with no alias, registered or not, are propagated unchanged.
+	Alias(v V1) string
+
 	// Validate implements schema.ValidateDiagFunc.
 	Validate(v interface{}, _ cty.Path) diag.Diagnostics
 }
@@ -127,6 +131,13 @@ func (e enum[V1]) V1(s string) V1 {
 	return v.v1
 }
 
+func (e enum[V1]) Alias(v V1) string {
+	if val, ok := e.values[string(v)]; ok && val.alias != "" {
+		return val.alias
+	}
+	return string(v)
+}
+
 func (e enum[V1]) Validate(v interface{}, _ cty.Path) diag.Diagnostics {
 	s := v.(string)
 	if s == "" {
@@ -156,6 +167,10 @@ type stringAdaptor[V1 swaggerEnum] struct {
 
 func (a stringAdaptor[V1]) V1(s string) string {
 	return string(a.enum.V1(s))
+}
+
+func (a stringAdaptor[V1]) Alias(s string) string {
+	return a.enum.Alias(V1(s))
 }
 
 func (a stringAdaptor[V1]) Validate(v interface{}, p cty.Path) diag.Diagnostics {

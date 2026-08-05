@@ -30,6 +30,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+const unstableAPIWarning = "This resource is backed by Chronosphere's unstable config API and is subject to breaking change without notice."
+
 // internalSchema is implemented by all intschema types.
 type internalSchema interface {
 	FromResourceData(d convertintschema.ResourceGetter) error

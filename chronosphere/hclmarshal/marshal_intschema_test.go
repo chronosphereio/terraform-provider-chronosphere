@@ -94,6 +94,7 @@ func TestMarshalIntSchema_Success(t *testing.T) {
 				ComputedAndNotOptional:  "this-should-not-be-in-the-output",
 				ComputedAndOptional:     "output-value",
 				HCLFileDashboardJson:    "/tmp/dashboard.json",
+				SomeWriteOnly:           "this-should-not-be-in-the-output",
 			},
 			want: `resource "chronosphere_test_resource" "bar" {
   collection_id  = chronosphere_collection.col1.id

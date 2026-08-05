@@ -190,22 +190,6 @@
       },
       "type": "object"
     },
-    "ConfigUnstableUpdateSyntheticGlobalVariableBody": {
-      "properties": {
-        "synthetic_global_variable": {
-          "$ref": "#/definitions/configunstableSyntheticGlobalVariable"
-        },
-        "create_if_missing": {
-          "description": "If `true`, the SyntheticGlobalVariable will be created if it does not already exist, identified by `slug`. If `false`, an error will be returned if the SyntheticGlobalVariable does not already exist.",
-          "type": "boolean"
-        },
-        "dry_run": {
-          "description": "If `true`, validates the specified configuration without creating or updating the SyntheticGlobalVariable. If the specified configuration is valid, the endpoint returns a partial response without the SyntheticGlobalVariable. If the specified configuration is invalid, the endpoint returns an error.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
     "ConfigUnstableUpdateSyntheticTestBody": {
       "properties": {
         "synthetic_test": {
@@ -254,17 +238,6 @@
           "type": "string"
         },
         "panel_name": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "DeleteSyntheticGlobalVariableResponseTestReference": {
-      "properties": {
-        "test_slug": {
-          "type": "string"
-        },
-        "test_name": {
           "type": "string"
         }
       },
@@ -1493,7 +1466,6 @@
           "type": "string"
         },
         "password": {
-          "description": "May contain a {{VAR_NAME}} reference resolved at test execution to a\nSyntheticGlobalVariable value.",
           "type": "string"
         }
       },
@@ -1820,26 +1792,6 @@
       },
       "type": "object"
     },
-    "configunstableCreateSyntheticGlobalVariableRequest": {
-      "properties": {
-        "synthetic_global_variable": {
-          "$ref": "#/definitions/configunstableSyntheticGlobalVariable"
-        },
-        "dry_run": {
-          "description": "If `true`, validates the specified configuration without creating the SyntheticGlobalVariable. If the specified configuration is valid, the endpoint returns a partial response without the SyntheticGlobalVariable. If the specified configuration is invalid, the endpoint returns an error.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableCreateSyntheticGlobalVariableResponse": {
-      "properties": {
-        "synthetic_global_variable": {
-          "$ref": "#/definitions/configunstableSyntheticGlobalVariable"
-        }
-      },
-      "type": "object"
-    },
     "configunstableCreateSyntheticTestRequest": {
       "properties": {
         "synthetic_test": {
@@ -2000,18 +1952,6 @@
       "type": "object"
     },
     "configunstableDeleteServiceResponse": {
-      "type": "object"
-    },
-    "configunstableDeleteSyntheticGlobalVariableResponse": {
-      "properties": {
-        "referencing_tests": {
-          "description": "Tests that referenced this variable at delete time.",
-          "items": {
-            "$ref": "#/definitions/DeleteSyntheticGlobalVariableResponseTestReference"
-          },
-          "type": "array"
-        }
-      },
       "type": "object"
     },
     "configunstableDeleteSyntheticTestResponse": {
@@ -2180,20 +2120,6 @@
         "services": {
           "items": {
             "$ref": "#/definitions/configunstableService"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableListSyntheticGlobalVariablesResponse": {
-      "properties": {
-        "page": {
-          "$ref": "#/definitions/configv1PageResult"
-        },
-        "synthetic_global_variables": {
-          "items": {
-            "$ref": "#/definitions/configunstableSyntheticGlobalVariable"
           },
           "type": "array"
         }
@@ -2497,14 +2423,6 @@
       },
       "type": "object"
     },
-    "configunstableReadSyntheticGlobalVariableResponse": {
-      "properties": {
-        "synthetic_global_variable": {
-          "$ref": "#/definitions/configunstableSyntheticGlobalVariable"
-        }
-      },
-      "type": "object"
-    },
     "configunstableReadSyntheticTestResponse": {
       "properties": {
         "synthetic_test": {
@@ -2651,43 +2569,6 @@
             "$ref": "#/definitions/SyncPrometheusChangeLog"
           },
           "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableSyntheticGlobalVariable": {
-      "description": "SyntheticGlobalVariable is a tenant-scoped named string variable that\nsynthetic tests would reference inline via {{NAME}} template syntax. The\nfeature is deferred — see src/synthetics/docs/decision-log.md DECISION-020\nfor the current scope. The proto and CRUD remain in-tree but are not\nreferenced by any active test-side code path.",
-      "properties": {
-        "slug": {
-          "description": "The unique identifier of the SyntheticGlobalVariable. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the SyntheticGlobalVariable is created.",
-          "type": "string"
-        },
-        "name": {
-          "description": "The name of the SyntheticGlobalVariable. You can modify this value after the SyntheticGlobalVariable is created.",
-          "type": "string"
-        },
-        "created_at": {
-          "description": "Timestamp of when the SyntheticGlobalVariable was created. Cannot be set by clients.",
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "updated_at": {
-          "description": "Timestamp of when the SyntheticGlobalVariable was last updated. Cannot be set by clients.",
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "protected": {
-          "description": "Always true in Phase 1; field exists so Phase 2 can introduce non-protected\nvariables without a schema migration.",
-          "type": "boolean"
-        },
-        "value": {
-          "description": "The variable value. Required on create. For protected variables the\nserver cannot read the value back, so reads always return \"\".",
-          "type": "string"
         }
       },
       "type": "object"
@@ -2970,14 +2851,6 @@
       "properties": {
         "service": {
           "$ref": "#/definitions/configunstableService"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableUpdateSyntheticGlobalVariableResponse": {
-      "properties": {
-        "synthetic_global_variable": {
-          "$ref": "#/definitions/configunstableSyntheticGlobalVariable"
         }
       },
       "type": "object"
@@ -5737,271 +5610,6 @@
         },
         "tags": [
           "SyncPrometheus"
-        ]
-      }
-    },
-    "/api/unstable/config/synthetic-global-variables": {
-      "get": {
-        "operationId": "ListSyntheticGlobalVariables",
-        "parameters": [
-          {
-            "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
-            "format": "int64",
-            "in": "query",
-            "name": "page.max_size",
-            "type": "integer"
-          },
-          {
-            "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
-            "in": "query",
-            "name": "page.token",
-            "type": "string"
-          },
-          {
-            "collectionFormat": "multi",
-            "description": "Filters results by slug, where any SyntheticGlobalVariable with a matching slug in the given list (and matches all other filters) will be returned.",
-            "in": "query",
-            "items": {
-              "type": "string"
-            },
-            "name": "slugs",
-            "type": "array"
-          },
-          {
-            "collectionFormat": "multi",
-            "description": "Filters results by name, where any SyntheticGlobalVariable with a matching name in the given list (and matches all other filters) will be returned.",
-            "in": "query",
-            "items": {
-              "type": "string"
-            },
-            "name": "names",
-            "type": "array"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableListSyntheticGlobalVariablesResponse"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "SyntheticGlobalVariable"
-        ]
-      },
-      "post": {
-        "operationId": "CreateSyntheticGlobalVariable",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/configunstableCreateSyntheticGlobalVariableRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response containing the created SyntheticGlobalVariable.",
-            "schema": {
-              "$ref": "#/definitions/configunstableCreateSyntheticGlobalVariableResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot create the SyntheticGlobalVariable because the request is invalid.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "409": {
-            "description": "Cannot create the SyntheticGlobalVariable because there is a conflict with an existing SyntheticGlobalVariable.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "SyntheticGlobalVariable"
-        ]
-      }
-    },
-    "/api/unstable/config/synthetic-global-variables/{slug}": {
-      "delete": {
-        "operationId": "DeleteSyntheticGlobalVariable",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "description": "When true, returns referencing tests without mutating.",
-            "in": "query",
-            "name": "dry_run",
-            "type": "boolean"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableDeleteSyntheticGlobalVariableResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot delete the SyntheticGlobalVariable because it is in use.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "404": {
-            "description": "Cannot delete the SyntheticGlobalVariable because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "SyntheticGlobalVariable"
-        ]
-      },
-      "get": {
-        "operationId": "ReadSyntheticGlobalVariable",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableReadSyntheticGlobalVariableResponse"
-            }
-          },
-          "404": {
-            "description": "Cannot read the SyntheticGlobalVariable because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "SyntheticGlobalVariable"
-        ]
-      },
-      "put": {
-        "operationId": "UpdateSyntheticGlobalVariable",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ConfigUnstableUpdateSyntheticGlobalVariableBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response containing the updated SyntheticGlobalVariable.",
-            "schema": {
-              "$ref": "#/definitions/configunstableUpdateSyntheticGlobalVariableResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot update the SyntheticGlobalVariable because the request is invalid.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "404": {
-            "description": "Cannot update the SyntheticGlobalVariable because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "409": {
-            "description": "Cannot update the SyntheticGlobalVariable because there is a conflict with an existing SyntheticGlobalVariable.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "SyntheticGlobalVariable"
         ]
       }
     },

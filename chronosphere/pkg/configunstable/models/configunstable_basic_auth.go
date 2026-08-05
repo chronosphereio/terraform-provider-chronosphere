@@ -18,8 +18,7 @@ import (
 // swagger:model configunstableBasicAuth
 type ConfigunstableBasicAuth struct {
 
-	// May contain a {{VAR_NAME}} reference resolved at test execution to a
-	// SyntheticGlobalVariable value.
+	// password
 	Password string `json:"password,omitempty"`
 
 	// username

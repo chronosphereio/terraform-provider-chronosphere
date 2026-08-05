@@ -222,6 +222,20 @@ type SignalGrouping struct {
 	SignalPerSeries bool     `intschema:"signal_per_series,optional"`
 }
 
+type SyntheticOAuth2Common struct {
+	AccessTokenUrl  string   `intschema:"access_token_url"`
+	Audience        string   `intschema:"audience,optional"`
+	Resource        string   `intschema:"resource,optional"`
+	Scopes          []string `intschema:"scopes,optional"`
+	TokenAuthMethod string   `intschema:"token_auth_method,optional"`
+}
+
+type SyntheticResponseTimeAssertion struct {
+	Operator string `intschema:"operator"`
+	Scope    string `intschema:"scope"`
+	TargetMs int64  `intschema:"target_ms"`
+}
+
 type TraceBoolFilter struct {
 	Value bool `intschema:"value"`
 }
