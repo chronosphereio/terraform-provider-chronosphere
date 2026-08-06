@@ -3,12 +3,12 @@
 page_title: "chronosphere_slack_external_connection Resource - chronosphere"
 subcategory: ""
 description: |-
-  Workspace-scoped Slack credentials that downstream notifiers and LogScale actions can reference. Centralizes webhook URLs and bot tokens so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.
+  Workspace-scoped Slack credentials that downstream notifiers can reference. Centralizes webhook URLs and bot tokens so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.
 ---
 
 # chronosphere_slack_external_connection (Resource)
 
-Workspace-scoped Slack credentials that downstream notifiers and LogScale actions can reference. Centralizes webhook URLs and bot tokens so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.
+Workspace-scoped Slack credentials that downstream notifiers can reference. Centralizes webhook URLs and bot tokens so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.
 
 ## Example Usage
 

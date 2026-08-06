@@ -65,8 +65,6 @@ func Provider() *schema.Provider {
 		"chronosphere_derived_label":                         resourceDerivedLabel(),
 		"chronosphere_dataset":                               resourceDataset(),
 		"chronosphere_otel_metrics_ingestion":                resourceOtelMetricsIngestion(),
-		"chronosphere_logscale_alert":                        resourceLogscaleAlert(),
-		"chronosphere_logscale_action":                       resourceLogscaleAction(),
 		"chronosphere_log_allocation_config":                 resourceLogAllocationConfig(),
 		"chronosphere_slo":                                   resourceSLO(),
 		"chronosphere_log_ingest_config":                     resourceLogIngestConfig(),

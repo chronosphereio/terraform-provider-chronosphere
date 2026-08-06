@@ -87,10 +87,7 @@ type ListCloudIntegrationsParams struct {
 
 	/* ProviderTypes.
 
-	    Filter by provider type.
-
-	- GCP: Google Cloud Platform.
-	- MONGODB_ATLAS: MongoDB Atlas.
+	   Filter by provider type.
 	*/
 	ProviderTypes []string
 

@@ -3,12 +3,12 @@
 page_title: "chronosphere_pagerduty_external_connection Resource - chronosphere"
 subcategory: ""
 description: |-
-  Workspace-scoped PagerDuty credentials that downstream notifiers and LogScale actions can reference. Holds either a PagerDuty Events integration key (for alert delivery) or a REST API token (for incident note polling); modern equivalent of the per-notifier credentials.
+  Workspace-scoped PagerDuty credentials that downstream notifiers can reference. Holds either a PagerDuty Events integration key (for alert delivery) or a REST API token (for incident note polling); modern equivalent of the per-notifier credentials.
 ---
 
 # chronosphere_pagerduty_external_connection (Resource)
 
-Workspace-scoped PagerDuty credentials that downstream notifiers and LogScale actions can reference. Holds either a PagerDuty Events integration key (for alert delivery) or a REST API token (for incident note polling); modern equivalent of the per-notifier credentials.
+Workspace-scoped PagerDuty credentials that downstream notifiers can reference. Holds either a PagerDuty Events integration key (for alert delivery) or a REST API token (for incident note polling); modern equivalent of the per-notifier credentials.
 
 ## Example Usage
 

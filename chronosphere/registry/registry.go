@@ -344,18 +344,6 @@ var Resources = mustValidate([]Resource{
 		SingletonID: "trace_tail_sampling_singleton",
 	},
 	{
-		Name:   "logscale_alert",
-		Entity: "LogScaleAlert",
-		API:    V1,
-		Schema: tfschema.LogscaleAlert,
-	},
-	{
-		Name:   "logscale_action",
-		Entity: "LogScaleAction",
-		API:    V1,
-		Schema: tfschema.LogscaleAction,
-	},
-	{
 		Name:        "log_allocation_config",
 		Entity:      "LogAllocationConfig",
 		API:         V1,

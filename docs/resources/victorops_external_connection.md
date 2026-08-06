@@ -3,12 +3,12 @@
 page_title: "chronosphere_victorops_external_connection Resource - chronosphere"
 subcategory: ""
 description: |-
-  Workspace-scoped VictorOps (Splunk On-Call) credentials that downstream notifiers and LogScale actions can reference. Centralizes the REST integration API key so it isn't duplicated across notifiers; modern equivalent of the per-notifier credentials.
+  Workspace-scoped VictorOps (Splunk On-Call) credentials that downstream notifiers can reference. Centralizes the REST integration API key so it isn't duplicated across notifiers; modern equivalent of the per-notifier credentials.
 ---
 
 # chronosphere_victorops_external_connection (Resource)
 
-Workspace-scoped VictorOps (Splunk On-Call) credentials that downstream notifiers and LogScale actions can reference. Centralizes the REST integration API key so it isn't duplicated across notifiers; modern equivalent of the per-notifier credentials.
+Workspace-scoped VictorOps (Splunk On-Call) credentials that downstream notifiers can reference. Centralizes the REST integration API key so it isn't duplicated across notifiers; modern equivalent of the per-notifier credentials.
 
 ## Example Usage
 

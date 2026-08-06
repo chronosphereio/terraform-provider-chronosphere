@@ -3,12 +3,12 @@
 page_title: "chronosphere_opsgenie_external_connection Resource - chronosphere"
 subcategory: ""
 description: |-
-  Workspace-scoped OpsGenie credentials that downstream notifiers and LogScale actions can reference. Centralizes the OpsGenie API key so it isn't duplicated across individual notifiers; modern equivalent of the per-notifier credentials.
+  Workspace-scoped OpsGenie credentials that downstream notifiers can reference. Centralizes the OpsGenie API key so it isn't duplicated across individual notifiers; modern equivalent of the per-notifier credentials.
 ---
 
 # chronosphere_opsgenie_external_connection (Resource)
 
-Workspace-scoped OpsGenie credentials that downstream notifiers and LogScale actions can reference. Centralizes the OpsGenie API key so it isn't duplicated across individual notifiers; modern equivalent of the per-notifier credentials.
+Workspace-scoped OpsGenie credentials that downstream notifiers can reference. Centralizes the OpsGenie API key so it isn't duplicated across individual notifiers; modern equivalent of the per-notifier credentials.
 
 ## Example Usage
 

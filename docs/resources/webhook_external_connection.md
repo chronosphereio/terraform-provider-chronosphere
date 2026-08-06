@@ -3,12 +3,12 @@
 page_title: "chronosphere_webhook_external_connection Resource - chronosphere"
 subcategory: ""
 description: |-
-  Workspace-scoped webhook credentials that downstream notifiers and LogScale actions can reference. Centralizes the destination URL and HTTP auth so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.
+  Workspace-scoped webhook credentials that downstream notifiers can reference. Centralizes the destination URL and HTTP auth so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.
 ---
 
 # chronosphere_webhook_external_connection (Resource)
 
-Workspace-scoped webhook credentials that downstream notifiers and LogScale actions can reference. Centralizes the destination URL and HTTP auth so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.
+Workspace-scoped webhook credentials that downstream notifiers can reference. Centralizes the destination URL and HTTP auth so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.
 
 ## Example Usage
 
