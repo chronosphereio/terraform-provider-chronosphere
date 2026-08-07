@@ -29,8 +29,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_control_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_ingest_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_retention_config"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_action"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_scale_alert"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/muting_rule"
@@ -113,8 +111,6 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.LogControlConfig = log_control_config.New(transport, formats)
 	cli.LogIngestConfig = log_ingest_config.New(transport, formats)
 	cli.LogRetentionConfig = log_retention_config.New(transport, formats)
-	cli.LogScaleAction = log_scale_action.New(transport, formats)
-	cli.LogScaleAlert = log_scale_alert.New(transport, formats)
 	cli.MappingRule = mapping_rule.New(transport, formats)
 	cli.Monitor = monitor.New(transport, formats)
 	cli.MutingRule = muting_rule.New(transport, formats)
@@ -216,10 +212,6 @@ type ConfigV1API struct {
 
 	LogRetentionConfig log_retention_config.ClientService
 
-	LogScaleAction log_scale_action.ClientService
-
-	LogScaleAlert log_scale_alert.ClientService
-
 	MappingRule mapping_rule.ClientService
 
 	Monitor monitor.ClientService
@@ -283,8 +275,6 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.LogControlConfig.SetTransport(transport)
 	c.LogIngestConfig.SetTransport(transport)
 	c.LogRetentionConfig.SetTransport(transport)
-	c.LogScaleAction.SetTransport(transport)
-	c.LogScaleAlert.SetTransport(transport)
 	c.MappingRule.SetTransport(transport)
 	c.Monitor.SetTransport(transport)
 	c.MutingRule.SetTransport(transport)

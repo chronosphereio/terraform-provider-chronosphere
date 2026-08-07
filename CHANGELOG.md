@@ -2,6 +2,12 @@
 
 ## UNRELEASED
 
+Removed:
+* Remove the `chronosphere_logscale_alert` and `chronosphere_logscale_action`
+  resources. The endpoints backing them no longer exist in the public API.
+  **This is a breaking change**: remove these resources from your
+  configuration and state before upgrading.
+
 ## v1.34.0
 
 Added:

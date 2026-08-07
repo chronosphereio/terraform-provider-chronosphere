@@ -57,16 +57,6 @@ func TestEnumConversions(t *testing.T) {
 
 	// v1 -> v1
 	require.Equal(t,
-		configv1.PagerDutyActionSeverityERROR,
-		LogScalePagerDutyActionSeverity.V1("ERROR"))
-
-	// v1 -> v1
-	require.Equal(t,
-		configv1.WebhookActionHTTPMethodPOST,
-		LogScaleWebhookActionHTTPMethod.V1("POST"))
-
-	// v1 -> v1
-	require.Equal(t,
 		configv1.CommonPromQLMatcherTypeMatchEqual,
 		PromQLMatcherType.V1("MatchEqual"))
 
@@ -154,18 +144,6 @@ func TestAllEnumsValidate(t *testing.T) {
 		{
 			v1SwaggerName: "ResourceAttributesFilterMode",
 			enum:          ResourceAttributesFilterMode.ToStrings(),
-		},
-		{
-			v1SwaggerName: "PagerDutyActionSeverity",
-			enum:          LogScalePagerDutyActionSeverity.ToStrings(),
-		},
-		{
-			v1SwaggerName: "WebhookActionHTTPMethod",
-			enum:          LogScaleWebhookActionHTTPMethod.ToStrings(),
-		},
-		{
-			v1SwaggerName: "LogScaleAlertAlertType",
-			enum:          LogscaleAlertType.ToStrings(),
 		},
 		{
 			v1SwaggerName: "SLITimeSliceSize",

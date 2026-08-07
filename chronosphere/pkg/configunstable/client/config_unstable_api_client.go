@@ -12,6 +12,7 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/cloud_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/command_center_group"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/config_unstable"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/link_template"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_primary_key"
@@ -21,6 +22,8 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/saved_trace_search"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/service"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/sync_prometheus"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/synthetic_global_variable"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/synthetic_test"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_tail_sampling_rules"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/trace_top_tag_config"
@@ -70,6 +73,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli.Transport = transport
 	cli.CloudIntegration = cloud_integration.New(transport, formats)
 	cli.CommandCenterGroup = command_center_group.New(transport, formats)
+	cli.ConfigUnstable = config_unstable.New(transport, formats)
 	cli.Dashboard = dashboard.New(transport, formats)
 	cli.LinkTemplate = link_template.New(transport, formats)
 	cli.LogPrimaryKey = log_primary_key.New(transport, formats)
@@ -79,6 +83,8 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli.SavedTraceSearch = saved_trace_search.New(transport, formats)
 	cli.Service = service.New(transport, formats)
 	cli.SyncPrometheus = sync_prometheus.New(transport, formats)
+	cli.SyntheticGlobalVariable = synthetic_global_variable.New(transport, formats)
+	cli.SyntheticTest = synthetic_test.New(transport, formats)
 	cli.TraceJaegerRemoteSamplingStrategy = trace_jaeger_remote_sampling_strategy.New(transport, formats)
 	cli.TraceTailSamplingRules = trace_tail_sampling_rules.New(transport, formats)
 	cli.TraceTopTagConfig = trace_top_tag_config.New(transport, formats)
@@ -130,6 +136,8 @@ type ConfigUnstableAPI struct {
 
 	CommandCenterGroup command_center_group.ClientService
 
+	ConfigUnstable config_unstable.ClientService
+
 	Dashboard dashboard.ClientService
 
 	LinkTemplate link_template.ClientService
@@ -148,6 +156,10 @@ type ConfigUnstableAPI struct {
 
 	SyncPrometheus sync_prometheus.ClientService
 
+	SyntheticGlobalVariable synthetic_global_variable.ClientService
+
+	SyntheticTest synthetic_test.ClientService
+
 	TraceJaegerRemoteSamplingStrategy trace_jaeger_remote_sampling_strategy.ClientService
 
 	TraceTailSamplingRules trace_tail_sampling_rules.ClientService
@@ -162,6 +174,7 @@ func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 	c.CloudIntegration.SetTransport(transport)
 	c.CommandCenterGroup.SetTransport(transport)
+	c.ConfigUnstable.SetTransport(transport)
 	c.Dashboard.SetTransport(transport)
 	c.LinkTemplate.SetTransport(transport)
 	c.LogPrimaryKey.SetTransport(transport)
@@ -171,6 +184,8 @@ func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.SavedTraceSearch.SetTransport(transport)
 	c.Service.SetTransport(transport)
 	c.SyncPrometheus.SetTransport(transport)
+	c.SyntheticGlobalVariable.SetTransport(transport)
+	c.SyntheticTest.SetTransport(transport)
 	c.TraceJaegerRemoteSamplingStrategy.SetTransport(transport)
 	c.TraceTailSamplingRules.SetTransport(transport)
 	c.TraceTopTagConfig.SetTransport(transport)

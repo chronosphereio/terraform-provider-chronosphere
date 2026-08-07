@@ -41,7 +41,7 @@ func resourceWebhookExternalConnection() *schema.Resource {
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
-		Description:   "Workspace-scoped webhook credentials that downstream notifiers and LogScale actions can reference. Centralizes the destination URL and HTTP auth so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.",
+		Description:   "Workspace-scoped webhook credentials that downstream notifiers can reference. Centralizes the destination URL and HTTP auth so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.",
 		Schema:        tfschema.WebhookExternalConnection,
 		CustomizeDiff: r.ValidateDryRun(&WebhookExternalConnectionDryRunCount),
 		Importer: &schema.ResourceImporter{
