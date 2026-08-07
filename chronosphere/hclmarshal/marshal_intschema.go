@@ -56,6 +56,12 @@ func marshalStruct(rv reflect.Value, b *Block) error {
 func marshalField(t intschematag.Tag, rv reflect.Value, b *Block) error {
 	rt := rv.Type()
 
+	// A write-only value is never held in state, so there is nothing truthful to
+	// emit: the zero value we hold would export as an empty credential.
+	if t.WriteOnly {
+		return nil
+	}
+
 	if rt == typeTFID {
 		b.AddRef(t.TFName, rv.Interface().(tfid.ID))
 		return nil

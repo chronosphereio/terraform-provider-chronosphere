@@ -6,6 +6,7 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/command_center_group"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/synthetic_test"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
@@ -2627,5 +2628,84 @@ func (generatedUnstableCommandCenterGroup) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigUnstable.CommandCenterGroup.DeleteCommandCenterGroup(req)
+	return err
+}
+
+type generatedUnstableSyntheticTest struct{}
+
+func (generatedUnstableSyntheticTest) slugOf(m *configunstablemodels.ConfigunstableSyntheticTest) string {
+	return m.Slug
+}
+
+func (generatedUnstableSyntheticTest) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableSyntheticTest,
+	dryRun bool,
+) (string, error) {
+	req := &synthetic_test.CreateSyntheticTestParams{
+		Context: ctx,
+		Body: &configunstablemodels.ConfigunstableCreateSyntheticTestRequest{
+			SyntheticTest: m,
+			DryRun:        dryRun,
+		},
+	}
+	resp, err := clients.ConfigUnstable.SyntheticTest.CreateSyntheticTest(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.SyntheticTest
+	if e == nil {
+		return "", nil
+	}
+	return (generatedUnstableSyntheticTest{}).slugOf(e), nil
+}
+
+func (generatedUnstableSyntheticTest) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configunstablemodels.ConfigunstableSyntheticTest, error) {
+	req := &synthetic_test.ReadSyntheticTestParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigUnstable.SyntheticTest.ReadSyntheticTest(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.SyntheticTest, nil
+}
+
+func (generatedUnstableSyntheticTest) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableSyntheticTest,
+	params updateParams,
+) error {
+	req := &synthetic_test.UpdateSyntheticTestParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configunstablemodels.ConfigUnstableUpdateSyntheticTestBody{
+
+			SyntheticTest:   m,
+			CreateIfMissing: params.createIfMissing,
+			DryRun:          params.dryRun,
+		},
+	}
+	_, err := clients.ConfigUnstable.SyntheticTest.UpdateSyntheticTest(req)
+	return err
+}
+func (generatedUnstableSyntheticTest) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &synthetic_test.DeleteSyntheticTestParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigUnstable.SyntheticTest.DeleteSyntheticTest(req)
 	return err
 }

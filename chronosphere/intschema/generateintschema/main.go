@@ -63,6 +63,8 @@ var sharedSchemaTypeNames = map[*schema.Schema]string{
 	tfschema.TraceTagFilterSchema:                     "TraceTagFilter",
 	tfschema.ValueMappingsSchema:                      "ValueMappings",
 	tfschema.SLOAdditionalPromQLFilters:               "SLOAdditionalPromQLFilters",
+	tfschema.SyntheticOAuth2CommonSchema:              "SyntheticOAuth2Common",
+	tfschema.SyntheticResponseTimeAssertionSchema:     "SyntheticResponseTimeAssertion",
 	tfschema.SignalGrouping:                           "SignalGrouping",
 	tfschema.PartitionFilterSchema:                    "PartitionFilter",
 	tfschema.LogFieldPathSchema:                       "LogControlConfigFieldPath",
@@ -220,7 +222,13 @@ const (
 
 func (st schemaType) filename(name string) string {
 	if st.Datasource() {
-		return "data_" + name + ".go"
+		name = "data_" + name
+	}
+	// Go treats a _test.go file as a test file and excludes it from the
+	// package build, so a resource whose name ends in _test (e.g.
+	// synthetic_test) would generate a schema the package cannot see.
+	if strings.HasSuffix(name, "_test") {
+		name += "_resource"
 	}
 	return name + ".go"
 }

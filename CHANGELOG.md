@@ -2,6 +2,13 @@
 
 ## UNRELEASED
 
+Added:
+* Add the `chronosphere_synthetic_test` resource, which probes an endpoint over
+  HTTP, DNS, TCP, or TLS from Chronosphere-operated locations and alerts on the
+  result. Credentials are configured through write-only (`*_wo`) attributes and
+  so require Terraform 1.11 or later. This resource is backed by the unstable
+  config API and requires the provider `unstable` flag.
+
 Removed:
 * Remove the `chronosphere_logscale_alert` and `chronosphere_logscale_action`
   resources. The endpoints backing them no longer exist in the public API.
