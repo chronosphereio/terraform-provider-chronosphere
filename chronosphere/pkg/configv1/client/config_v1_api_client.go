@@ -42,6 +42,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_attribute"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/slo"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/synthetic_test"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_behavior"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_behavior_config"
@@ -124,6 +125,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.ServiceAccount = service_account.New(transport, formats)
 	cli.ServiceAttribute = service_attribute.New(transport, formats)
 	cli.SLO = slo.New(transport, formats)
+	cli.SyntheticTest = synthetic_test.New(transport, formats)
 	cli.Team = team.New(transport, formats)
 	cli.TraceBehavior = trace_behavior.New(transport, formats)
 	cli.TraceBehaviorConfig = trace_behavior_config.New(transport, formats)
@@ -238,6 +240,8 @@ type ConfigV1API struct {
 
 	SLO slo.ClientService
 
+	SyntheticTest synthetic_test.ClientService
+
 	Team team.ClientService
 
 	TraceBehavior trace_behavior.ClientService
@@ -288,6 +292,7 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.ServiceAccount.SetTransport(transport)
 	c.ServiceAttribute.SetTransport(transport)
 	c.SLO.SetTransport(transport)
+	c.SyntheticTest.SetTransport(transport)
 	c.Team.SetTransport(transport)
 	c.TraceBehavior.SetTransport(transport)
 	c.TraceBehaviorConfig.SetTransport(transport)

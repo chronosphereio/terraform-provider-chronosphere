@@ -22,7 +22,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/shared/pkg/container/set"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 )
@@ -136,7 +136,7 @@ func TestSyntheticTestAuthSecretsAreWriteOnly(t *testing.T) {
 	assert.Equal(t, "cc-secret", m.Oauth2ClientCredentials.ClientSecret)
 	assert.Equal(t, "rop-password", m.Oauth2ResourceOwnerPassword.Password)
 	assert.Equal(t, "rop-secret", m.Oauth2ResourceOwnerPassword.ClientSecret)
-	assert.Equal(t, models.ConfigunstableOAuth2TokenAuthMethodOTAMREQUESTBODY, m.Oauth2ClientCredentials.Common.TokenAuthMethod)
+	assert.Equal(t, models.Configv1OAuth2TokenAuthMethodOTAMREQUESTBODY, m.Oauth2ClientCredentials.Common.TokenAuthMethod)
 
 	// A read returns the redacted sentinel; none of it survives into the schema.
 	m.BasicAuth.Password = "**REDACTED**"

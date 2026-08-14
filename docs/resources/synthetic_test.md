@@ -3,12 +3,12 @@
 page_title: "chronosphere_synthetic_test Resource - chronosphere"
 subcategory: ""
 description: |-
-  A synthetic test that probes an endpoint from Chronosphere-operated locations and alerts on the result. This resource is backed by Chronosphere's unstable config API and is subject to breaking change without notice.
+  A synthetic test that probes an endpoint from Chronosphere-operated locations and alerts on the result.
 ---
 
 # chronosphere_synthetic_test (Resource)
 
-A synthetic test that probes an endpoint from Chronosphere-operated locations and alerts on the result. This resource is backed by Chronosphere's unstable config API and is subject to breaking change without notice.
+A synthetic test that probes an endpoint from Chronosphere-operated locations and alerts on the result.
 
 ## Example Usage
 

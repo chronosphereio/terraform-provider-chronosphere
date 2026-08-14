@@ -6,7 +6,6 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/command_center_group"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/synthetic_test"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
@@ -36,6 +35,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/rollup_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/slo"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/synthetic_test"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
@@ -2236,6 +2236,85 @@ func (generatedServiceAttribute) delete(
 	return err
 }
 
+type generatedSyntheticTest struct{}
+
+func (generatedSyntheticTest) slugOf(m *configv1models.Configv1SyntheticTest) string {
+	return m.Slug
+}
+
+func (generatedSyntheticTest) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1SyntheticTest,
+	dryRun bool,
+) (string, error) {
+	req := &synthetic_test.CreateSyntheticTestParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateSyntheticTestRequest{
+			SyntheticTest: m,
+			DryRun:        dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.SyntheticTest.CreateSyntheticTest(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.SyntheticTest
+	if e == nil {
+		return "", nil
+	}
+	return (generatedSyntheticTest{}).slugOf(e), nil
+}
+
+func (generatedSyntheticTest) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1SyntheticTest, error) {
+	req := &synthetic_test.ReadSyntheticTestParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigV1.SyntheticTest.ReadSyntheticTest(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.SyntheticTest, nil
+}
+
+func (generatedSyntheticTest) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1SyntheticTest,
+	params updateParams,
+) error {
+	req := &synthetic_test.UpdateSyntheticTestParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configv1models.ConfigV1UpdateSyntheticTestBody{
+
+			SyntheticTest:   m,
+			CreateIfMissing: params.createIfMissing,
+			DryRun:          params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.SyntheticTest.UpdateSyntheticTest(req)
+	return err
+}
+func (generatedSyntheticTest) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &synthetic_test.DeleteSyntheticTestParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigV1.SyntheticTest.DeleteSyntheticTest(req)
+	return err
+}
+
 type generatedTeam struct{}
 
 func (generatedTeam) slugOf(m *configv1models.Configv1Team) string {
@@ -2628,84 +2707,5 @@ func (generatedUnstableCommandCenterGroup) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigUnstable.CommandCenterGroup.DeleteCommandCenterGroup(req)
-	return err
-}
-
-type generatedUnstableSyntheticTest struct{}
-
-func (generatedUnstableSyntheticTest) slugOf(m *configunstablemodels.ConfigunstableSyntheticTest) string {
-	return m.Slug
-}
-
-func (generatedUnstableSyntheticTest) create(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configunstablemodels.ConfigunstableSyntheticTest,
-	dryRun bool,
-) (string, error) {
-	req := &synthetic_test.CreateSyntheticTestParams{
-		Context: ctx,
-		Body: &configunstablemodels.ConfigunstableCreateSyntheticTestRequest{
-			SyntheticTest: m,
-			DryRun:        dryRun,
-		},
-	}
-	resp, err := clients.ConfigUnstable.SyntheticTest.CreateSyntheticTest(req)
-	if err != nil {
-		return "", err
-	}
-	e := resp.Payload.SyntheticTest
-	if e == nil {
-		return "", nil
-	}
-	return (generatedUnstableSyntheticTest{}).slugOf(e), nil
-}
-
-func (generatedUnstableSyntheticTest) read(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) (*configunstablemodels.ConfigunstableSyntheticTest, error) {
-	req := &synthetic_test.ReadSyntheticTestParams{
-		Context: ctx,
-		Slug:    slug,
-	}
-	resp, err := clients.ConfigUnstable.SyntheticTest.ReadSyntheticTest(req)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Payload.SyntheticTest, nil
-}
-
-func (generatedUnstableSyntheticTest) update(
-	ctx context.Context,
-	clients apiclients.Clients,
-	m *configunstablemodels.ConfigunstableSyntheticTest,
-	params updateParams,
-) error {
-	req := &synthetic_test.UpdateSyntheticTestParams{
-		Context: ctx,
-		Slug:    m.Slug,
-
-		Body: &configunstablemodels.ConfigUnstableUpdateSyntheticTestBody{
-
-			SyntheticTest:   m,
-			CreateIfMissing: params.createIfMissing,
-			DryRun:          params.dryRun,
-		},
-	}
-	_, err := clients.ConfigUnstable.SyntheticTest.UpdateSyntheticTest(req)
-	return err
-}
-func (generatedUnstableSyntheticTest) delete(
-	ctx context.Context,
-	clients apiclients.Clients,
-	slug string,
-) error {
-	req := &synthetic_test.DeleteSyntheticTestParams{
-		Context: ctx,
-		Slug:    slug,
-	}
-	_, err := clients.ConfigUnstable.SyntheticTest.DeleteSyntheticTest(req)
 	return err
 }

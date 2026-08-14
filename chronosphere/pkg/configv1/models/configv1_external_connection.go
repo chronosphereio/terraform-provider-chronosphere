@@ -27,6 +27,9 @@ type Configv1ExternalConnection struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
+	// datadog
+	Datadog *ExternalConnectionDatadogConfig `json:"datadog,omitempty"`
+
 	// mongodb atlas
 	MongodbAtlas *ExternalConnectionMongoDbAtlasConfig `json:"mongodb_atlas,omitempty"`
 
@@ -69,6 +72,10 @@ func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCreatedAt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDatadog(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -136,6 +143,25 @@ func (m *Configv1ExternalConnection) validateCreatedAt(formats strfmt.Registry) 
 
 	if err := validate.FormatOf("created_at", "body", "date-time", m.CreatedAt.String(), formats); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) validateDatadog(formats strfmt.Registry) error {
+	if swag.IsZero(m.Datadog) { // not required
+		return nil
+	}
+
+	if m.Datadog != nil {
+		if err := m.Datadog.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("datadog")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("datadog")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -298,6 +324,10 @@ func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, format
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateDatadog(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateMongodbAtlas(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -356,6 +386,22 @@ func (m *Configv1ExternalConnection) contextValidateCreatedAt(ctx context.Contex
 
 	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) contextValidateDatadog(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Datadog != nil {
+		if err := m.Datadog.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("datadog")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("datadog")
+			}
+			return err
+		}
 	}
 
 	return nil
