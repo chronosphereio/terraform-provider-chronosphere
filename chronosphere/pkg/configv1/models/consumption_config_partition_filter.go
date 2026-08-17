@@ -23,7 +23,7 @@ type ConsumptionConfigPartitionFilter struct {
 	Conditions []*PartitionFilterCondition `json:"conditions"`
 
 	// operator
-	Operator FilterOperator `json:"operator,omitempty"`
+	Operator PartitionFilterOperator `json:"operator,omitempty"`
 }
 
 // Validate validates this consumption config partition filter

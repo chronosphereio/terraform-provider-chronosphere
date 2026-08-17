@@ -19,13 +19,13 @@ import (
 )
 
 // PartitionFilterOperator is an enum.
-var PartitionFilterOperator = newEnum("PartitionFilterOperator", []value[configv1.FilterOperator]{
+var PartitionFilterOperator = newEnum("PartitionFilterOperator", []value[configv1.PartitionFilterOperator]{
 	{
-		v1:    configv1.FilterOperatorIN,
+		v1:    configv1.PartitionFilterOperatorIN,
 		alias: "IN",
 	},
 	{
-		v1:    configv1.FilterOperatorNOTIN,
+		v1:    configv1.PartitionFilterOperatorNOTIN,
 		alias: "NOT_IN",
 	},
 })

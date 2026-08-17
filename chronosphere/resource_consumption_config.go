@@ -86,7 +86,7 @@ func filterToModel(f intschema.PartitionFilter) (*models.ConsumptionConfigPartit
 		return nil, err
 	}
 	return &models.ConsumptionConfigPartitionFilter{
-		Operator:   models.FilterOperator(f.Operator),
+		Operator:   models.PartitionFilterOperator(f.Operator),
 		Conditions: conditions,
 	}, nil
 }

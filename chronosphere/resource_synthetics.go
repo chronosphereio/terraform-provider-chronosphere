@@ -20,8 +20,7 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/enum"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
-	configmodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
@@ -31,18 +30,18 @@ func resourceSyntheticTest() *schema.Resource {
 	r := newGenericResource(
 		"synthetic_test",
 		syntheticTestConverter{},
-		generatedUnstableSyntheticTest{},
+		generatedSyntheticTest{},
 	)
 	return &schema.Resource{
 		CreateContext: r.CreateContext,
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
-		Description:   "A synthetic test that probes an endpoint from Chronosphere-operated locations and alerts on the result. " + unstableAPIWarning,
+		Description:   "A synthetic test that probes an endpoint from Chronosphere-operated locations and alerts on the result.",
 		Schema:        tfschema.SyntheticTest,
-		CustomizeDiff: r.ValidateDryRunOptions(&SyntheticTestDryRunCount, ValidateDryRunOpts[*models.ConfigunstableSyntheticTest]{
+		CustomizeDiff: r.ValidateDryRunOptions(&SyntheticTestDryRunCount, ValidateDryRunOpts[*models.Configv1SyntheticTest]{
 			SetUnknownReferencesSkip: syntheticTestDryRunSkipIDs,
-			ModifyAPIModel: func(m *models.ConfigunstableSyntheticTest) {
+			ModifyAPIModel: func(m *models.Configv1SyntheticTest) {
 				// Skipped above, so a policy created by this same apply arrives
 				// empty; the API requires one, so stand in a placeholder rather
 				// than fail the plan on a reference that will resolve.
@@ -68,9 +67,9 @@ type syntheticTestConverter struct{}
 
 func (syntheticTestConverter) toModel(
 	t *intschema.SyntheticTest,
-) (*models.ConfigunstableSyntheticTest, error) {
-	collSlug, collRef := unstableCollectionRefFromID(t.CollectionId.Slug())
-	m := &models.ConfigunstableSyntheticTest{
+) (*models.Configv1SyntheticTest, error) {
+	collSlug, collRef := collectionRefFromID(t.CollectionId.Slug())
+	m := &models.Configv1SyntheticTest{
 		Name:           t.Name,
 		Slug:           t.Slug,
 		Description:    t.Description,
@@ -105,13 +104,13 @@ func (syntheticTestConverter) toModel(
 }
 
 func (syntheticTestConverter) fromModel(
-	m *models.ConfigunstableSyntheticTest,
+	m *models.Configv1SyntheticTest,
 ) (*intschema.SyntheticTest, error) {
 	t := &intschema.SyntheticTest{
 		Name:         m.Name,
 		Slug:         m.Slug,
 		Description:  m.Description,
-		CollectionId: tfid.Slug(unstableCollectionIDFromRef(m.CollectionSlug, m.Collection)),
+		CollectionId: tfid.Slug(collectionIDFromRef(m.CollectionSlug, m.Collection)),
 		Labels:       m.Labels,
 		TestType:     enum.SyntheticTestType.Alias(m.TestType),
 		Status:       enum.SyntheticTestStatus.Alias(m.Status),
@@ -164,24 +163,6 @@ func (syntheticTestConverter) normalize(config, server *intschema.SyntheticTest)
 		s.Oauth2ResourceOwnerPassword.PasswordWoVersion = c.Oauth2ResourceOwnerPassword.PasswordWoVersion
 		s.Oauth2ResourceOwnerPassword.ClientSecretWoVersion = c.Oauth2ResourceOwnerPassword.ClientSecretWoVersion
 	}
-}
-
-func unstableCollectionRefFromID(id string) (slug string, ref *models.Configv1CollectionReference) {
-	collType, slug, ok := CollectionTypeSlugFromID(id)
-	if !ok {
-		return id, nil
-	}
-	return "", &models.Configv1CollectionReference{
-		Type: models.Configv1CollectionReferenceType(collType),
-		Slug: slug,
-	}
-}
-
-func unstableCollectionIDFromRef(slug string, ref *models.Configv1CollectionReference) string {
-	if ref == nil {
-		return slug
-	}
-	return CollectionTypeSlugToID(configmodels.Configv1CollectionReferenceType(ref.Type), ref.Slug)
 }
 
 func syntheticHTTPTestToModel(t *intschema.SyntheticTestHttpTest) *models.SyntheticTestHTTPTestConfig {
@@ -250,32 +231,32 @@ func syntheticHTTPAuthToModel(a *intschema.SyntheticTestHttpTestAuthentication) 
 	}
 	m := &models.HTTPTestConfigHTTPAuth{}
 	if v := a.BasicAuth; v != nil {
-		m.BasicAuth = &models.ConfigunstableBasicAuth{
+		m.BasicAuth = &models.Configv1BasicAuth{
 			Username: v.Username,
 			Password: v.PasswordWo,
 		}
 	}
 	if v := a.ApiTokenAuth; v != nil {
-		m.APITokenAuth = &models.ConfigunstableAPITokenAuth{
+		m.APITokenAuth = &models.Configv1APITokenAuth{
 			Key:   v.Key,
 			Token: v.TokenWo,
 		}
 	}
 	if v := a.ClientCertificate; v != nil {
-		m.ClientCertificate = &models.ConfigunstableClientCertificate{
+		m.ClientCertificate = &models.Configv1ClientCertificate{
 			Certificate: v.Certificate,
 			PrivateKey:  v.PrivateKeyWo,
 		}
 	}
 	if v := a.Oauth2ClientCredentials; v != nil {
-		m.Oauth2ClientCredentials = &models.ConfigunstableOAuth2ClientCredentials{
+		m.Oauth2ClientCredentials = &models.Configv1OAuth2ClientCredentials{
 			ClientID:     v.ClientId,
 			ClientSecret: v.ClientSecretWo,
 			Common:       syntheticOAuth2CommonToModel(v.Common),
 		}
 	}
 	if v := a.Oauth2ResourceOwnerPassword; v != nil {
-		m.Oauth2ResourceOwnerPassword = &models.ConfigunstableOAuth2ResourceOwnerPassword{
+		m.Oauth2ResourceOwnerPassword = &models.Configv1OAuth2ResourceOwnerPassword{
 			Username:     v.Username,
 			Password:     v.PasswordWo,
 			ClientID:     v.ClientId,
@@ -324,11 +305,11 @@ func syntheticHTTPAuthFromModel(m *models.HTTPTestConfigHTTPAuth) *intschema.Syn
 
 func syntheticOAuth2CommonToModel(
 	c *intschema.SyntheticOAuth2Common,
-) *models.ConfigunstableOAuth2Common {
+) *models.Configv1OAuth2Common {
 	if c == nil {
 		return nil
 	}
-	return &models.ConfigunstableOAuth2Common{
+	return &models.Configv1OAuth2Common{
 		AccessTokenURL:  c.AccessTokenUrl,
 		TokenAuthMethod: enum.SyntheticOAuth2TokenAuthMethod.V1(c.TokenAuthMethod),
 		Audience:        c.Audience,
@@ -338,7 +319,7 @@ func syntheticOAuth2CommonToModel(
 }
 
 func syntheticOAuth2CommonFromModel(
-	m *models.ConfigunstableOAuth2Common,
+	m *models.Configv1OAuth2Common,
 ) *intschema.SyntheticOAuth2Common {
 	if m == nil {
 		return nil
