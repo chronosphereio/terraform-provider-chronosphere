@@ -19,7 +19,11 @@ import (
 // swagger:model configunstableNotebook
 type ConfigunstableNotebook struct {
 
-	// Required slug of the collection the notebook belongs to.
+	// collection
+	Collection *Configv1CollectionReference `json:"collection,omitempty"`
+
+	// Slug of the collection the notebook belongs to. Required if `collection`
+	// isn't set.
 	CollectionSlug string `json:"collection_slug,omitempty"`
 
 	// Timestamp of when the Notebook was created. Cannot be set by clients.
@@ -46,6 +50,10 @@ type ConfigunstableNotebook struct {
 func (m *ConfigunstableNotebook) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateCollection(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCreatedAt(formats); err != nil {
 		res = append(res, err)
 	}
@@ -57,6 +65,25 @@ func (m *ConfigunstableNotebook) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *ConfigunstableNotebook) validateCollection(formats strfmt.Registry) error {
+	if swag.IsZero(m.Collection) { // not required
+		return nil
+	}
+
+	if m.Collection != nil {
+		if err := m.Collection.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("collection")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("collection")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -88,6 +115,10 @@ func (m *ConfigunstableNotebook) validateUpdatedAt(formats strfmt.Registry) erro
 func (m *ConfigunstableNotebook) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateCollection(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -99,6 +130,22 @@ func (m *ConfigunstableNotebook) ContextValidate(ctx context.Context, formats st
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *ConfigunstableNotebook) contextValidateCollection(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Collection != nil {
+		if err := m.Collection.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("collection")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("collection")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
