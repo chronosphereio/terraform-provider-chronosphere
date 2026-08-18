@@ -431,8 +431,5 @@ var Resources = mustValidate([]Resource{
 		Entity: "SyntheticTest",
 		API:    V1,
 		Schema: tfschema.SyntheticTest,
-		// Remove once gateways serving /v1/config/synthetic-tests are
-		// deployed to the environments the export/import tests run against.
-		DisableExportImport: true,
 	},
 })
