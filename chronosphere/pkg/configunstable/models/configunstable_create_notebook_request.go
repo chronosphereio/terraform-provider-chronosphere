@@ -18,6 +18,9 @@ import (
 // swagger:model configunstableCreateNotebookRequest
 type ConfigunstableCreateNotebookRequest struct {
 
+	// If `true`, validates the specified configuration without creating the Notebook. If the specified configuration is valid, the endpoint returns a partial response without the Notebook. If the specified configuration is invalid, the endpoint returns an error.
+	DryRun bool `json:"dry_run,omitempty"`
+
 	// notebook
 	Notebook *ConfigunstableNotebook `json:"notebook,omitempty"`
 }
