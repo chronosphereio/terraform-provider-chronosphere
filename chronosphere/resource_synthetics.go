@@ -26,6 +26,11 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
+// SyntheticTestFromModel maps an API model to an intschema model.
+func SyntheticTestFromModel(m *models.Configv1SyntheticTest) (*intschema.SyntheticTest, error) {
+	return syntheticTestConverter{}.fromModel(m)
+}
+
 func resourceSyntheticTest() *schema.Resource {
 	r := newGenericResource(
 		"synthetic_test",
