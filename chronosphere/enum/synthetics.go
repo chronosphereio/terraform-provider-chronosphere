@@ -33,6 +33,21 @@ var SyntheticTestStatus = newEnum("SyntheticTestStatus", []value[configv1.Synthe
 var SyntheticTestLocation = newEnum("SyntheticTestLocation", []value[configv1.SyntheticTestTestLocation]{
 	{v1: configv1.SyntheticTestTestLocationGCPUSOREGON, alias: "GCP_US_OREGON"},
 	{v1: configv1.SyntheticTestTestLocationGCPUSVIRGINIA, alias: "GCP_US_VIRGINIA"},
+	{v1: configv1.SyntheticTestTestLocationGCPBRSAOPAULO, alias: "GCP_BR_SAO_PAULO"},
+	{v1: configv1.SyntheticTestTestLocationGCPSGSINGAPORE, alias: "GCP_SG_SINGAPORE"},
+	{v1: configv1.SyntheticTestTestLocationGCPAUSYDNEY, alias: "GCP_AU_SYDNEY"},
+	{v1: configv1.SyntheticTestTestLocationGCPINMUMBAI, alias: "GCP_IN_MUMBAI"},
+	{v1: configv1.SyntheticTestTestLocationGCPJPTOKYO, alias: "GCP_JP_TOKYO"},
+	{v1: configv1.SyntheticTestTestLocationGCPGBLONDON, alias: "GCP_GB_LONDON"},
+	{v1: configv1.SyntheticTestTestLocationGCPDEFRANKFURT, alias: "GCP_DE_FRANKFURT"},
+	{v1: configv1.SyntheticTestTestLocationGCPZAJOHANNESBURG, alias: "GCP_ZA_JOHANNESBURG"},
+	{v1: configv1.SyntheticTestTestLocationGCPIDJAKARTA, alias: "GCP_ID_JAKARTA"},
+	{v1: configv1.SyntheticTestTestLocationGCPCAMONTREAL, alias: "GCP_CA_MONTREAL"},
+	{v1: configv1.SyntheticTestTestLocationGCPKRSEOUL, alias: "GCP_KR_SEOUL"},
+	{v1: configv1.SyntheticTestTestLocationGCPITMILAN, alias: "GCP_IT_MILAN"},
+	{v1: configv1.SyntheticTestTestLocationGCPQADOHA, alias: "GCP_QA_DOHA"},
+	{v1: configv1.SyntheticTestTestLocationGCPJPOSAKA, alias: "GCP_JP_OSAKA"},
+	{v1: configv1.SyntheticTestTestLocationGCPFRPARIS, alias: "GCP_FR_PARIS"},
 })
 
 var SyntheticHTTPMethod = newEnum("SyntheticHTTPMethod", []value[configv1.HTTPTestConfigHTTPMethod]{

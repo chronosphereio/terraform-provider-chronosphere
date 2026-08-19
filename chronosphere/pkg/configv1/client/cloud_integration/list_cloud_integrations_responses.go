@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // ListCloudIntegrationsReader is a Reader for the ListCloudIntegrations structure.
@@ -58,7 +58,7 @@ ListCloudIntegrationsOK describes a response with status code 200, with default 
 A successful response.
 */
 type ListCloudIntegrationsOK struct {
-	Payload *models.ConfigunstableListCloudIntegrationsResponse
+	Payload *models.Configv1ListCloudIntegrationsResponse
 }
 
 // IsSuccess returns true when this list cloud integrations o k response has a 2xx status code
@@ -92,20 +92,20 @@ func (o *ListCloudIntegrationsOK) Code() int {
 }
 
 func (o *ListCloudIntegrationsOK) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations][%d] listCloudIntegrationsOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations][%d] listCloudIntegrationsOK  %+v", 200, o.Payload)
 }
 
 func (o *ListCloudIntegrationsOK) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations][%d] listCloudIntegrationsOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations][%d] listCloudIntegrationsOK  %+v", 200, o.Payload)
 }
 
-func (o *ListCloudIntegrationsOK) GetPayload() *models.ConfigunstableListCloudIntegrationsResponse {
+func (o *ListCloudIntegrationsOK) GetPayload() *models.Configv1ListCloudIntegrationsResponse {
 	return o.Payload
 }
 
 func (o *ListCloudIntegrationsOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.ConfigunstableListCloudIntegrationsResponse)
+	o.Payload = new(models.Configv1ListCloudIntegrationsResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -160,11 +160,11 @@ func (o *ListCloudIntegrationsInternalServerError) Code() int {
 }
 
 func (o *ListCloudIntegrationsInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations][%d] listCloudIntegrationsInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations][%d] listCloudIntegrationsInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ListCloudIntegrationsInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations][%d] listCloudIntegrationsInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations][%d] listCloudIntegrationsInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ListCloudIntegrationsInternalServerError) GetPayload() *models.APIError {
@@ -232,11 +232,11 @@ func (o *ListCloudIntegrationsDefault) Code() int {
 }
 
 func (o *ListCloudIntegrationsDefault) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations][%d] ListCloudIntegrations default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations][%d] ListCloudIntegrations default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *ListCloudIntegrationsDefault) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations][%d] ListCloudIntegrations default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations][%d] ListCloudIntegrations default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *ListCloudIntegrationsDefault) GetPayload() models.GenericError {

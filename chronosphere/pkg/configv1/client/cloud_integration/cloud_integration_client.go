@@ -52,7 +52,7 @@ func (a *Client) CreateCloudIntegration(params *CreateCloudIntegrationParams, op
 	op := &runtime.ClientOperation{
 		ID:                 "CreateCloudIntegration",
 		Method:             "POST",
-		PathPattern:        "/api/unstable/config/cloud-integrations",
+		PathPattern:        "/api/v1/config/cloud-integrations",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -89,7 +89,7 @@ func (a *Client) DeleteCloudIntegration(params *DeleteCloudIntegrationParams, op
 	op := &runtime.ClientOperation{
 		ID:                 "DeleteCloudIntegration",
 		Method:             "DELETE",
-		PathPattern:        "/api/unstable/config/cloud-integrations/{slug}",
+		PathPattern:        "/api/v1/config/cloud-integrations/{slug}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -126,7 +126,7 @@ func (a *Client) ListCloudIntegrations(params *ListCloudIntegrationsParams, opts
 	op := &runtime.ClientOperation{
 		ID:                 "ListCloudIntegrations",
 		Method:             "GET",
-		PathPattern:        "/api/unstable/config/cloud-integrations",
+		PathPattern:        "/api/v1/config/cloud-integrations",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -163,7 +163,7 @@ func (a *Client) ReadCloudIntegration(params *ReadCloudIntegrationParams, opts .
 	op := &runtime.ClientOperation{
 		ID:                 "ReadCloudIntegration",
 		Method:             "GET",
-		PathPattern:        "/api/unstable/config/cloud-integrations/{slug}",
+		PathPattern:        "/api/v1/config/cloud-integrations/{slug}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -200,7 +200,7 @@ func (a *Client) UpdateCloudIntegration(params *UpdateCloudIntegrationParams, op
 	op := &runtime.ClientOperation{
 		ID:                 "UpdateCloudIntegration",
 		Method:             "PUT",
-		PathPattern:        "/api/unstable/config/cloud-integrations/{slug}",
+		PathPattern:        "/api/v1/config/cloud-integrations/{slug}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},

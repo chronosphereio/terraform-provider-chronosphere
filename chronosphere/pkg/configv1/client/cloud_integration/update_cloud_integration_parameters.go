@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // NewUpdateCloudIntegrationParams creates a new UpdateCloudIntegrationParams object,
@@ -64,7 +64,7 @@ UpdateCloudIntegrationParams contains all the parameters to send to the API endp
 type UpdateCloudIntegrationParams struct {
 
 	// Body.
-	Body *models.ConfigUnstableUpdateCloudIntegrationBody
+	Body *models.ConfigV1UpdateCloudIntegrationBody
 
 	// Slug.
 	Slug string
@@ -123,13 +123,13 @@ func (o *UpdateCloudIntegrationParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the update cloud integration params
-func (o *UpdateCloudIntegrationParams) WithBody(body *models.ConfigUnstableUpdateCloudIntegrationBody) *UpdateCloudIntegrationParams {
+func (o *UpdateCloudIntegrationParams) WithBody(body *models.ConfigV1UpdateCloudIntegrationBody) *UpdateCloudIntegrationParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the update cloud integration params
-func (o *UpdateCloudIntegrationParams) SetBody(body *models.ConfigUnstableUpdateCloudIntegrationBody) {
+func (o *UpdateCloudIntegrationParams) SetBody(body *models.ConfigV1UpdateCloudIntegrationBody) {
 	o.Body = body
 }
 

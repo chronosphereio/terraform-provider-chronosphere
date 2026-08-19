@@ -14,20 +14,20 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableListCloudIntegrationsResponse configunstable list cloud integrations response
+// Configv1ListCloudIntegrationsResponse configv1 list cloud integrations response
 //
-// swagger:model configunstableListCloudIntegrationsResponse
-type ConfigunstableListCloudIntegrationsResponse struct {
+// swagger:model configv1ListCloudIntegrationsResponse
+type Configv1ListCloudIntegrationsResponse struct {
 
 	// cloud integrations
-	CloudIntegrations []*ConfigunstableCloudIntegration `json:"cloud_integrations"`
+	CloudIntegrations []*Configv1CloudIntegration `json:"cloud_integrations"`
 
 	// page
 	Page *Configv1PageResult `json:"page,omitempty"`
 }
 
-// Validate validates this configunstable list cloud integrations response
-func (m *ConfigunstableListCloudIntegrationsResponse) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 list cloud integrations response
+func (m *Configv1ListCloudIntegrationsResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCloudIntegrations(formats); err != nil {
@@ -44,7 +44,7 @@ func (m *ConfigunstableListCloudIntegrationsResponse) Validate(formats strfmt.Re
 	return nil
 }
 
-func (m *ConfigunstableListCloudIntegrationsResponse) validateCloudIntegrations(formats strfmt.Registry) error {
+func (m *Configv1ListCloudIntegrationsResponse) validateCloudIntegrations(formats strfmt.Registry) error {
 	if swag.IsZero(m.CloudIntegrations) { // not required
 		return nil
 	}
@@ -70,7 +70,7 @@ func (m *ConfigunstableListCloudIntegrationsResponse) validateCloudIntegrations(
 	return nil
 }
 
-func (m *ConfigunstableListCloudIntegrationsResponse) validatePage(formats strfmt.Registry) error {
+func (m *Configv1ListCloudIntegrationsResponse) validatePage(formats strfmt.Registry) error {
 	if swag.IsZero(m.Page) { // not required
 		return nil
 	}
@@ -89,8 +89,8 @@ func (m *ConfigunstableListCloudIntegrationsResponse) validatePage(formats strfm
 	return nil
 }
 
-// ContextValidate validate this configunstable list cloud integrations response based on the context it is used
-func (m *ConfigunstableListCloudIntegrationsResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 list cloud integrations response based on the context it is used
+func (m *Configv1ListCloudIntegrationsResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateCloudIntegrations(ctx, formats); err != nil {
@@ -107,7 +107,7 @@ func (m *ConfigunstableListCloudIntegrationsResponse) ContextValidate(ctx contex
 	return nil
 }
 
-func (m *ConfigunstableListCloudIntegrationsResponse) contextValidateCloudIntegrations(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ListCloudIntegrationsResponse) contextValidateCloudIntegrations(ctx context.Context, formats strfmt.Registry) error {
 
 	for i := 0; i < len(m.CloudIntegrations); i++ {
 
@@ -127,7 +127,7 @@ func (m *ConfigunstableListCloudIntegrationsResponse) contextValidateCloudIntegr
 	return nil
 }
 
-func (m *ConfigunstableListCloudIntegrationsResponse) contextValidatePage(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ListCloudIntegrationsResponse) contextValidatePage(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Page != nil {
 		if err := m.Page.ContextValidate(ctx, formats); err != nil {
@@ -144,7 +144,7 @@ func (m *ConfigunstableListCloudIntegrationsResponse) contextValidatePage(ctx co
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableListCloudIntegrationsResponse) MarshalBinary() ([]byte, error) {
+func (m *Configv1ListCloudIntegrationsResponse) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -152,8 +152,8 @@ func (m *ConfigunstableListCloudIntegrationsResponse) MarshalBinary() ([]byte, e
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableListCloudIntegrationsResponse) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableListCloudIntegrationsResponse
+func (m *Configv1ListCloudIntegrationsResponse) UnmarshalBinary(b []byte) error {
+	var res Configv1ListCloudIntegrationsResponse
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

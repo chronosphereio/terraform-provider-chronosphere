@@ -13,17 +13,17 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableUpdateCloudIntegrationResponse configunstable update cloud integration response
+// Configv1CreateCloudIntegrationResponse configv1 create cloud integration response
 //
-// swagger:model configunstableUpdateCloudIntegrationResponse
-type ConfigunstableUpdateCloudIntegrationResponse struct {
+// swagger:model configv1CreateCloudIntegrationResponse
+type Configv1CreateCloudIntegrationResponse struct {
 
 	// cloud integration
-	CloudIntegration *ConfigunstableCloudIntegration `json:"cloud_integration,omitempty"`
+	CloudIntegration *Configv1CloudIntegration `json:"cloud_integration,omitempty"`
 }
 
-// Validate validates this configunstable update cloud integration response
-func (m *ConfigunstableUpdateCloudIntegrationResponse) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 create cloud integration response
+func (m *Configv1CreateCloudIntegrationResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCloudIntegration(formats); err != nil {
@@ -36,7 +36,7 @@ func (m *ConfigunstableUpdateCloudIntegrationResponse) Validate(formats strfmt.R
 	return nil
 }
 
-func (m *ConfigunstableUpdateCloudIntegrationResponse) validateCloudIntegration(formats strfmt.Registry) error {
+func (m *Configv1CreateCloudIntegrationResponse) validateCloudIntegration(formats strfmt.Registry) error {
 	if swag.IsZero(m.CloudIntegration) { // not required
 		return nil
 	}
@@ -55,8 +55,8 @@ func (m *ConfigunstableUpdateCloudIntegrationResponse) validateCloudIntegration(
 	return nil
 }
 
-// ContextValidate validate this configunstable update cloud integration response based on the context it is used
-func (m *ConfigunstableUpdateCloudIntegrationResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 create cloud integration response based on the context it is used
+func (m *Configv1CreateCloudIntegrationResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateCloudIntegration(ctx, formats); err != nil {
@@ -69,7 +69,7 @@ func (m *ConfigunstableUpdateCloudIntegrationResponse) ContextValidate(ctx conte
 	return nil
 }
 
-func (m *ConfigunstableUpdateCloudIntegrationResponse) contextValidateCloudIntegration(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1CreateCloudIntegrationResponse) contextValidateCloudIntegration(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.CloudIntegration != nil {
 		if err := m.CloudIntegration.ContextValidate(ctx, formats); err != nil {
@@ -86,7 +86,7 @@ func (m *ConfigunstableUpdateCloudIntegrationResponse) contextValidateCloudInteg
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableUpdateCloudIntegrationResponse) MarshalBinary() ([]byte, error) {
+func (m *Configv1CreateCloudIntegrationResponse) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -94,8 +94,8 @@ func (m *ConfigunstableUpdateCloudIntegrationResponse) MarshalBinary() ([]byte, 
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableUpdateCloudIntegrationResponse) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableUpdateCloudIntegrationResponse
+func (m *Configv1CreateCloudIntegrationResponse) UnmarshalBinary(b []byte) error {
+	var res Configv1CreateCloudIntegrationResponse
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
