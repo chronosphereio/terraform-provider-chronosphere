@@ -8,6 +8,12 @@ Added:
   result. Credentials are configured through write-only (`*_wo`) attributes and
   so require Terraform 1.11 or later. This resource is backed by the stable
   v1 config API.
+* Add 15 probe locations to `chronosphere_synthetic_test` `locations`:
+  `GCP_BR_SAO_PAULO`, `GCP_SG_SINGAPORE`, `GCP_AU_SYDNEY`, `GCP_IN_MUMBAI`,
+  `GCP_JP_TOKYO`, `GCP_GB_LONDON`, `GCP_DE_FRANKFURT`, `GCP_ZA_JOHANNESBURG`,
+  `GCP_ID_JAKARTA`, `GCP_CA_MONTREAL`, `GCP_KR_SEOUL`, `GCP_IT_MILAN`,
+  `GCP_QA_DOHA`, `GCP_JP_OSAKA`, and `GCP_FR_PARIS`, joining the existing
+  `GCP_US_OREGON` and `GCP_US_VIRGINIA`.
 
 Removed:
 * Remove the `chronosphere_logscale_alert` and `chronosphere_logscale_action`
