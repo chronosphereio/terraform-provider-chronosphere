@@ -9,13 +9,6 @@ Added:
   so require Terraform 1.11 or later. This resource is backed by the stable
   v1 config API.
 
-Changed:
-* Sync the underlying API client with the current public API: the
-  CloudIntegration API is promoted from unstable to v1 (the unstable client
-  is removed), the SLO SLI model gains `slo_type` and
-  `latency_threshold_nanos`, and monitor listing gains a `name_contains`
-  filter. None of these are exposed as provider resources or fields yet.
-
 Removed:
 * Remove the `chronosphere_logscale_alert` and `chronosphere_logscale_action`
   resources. The endpoints backing them no longer exist in the public API.
