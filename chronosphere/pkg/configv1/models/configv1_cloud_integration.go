@@ -14,11 +14,11 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// ConfigunstableCloudIntegration CloudIntegration represents a configuration for collecting metrics from a
+// Configv1CloudIntegration CloudIntegration represents a configuration for collecting metrics from a
 // cloud provider. Each integration contains provider-specific configuration.
 //
-// swagger:model configunstableCloudIntegration
-type ConfigunstableCloudIntegration struct {
+// swagger:model configv1CloudIntegration
+type Configv1CloudIntegration struct {
 
 	// Timestamp of when the CloudIntegration was created. Cannot be set by clients.
 	// Read Only: true
@@ -32,7 +32,7 @@ type ConfigunstableCloudIntegration struct {
 	// Labels applied to all metrics emitted from this integration.
 	MetricLabels map[string]string `json:"metric_labels,omitempty"`
 
-	// Unique name of the CloudIntegration.
+	// The name of the CloudIntegration. You can modify this value after the CloudIntegration is created.
 	Name string `json:"name,omitempty"`
 
 	// Provider-specific configuration. Structure depends on provider_type.
@@ -41,11 +41,11 @@ type ConfigunstableCloudIntegration struct {
 	// Required on create/update. Identifies the cloud provider.
 	ProviderType string `json:"provider_type,omitempty"`
 
-	// Unique slug identifying the CloudIntegration.
+	// The unique identifier of the CloudIntegration. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the CloudIntegration is created.
 	Slug string `json:"slug,omitempty"`
 
 	// state
-	State ConfigunstableCloudIntegrationState `json:"state,omitempty"`
+	State Configv1CloudIntegrationState `json:"state,omitempty"`
 
 	// Timestamp of when the CloudIntegration was last updated. Cannot be set by clients.
 	// Read Only: true
@@ -53,8 +53,8 @@ type ConfigunstableCloudIntegration struct {
 	UpdatedAt strfmt.DateTime `json:"updated_at,omitempty"`
 }
 
-// Validate validates this configunstable cloud integration
-func (m *ConfigunstableCloudIntegration) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 cloud integration
+func (m *Configv1CloudIntegration) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCreatedAt(formats); err != nil {
@@ -75,7 +75,7 @@ func (m *ConfigunstableCloudIntegration) Validate(formats strfmt.Registry) error
 	return nil
 }
 
-func (m *ConfigunstableCloudIntegration) validateCreatedAt(formats strfmt.Registry) error {
+func (m *Configv1CloudIntegration) validateCreatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.CreatedAt) { // not required
 		return nil
 	}
@@ -87,7 +87,7 @@ func (m *ConfigunstableCloudIntegration) validateCreatedAt(formats strfmt.Regist
 	return nil
 }
 
-func (m *ConfigunstableCloudIntegration) validateState(formats strfmt.Registry) error {
+func (m *Configv1CloudIntegration) validateState(formats strfmt.Registry) error {
 	if swag.IsZero(m.State) { // not required
 		return nil
 	}
@@ -104,7 +104,7 @@ func (m *ConfigunstableCloudIntegration) validateState(formats strfmt.Registry) 
 	return nil
 }
 
-func (m *ConfigunstableCloudIntegration) validateUpdatedAt(formats strfmt.Registry) error {
+func (m *Configv1CloudIntegration) validateUpdatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.UpdatedAt) { // not required
 		return nil
 	}
@@ -116,8 +116,8 @@ func (m *ConfigunstableCloudIntegration) validateUpdatedAt(formats strfmt.Regist
 	return nil
 }
 
-// ContextValidate validate this configunstable cloud integration based on the context it is used
-func (m *ConfigunstableCloudIntegration) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 cloud integration based on the context it is used
+func (m *Configv1CloudIntegration) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
@@ -138,7 +138,7 @@ func (m *ConfigunstableCloudIntegration) ContextValidate(ctx context.Context, fo
 	return nil
 }
 
-func (m *ConfigunstableCloudIntegration) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1CloudIntegration) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
 		return err
@@ -147,7 +147,7 @@ func (m *ConfigunstableCloudIntegration) contextValidateCreatedAt(ctx context.Co
 	return nil
 }
 
-func (m *ConfigunstableCloudIntegration) contextValidateState(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1CloudIntegration) contextValidateState(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := m.State.ContextValidate(ctx, formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
@@ -161,7 +161,7 @@ func (m *ConfigunstableCloudIntegration) contextValidateState(ctx context.Contex
 	return nil
 }
 
-func (m *ConfigunstableCloudIntegration) contextValidateUpdatedAt(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1CloudIntegration) contextValidateUpdatedAt(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "updated_at", "body", strfmt.DateTime(m.UpdatedAt)); err != nil {
 		return err
@@ -171,7 +171,7 @@ func (m *ConfigunstableCloudIntegration) contextValidateUpdatedAt(ctx context.Co
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableCloudIntegration) MarshalBinary() ([]byte, error) {
+func (m *Configv1CloudIntegration) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -179,8 +179,8 @@ func (m *ConfigunstableCloudIntegration) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableCloudIntegration) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableCloudIntegration
+func (m *Configv1CloudIntegration) UnmarshalBinary(b []byte) error {
+	var res Configv1CloudIntegration
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

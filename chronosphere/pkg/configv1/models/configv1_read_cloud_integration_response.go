@@ -13,23 +13,17 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigUnstableUpdateCloudIntegrationBody config unstable update cloud integration body
+// Configv1ReadCloudIntegrationResponse configv1 read cloud integration response
 //
-// swagger:model ConfigUnstableUpdateCloudIntegrationBody
-type ConfigUnstableUpdateCloudIntegrationBody struct {
+// swagger:model configv1ReadCloudIntegrationResponse
+type Configv1ReadCloudIntegrationResponse struct {
 
 	// cloud integration
-	CloudIntegration *ConfigunstableCloudIntegration `json:"cloud_integration,omitempty"`
-
-	// If `true`, the CloudIntegration will be created if it does not already exist, identified by `slug`. If `false`, an error will be returned if the CloudIntegration does not already exist.
-	CreateIfMissing bool `json:"create_if_missing,omitempty"`
-
-	// If `true`, validates the specified configuration without creating or updating the CloudIntegration. If the specified configuration is valid, the endpoint returns a partial response without the CloudIntegration. If the specified configuration is invalid, the endpoint returns an error.
-	DryRun bool `json:"dry_run,omitempty"`
+	CloudIntegration *Configv1CloudIntegration `json:"cloud_integration,omitempty"`
 }
 
-// Validate validates this config unstable update cloud integration body
-func (m *ConfigUnstableUpdateCloudIntegrationBody) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 read cloud integration response
+func (m *Configv1ReadCloudIntegrationResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCloudIntegration(formats); err != nil {
@@ -42,7 +36,7 @@ func (m *ConfigUnstableUpdateCloudIntegrationBody) Validate(formats strfmt.Regis
 	return nil
 }
 
-func (m *ConfigUnstableUpdateCloudIntegrationBody) validateCloudIntegration(formats strfmt.Registry) error {
+func (m *Configv1ReadCloudIntegrationResponse) validateCloudIntegration(formats strfmt.Registry) error {
 	if swag.IsZero(m.CloudIntegration) { // not required
 		return nil
 	}
@@ -61,8 +55,8 @@ func (m *ConfigUnstableUpdateCloudIntegrationBody) validateCloudIntegration(form
 	return nil
 }
 
-// ContextValidate validate this config unstable update cloud integration body based on the context it is used
-func (m *ConfigUnstableUpdateCloudIntegrationBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 read cloud integration response based on the context it is used
+func (m *Configv1ReadCloudIntegrationResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateCloudIntegration(ctx, formats); err != nil {
@@ -75,7 +69,7 @@ func (m *ConfigUnstableUpdateCloudIntegrationBody) ContextValidate(ctx context.C
 	return nil
 }
 
-func (m *ConfigUnstableUpdateCloudIntegrationBody) contextValidateCloudIntegration(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ReadCloudIntegrationResponse) contextValidateCloudIntegration(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.CloudIntegration != nil {
 		if err := m.CloudIntegration.ContextValidate(ctx, formats); err != nil {
@@ -92,7 +86,7 @@ func (m *ConfigUnstableUpdateCloudIntegrationBody) contextValidateCloudIntegrati
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigUnstableUpdateCloudIntegrationBody) MarshalBinary() ([]byte, error) {
+func (m *Configv1ReadCloudIntegrationResponse) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -100,8 +94,8 @@ func (m *ConfigUnstableUpdateCloudIntegrationBody) MarshalBinary() ([]byte, erro
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigUnstableUpdateCloudIntegrationBody) UnmarshalBinary(b []byte) error {
-	var res ConfigUnstableUpdateCloudIntegrationBody
+func (m *Configv1ReadCloudIntegrationResponse) UnmarshalBinary(b []byte) error {
+	var res Configv1ReadCloudIntegrationResponse
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

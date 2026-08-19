@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // CreateCloudIntegrationReader is a Reader for the CreateCloudIntegration structure.
@@ -70,7 +70,7 @@ CreateCloudIntegrationOK describes a response with status code 200, with default
 A successful response containing the created CloudIntegration.
 */
 type CreateCloudIntegrationOK struct {
-	Payload *models.ConfigunstableCreateCloudIntegrationResponse
+	Payload *models.Configv1CreateCloudIntegrationResponse
 }
 
 // IsSuccess returns true when this create cloud integration o k response has a 2xx status code
@@ -104,20 +104,20 @@ func (o *CreateCloudIntegrationOK) Code() int {
 }
 
 func (o *CreateCloudIntegrationOK) Error() string {
-	return fmt.Sprintf("[POST /api/unstable/config/cloud-integrations][%d] createCloudIntegrationOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/cloud-integrations][%d] createCloudIntegrationOK  %+v", 200, o.Payload)
 }
 
 func (o *CreateCloudIntegrationOK) String() string {
-	return fmt.Sprintf("[POST /api/unstable/config/cloud-integrations][%d] createCloudIntegrationOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/cloud-integrations][%d] createCloudIntegrationOK  %+v", 200, o.Payload)
 }
 
-func (o *CreateCloudIntegrationOK) GetPayload() *models.ConfigunstableCreateCloudIntegrationResponse {
+func (o *CreateCloudIntegrationOK) GetPayload() *models.Configv1CreateCloudIntegrationResponse {
 	return o.Payload
 }
 
 func (o *CreateCloudIntegrationOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.ConfigunstableCreateCloudIntegrationResponse)
+	o.Payload = new(models.Configv1CreateCloudIntegrationResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -172,11 +172,11 @@ func (o *CreateCloudIntegrationBadRequest) Code() int {
 }
 
 func (o *CreateCloudIntegrationBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/unstable/config/cloud-integrations][%d] createCloudIntegrationBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/cloud-integrations][%d] createCloudIntegrationBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *CreateCloudIntegrationBadRequest) String() string {
-	return fmt.Sprintf("[POST /api/unstable/config/cloud-integrations][%d] createCloudIntegrationBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/cloud-integrations][%d] createCloudIntegrationBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *CreateCloudIntegrationBadRequest) GetPayload() *models.APIError {
@@ -240,11 +240,11 @@ func (o *CreateCloudIntegrationConflict) Code() int {
 }
 
 func (o *CreateCloudIntegrationConflict) Error() string {
-	return fmt.Sprintf("[POST /api/unstable/config/cloud-integrations][%d] createCloudIntegrationConflict  %+v", 409, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/cloud-integrations][%d] createCloudIntegrationConflict  %+v", 409, o.Payload)
 }
 
 func (o *CreateCloudIntegrationConflict) String() string {
-	return fmt.Sprintf("[POST /api/unstable/config/cloud-integrations][%d] createCloudIntegrationConflict  %+v", 409, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/cloud-integrations][%d] createCloudIntegrationConflict  %+v", 409, o.Payload)
 }
 
 func (o *CreateCloudIntegrationConflict) GetPayload() *models.APIError {
@@ -308,11 +308,11 @@ func (o *CreateCloudIntegrationInternalServerError) Code() int {
 }
 
 func (o *CreateCloudIntegrationInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/unstable/config/cloud-integrations][%d] createCloudIntegrationInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/cloud-integrations][%d] createCloudIntegrationInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *CreateCloudIntegrationInternalServerError) String() string {
-	return fmt.Sprintf("[POST /api/unstable/config/cloud-integrations][%d] createCloudIntegrationInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/cloud-integrations][%d] createCloudIntegrationInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *CreateCloudIntegrationInternalServerError) GetPayload() *models.APIError {
@@ -380,11 +380,11 @@ func (o *CreateCloudIntegrationDefault) Code() int {
 }
 
 func (o *CreateCloudIntegrationDefault) Error() string {
-	return fmt.Sprintf("[POST /api/unstable/config/cloud-integrations][%d] CreateCloudIntegration default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/cloud-integrations][%d] CreateCloudIntegration default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *CreateCloudIntegrationDefault) String() string {
-	return fmt.Sprintf("[POST /api/unstable/config/cloud-integrations][%d] CreateCloudIntegration default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[POST /api/v1/config/cloud-integrations][%d] CreateCloudIntegration default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *CreateCloudIntegrationDefault) GetPayload() models.GenericError {

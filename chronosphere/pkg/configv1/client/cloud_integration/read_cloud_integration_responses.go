@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // ReadCloudIntegrationReader is a Reader for the ReadCloudIntegration structure.
@@ -64,7 +64,7 @@ ReadCloudIntegrationOK describes a response with status code 200, with default h
 A successful response.
 */
 type ReadCloudIntegrationOK struct {
-	Payload *models.ConfigunstableReadCloudIntegrationResponse
+	Payload *models.Configv1ReadCloudIntegrationResponse
 }
 
 // IsSuccess returns true when this read cloud integration o k response has a 2xx status code
@@ -98,20 +98,20 @@ func (o *ReadCloudIntegrationOK) Code() int {
 }
 
 func (o *ReadCloudIntegrationOK) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations/{slug}][%d] readCloudIntegrationOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations/{slug}][%d] readCloudIntegrationOK  %+v", 200, o.Payload)
 }
 
 func (o *ReadCloudIntegrationOK) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations/{slug}][%d] readCloudIntegrationOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations/{slug}][%d] readCloudIntegrationOK  %+v", 200, o.Payload)
 }
 
-func (o *ReadCloudIntegrationOK) GetPayload() *models.ConfigunstableReadCloudIntegrationResponse {
+func (o *ReadCloudIntegrationOK) GetPayload() *models.Configv1ReadCloudIntegrationResponse {
 	return o.Payload
 }
 
 func (o *ReadCloudIntegrationOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.ConfigunstableReadCloudIntegrationResponse)
+	o.Payload = new(models.Configv1ReadCloudIntegrationResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -166,11 +166,11 @@ func (o *ReadCloudIntegrationNotFound) Code() int {
 }
 
 func (o *ReadCloudIntegrationNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations/{slug}][%d] readCloudIntegrationNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations/{slug}][%d] readCloudIntegrationNotFound  %+v", 404, o.Payload)
 }
 
 func (o *ReadCloudIntegrationNotFound) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations/{slug}][%d] readCloudIntegrationNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations/{slug}][%d] readCloudIntegrationNotFound  %+v", 404, o.Payload)
 }
 
 func (o *ReadCloudIntegrationNotFound) GetPayload() *models.APIError {
@@ -234,11 +234,11 @@ func (o *ReadCloudIntegrationInternalServerError) Code() int {
 }
 
 func (o *ReadCloudIntegrationInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations/{slug}][%d] readCloudIntegrationInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations/{slug}][%d] readCloudIntegrationInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ReadCloudIntegrationInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations/{slug}][%d] readCloudIntegrationInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations/{slug}][%d] readCloudIntegrationInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ReadCloudIntegrationInternalServerError) GetPayload() *models.APIError {
@@ -306,11 +306,11 @@ func (o *ReadCloudIntegrationDefault) Code() int {
 }
 
 func (o *ReadCloudIntegrationDefault) Error() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations/{slug}][%d] ReadCloudIntegration default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations/{slug}][%d] ReadCloudIntegration default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *ReadCloudIntegrationDefault) String() string {
-	return fmt.Sprintf("[GET /api/unstable/config/cloud-integrations/{slug}][%d] ReadCloudIntegration default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /api/v1/config/cloud-integrations/{slug}][%d] ReadCloudIntegration default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *ReadCloudIntegrationDefault) GetPayload() models.GenericError {

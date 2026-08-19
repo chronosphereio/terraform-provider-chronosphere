@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // UpdateCloudIntegrationReader is a Reader for the UpdateCloudIntegration structure.
@@ -76,7 +76,7 @@ UpdateCloudIntegrationOK describes a response with status code 200, with default
 A successful response containing the updated CloudIntegration.
 */
 type UpdateCloudIntegrationOK struct {
-	Payload *models.ConfigunstableUpdateCloudIntegrationResponse
+	Payload *models.Configv1UpdateCloudIntegrationResponse
 }
 
 // IsSuccess returns true when this update cloud integration o k response has a 2xx status code
@@ -110,20 +110,20 @@ func (o *UpdateCloudIntegrationOK) Code() int {
 }
 
 func (o *UpdateCloudIntegrationOK) Error() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/cloud-integrations/{slug}][%d] updateCloudIntegrationOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/cloud-integrations/{slug}][%d] updateCloudIntegrationOK  %+v", 200, o.Payload)
 }
 
 func (o *UpdateCloudIntegrationOK) String() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/cloud-integrations/{slug}][%d] updateCloudIntegrationOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/cloud-integrations/{slug}][%d] updateCloudIntegrationOK  %+v", 200, o.Payload)
 }
 
-func (o *UpdateCloudIntegrationOK) GetPayload() *models.ConfigunstableUpdateCloudIntegrationResponse {
+func (o *UpdateCloudIntegrationOK) GetPayload() *models.Configv1UpdateCloudIntegrationResponse {
 	return o.Payload
 }
 
 func (o *UpdateCloudIntegrationOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.ConfigunstableUpdateCloudIntegrationResponse)
+	o.Payload = new(models.Configv1UpdateCloudIntegrationResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -178,11 +178,11 @@ func (o *UpdateCloudIntegrationBadRequest) Code() int {
 }
 
 func (o *UpdateCloudIntegrationBadRequest) Error() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/cloud-integrations/{slug}][%d] updateCloudIntegrationBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/cloud-integrations/{slug}][%d] updateCloudIntegrationBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *UpdateCloudIntegrationBadRequest) String() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/cloud-integrations/{slug}][%d] updateCloudIntegrationBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/cloud-integrations/{slug}][%d] updateCloudIntegrationBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *UpdateCloudIntegrationBadRequest) GetPayload() *models.APIError {
@@ -246,11 +246,11 @@ func (o *UpdateCloudIntegrationNotFound) Code() int {
 }
 
 func (o *UpdateCloudIntegrationNotFound) Error() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/cloud-integrations/{slug}][%d] updateCloudIntegrationNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/cloud-integrations/{slug}][%d] updateCloudIntegrationNotFound  %+v", 404, o.Payload)
 }
 
 func (o *UpdateCloudIntegrationNotFound) String() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/cloud-integrations/{slug}][%d] updateCloudIntegrationNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/cloud-integrations/{slug}][%d] updateCloudIntegrationNotFound  %+v", 404, o.Payload)
 }
 
 func (o *UpdateCloudIntegrationNotFound) GetPayload() *models.APIError {
@@ -314,11 +314,11 @@ func (o *UpdateCloudIntegrationConflict) Code() int {
 }
 
 func (o *UpdateCloudIntegrationConflict) Error() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/cloud-integrations/{slug}][%d] updateCloudIntegrationConflict  %+v", 409, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/cloud-integrations/{slug}][%d] updateCloudIntegrationConflict  %+v", 409, o.Payload)
 }
 
 func (o *UpdateCloudIntegrationConflict) String() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/cloud-integrations/{slug}][%d] updateCloudIntegrationConflict  %+v", 409, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/cloud-integrations/{slug}][%d] updateCloudIntegrationConflict  %+v", 409, o.Payload)
 }
 
 func (o *UpdateCloudIntegrationConflict) GetPayload() *models.APIError {
@@ -382,11 +382,11 @@ func (o *UpdateCloudIntegrationInternalServerError) Code() int {
 }
 
 func (o *UpdateCloudIntegrationInternalServerError) Error() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/cloud-integrations/{slug}][%d] updateCloudIntegrationInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/cloud-integrations/{slug}][%d] updateCloudIntegrationInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *UpdateCloudIntegrationInternalServerError) String() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/cloud-integrations/{slug}][%d] updateCloudIntegrationInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/cloud-integrations/{slug}][%d] updateCloudIntegrationInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *UpdateCloudIntegrationInternalServerError) GetPayload() *models.APIError {
@@ -454,11 +454,11 @@ func (o *UpdateCloudIntegrationDefault) Code() int {
 }
 
 func (o *UpdateCloudIntegrationDefault) Error() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/cloud-integrations/{slug}][%d] UpdateCloudIntegration default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/cloud-integrations/{slug}][%d] UpdateCloudIntegration default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *UpdateCloudIntegrationDefault) String() string {
-	return fmt.Sprintf("[PUT /api/unstable/config/cloud-integrations/{slug}][%d] UpdateCloudIntegration default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[PUT /api/v1/config/cloud-integrations/{slug}][%d] UpdateCloudIntegration default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *UpdateCloudIntegrationDefault) GetPayload() models.GenericError {

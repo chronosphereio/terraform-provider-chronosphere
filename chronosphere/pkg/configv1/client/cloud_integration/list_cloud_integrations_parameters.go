@@ -103,8 +103,8 @@ type ListCloudIntegrationsParams struct {
 
 	 - STATE_ENABLED: Integration is fully enabled and actively collecting metrics.
 	 - STATE_DISABLED: Integration is disabled and not collecting metrics.
-	 - STATE_PREVIEW: Integration is in preview mode for estimating cardinality/license impact
-	before full enablement.
+	 - STATE_PREVIEW: Integration is in preview mode for estimating cardinality/license
+	impact before full enablement.
 	*/
 	States []string
 

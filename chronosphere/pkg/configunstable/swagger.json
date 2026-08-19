@@ -42,22 +42,6 @@
       },
       "type": "object"
     },
-    "ConfigUnstableUpdateCloudIntegrationBody": {
-      "properties": {
-        "cloud_integration": {
-          "$ref": "#/definitions/configunstableCloudIntegration"
-        },
-        "create_if_missing": {
-          "description": "If `true`, the CloudIntegration will be created if it does not already exist, identified by `slug`. If `false`, an error will be returned if the CloudIntegration does not already exist.",
-          "type": "boolean"
-        },
-        "dry_run": {
-          "description": "If `true`, validates the specified configuration without creating or updating the CloudIntegration. If the specified configuration is valid, the endpoint returns a partial response without the CloudIntegration. If the specified configuration is invalid, the endpoint returns an error.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
     "ConfigUnstableUpdateCommandCenterGroupBody": {
       "properties": {
         "command_center_group": {
@@ -681,63 +665,6 @@
       },
       "type": "object"
     },
-    "configunstableCloudIntegration": {
-      "description": "CloudIntegration represents a configuration for collecting metrics from a\ncloud provider. Each integration contains provider-specific configuration.",
-      "properties": {
-        "slug": {
-          "description": "Unique slug identifying the CloudIntegration.",
-          "type": "string"
-        },
-        "name": {
-          "description": "Unique name of the CloudIntegration.",
-          "type": "string"
-        },
-        "created_at": {
-          "description": "Timestamp of when the CloudIntegration was created. Cannot be set by clients.",
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "updated_at": {
-          "description": "Timestamp of when the CloudIntegration was last updated. Cannot be set by clients.",
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "metric_labels": {
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Labels applied to all metrics emitted from this integration.",
-          "type": "object"
-        },
-        "state": {
-          "$ref": "#/definitions/configunstableCloudIntegrationState"
-        },
-        "external_connection_slug": {
-          "description": "Slug of the ExternalConnection used for credentials. Optional depending on\nthe provider.",
-          "type": "string"
-        },
-        "provider_config": {
-          "description": "Provider-specific configuration. Structure depends on provider_type.",
-          "type": "object"
-        },
-        "provider_type": {
-          "description": "Required on create/update. Identifies the cloud provider.",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableCloudIntegrationState": {
-      "description": "State represents the operational state of a CloudIntegration.\n\n - STATE_ENABLED: Integration is fully enabled and actively collecting metrics.\n - STATE_DISABLED: Integration is disabled and not collecting metrics.\n - STATE_PREVIEW: Integration is in preview mode for estimating cardinality/license impact\nbefore full enablement.",
-      "enum": [
-        "STATE_ENABLED",
-        "STATE_DISABLED",
-        "STATE_PREVIEW"
-      ],
-      "type": "string"
-    },
     "configunstableCommandCenterGroup": {
       "description": "CommandCenterGroup is a group of signals tracked in the command center.",
       "properties": {
@@ -763,26 +690,6 @@
         },
         "group_slo_reference": {
           "$ref": "#/definitions/configunstableSloReference"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableCreateCloudIntegrationRequest": {
-      "properties": {
-        "cloud_integration": {
-          "$ref": "#/definitions/configunstableCloudIntegration"
-        },
-        "dry_run": {
-          "description": "If `true`, validates the specified configuration without creating the CloudIntegration. If the specified configuration is valid, the endpoint returns a partial response without the CloudIntegration. If the specified configuration is invalid, the endpoint returns an error.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableCreateCloudIntegrationResponse": {
-      "properties": {
-        "cloud_integration": {
-          "$ref": "#/definitions/configunstableCloudIntegration"
         }
       },
       "type": "object"
@@ -1099,9 +1006,6 @@
       },
       "type": "object"
     },
-    "configunstableDeleteCloudIntegrationResponse": {
-      "type": "object"
-    },
     "configunstableDeleteCommandCenterGroupResponse": {
       "type": "object"
     },
@@ -1172,20 +1076,6 @@
         "ui_component": {
           "description": "Link template is scoped to the specified string representing a UI component here.",
           "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableListCloudIntegrationsResponse": {
-      "properties": {
-        "page": {
-          "$ref": "#/definitions/configv1PageResult"
-        },
-        "cloud_integrations": {
-          "items": {
-            "$ref": "#/definitions/configunstableCloudIntegration"
-          },
-          "type": "array"
         }
       },
       "type": "object"
@@ -1437,14 +1327,6 @@
         },
         "metric": {
           "$ref": "#/definitions/ObjectDiscoveryRuleMetricRule"
-        }
-      },
-      "type": "object"
-    },
-    "configunstableReadCloudIntegrationResponse": {
-      "properties": {
-        "cloud_integration": {
-          "$ref": "#/definitions/configunstableCloudIntegration"
         }
       },
       "type": "object"
@@ -1786,14 +1668,6 @@
       },
       "type": "object"
     },
-    "configunstableUpdateCloudIntegrationResponse": {
-      "properties": {
-        "cloud_integration": {
-          "$ref": "#/definitions/configunstableCloudIntegration"
-        }
-      },
-      "type": "object"
-    },
     "configunstableUpdateCommandCenterGroupResponse": {
       "properties": {
         "command_center_group": {
@@ -1971,290 +1845,6 @@
     "version": "UNSTABLE"
   },
   "paths": {
-    "/api/unstable/config/cloud-integrations": {
-      "get": {
-        "operationId": "ListCloudIntegrations",
-        "parameters": [
-          {
-            "description": "Sets the preferred number of items to return per page. If set to `0`, the\nserver will use its default value. Regardless of the value specified, clients\nmust never assume how many items will be returned.",
-            "format": "int64",
-            "in": "query",
-            "name": "page.max_size",
-            "type": "integer"
-          },
-          {
-            "description": "An opaque page token that identifies which page the client should request.\nAn empty value indicates the first page.",
-            "in": "query",
-            "name": "page.token",
-            "type": "string"
-          },
-          {
-            "collectionFormat": "multi",
-            "description": "Filters results by slug, where any CloudIntegration with a matching slug in the given list (and matches all other filters) will be returned.",
-            "in": "query",
-            "items": {
-              "type": "string"
-            },
-            "name": "slugs",
-            "type": "array"
-          },
-          {
-            "collectionFormat": "multi",
-            "description": "Filters results by name, where any CloudIntegration with a matching name in the given list (and matches all other filters) will be returned.",
-            "in": "query",
-            "items": {
-              "type": "string"
-            },
-            "name": "names",
-            "type": "array"
-          },
-          {
-            "collectionFormat": "multi",
-            "description": "Filter by integration state.\n\n - STATE_ENABLED: Integration is fully enabled and actively collecting metrics.\n - STATE_DISABLED: Integration is disabled and not collecting metrics.\n - STATE_PREVIEW: Integration is in preview mode for estimating cardinality/license impact\nbefore full enablement.",
-            "in": "query",
-            "items": {
-              "enum": [
-                "STATE_ENABLED",
-                "STATE_DISABLED",
-                "STATE_PREVIEW"
-              ],
-              "type": "string"
-            },
-            "name": "states",
-            "type": "array"
-          },
-          {
-            "collectionFormat": "multi",
-            "description": "Filter by provider type.",
-            "in": "query",
-            "items": {
-              "type": "string"
-            },
-            "name": "provider_types",
-            "type": "array"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableListCloudIntegrationsResponse"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "CloudIntegration"
-        ]
-      },
-      "post": {
-        "operationId": "CreateCloudIntegration",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/configunstableCreateCloudIntegrationRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response containing the created CloudIntegration.",
-            "schema": {
-              "$ref": "#/definitions/configunstableCreateCloudIntegrationResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot create the CloudIntegration because the request is invalid.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "409": {
-            "description": "Cannot create the CloudIntegration because there is a conflict with an existing CloudIntegration.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "CloudIntegration"
-        ]
-      }
-    },
-    "/api/unstable/config/cloud-integrations/{slug}": {
-      "delete": {
-        "operationId": "DeleteCloudIntegration",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableDeleteCloudIntegrationResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot delete the CloudIntegration because it is in use.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "404": {
-            "description": "Cannot delete the CloudIntegration because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "CloudIntegration"
-        ]
-      },
-      "get": {
-        "operationId": "ReadCloudIntegration",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/configunstableReadCloudIntegrationResponse"
-            }
-          },
-          "404": {
-            "description": "Cannot read the CloudIntegration because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "CloudIntegration"
-        ]
-      },
-      "put": {
-        "operationId": "UpdateCloudIntegration",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "slug",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ConfigUnstableUpdateCloudIntegrationBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A successful response containing the updated CloudIntegration.",
-            "schema": {
-              "$ref": "#/definitions/configunstableUpdateCloudIntegrationResponse"
-            }
-          },
-          "400": {
-            "description": "Cannot update the CloudIntegration because the request is invalid.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "404": {
-            "description": "Cannot update the CloudIntegration because the slug does not exist.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "409": {
-            "description": "Cannot update the CloudIntegration because there is a conflict with an existing CloudIntegration.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "500": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/apiError"
-            }
-          },
-          "default": {
-            "description": "An undefined error response.",
-            "schema": {
-              "$ref": "#/definitions/genericError"
-            }
-          }
-        },
-        "tags": [
-          "CloudIntegration"
-        ]
-      }
-    },
     "/api/unstable/config/command-center-groups": {
       "get": {
         "operationId": "ListCommandCenterGroups",

@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 )
 
 // DeleteCloudIntegrationReader is a Reader for the DeleteCloudIntegration structure.
@@ -70,7 +70,7 @@ DeleteCloudIntegrationOK describes a response with status code 200, with default
 A successful response.
 */
 type DeleteCloudIntegrationOK struct {
-	Payload models.ConfigunstableDeleteCloudIntegrationResponse
+	Payload models.Configv1DeleteCloudIntegrationResponse
 }
 
 // IsSuccess returns true when this delete cloud integration o k response has a 2xx status code
@@ -104,14 +104,14 @@ func (o *DeleteCloudIntegrationOK) Code() int {
 }
 
 func (o *DeleteCloudIntegrationOK) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationOK  %+v", 200, o.Payload)
 }
 
 func (o *DeleteCloudIntegrationOK) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationOK  %+v", 200, o.Payload)
 }
 
-func (o *DeleteCloudIntegrationOK) GetPayload() models.ConfigunstableDeleteCloudIntegrationResponse {
+func (o *DeleteCloudIntegrationOK) GetPayload() models.Configv1DeleteCloudIntegrationResponse {
 	return o.Payload
 }
 
@@ -170,11 +170,11 @@ func (o *DeleteCloudIntegrationBadRequest) Code() int {
 }
 
 func (o *DeleteCloudIntegrationBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *DeleteCloudIntegrationBadRequest) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationBadRequest  %+v", 400, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *DeleteCloudIntegrationBadRequest) GetPayload() *models.APIError {
@@ -238,11 +238,11 @@ func (o *DeleteCloudIntegrationNotFound) Code() int {
 }
 
 func (o *DeleteCloudIntegrationNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationNotFound  %+v", 404, o.Payload)
 }
 
 func (o *DeleteCloudIntegrationNotFound) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationNotFound  %+v", 404, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationNotFound  %+v", 404, o.Payload)
 }
 
 func (o *DeleteCloudIntegrationNotFound) GetPayload() *models.APIError {
@@ -306,11 +306,11 @@ func (o *DeleteCloudIntegrationInternalServerError) Code() int {
 }
 
 func (o *DeleteCloudIntegrationInternalServerError) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *DeleteCloudIntegrationInternalServerError) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationInternalServerError  %+v", 500, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/cloud-integrations/{slug}][%d] deleteCloudIntegrationInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *DeleteCloudIntegrationInternalServerError) GetPayload() *models.APIError {
@@ -378,11 +378,11 @@ func (o *DeleteCloudIntegrationDefault) Code() int {
 }
 
 func (o *DeleteCloudIntegrationDefault) Error() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/cloud-integrations/{slug}][%d] DeleteCloudIntegration default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/cloud-integrations/{slug}][%d] DeleteCloudIntegration default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *DeleteCloudIntegrationDefault) String() string {
-	return fmt.Sprintf("[DELETE /api/unstable/config/cloud-integrations/{slug}][%d] DeleteCloudIntegration default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[DELETE /api/v1/config/cloud-integrations/{slug}][%d] DeleteCloudIntegration default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *DeleteCloudIntegrationDefault) GetPayload() models.GenericError {
