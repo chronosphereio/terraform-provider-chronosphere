@@ -9,11 +9,6 @@ Added:
   so require Terraform 1.11 or later. This resource is backed by the stable
   v1 config API.
 
-Fixed:
-* Include `chronosphere_synthetic_test` in export-config and import-state,
-  which previously skipped synthetic tests while gateways serving the v1
-  synthetic-test API were still rolling out.
-
 Removed:
 * Remove the `chronosphere_logscale_alert` and `chronosphere_logscale_action`
   resources. The endpoints backing them no longer exist in the public API.
