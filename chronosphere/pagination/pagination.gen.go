@@ -1728,7 +1728,40 @@ func ListSyntheticTestsByFilter(
 	f Filter,
 	opts ...func(*synthetic_test.ListSyntheticTestsParams),
 ) ([]*configv1models.Configv1SyntheticTest, error) {
-	return nil, nil
+	var (
+		nextToken string
+		result    []*configv1models.Configv1SyntheticTest
+	)
+	for {
+		p := &synthetic_test.ListSyntheticTestsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.SyntheticTest.ListSyntheticTests(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.SyntheticTests {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
 }
 
 func ListTeams(
