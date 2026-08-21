@@ -12,6 +12,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/classic_dashboard"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/cloud_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_budget"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_config"
@@ -172,6 +173,75 @@ func ListBucketsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.Buckets {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListCloudIntegrations(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1CloudIntegration, error) {
+	return ListCloudIntegrationsByFilter(ctx, client, Filter{})
+}
+
+func ListCloudIntegrationsBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1CloudIntegration, error) {
+	return ListCloudIntegrationsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListCloudIntegrationsByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1CloudIntegration, error) {
+	return ListCloudIntegrationsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListCloudIntegrationsByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*cloud_integration.ListCloudIntegrationsParams),
+) ([]*configv1models.Configv1CloudIntegration, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1CloudIntegration
+	)
+	for {
+		p := &cloud_integration.ListCloudIntegrationsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.CloudIntegration.ListCloudIntegrations(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.CloudIntegrations {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {

@@ -49,6 +49,7 @@ func Provider() *schema.Provider {
 		"chronosphere_blackhole_alert_notifier":              resourceBlackHoleAlertNotifier(),
 		"chronosphere_gcp_metrics_integration":               resourceGcpMetricsIntegration(),
 		"chronosphere_azure_metrics_integration":             resourceAzureMetricsIntegration(),
+		"chronosphere_cloud_integration":                     resourceCloudIntegration(),
 		"chronosphere_recording_rule":                        resourceRecordingRule(),
 		"chronosphere_rollup_rule":                           resourceRollupRule(),
 		"chronosphere_drop_rule":                             resourceDropRule(),
