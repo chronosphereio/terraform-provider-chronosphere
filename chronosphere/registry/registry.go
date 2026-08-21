@@ -171,6 +171,12 @@ var Resources = mustValidate([]Resource{
 		Schema: tfschema.Bucket,
 	},
 	{
+		Name:   "cloud_integration",
+		Entity: "CloudIntegration",
+		API:    V1,
+		Schema: tfschema.CloudIntegration,
+	},
+	{
 		Name:   "collection",
 		Entity: "Collection",
 		API:    V1,
