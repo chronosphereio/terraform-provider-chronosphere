@@ -67,6 +67,8 @@ type SloSli struct {
 	CustomDimensionLabels    []string                        `intschema:"custom_dimension_labels,optional"`
 	CustomIndicator          *SloSliCustomIndicator          `intschema:"custom_indicator,optional,list_encoded_object"`
 	CustomTimesliceIndicator *SloSliCustomTimesliceIndicator `intschema:"custom_timeslice_indicator,optional,list_encoded_object"`
+	LatencyThresholdNanos    int64                           `intschema:"latency_threshold_nanos,optional"`
+	SloType                  string                          `intschema:"slo_type,optional"`
 }
 
 type SloSliCustomTimesliceIndicator struct {

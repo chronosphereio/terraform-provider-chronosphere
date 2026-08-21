@@ -15,6 +15,8 @@
 package chronosphere
 
 import (
+	"strconv"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"go.uber.org/atomic"
 
@@ -105,6 +107,8 @@ func (sloConverter) toModel(s *intschema.Slo) (*models.Configv1SLO, error) {
 			CustomTimesliceIndicator: customTimesliceIndicator,
 			CustomDimensionLabels:    s.Sli.CustomDimensionLabels,
 			AdditionalPromqlFilters:  promFiltersToModel(s.Sli.AdditionalPromqlFilters),
+			SLOType:                  enum.SLISLOType.V1(s.Sli.SloType),
+			LatencyThresholdNanos:    latencyThresholdNanosToModel(s.Sli.LatencyThresholdNanos),
 		},
 		SignalGrouping: monitorSignalGroupingToModel(s.SignalGrouping),
 		Annotations:    s.Annotations,
@@ -143,6 +147,11 @@ func (sloConverter) fromModel(
 		}
 	}
 
+	latencyThresholdNanos, err := parseStringToInt64(s.Sli.LatencyThresholdNanos, "latency_threshold_nanos")
+	if err != nil {
+		return nil, err
+	}
+
 	var collectionID tfid.ID
 	if s.CollectionRef.Type == models.Configv1CollectionReferenceTypeSIMPLE {
 		collectionID = tfid.Slug(s.CollectionRef.Slug)
@@ -167,11 +176,23 @@ func (sloConverter) fromModel(
 			CustomTimesliceIndicator: customTimesliceIndicator,
 			CustomDimensionLabels:    s.Sli.CustomDimensionLabels,
 			AdditionalPromqlFilters:  promFiltersFromModel(s.Sli.AdditionalPromqlFilters),
+			SloType:                  enum.SLISLOType.Alias(s.Sli.SLOType),
+			LatencyThresholdNanos:    latencyThresholdNanos,
 		},
 		SignalGrouping: monitorSignalGroupingFromModel(s.SignalGrouping),
 		Annotations:    s.Annotations,
 		Labels:         s.Labels,
 	}, nil
+}
+
+// latencyThresholdNanosToModel encodes the threshold as the string the API uses
+// for int64 fields. Zero is indistinguishable from unset in Terraform, and a
+// zero threshold is meaningless, so it serializes to the omitted empty string.
+func latencyThresholdNanosToModel(nanos int64) string {
+	if nanos == 0 {
+		return ""
+	}
+	return strconv.FormatInt(nanos, 10)
 }
 
 func unstableRefToV1(ref *models.Configv1CollectionReference) *models.Configv1CollectionReference {

@@ -3,6 +3,11 @@
 ## UNRELEASED
 
 Added:
+* Add `slo_type` and `latency_threshold_nanos` to the `sli` block of
+  `chronosphere_slo`. Together they record whether an SLO measures endpoint
+  availability or latency, and for latency SLOs the threshold requests are
+  measured against. Both are optional and no query generation depends on
+  them, so leaving them unset keeps existing SLOs rendering as they do today.
 * Add the `chronosphere_synthetic_test` resource, which probes an endpoint over
   HTTP, DNS, TCP, or TLS from Chronosphere-operated locations and alerts on the
   result. Credentials are configured through write-only (`*_wo`) attributes and

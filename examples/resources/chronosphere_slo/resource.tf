@@ -39,5 +39,31 @@ resource "chronosphere_slo" "request_success" {
       bad_query_template   = "sum(rate(http_request_duration_seconds_count{error=\"true\"}[{{ .Window }}]))"
       total_query_template = "sum(rate(http_request_duration_seconds_count[{{ .Window }}]))"
     }
+
+    slo_type = "ENDPOINT_AVAILABILITY"
+  }
+}
+
+resource "chronosphere_slo" "request_latency" {
+  name                   = "payments request latency"
+  collection_id          = chronosphere_collection.c.id
+  notification_policy_id = chronosphere_notification_policy.np.id
+
+  definition {
+    objective = 99
+    time_window {
+      duration = "28d"
+    }
+  }
+
+  sli {
+    custom_indicator {
+      good_query_template  = "sum(rate(http_request_duration_seconds_bucket{le=\"0.05\"}[{{ .Window }}]))"
+      total_query_template = "sum(rate(http_request_duration_seconds_count[{{ .Window }}]))"
+    }
+
+    # 50ms, expressed in nanoseconds.
+    slo_type                = "LATENCY"
+    latency_threshold_nanos = 50000000
   }
 }
