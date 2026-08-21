@@ -8,6 +8,12 @@ Added:
   result. Credentials are configured through write-only (`*_wo`) attributes and
   so require Terraform 1.11 or later. This resource is backed by the stable
   v1 config API.
+* Add the `chronosphere_cloud_integration` resource, which ingests metrics
+  from a cloud provider through an external connection. The provider-specific
+  configuration is an opaque `provider_config` JSON attribute (use
+  `jsonencode`) whose structure is defined by `provider_type`, so newly
+  supported cloud providers require no provider upgrade. This resource is
+  backed by the stable v1 config API.
 
 Removed:
 * Remove the `chronosphere_logscale_alert` and `chronosphere_logscale_action`

@@ -9,6 +9,7 @@ import (
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/cloud_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/collection"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/config_v1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/consumption_budget"
@@ -198,6 +199,85 @@ func (generatedBucket) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.Bucket.DeleteBucket(req)
+	return err
+}
+
+type generatedCloudIntegration struct{}
+
+func (generatedCloudIntegration) slugOf(m *configv1models.Configv1CloudIntegration) string {
+	return m.Slug
+}
+
+func (generatedCloudIntegration) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1CloudIntegration,
+	dryRun bool,
+) (string, error) {
+	req := &cloud_integration.CreateCloudIntegrationParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateCloudIntegrationRequest{
+			CloudIntegration: m,
+			DryRun:           dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.CloudIntegration.CreateCloudIntegration(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.CloudIntegration
+	if e == nil {
+		return "", nil
+	}
+	return (generatedCloudIntegration{}).slugOf(e), nil
+}
+
+func (generatedCloudIntegration) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1CloudIntegration, error) {
+	req := &cloud_integration.ReadCloudIntegrationParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigV1.CloudIntegration.ReadCloudIntegration(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.CloudIntegration, nil
+}
+
+func (generatedCloudIntegration) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1CloudIntegration,
+	params updateParams,
+) error {
+	req := &cloud_integration.UpdateCloudIntegrationParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configv1models.ConfigV1UpdateCloudIntegrationBody{
+
+			CloudIntegration: m,
+			CreateIfMissing:  params.createIfMissing,
+			DryRun:           params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.CloudIntegration.UpdateCloudIntegration(req)
+	return err
+}
+func (generatedCloudIntegration) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &cloud_integration.DeleteCloudIntegrationParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigV1.CloudIntegration.DeleteCloudIntegration(req)
 	return err
 }
 
