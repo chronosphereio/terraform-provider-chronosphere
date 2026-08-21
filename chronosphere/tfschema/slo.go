@@ -159,6 +159,16 @@ var SLI = map[string]*schema.Schema{
 		Elem:        &schema.Schema{Type: schema.TypeString},
 	},
 	"additional_promql_filters": SLOAdditionalPromQLFilters,
+	"slo_type": Enum{
+		Value:       enum.SLISLOType.ToStrings(),
+		Optional:    true,
+		Description: "What the SLO measures. No query generation depends on it: the queries are still authored through `custom_indicator` or `custom_timeslice_indicator`, and this only records the intent behind them. Leave unset to keep the pre-existing rendering.",
+	}.Schema(),
+	"latency_threshold_nanos": {
+		Type:        schema.TypeInt,
+		Optional:    true,
+		Description: "The latency that requests are measured against, in nanoseconds: `50000000` is the \"50ms\" in \"P99 < 50ms\". Required when `slo_type` is `LATENCY`, rejected otherwise.",
+	},
 }
 
 var SloCustomIndicator = map[string]*schema.Schema{

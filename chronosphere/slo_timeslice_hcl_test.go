@@ -116,6 +116,45 @@ resource "chronosphere_slo" "latency" {
 }
 `,
 		},
+		{
+			name: "latency type and threshold",
+			slo: &intschema.Slo{
+				HCLID:        "latency_type",
+				Name:         "latency slo",
+				CollectionId: tfid.Slug("test-collection"),
+				Definition: intschema.SloDefinition{
+					Objective: 99,
+				},
+				Sli: intschema.SloSli{
+					CustomIndicator: &intschema.SloSliCustomIndicator{
+						GoodQueryTemplate:  "sum(rate(http_request_duration_seconds_bucket{le=\"0.05\"}[{{.Window}}]))",
+						TotalQueryTemplate: "sum(rate(http_request_duration_seconds_count[{{.Window}}]))",
+					},
+					SloType:               "LATENCY",
+					LatencyThresholdNanos: 50000000,
+				},
+			},
+			want: `
+resource "chronosphere_slo" "latency_type" {
+  name          = "latency slo"
+  collection_id = "test-collection"
+
+  definition {
+    objective = 99
+  }
+
+  sli {
+    custom_indicator {
+      total_query_template = "sum(rate(http_request_duration_seconds_count[{{.Window}}]))"
+      good_query_template  = "sum(rate(http_request_duration_seconds_bucket{le=\"0.05\"}[{{.Window}}]))"
+    }
+
+    latency_threshold_nanos = 50000000
+    slo_type                = "LATENCY"
+  }
+}
+`,
+		},
 	}
 
 	for _, tt := range tests {

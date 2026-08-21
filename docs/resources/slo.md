@@ -54,6 +54,32 @@ resource "chronosphere_slo" "request_success" {
       bad_query_template   = "sum(rate(http_request_duration_seconds_count{error=\"true\"}[{{ .Window }}]))"
       total_query_template = "sum(rate(http_request_duration_seconds_count[{{ .Window }}]))"
     }
+
+    slo_type = "ENDPOINT_AVAILABILITY"
+  }
+}
+
+resource "chronosphere_slo" "request_latency" {
+  name                   = "payments request latency"
+  collection_id          = chronosphere_collection.c.id
+  notification_policy_id = chronosphere_notification_policy.np.id
+
+  definition {
+    objective = 99
+    time_window {
+      duration = "28d"
+    }
+  }
+
+  sli {
+    custom_indicator {
+      good_query_template  = "sum(rate(http_request_duration_seconds_bucket{le=\"0.05\"}[{{ .Window }}]))"
+      total_query_template = "sum(rate(http_request_duration_seconds_count[{{ .Window }}]))"
+    }
+
+    # 50ms, expressed in nanoseconds.
+    slo_type                = "LATENCY"
+    latency_threshold_nanos = 50000000
   }
 }
 ```
@@ -126,6 +152,8 @@ Optional:
 - `custom_dimension_labels` (List of String) Additional labels exported from the underlying queries to group the error budget by. Available in PromQL templates via `{{.GroupBy}}`.
 - `custom_indicator` (Block List, Max: 1) Error-ratio SLI defined by good/bad/total PromQL query templates. Mutually exclusive with `custom_timeslice_indicator`. (see [below for nested schema](#nestedblock--sli--custom_indicator))
 - `custom_timeslice_indicator` (Block List, Max: 1) Time-slice SLI that evaluates a PromQL query over fixed time slices against a threshold condition. Mutually exclusive with `custom_indicator`. (see [below for nested schema](#nestedblock--sli--custom_timeslice_indicator))
+- `latency_threshold_nanos` (Number) The latency that requests are measured against, in nanoseconds: `50000000` is the "50ms" in "P99 < 50ms". Required when `slo_type` is `LATENCY`, rejected otherwise.
+- `slo_type` (String) What the SLO measures. No query generation depends on it: the queries are still authored through `custom_indicator` or `custom_timeslice_indicator`, and this only records the intent behind them. Leave unset to keep the pre-existing rendering.
 
 <a id="nestedblock--sli--additional_promql_filters"></a>
 ### Nested Schema for `sli.additional_promql_filters`

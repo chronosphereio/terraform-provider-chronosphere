@@ -70,3 +70,78 @@ func TestSLOTimesliceIndicatorConversion(t *testing.T) {
 	assert.Equal(t, intSlo.Sli.CustomTimesliceIndicator.Condition.Op, intSloResult.Sli.CustomTimesliceIndicator.Condition.Op)
 	assert.Equal(t, intSlo.Sli.CustomTimesliceIndicator.Condition.Value, intSloResult.Sli.CustomTimesliceIndicator.Condition.Value)
 }
+
+func TestSLOTypeConversion(t *testing.T) {
+	newSLO := func(sloType string, nanos int64) *intschema.Slo {
+		return &intschema.Slo{
+			Name:         "test latency slo",
+			CollectionId: tfid.Slug("test-collection"),
+			Definition: intschema.SloDefinition{
+				Objective: 99.9,
+			},
+			Sli: intschema.SloSli{
+				CustomIndicator: &intschema.SloSliCustomIndicator{
+					GoodQueryTemplate:  `sum(rate(http_request_duration_seconds_bucket{le="0.05"}[{{.Window}}]))`,
+					TotalQueryTemplate: `sum(rate(http_request_duration_seconds_count[{{.Window}}]))`,
+				},
+				SloType:               sloType,
+				LatencyThresholdNanos: nanos,
+			},
+		}
+	}
+
+	converter := sloConverter{}
+
+	t.Run("latency", func(t *testing.T) {
+		intSlo := newSLO("LATENCY", 50000000)
+
+		model, err := converter.toModel(intSlo)
+		require.NoError(t, err)
+		assert.Equal(t, models.SLISLOTypeLATENCY, model.Sli.SLOType)
+		assert.Equal(t, "50000000", model.Sli.LatencyThresholdNanos)
+
+		result, err := converter.fromModel(model)
+		require.NoError(t, err)
+		assert.Equal(t, "LATENCY", result.Sli.SloType)
+		assert.Equal(t, int64(50000000), result.Sli.LatencyThresholdNanos)
+	})
+
+	t.Run("availability", func(t *testing.T) {
+		intSlo := newSLO("ENDPOINT_AVAILABILITY", 0)
+
+		model, err := converter.toModel(intSlo)
+		require.NoError(t, err)
+		assert.Equal(t, models.SLISLOTypeENDPOINTAVAILABILITY, model.Sli.SLOType)
+		assert.Empty(t, model.Sli.LatencyThresholdNanos)
+
+		result, err := converter.fromModel(model)
+		require.NoError(t, err)
+		assert.Equal(t, "ENDPOINT_AVAILABILITY", result.Sli.SloType)
+		assert.Zero(t, result.Sli.LatencyThresholdNanos)
+	})
+
+	// Configs written before the fields existed must round-trip untouched, so
+	// unset stays unset rather than defaulting to a declared type.
+	t.Run("unset", func(t *testing.T) {
+		intSlo := newSLO("", 0)
+
+		model, err := converter.toModel(intSlo)
+		require.NoError(t, err)
+		assert.Empty(t, model.Sli.SLOType)
+		assert.Empty(t, model.Sli.LatencyThresholdNanos)
+
+		result, err := converter.fromModel(model)
+		require.NoError(t, err)
+		assert.Empty(t, result.Sli.SloType)
+		assert.Zero(t, result.Sli.LatencyThresholdNanos)
+	})
+
+	t.Run("unparseable threshold", func(t *testing.T) {
+		model, err := converter.toModel(newSLO("LATENCY", 50000000))
+		require.NoError(t, err)
+		model.Sli.LatencyThresholdNanos = "not-a-number"
+
+		_, err = converter.fromModel(model)
+		require.ErrorContains(t, err, "latency_threshold_nanos")
+	})
+}
