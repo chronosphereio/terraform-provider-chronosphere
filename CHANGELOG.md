@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.35.0
+
 Added:
 * Add the `chronosphere_synthetic_test` resource, which probes an endpoint over
   HTTP, DNS, TCP, or TLS from Chronosphere-operated locations and alerts on the
