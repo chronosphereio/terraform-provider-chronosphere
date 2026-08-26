@@ -275,6 +275,13 @@ var Resources = mustValidate([]Resource{
 		Schema: tfschema.PagerdutyAlertNotifier,
 	},
 	{
+		Name:        "query_resource_pools",
+		Entity:      "QueryResourcePools",
+		API:         Unstable,
+		Schema:      tfschema.QueryResourcePools,
+		SingletonID: "query_resource_pools_singleton",
+	},
+	{
 		Name:   "recording_rule",
 		Entity: "RecordingRule",
 		API:    V1,
