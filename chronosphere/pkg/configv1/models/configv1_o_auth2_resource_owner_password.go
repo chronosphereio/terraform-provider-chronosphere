@@ -13,26 +13,26 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Configv1OAuth2ResourceOwnerPassword OAuth2ResourceOwnerPassword configures the OAuth 2.0 resource-owner
-// password-credentials grant. client_id/client_secret are optional, set when
-// the token endpoint also authenticates the client.
+// Configv1OAuth2ResourceOwnerPassword Configures the OAuth 2.0 resource-owner password-credentials grant. Set
+// `client_id` and `client_secret` when the token endpoint also authenticates
+// the client.
 //
 // swagger:model configv1OAuth2ResourceOwnerPassword
 type Configv1OAuth2ResourceOwnerPassword struct {
 
-	// client id
+	// Client identifier issued to the test.
 	ClientID string `json:"client_id,omitempty"`
 
-	// client secret
+	// Client secret issued to the test.
 	ClientSecret string `json:"client_secret,omitempty"`
 
 	// common
 	Common *Configv1OAuth2Common `json:"common,omitempty"`
 
-	// password
+	// Password of the resource owner.
 	Password string `json:"password,omitempty"`
 
-	// username
+	// User name of the resource owner.
 	Username string `json:"username,omitempty"`
 }
 
