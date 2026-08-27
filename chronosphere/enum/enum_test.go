@@ -150,6 +150,10 @@ func TestAllEnumsValidate(t *testing.T) {
 			enum:          SLITimeSliceSize.ToStrings(),
 		},
 		{
+			v1SwaggerName: "SLISLOType",
+			enum:          SLISLOType.ToStrings(),
+		},
+		{
 			v1SwaggerName: "configv1LogRetentionConfigMode",
 			enum:          LogRetentionConfigMode.ToStrings(),
 		},

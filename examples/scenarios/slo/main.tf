@@ -42,6 +42,7 @@ resource "chronosphere_slo" "slo" {
       total_query_template = "sum(rate(http_request_duration_seconds_count[{{ .Window }}]))"
     }
     custom_dimension_labels = ["label1", "label2"]
+    slo_type                = "ENDPOINT_AVAILABILITY"
   }
 }
 
@@ -246,5 +247,9 @@ resource "chronosphere_slo" "slo_with_timeslice_latency" {
       }
     }
     custom_dimension_labels = ["service"]
+
+    # 500ms, matching the 0.5 the timeslice condition compares against.
+    slo_type                = "LATENCY"
+    latency_threshold_nanos = 500000000
   }
 }
