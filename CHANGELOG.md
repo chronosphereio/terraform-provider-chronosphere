@@ -8,6 +8,11 @@ Added:
   availability or latency, and for latency SLOs the threshold requests are
   measured against. Both are optional and no query generation depends on
   them, so leaving them unset keeps existing SLOs rendering as they do today.
+* Add the `chronosphere_query_resource_pools` resource, a singleton that groups
+  automated metric query sources (monitors, recording rules, SLOs, and service
+  accounts) into named pools, each with a data read limit that rejects the
+  pool's queries once usage is sustained above the limit. This resource is
+  backed by the unstable config API.
 
 ## v1.35.0
 

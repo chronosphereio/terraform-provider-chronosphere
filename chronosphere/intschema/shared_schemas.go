@@ -171,6 +171,11 @@ type PartitionFilterConditionTraceSpanFilters struct {
 	Tag             []TraceTagFilter     `intschema:"tag,optional"`
 }
 
+type QueryResourcePoolDataReadLimitSchema struct {
+	MaxDatapointsReadPerSecond int64 `intschema:"max_datapoints_read_per_second"`
+	SustainSecs                int64 `intschema:"sustain_secs,optional"`
+}
+
 type RegexParser struct {
 	Regex string `intschema:"regex"`
 }

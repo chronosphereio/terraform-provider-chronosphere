@@ -47,6 +47,7 @@ var sharedSchemaTypeNames = map[*schema.Schema]string{
 	tfschema.MatcherListSchema:                        "Matcher",
 	tfschema.MonitorSeriesConditionSchema:             "MonitorSeriesCondition",
 	tfschema.RegexLogParserSchema:                     "RegexParser",
+	tfschema.QueryResourcePoolDataReadLimitSchema:     "QueryResourcePoolDataReadLimitSchema",
 	tfschema.ResourcePoolAllocationSchema:             "ResourcePoolAllocationSchema",
 	tfschema.ResourcePoolPrioritiesSchema:             "ResourcePoolPrioritiesSchema",
 	tfschema.ResourcePoolAllocationThresholdsSchema:   "ResourcePoolAllocationThresholdsSchema",

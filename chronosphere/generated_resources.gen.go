@@ -6,6 +6,7 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/command_center_group"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/query_resource_pools"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/bucket"
@@ -2787,5 +2788,84 @@ func (generatedUnstableCommandCenterGroup) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigUnstable.CommandCenterGroup.DeleteCommandCenterGroup(req)
+	return err
+}
+
+type generatedUnstableQueryResourcePools struct{}
+
+// QueryResourcePoolsID is the static ID of the global QueryResourcePools singleton.
+const QueryResourcePoolsID = "query_resource_pools_singleton"
+
+func (generatedUnstableQueryResourcePools) slugOf(m *configunstablemodels.ConfigunstableQueryResourcePools) string {
+	return QueryResourcePoolsID
+}
+
+func (generatedUnstableQueryResourcePools) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableQueryResourcePools,
+	dryRun bool,
+) (string, error) {
+	req := &query_resource_pools.CreateQueryResourcePoolsParams{
+		Context: ctx,
+		Body: &configunstablemodels.ConfigunstableCreateQueryResourcePoolsRequest{
+			QueryResourcePools: m,
+			DryRun:             dryRun,
+		},
+	}
+	resp, err := clients.ConfigUnstable.QueryResourcePools.CreateQueryResourcePools(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.QueryResourcePools
+	if e == nil {
+		return "", nil
+	}
+	return (generatedUnstableQueryResourcePools{}).slugOf(e), nil
+}
+
+func (generatedUnstableQueryResourcePools) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configunstablemodels.ConfigunstableQueryResourcePools, error) {
+	req := &query_resource_pools.ReadQueryResourcePoolsParams{
+		Context: ctx,
+	}
+	resp, err := clients.ConfigUnstable.QueryResourcePools.ReadQueryResourcePools(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.QueryResourcePools, nil
+}
+
+func (generatedUnstableQueryResourcePools) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableQueryResourcePools,
+	params updateParams,
+) error {
+	req := &query_resource_pools.UpdateQueryResourcePoolsParams{
+		Context: ctx,
+
+		Body: &configunstablemodels.ConfigunstableUpdateQueryResourcePoolsRequest{
+
+			QueryResourcePools: m,
+			CreateIfMissing:    params.createIfMissing,
+			DryRun:             params.dryRun,
+		},
+	}
+	_, err := clients.ConfigUnstable.QueryResourcePools.UpdateQueryResourcePools(req)
+	return err
+}
+func (generatedUnstableQueryResourcePools) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &query_resource_pools.DeleteQueryResourcePoolsParams{
+		Context: ctx,
+	}
+	_, err := clients.ConfigUnstable.QueryResourcePools.DeleteQueryResourcePools(req)
 	return err
 }
