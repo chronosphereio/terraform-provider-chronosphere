@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.36.0
+
 Added:
 * Add `slo_type` and `latency_threshold_nanos` to the `sli` block of
   `chronosphere_slo`. Together they record whether an SLO measures endpoint
