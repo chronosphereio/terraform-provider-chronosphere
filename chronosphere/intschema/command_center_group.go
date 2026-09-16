@@ -14,9 +14,11 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type CommandCenterGroup struct {
-	Name              string                               `intschema:"name"`
-	Slug              string                               `intschema:"slug,optional,computed"`
-	GroupSloReference *CommandCenterGroupGroupSloReference `intschema:"group_slo_reference,optional,list_encoded_object"`
+	Name                 string                                   `intschema:"name"`
+	Slug                 string                                   `intschema:"slug,optional,computed"`
+	GroupSloReference    *CommandCenterGroupGroupSloReference     `intschema:"group_slo_reference,optional,list_encoded_object"`
+	PrimarySloReference  *CommandCenterGroupPrimarySloReference   `intschema:"primary_slo_reference,optional,list_encoded_object"`
+	RelatedSloReferences []CommandCenterGroupRelatedSloReferences `intschema:"related_slo_references,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
@@ -53,6 +55,14 @@ func (o *CommandCenterGroup) Ref() tfid.ID {
 		Type: "chronosphere_command_center_group",
 		ID:   o.HCLID,
 	}.AsID()
+}
+
+type CommandCenterGroupRelatedSloReferences struct {
+	Slug string `intschema:"slug"`
+}
+
+type CommandCenterGroupPrimarySloReference struct {
+	Slug string `intschema:"slug"`
 }
 
 type CommandCenterGroupGroupSloReference struct {

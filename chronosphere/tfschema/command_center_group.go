@@ -30,18 +30,36 @@ var CommandCenterGroup = map[string]*schema.Schema{
 		Description: "Stable identifier for the command center group. Generated from `name` if omitted. Immutable after creation.",
 	},
 	"group_slo_reference": {
+		Type:          schema.TypeList,
+		Optional:      true,
+		MaxItems:      1,
+		ConflictsWith: []string{"primary_slo_reference"},
+		Deprecated:    "use `primary_slo_reference` instead",
+		Description:   "Deprecated: use `primary_slo_reference` instead. Reference to the primary SLO tracked by this group.",
+		Elem:          CommandCenterSLOReferenceElemSchema,
+	},
+	"primary_slo_reference": {
+		Type:          schema.TypeList,
+		Optional:      true,
+		MaxItems:      1,
+		ConflictsWith: []string{"group_slo_reference"},
+		Description:   "Reference to the primary SLO tracked by this group.",
+		Elem:          CommandCenterSLOReferenceElemSchema,
+	},
+	"related_slo_references": {
 		Type:        schema.TypeList,
 		Optional:    true,
-		MaxItems:    1,
-		Description: "Reference to the SLO tracked by this group.",
-		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"slug": {
-					Type:        schema.TypeString,
-					Required:    true,
-					Description: "Slug of the referenced SLO.",
-				},
-			},
+		Description: "Related SLOs tracked by this group, secondary to the primary one.",
+		Elem:        CommandCenterSLOReferenceElemSchema,
+	},
+}
+
+var CommandCenterSLOReferenceElemSchema = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"slug": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Slug of the referenced SLO.",
 		},
 	},
 }
