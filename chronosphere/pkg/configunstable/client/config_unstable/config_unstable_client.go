@@ -28,32 +28,28 @@ type ClientOption func(*runtime.ClientOperation)
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	CreateDashboardFromClassic(params *CreateDashboardFromClassicParams, opts ...ClientOption) (*CreateDashboardFromClassicOK, error)
+	ValidateDashboard(params *ValidateDashboardParams, opts ...ClientOption) (*ValidateDashboardOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
 
 /*
-	CreateDashboardFromClassic Converts raw classic (Grafana) dashboard JSON to the standard dashboard
-
-format and creates it as a standard Dashboard entity in one call.
-Conversion is delegated to cloud-ui-gateway; when that service is
-unavailable this endpoint fails closed with SERVICE_UNAVAILABLE.
+ValidateDashboard Validates dashboard JSON without persisting it.
 */
-func (a *Client) CreateDashboardFromClassic(params *CreateDashboardFromClassicParams, opts ...ClientOption) (*CreateDashboardFromClassicOK, error) {
+func (a *Client) ValidateDashboard(params *ValidateDashboardParams, opts ...ClientOption) (*ValidateDashboardOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewCreateDashboardFromClassicParams()
+		params = NewValidateDashboardParams()
 	}
 	op := &runtime.ClientOperation{
-		ID:                 "CreateDashboardFromClassic",
+		ID:                 "ValidateDashboard",
 		Method:             "POST",
-		PathPattern:        "/api/unstable/config/dashboards:createFromClassic",
+		PathPattern:        "/api/unstable/config/dashboards:validate",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
 		Params:             params,
-		Reader:             &CreateDashboardFromClassicReader{formats: a.formats},
+		Reader:             &ValidateDashboardReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -65,12 +61,12 @@ func (a *Client) CreateDashboardFromClassic(params *CreateDashboardFromClassicPa
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*CreateDashboardFromClassicOK)
+	success, ok := result.(*ValidateDashboardOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
-	unexpectedSuccess := result.(*CreateDashboardFromClassicDefault)
+	unexpectedSuccess := result.(*ValidateDashboardDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
