@@ -453,9 +453,7 @@ func syntheticDNSTestToModel(t *intschema.SyntheticTestDnsTest) *models.Syntheti
 		return nil
 	}
 	m := &models.SyntheticTestDNSTestConfig{
-		Domain:        t.Domain,
-		DNSServer:     t.DnsServer,
-		DNSServerPort: t.DnsServerPort,
+		Domain: t.Domain,
 	}
 	for _, a := range t.Assertions {
 		assertion := &models.SyntheticTestDNSTestConfigAssertion{
@@ -479,9 +477,7 @@ func syntheticDNSTestFromModel(m *models.SyntheticTestDNSTestConfig) *intschema.
 		return nil
 	}
 	t := &intschema.SyntheticTestDnsTest{
-		Domain:        m.Domain,
-		DnsServer:     m.DNSServer,
-		DnsServerPort: m.DNSServerPort,
+		Domain: m.Domain,
 	}
 	for _, a := range m.Assertions {
 		if a == nil {

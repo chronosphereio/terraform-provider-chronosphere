@@ -166,9 +166,7 @@ func TestSyntheticTestAuthSecretsAreWriteOnly(t *testing.T) {
 func TestSyntheticTestProtocolConversions(t *testing.T) {
 	t.Run("dns", func(t *testing.T) {
 		in := &intschema.SyntheticTestDnsTest{
-			Domain:        "example.com",
-			DnsServer:     "8.8.8.8",
-			DnsServerPort: 53,
+			Domain: "example.com",
 			Assertions: []intschema.SyntheticTestDnsTestAssertions{{
 				DnsRecordAssertion: &intschema.SyntheticTestDnsTestAssertionsDnsRecordAssertion{
 					RecordType: "A",

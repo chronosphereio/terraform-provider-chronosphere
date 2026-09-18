@@ -115,8 +115,6 @@ Required:
 Optional:
 
 - `assertions` (Block List) Conditions evaluated against the DNS response. Every assertion must pass for the run to pass. Set exactly one nested block per entry. (see [below for nested schema](#nestedblock--dns_test--assertions))
-- `dns_server` (String) DNS server queried. Defaults to the probe's resolver.
-- `dns_server_port` (Number) Port on `dns_server` to query.
 
 <a id="nestedblock--dns_test--assertions"></a>
 ### Nested Schema for `dns_test.assertions`
