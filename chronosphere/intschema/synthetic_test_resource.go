@@ -257,10 +257,8 @@ type SyntheticTestHttpTestAssertionsBodyAssertion struct {
 }
 
 type SyntheticTestDnsTest struct {
-	Domain        string                           `intschema:"domain"`
-	Assertions    []SyntheticTestDnsTestAssertions `intschema:"assertions,optional"`
-	DnsServer     string                           `intschema:"dns_server,optional"`
-	DnsServerPort int64                            `intschema:"dns_server_port,optional"`
+	Domain     string                           `intschema:"domain"`
+	Assertions []SyntheticTestDnsTestAssertions `intschema:"assertions,optional"`
 }
 
 type SyntheticTestDnsTestAssertions struct {

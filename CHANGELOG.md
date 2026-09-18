@@ -2,6 +2,11 @@
 
 ## UNRELEASED
 
+Removed:
+* Remove support for custom DNS server in DNS test block of `chronosphere_synthetic_test`.
+  DNS tests now always resolve through Google Public DNS (`8.8.8.8:53`), and the public API
+  no longer accepts a custom nameserver.
+
 ## v1.36.0
 
 Added:

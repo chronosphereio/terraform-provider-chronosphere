@@ -645,16 +645,6 @@ var syntheticDNSTest = map[string]*schema.Schema{
 		Required:    true,
 		Description: "Domain name resolved by the test.",
 	},
-	"dns_server": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "DNS server queried. Defaults to the probe's resolver.",
-	},
-	"dns_server_port": {
-		Type:        schema.TypeInt,
-		Optional:    true,
-		Description: "Port on `dns_server` to query.",
-	},
 	"assertions": {
 		Type:        schema.TypeList,
 		Optional:    true,
