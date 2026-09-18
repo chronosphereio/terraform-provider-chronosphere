@@ -3,11 +3,9 @@
 ## UNRELEASED
 
 Removed:
-* Remove the `dns_server` and `dns_server_port` attributes from the `dns_test`
-  block of `chronosphere_synthetic_test`. DNS tests now always resolve through
-  Google Public DNS (`8.8.8.8:53`), and the public API no longer accepts a
-  custom nameserver. **This is a breaking change**: remove both attributes
-  from your configuration before upgrading.
+* Remove support for custom DNS server in DNS test block of `chronosphere_synthetic_test`.
+  DNS tests now always resolve through Google Public DNS (`8.8.8.8:53`), and the public API
+  no longer accepts a custom nameserver.
 
 ## v1.36.0
 
