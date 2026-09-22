@@ -7,6 +7,19 @@ Removed:
   DNS tests now always resolve through Google Public DNS (`8.8.8.8:53`), and the public API
   no longer accepts a custom nameserver.
 
+Added:
+* Add `primary_slo_reference` and `related_slo_references` blocks to
+  `chronosphere_command_center_group`. `primary_slo_reference` identifies the
+  group's primary tracked SLO, and `related_slo_references` lists its
+  secondary SLOs.
+
+Deprecated:
+* Deprecate the `group_slo_reference` block on `chronosphere_command_center_group`
+  in favor of `primary_slo_reference`. Both blocks are written to the API's
+  `primary_slo_reference` field, so existing configurations keep working
+  unchanged; migrating is a matter of renaming the block. `group_slo_reference`
+  will be removed in a future release.
+
 ## v1.36.0
 
 Added:
