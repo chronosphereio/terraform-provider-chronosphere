@@ -31,6 +31,9 @@ type ConfigunstableNotebook struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
+	// labels
+	Labels map[string]string `json:"labels,omitempty"`
+
 	// The name of the Notebook. You can modify this value after the Notebook is created.
 	Name string `json:"name,omitempty"`
 

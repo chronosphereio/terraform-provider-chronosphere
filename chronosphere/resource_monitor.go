@@ -200,8 +200,8 @@ func monitorScheduleFromModel(s *models.MonitorSchedule) (*intschema.MonitorSche
 
 func monitorWeeklyScheduleToModel(
 	ranges []intschema.MonitorScheduleRange,
-) (*models.ScheduleWeeklySchedule, error) {
-	byDay := make(map[string][]*models.ScheduleDayTimeRange)
+) (*models.MonitorScheduleWeeklySchedule, error) {
+	byDay := make(map[string][]*models.ScheduleScheduleDayTimeRange)
 	for _, r := range ranges {
 		day := strings.ToLower(r.Day)
 		if _, ok := validDays[day]; !ok {
@@ -209,7 +209,7 @@ func monitorWeeklyScheduleToModel(
 				"unknown schedule day %q, must be one of %v",
 				r.Day, sortedKeys(validDays))
 		}
-		byDay[day] = append(byDay[day], &models.ScheduleDayTimeRange{
+		byDay[day] = append(byDay[day], &models.ScheduleScheduleDayTimeRange{
 			StartHhMm: r.Start,
 			EndHhMm:   r.End,
 		})
@@ -232,7 +232,7 @@ func monitorWeeklyScheduleToModel(
 			Ranges: rs,
 		}
 	}
-	return &models.ScheduleWeeklySchedule{
+	return &models.MonitorScheduleWeeklySchedule{
 		Monday:    load(monday),
 		Tuesday:   load(tuesday),
 		Wednesday: load(wednesday),
@@ -244,7 +244,7 @@ func monitorWeeklyScheduleToModel(
 }
 
 func monitorWeeklyScheduleFromModel(
-	w *models.ScheduleWeeklySchedule,
+	w *models.MonitorScheduleWeeklySchedule,
 ) ([]intschema.MonitorScheduleRange, error) {
 	if w == nil {
 		return nil, nil

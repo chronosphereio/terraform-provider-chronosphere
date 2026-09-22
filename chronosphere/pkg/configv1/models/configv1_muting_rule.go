@@ -28,7 +28,9 @@ type Configv1MutingRule struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
-	// Required. Timestamp of when the muting rule stops being active.
+	// Required. Timestamp of when the muting rule stops being active. On a
+	// recurring rule this bounds the recurrence as a whole rather than any one
+	// occurrence.
 	// Format: date-time
 	EndsAt strfmt.DateTime `json:"ends_at,omitempty"`
 
@@ -39,6 +41,9 @@ type Configv1MutingRule struct {
 
 	// The name of the MutingRule. You can modify this value after the MutingRule is created.
 	Name string `json:"name,omitempty"`
+
+	// recurrence
+	Recurrence *MutingRuleRecurrence `json:"recurrence,omitempty"`
 
 	// The unique identifier of the MutingRule. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the MutingRule is created.
 	Slug string `json:"slug,omitempty"`
@@ -67,6 +72,10 @@ func (m *Configv1MutingRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLabelMatchers(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRecurrence(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -134,6 +143,25 @@ func (m *Configv1MutingRule) validateLabelMatchers(formats strfmt.Registry) erro
 	return nil
 }
 
+func (m *Configv1MutingRule) validateRecurrence(formats strfmt.Registry) error {
+	if swag.IsZero(m.Recurrence) { // not required
+		return nil
+	}
+
+	if m.Recurrence != nil {
+		if err := m.Recurrence.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("recurrence")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("recurrence")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Configv1MutingRule) validateStartsAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.StartsAt) { // not required
 		return nil
@@ -167,6 +195,10 @@ func (m *Configv1MutingRule) ContextValidate(ctx context.Context, formats strfmt
 	}
 
 	if err := m.contextValidateLabelMatchers(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateRecurrence(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -204,6 +236,22 @@ func (m *Configv1MutingRule) contextValidateLabelMatchers(ctx context.Context, f
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *Configv1MutingRule) contextValidateRecurrence(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Recurrence != nil {
+		if err := m.Recurrence.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("recurrence")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("recurrence")
+			}
+			return err
+		}
 	}
 
 	return nil
