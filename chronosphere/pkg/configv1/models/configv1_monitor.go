@@ -39,6 +39,10 @@ type Configv1Monitor struct {
 	// Format: date-time
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
+	// Optional description of the monitor. Markdown is supported when rendered
+	// in the Chronosphere app.
+	Description string `json:"description,omitempty"`
+
 	// Graphite query to evaluate for the alert. If set, no other queries can be set.
 	// Example: sumSeries(stats.timers.*.mean_90)
 	GraphiteQuery string `json:"graphite_query,omitempty"`

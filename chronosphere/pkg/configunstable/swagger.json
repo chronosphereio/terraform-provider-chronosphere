@@ -1429,6 +1429,12 @@
         },
         "collection": {
           "$ref": "#/definitions/configv1CollectionReference"
+        },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
         }
       },
       "type": "object"

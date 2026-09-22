@@ -1817,7 +1817,33 @@
           "type": "string"
         },
         "weekly_schedule": {
-          "$ref": "#/definitions/ScheduleWeeklySchedule"
+          "$ref": "#/definitions/MonitorScheduleWeeklySchedule"
+        }
+      },
+      "type": "object"
+    },
+    "MonitorScheduleWeeklySchedule": {
+      "properties": {
+        "monday": {
+          "$ref": "#/definitions/ScheduleScheduleDay"
+        },
+        "tuesday": {
+          "$ref": "#/definitions/ScheduleScheduleDay"
+        },
+        "wednesday": {
+          "$ref": "#/definitions/ScheduleScheduleDay"
+        },
+        "thursday": {
+          "$ref": "#/definitions/ScheduleScheduleDay"
+        },
+        "friday": {
+          "$ref": "#/definitions/ScheduleScheduleDay"
+        },
+        "saturday": {
+          "$ref": "#/definitions/ScheduleScheduleDay"
+        },
+        "sunday": {
+          "$ref": "#/definitions/ScheduleScheduleDay"
         }
       },
       "type": "object"
@@ -1866,6 +1892,58 @@
         "signal_per_series": {
           "description": "If set to `true`, each series will have its own signal. Cannot be used with\n`label_names`.",
           "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "MutingRuleRecurrence": {
+      "description": "Recurrence makes a muting rule mute on a repeating weekly schedule rather\nthan continuously.\n",
+      "properties": {
+        "timezone": {
+          "description": "Required. The timezone the time ranges are interpreted in, as an IANA name\nsuch as `\"America/New_York\"`. Ranges are matched against wall-clock time in\nthis zone, so they keep their local meaning across daylight saving changes.",
+          "type": "string"
+        },
+        "weekly_schedule": {
+          "$ref": "#/definitions/MutingRuleRecurrenceWeeklySchedule"
+        }
+      },
+      "type": "object"
+    },
+    "MutingRuleRecurrenceTimeRange": {
+      "properties": {
+        "start_hh_mm": {
+          "description": "Start time in the format `\"\u003chour\u003e:\u003cminute\u003e\"`. For example, `\"22:00\"`.",
+          "type": "string"
+        },
+        "end_hh_mm": {
+          "description": "End time in the format `\"\u003chour\u003e:\u003cminute\u003e\"`. For example, `\"06:00\"`.\nUse `\"24:00\"` for the end of the day: a window that crosses midnight is\nexpressed as one range ending at `\"24:00\"` and another on the following\nday starting at `\"00:00\"`.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MutingRuleRecurrenceWeeklySchedule": {
+      "properties": {
+        "monday": {
+          "$ref": "#/definitions/RecurrenceDaySchedule"
+        },
+        "tuesday": {
+          "$ref": "#/definitions/RecurrenceDaySchedule"
+        },
+        "wednesday": {
+          "$ref": "#/definitions/RecurrenceDaySchedule"
+        },
+        "thursday": {
+          "$ref": "#/definitions/RecurrenceDaySchedule"
+        },
+        "friday": {
+          "$ref": "#/definitions/RecurrenceDaySchedule"
+        },
+        "saturday": {
+          "$ref": "#/definitions/RecurrenceDaySchedule"
+        },
+        "sunday": {
+          "$ref": "#/definitions/RecurrenceDaySchedule"
         }
       },
       "type": "object"
@@ -2105,6 +2183,18 @@
         "EXECUTION_MODE_SYNCHRONIZED"
       ],
       "type": "string"
+    },
+    "RecurrenceDaySchedule": {
+      "properties": {
+        "ranges": {
+          "description": "The time ranges during which the rule mutes on this day. Ranges must not\noverlap.",
+          "items": {
+            "$ref": "#/definitions/MutingRuleRecurrenceTimeRange"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
     },
     "ReplaceFieldMappedValue": {
       "description": "MappedValue is the configuration for mapped value replace mode.",
@@ -2482,19 +2572,6 @@
       ],
       "type": "string"
     },
-    "ScheduleDayTimeRange": {
-      "properties": {
-        "start_hh_mm": {
-          "description": "Start time in the in format `\"\u003chour\u003e:\u003cminute\u003e\"`. For example, `\"15:30\"`.",
-          "type": "string"
-        },
-        "end_hh_mm": {
-          "description": "End time in the in format `\"\u003chour\u003e:\u003cminute\u003e\"`. For example, `\"15:30\"`.",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "ScheduleScheduleDay": {
       "properties": {
         "active": {
@@ -2503,35 +2580,22 @@
         "ranges": {
           "description": "The time ranges that the monitor is active on this day. Required if `active`\nis set to `ONLY_DURING_RANGES`. Otherwise, this field must be empty.",
           "items": {
-            "$ref": "#/definitions/ScheduleDayTimeRange"
+            "$ref": "#/definitions/ScheduleScheduleDayTimeRange"
           },
           "type": "array"
         }
       },
       "type": "object"
     },
-    "ScheduleWeeklySchedule": {
+    "ScheduleScheduleDayTimeRange": {
       "properties": {
-        "monday": {
-          "$ref": "#/definitions/ScheduleScheduleDay"
+        "start_hh_mm": {
+          "description": "Start time in the in format `\"\u003chour\u003e:\u003cminute\u003e\"`. For example, `\"15:30\"`.",
+          "type": "string"
         },
-        "tuesday": {
-          "$ref": "#/definitions/ScheduleScheduleDay"
-        },
-        "wednesday": {
-          "$ref": "#/definitions/ScheduleScheduleDay"
-        },
-        "thursday": {
-          "$ref": "#/definitions/ScheduleScheduleDay"
-        },
-        "friday": {
-          "$ref": "#/definitions/ScheduleScheduleDay"
-        },
-        "saturday": {
-          "$ref": "#/definitions/ScheduleScheduleDay"
-        },
-        "sunday": {
-          "$ref": "#/definitions/ScheduleScheduleDay"
+        "end_hh_mm": {
+          "description": "End time in the in format `\"\u003chour\u003e:\u003cminute\u003e\"`. For example, `\"15:30\"`.",
+          "type": "string"
         }
       },
       "type": "object"
@@ -3137,6 +3201,7 @@
     },
     "SyntheticTestTestLocation": {
       "enum": [
+        "GCP_US_LOS_ANGELES",
         "GCP_US_OREGON",
         "GCP_US_VIRGINIA",
         "GCP_BR_SAO_PAULO",
@@ -6391,6 +6456,10 @@
           "readOnly": true,
           "type": "string"
         },
+        "description": {
+          "description": "Optional description of the monitor. Markdown is supported when rendered\nin the Chronosphere app.",
+          "type": "string"
+        },
         "bucket_slug": {
           "description": "Slug of the bucket the monitor belongs to. Required if `collection_slug` isn't\nset.",
           "type": "string"
@@ -6523,13 +6592,16 @@
           "type": "string"
         },
         "ends_at": {
-          "description": "Required. Timestamp of when the muting rule stops being active.",
+          "description": "Required. Timestamp of when the muting rule stops being active. On a\nrecurring rule this bounds the recurrence as a whole rather than any one\noccurrence.",
           "format": "date-time",
           "type": "string"
         },
         "comment": {
           "description": "Descriptive comment that explains why the muting rule was created.",
           "type": "string"
+        },
+        "recurrence": {
+          "$ref": "#/definitions/MutingRuleRecurrence"
         }
       },
       "type": "object"
@@ -13828,6 +13900,16 @@
             "in": "query",
             "name": "name_contains",
             "type": "string"
+          },
+          {
+            "collectionFormat": "multi",
+            "description": "Filter returned monitors by their labels. Each entry is `name=value` or\n`name!=value`, for example `team=payments` or `team!=payments`; the value may be\ndouble-quoted. `=~` and `!~` are not accepted. A monitor is returned only if every\nentry holds for it: `name=value` requires the monitor to carry that label with that\nvalue (it may carry other labels too), and `name!=value` excludes monitors whose\nlabel has that value. With an empty value, `name=` matches monitors that do not have\nthe label and `name!=` matches monitors that have it with any value. Unlike the\nother list filters, whose values are OR'd, entries here are AND'd.",
+            "in": "query",
+            "items": {
+              "type": "string"
+            },
+            "name": "label_matchers",
+            "type": "array"
           }
         ],
         "responses": {
