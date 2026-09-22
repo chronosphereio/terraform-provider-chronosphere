@@ -5,8 +5,7 @@
 Added:
 * Add the `chronosphere_metric_name_active_series_limit` resource, which caps
   the number of active time series accepted for a single metric name over the
-  active series rolling window. Only one limit may exist per metric name. This
-  resource is backed by the unstable config API.
+  active series rolling window. Only one limit may exist per metric name.
 
 Removed:
 * Remove support for custom DNS server in DNS test block of `chronosphere_synthetic_test`.

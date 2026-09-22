@@ -3,12 +3,12 @@
 page_title: "chronosphere_metric_name_active_series_limit Resource - chronosphere"
 subcategory: ""
 description: |-
-  A per-metric-name cap on the number of active time series accepted over the active time series rolling window. This resource is backed by Chronosphere's unstable config API and is subject to breaking change without notice.
+  A per-metric-name cap on the number of active time series accepted over the active time series rolling window.
 ---
 
 # chronosphere_metric_name_active_series_limit (Resource)
 
-A per-metric-name cap on the number of active time series accepted over the active time series rolling window. This resource is backed by Chronosphere's unstable config API and is subject to breaking change without notice.
+A per-metric-name cap on the number of active time series accepted over the active time series rolling window.
 
 ## Example Usage
 

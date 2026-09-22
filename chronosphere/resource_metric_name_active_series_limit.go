@@ -21,7 +21,7 @@ import (
 	"go.uber.org/atomic"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
@@ -29,7 +29,7 @@ func resourceMetricNameActiveSeriesLimit() *schema.Resource {
 	r := newGenericResource(
 		"metric_name_active_series_limit",
 		metricNameActiveSeriesLimitConverter{},
-		generatedUnstableMetricNameActiveSeriesLimit{},
+		generatedMetricNameActiveSeriesLimit{},
 	)
 	return &schema.Resource{
 		CreateContext: r.CreateContext,
@@ -37,7 +37,7 @@ func resourceMetricNameActiveSeriesLimit() *schema.Resource {
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
 		Description: "A per-metric-name cap on the number of active time series accepted " +
-			"over the active time series rolling window. " + unstableAPIWarning,
+			"over the active time series rolling window.",
 		Schema:        tfschema.MetricNameActiveSeriesLimit,
 		CustomizeDiff: r.ValidateDryRun(&MetricNameActiveSeriesLimitDryRunCount),
 		Importer: &schema.ResourceImporter{
@@ -53,8 +53,8 @@ type metricNameActiveSeriesLimitConverter struct{}
 
 func (metricNameActiveSeriesLimitConverter) toModel(
 	l *intschema.MetricNameActiveSeriesLimit,
-) (*models.ConfigunstableMetricNameActiveSeriesLimit, error) {
-	return &models.ConfigunstableMetricNameActiveSeriesLimit{
+) (*models.Configv1MetricNameActiveSeriesLimit, error) {
+	return &models.Configv1MetricNameActiveSeriesLimit{
 		Name:       l.Name,
 		Slug:       l.Slug,
 		MetricName: l.MetricName,
@@ -65,7 +65,7 @@ func (metricNameActiveSeriesLimitConverter) toModel(
 }
 
 func (metricNameActiveSeriesLimitConverter) fromModel(
-	m *models.ConfigunstableMetricNameActiveSeriesLimit,
+	m *models.Configv1MetricNameActiveSeriesLimit,
 ) (*intschema.MetricNameActiveSeriesLimit, error) {
 	maxActiveSeries, err := parseStringToInt64(m.MaxActiveSeries, "max_active_series")
 	if err != nil {

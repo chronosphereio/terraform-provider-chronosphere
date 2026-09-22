@@ -442,7 +442,7 @@ var Resources = mustValidate([]Resource{
 	{
 		Name:   "metric_name_active_series_limit",
 		Entity: "MetricNameActiveSeriesLimit",
-		API:    Unstable,
+		API:    V1,
 		Schema: tfschema.MetricNameActiveSeriesLimit,
 	},
 	{
