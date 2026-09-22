@@ -13,20 +13,20 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableCreateMetricNameActiveSeriesLimitRequest configunstable create metric name active series limit request
+// Configv1CreateMetricNameActiveSeriesLimitRequest configv1 create metric name active series limit request
 //
-// swagger:model configunstableCreateMetricNameActiveSeriesLimitRequest
-type ConfigunstableCreateMetricNameActiveSeriesLimitRequest struct {
+// swagger:model configv1CreateMetricNameActiveSeriesLimitRequest
+type Configv1CreateMetricNameActiveSeriesLimitRequest struct {
 
 	// If `true`, validates the specified configuration without creating the MetricNameActiveSeriesLimit. If the specified configuration is valid, the endpoint returns a partial response without the MetricNameActiveSeriesLimit. If the specified configuration is invalid, the endpoint returns an error.
 	DryRun bool `json:"dry_run,omitempty"`
 
 	// metric name active series limit
-	MetricNameActiveSeriesLimit *ConfigunstableMetricNameActiveSeriesLimit `json:"metric_name_active_series_limit,omitempty"`
+	MetricNameActiveSeriesLimit *Configv1MetricNameActiveSeriesLimit `json:"metric_name_active_series_limit,omitempty"`
 }
 
-// Validate validates this configunstable create metric name active series limit request
-func (m *ConfigunstableCreateMetricNameActiveSeriesLimitRequest) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 create metric name active series limit request
+func (m *Configv1CreateMetricNameActiveSeriesLimitRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateMetricNameActiveSeriesLimit(formats); err != nil {
@@ -39,7 +39,7 @@ func (m *ConfigunstableCreateMetricNameActiveSeriesLimitRequest) Validate(format
 	return nil
 }
 
-func (m *ConfigunstableCreateMetricNameActiveSeriesLimitRequest) validateMetricNameActiveSeriesLimit(formats strfmt.Registry) error {
+func (m *Configv1CreateMetricNameActiveSeriesLimitRequest) validateMetricNameActiveSeriesLimit(formats strfmt.Registry) error {
 	if swag.IsZero(m.MetricNameActiveSeriesLimit) { // not required
 		return nil
 	}
@@ -58,8 +58,8 @@ func (m *ConfigunstableCreateMetricNameActiveSeriesLimitRequest) validateMetricN
 	return nil
 }
 
-// ContextValidate validate this configunstable create metric name active series limit request based on the context it is used
-func (m *ConfigunstableCreateMetricNameActiveSeriesLimitRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 create metric name active series limit request based on the context it is used
+func (m *Configv1CreateMetricNameActiveSeriesLimitRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateMetricNameActiveSeriesLimit(ctx, formats); err != nil {
@@ -72,7 +72,7 @@ func (m *ConfigunstableCreateMetricNameActiveSeriesLimitRequest) ContextValidate
 	return nil
 }
 
-func (m *ConfigunstableCreateMetricNameActiveSeriesLimitRequest) contextValidateMetricNameActiveSeriesLimit(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1CreateMetricNameActiveSeriesLimitRequest) contextValidateMetricNameActiveSeriesLimit(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.MetricNameActiveSeriesLimit != nil {
 		if err := m.MetricNameActiveSeriesLimit.ContextValidate(ctx, formats); err != nil {
@@ -89,7 +89,7 @@ func (m *ConfigunstableCreateMetricNameActiveSeriesLimitRequest) contextValidate
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableCreateMetricNameActiveSeriesLimitRequest) MarshalBinary() ([]byte, error) {
+func (m *Configv1CreateMetricNameActiveSeriesLimitRequest) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -97,8 +97,8 @@ func (m *ConfigunstableCreateMetricNameActiveSeriesLimitRequest) MarshalBinary()
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableCreateMetricNameActiveSeriesLimitRequest) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableCreateMetricNameActiveSeriesLimitRequest
+func (m *Configv1CreateMetricNameActiveSeriesLimitRequest) UnmarshalBinary(b []byte) error {
+	var res Configv1CreateMetricNameActiveSeriesLimitRequest
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
