@@ -7,6 +7,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/clienterror"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/command_center_group"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/metric_name_active_series_limit"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
@@ -2192,6 +2193,78 @@ func ListUnstableCommandCenterGroupsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.CommandCenterGroups {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListUnstableMetricNameActiveSeriesLimits(
+	ctx context.Context,
+	client *configunstable.Client,
+) ([]*configunstablemodels.ConfigunstableMetricNameActiveSeriesLimit, error) {
+	return ListUnstableMetricNameActiveSeriesLimitsByFilter(ctx, client, Filter{})
+}
+
+func ListUnstableMetricNameActiveSeriesLimitsBySlugs(
+	ctx context.Context,
+	client *configunstable.Client,
+	slugs []string,
+) ([]*configunstablemodels.ConfigunstableMetricNameActiveSeriesLimit, error) {
+	return ListUnstableMetricNameActiveSeriesLimitsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListUnstableMetricNameActiveSeriesLimitsByNames(
+	ctx context.Context,
+	client *configunstable.Client,
+	names []string,
+) ([]*configunstablemodels.ConfigunstableMetricNameActiveSeriesLimit, error) {
+	return ListUnstableMetricNameActiveSeriesLimitsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListUnstableMetricNameActiveSeriesLimitsByFilter(
+	ctx context.Context,
+	client *configunstable.Client,
+	f Filter,
+	opts ...func(*metric_name_active_series_limit.ListMetricNameActiveSeriesLimitsParams),
+) ([]*configunstablemodels.ConfigunstableMetricNameActiveSeriesLimit, error) {
+	if !unstable.Enabled() {
+		return nil, nil
+	}
+	var (
+		nextToken string
+		result    []*configunstablemodels.ConfigunstableMetricNameActiveSeriesLimit
+	)
+	for {
+		p := &metric_name_active_series_limit.ListMetricNameActiveSeriesLimitsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.MetricNameActiveSeriesLimit.ListMetricNameActiveSeriesLimits(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.MetricNameActiveSeriesLimits {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {

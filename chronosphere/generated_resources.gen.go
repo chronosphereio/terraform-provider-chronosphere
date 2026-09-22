@@ -6,6 +6,7 @@ import (
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/command_center_group"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/metric_name_active_series_limit"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/query_resource_pools"
 	configunstablemodels "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/azure_metrics_integration"
@@ -2788,6 +2789,85 @@ func (generatedUnstableCommandCenterGroup) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigUnstable.CommandCenterGroup.DeleteCommandCenterGroup(req)
+	return err
+}
+
+type generatedUnstableMetricNameActiveSeriesLimit struct{}
+
+func (generatedUnstableMetricNameActiveSeriesLimit) slugOf(m *configunstablemodels.ConfigunstableMetricNameActiveSeriesLimit) string {
+	return m.Slug
+}
+
+func (generatedUnstableMetricNameActiveSeriesLimit) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableMetricNameActiveSeriesLimit,
+	dryRun bool,
+) (string, error) {
+	req := &metric_name_active_series_limit.CreateMetricNameActiveSeriesLimitParams{
+		Context: ctx,
+		Body: &configunstablemodels.ConfigunstableCreateMetricNameActiveSeriesLimitRequest{
+			MetricNameActiveSeriesLimit: m,
+			DryRun:                      dryRun,
+		},
+	}
+	resp, err := clients.ConfigUnstable.MetricNameActiveSeriesLimit.CreateMetricNameActiveSeriesLimit(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.MetricNameActiveSeriesLimit
+	if e == nil {
+		return "", nil
+	}
+	return (generatedUnstableMetricNameActiveSeriesLimit{}).slugOf(e), nil
+}
+
+func (generatedUnstableMetricNameActiveSeriesLimit) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configunstablemodels.ConfigunstableMetricNameActiveSeriesLimit, error) {
+	req := &metric_name_active_series_limit.ReadMetricNameActiveSeriesLimitParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigUnstable.MetricNameActiveSeriesLimit.ReadMetricNameActiveSeriesLimit(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.MetricNameActiveSeriesLimit, nil
+}
+
+func (generatedUnstableMetricNameActiveSeriesLimit) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configunstablemodels.ConfigunstableMetricNameActiveSeriesLimit,
+	params updateParams,
+) error {
+	req := &metric_name_active_series_limit.UpdateMetricNameActiveSeriesLimitParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configunstablemodels.ConfigUnstableUpdateMetricNameActiveSeriesLimitBody{
+
+			MetricNameActiveSeriesLimit: m,
+			CreateIfMissing:             params.createIfMissing,
+			DryRun:                      params.dryRun,
+		},
+	}
+	_, err := clients.ConfigUnstable.MetricNameActiveSeriesLimit.UpdateMetricNameActiveSeriesLimit(req)
+	return err
+}
+func (generatedUnstableMetricNameActiveSeriesLimit) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &metric_name_active_series_limit.DeleteMetricNameActiveSeriesLimitParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigUnstable.MetricNameActiveSeriesLimit.DeleteMetricNameActiveSeriesLimit(req)
 	return err
 }
 

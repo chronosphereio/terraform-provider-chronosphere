@@ -440,6 +440,12 @@ var Resources = mustValidate([]Resource{
 		Schema: tfschema.CommandCenterGroup,
 	},
 	{
+		Name:   "metric_name_active_series_limit",
+		Entity: "MetricNameActiveSeriesLimit",
+		API:    Unstable,
+		Schema: tfschema.MetricNameActiveSeriesLimit,
+	},
+	{
 		Name:   "synthetic_test",
 		Entity: "SyntheticTest",
 		API:    V1,
