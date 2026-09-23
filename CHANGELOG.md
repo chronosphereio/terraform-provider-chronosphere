@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.37.0
+
 Added:
 * Add `description` field to `chronosphere_monitor`.
 * Add the `chronosphere_metric_name_active_series_limit` resource, which caps
