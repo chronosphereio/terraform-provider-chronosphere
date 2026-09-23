@@ -25,6 +25,11 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
+// MetricNameActiveSeriesLimitFromModel maps an API model to the intschema model.
+func MetricNameActiveSeriesLimitFromModel(m *models.Configv1MetricNameActiveSeriesLimit) (*intschema.MetricNameActiveSeriesLimit, error) {
+	return (metricNameActiveSeriesLimitConverter{}).fromModel(m)
+}
+
 func resourceMetricNameActiveSeriesLimit() *schema.Resource {
 	r := newGenericResource(
 		"metric_name_active_series_limit",
