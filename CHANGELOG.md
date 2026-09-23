@@ -3,6 +3,7 @@
 ## UNRELEASED
 
 Added:
+* Add `description` field to `chronosphere_monitor`.
 * Add the `chronosphere_metric_name_active_series_limit` resource, which caps
   the number of active time series accepted for a single metric name over the
   active series rolling window. Only one limit may exist per metric name.

@@ -37,6 +37,11 @@ var Monitor = map[string]*schema.Schema{
 		Required:    true,
 		Description: "Display name of the monitor.",
 	},
+	"description": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Free-form description of the monitor.",
+	},
 	"bucket_id": {
 		Type:         schema.TypeString,
 		Optional:     true,
