@@ -31,6 +31,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_ingest_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_retention_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/metric_name_active_series_limit"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/muting_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
@@ -115,6 +116,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.LogIngestConfig = log_ingest_config.New(transport, formats)
 	cli.LogRetentionConfig = log_retention_config.New(transport, formats)
 	cli.MappingRule = mapping_rule.New(transport, formats)
+	cli.MetricNameActiveSeriesLimit = metric_name_active_series_limit.New(transport, formats)
 	cli.Monitor = monitor.New(transport, formats)
 	cli.MutingRule = muting_rule.New(transport, formats)
 	cli.NotificationPolicy = notification_policy.New(transport, formats)
@@ -220,6 +222,8 @@ type ConfigV1API struct {
 
 	MappingRule mapping_rule.ClientService
 
+	MetricNameActiveSeriesLimit metric_name_active_series_limit.ClientService
+
 	Monitor monitor.ClientService
 
 	MutingRule muting_rule.ClientService
@@ -285,6 +289,7 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.LogIngestConfig.SetTransport(transport)
 	c.LogRetentionConfig.SetTransport(transport)
 	c.MappingRule.SetTransport(transport)
+	c.MetricNameActiveSeriesLimit.SetTransport(transport)
 	c.Monitor.SetTransport(transport)
 	c.MutingRule.SetTransport(transport)
 	c.NotificationPolicy.SetTransport(transport)

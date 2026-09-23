@@ -52,7 +52,7 @@ func (a *Client) CreateMetricNameActiveSeriesLimit(params *CreateMetricNameActiv
 	op := &runtime.ClientOperation{
 		ID:                 "CreateMetricNameActiveSeriesLimit",
 		Method:             "POST",
-		PathPattern:        "/api/unstable/config/metric-name-active-series-limits",
+		PathPattern:        "/api/v1/config/metric-name-active-series-limits",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -89,7 +89,7 @@ func (a *Client) DeleteMetricNameActiveSeriesLimit(params *DeleteMetricNameActiv
 	op := &runtime.ClientOperation{
 		ID:                 "DeleteMetricNameActiveSeriesLimit",
 		Method:             "DELETE",
-		PathPattern:        "/api/unstable/config/metric-name-active-series-limits/{slug}",
+		PathPattern:        "/api/v1/config/metric-name-active-series-limits/{slug}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -126,7 +126,7 @@ func (a *Client) ListMetricNameActiveSeriesLimits(params *ListMetricNameActiveSe
 	op := &runtime.ClientOperation{
 		ID:                 "ListMetricNameActiveSeriesLimits",
 		Method:             "GET",
-		PathPattern:        "/api/unstable/config/metric-name-active-series-limits",
+		PathPattern:        "/api/v1/config/metric-name-active-series-limits",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -163,7 +163,7 @@ func (a *Client) ReadMetricNameActiveSeriesLimit(params *ReadMetricNameActiveSer
 	op := &runtime.ClientOperation{
 		ID:                 "ReadMetricNameActiveSeriesLimit",
 		Method:             "GET",
-		PathPattern:        "/api/unstable/config/metric-name-active-series-limits/{slug}",
+		PathPattern:        "/api/v1/config/metric-name-active-series-limits/{slug}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
@@ -200,7 +200,7 @@ func (a *Client) UpdateMetricNameActiveSeriesLimit(params *UpdateMetricNameActiv
 	op := &runtime.ClientOperation{
 		ID:                 "UpdateMetricNameActiveSeriesLimit",
 		Method:             "PUT",
-		PathPattern:        "/api/unstable/config/metric-name-active-series-limits/{slug}",
+		PathPattern:        "/api/v1/config/metric-name-active-series-limits/{slug}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},

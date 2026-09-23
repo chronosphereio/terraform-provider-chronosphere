@@ -22,6 +22,7 @@ type Monitor struct {
 	Query                MonitorQuery                 `intschema:"query,list_encoded_object"`
 	SeriesConditions     MonitorSeriesConditions      `intschema:"series_conditions,list_encoded_object"`
 	Annotations          map[string]string            `intschema:"annotations,optional"`
+	Description          string                       `intschema:"description,optional"`
 	Interval             string                       `intschema:"interval,optional"`
 	Labels               map[string]string            `intschema:"labels,optional"`
 	NotificationTemplate *MonitorNotificationTemplate `intschema:"notification_template,optional,list_encoded_object"`

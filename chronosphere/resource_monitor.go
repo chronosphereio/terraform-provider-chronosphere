@@ -127,6 +127,7 @@ func (monitorConverter) toModel(
 		BucketSlug:             m.BucketId.Slug(),
 		CollectionSlug:         collSlug,
 		Collection:             collRef,
+		Description:            m.Description,
 		GraphiteQuery:          m.Query.GraphiteExpr,
 		IntervalSecs:           intervalSecs,
 		Labels:                 m.Labels,
@@ -151,6 +152,7 @@ func (monitorConverter) fromModel(
 	}
 	return &intschema.Monitor{
 		Name:                 m.Name,
+		Description:          m.Description,
 		Slug:                 m.Slug,
 		BucketId:             tfid.Slug(m.BucketSlug),
 		CollectionId:         tfid.Slug(collectionIDFromRef(m.CollectionSlug, m.Collection)),

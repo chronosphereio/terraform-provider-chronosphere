@@ -15,7 +15,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/link_template"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/log_primary_key"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/metric_name_active_series_limit"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/noop_entity"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/notebook"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/object_discovery_rule"
@@ -75,7 +74,6 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 	cli.Dashboard = dashboard.New(transport, formats)
 	cli.LinkTemplate = link_template.New(transport, formats)
 	cli.LogPrimaryKey = log_primary_key.New(transport, formats)
-	cli.MetricNameActiveSeriesLimit = metric_name_active_series_limit.New(transport, formats)
 	cli.NoopEntity = noop_entity.New(transport, formats)
 	cli.Notebook = notebook.New(transport, formats)
 	cli.ObjectDiscoveryRule = object_discovery_rule.New(transport, formats)
@@ -140,8 +138,6 @@ type ConfigUnstableAPI struct {
 
 	LogPrimaryKey log_primary_key.ClientService
 
-	MetricNameActiveSeriesLimit metric_name_active_series_limit.ClientService
-
 	NoopEntity noop_entity.ClientService
 
 	Notebook notebook.ClientService
@@ -173,7 +169,6 @@ func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Dashboard.SetTransport(transport)
 	c.LinkTemplate.SetTransport(transport)
 	c.LogPrimaryKey.SetTransport(transport)
-	c.MetricNameActiveSeriesLimit.SetTransport(transport)
 	c.NoopEntity.SetTransport(transport)
 	c.Notebook.SetTransport(transport)
 	c.ObjectDiscoveryRule.SetTransport(transport)

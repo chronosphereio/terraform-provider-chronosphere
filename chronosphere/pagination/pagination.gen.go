@@ -29,6 +29,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_ingest_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_retention_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/metric_name_active_series_limit"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notifier"
@@ -1162,6 +1163,75 @@ func ListMappingRulesByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.MappingRules {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListMetricNameActiveSeriesLimits(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1MetricNameActiveSeriesLimit, error) {
+	return ListMetricNameActiveSeriesLimitsByFilter(ctx, client, Filter{})
+}
+
+func ListMetricNameActiveSeriesLimitsBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1MetricNameActiveSeriesLimit, error) {
+	return ListMetricNameActiveSeriesLimitsByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListMetricNameActiveSeriesLimitsByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1MetricNameActiveSeriesLimit, error) {
+	return ListMetricNameActiveSeriesLimitsByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListMetricNameActiveSeriesLimitsByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*metric_name_active_series_limit.ListMetricNameActiveSeriesLimitsParams),
+) ([]*configv1models.Configv1MetricNameActiveSeriesLimit, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1MetricNameActiveSeriesLimit
+	)
+	for {
+		p := &metric_name_active_series_limit.ListMetricNameActiveSeriesLimitsParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.MetricNameActiveSeriesLimit.ListMetricNameActiveSeriesLimits(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.MetricNameActiveSeriesLimits {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {

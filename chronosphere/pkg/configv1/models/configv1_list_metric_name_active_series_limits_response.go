@@ -14,20 +14,20 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ConfigunstableListMetricNameActiveSeriesLimitsResponse configunstable list metric name active series limits response
+// Configv1ListMetricNameActiveSeriesLimitsResponse configv1 list metric name active series limits response
 //
-// swagger:model configunstableListMetricNameActiveSeriesLimitsResponse
-type ConfigunstableListMetricNameActiveSeriesLimitsResponse struct {
+// swagger:model configv1ListMetricNameActiveSeriesLimitsResponse
+type Configv1ListMetricNameActiveSeriesLimitsResponse struct {
 
 	// metric name active series limits
-	MetricNameActiveSeriesLimits []*ConfigunstableMetricNameActiveSeriesLimit `json:"metric_name_active_series_limits"`
+	MetricNameActiveSeriesLimits []*Configv1MetricNameActiveSeriesLimit `json:"metric_name_active_series_limits"`
 
 	// page
 	Page *Configv1PageResult `json:"page,omitempty"`
 }
 
-// Validate validates this configunstable list metric name active series limits response
-func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) Validate(formats strfmt.Registry) error {
+// Validate validates this configv1 list metric name active series limits response
+func (m *Configv1ListMetricNameActiveSeriesLimitsResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateMetricNameActiveSeriesLimits(formats); err != nil {
@@ -44,7 +44,7 @@ func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) Validate(format
 	return nil
 }
 
-func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) validateMetricNameActiveSeriesLimits(formats strfmt.Registry) error {
+func (m *Configv1ListMetricNameActiveSeriesLimitsResponse) validateMetricNameActiveSeriesLimits(formats strfmt.Registry) error {
 	if swag.IsZero(m.MetricNameActiveSeriesLimits) { // not required
 		return nil
 	}
@@ -70,7 +70,7 @@ func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) validateMetricN
 	return nil
 }
 
-func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) validatePage(formats strfmt.Registry) error {
+func (m *Configv1ListMetricNameActiveSeriesLimitsResponse) validatePage(formats strfmt.Registry) error {
 	if swag.IsZero(m.Page) { // not required
 		return nil
 	}
@@ -89,8 +89,8 @@ func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) validatePage(fo
 	return nil
 }
 
-// ContextValidate validate this configunstable list metric name active series limits response based on the context it is used
-func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this configv1 list metric name active series limits response based on the context it is used
+func (m *Configv1ListMetricNameActiveSeriesLimitsResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateMetricNameActiveSeriesLimits(ctx, formats); err != nil {
@@ -107,7 +107,7 @@ func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) ContextValidate
 	return nil
 }
 
-func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) contextValidateMetricNameActiveSeriesLimits(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ListMetricNameActiveSeriesLimitsResponse) contextValidateMetricNameActiveSeriesLimits(ctx context.Context, formats strfmt.Registry) error {
 
 	for i := 0; i < len(m.MetricNameActiveSeriesLimits); i++ {
 
@@ -127,7 +127,7 @@ func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) contextValidate
 	return nil
 }
 
-func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) contextValidatePage(ctx context.Context, formats strfmt.Registry) error {
+func (m *Configv1ListMetricNameActiveSeriesLimitsResponse) contextValidatePage(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Page != nil {
 		if err := m.Page.ContextValidate(ctx, formats); err != nil {
@@ -144,7 +144,7 @@ func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) contextValidate
 }
 
 // MarshalBinary interface implementation
-func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) MarshalBinary() ([]byte, error) {
+func (m *Configv1ListMetricNameActiveSeriesLimitsResponse) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -152,8 +152,8 @@ func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) MarshalBinary()
 }
 
 // UnmarshalBinary interface implementation
-func (m *ConfigunstableListMetricNameActiveSeriesLimitsResponse) UnmarshalBinary(b []byte) error {
-	var res ConfigunstableListMetricNameActiveSeriesLimitsResponse
+func (m *Configv1ListMetricNameActiveSeriesLimitsResponse) UnmarshalBinary(b []byte) error {
+	var res Configv1ListMetricNameActiveSeriesLimitsResponse
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
