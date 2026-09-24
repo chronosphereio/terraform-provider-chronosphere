@@ -286,7 +286,14 @@ func (r genericResource[M, SV, S]) ValidateDryRunOptions(dryRunCounter *atomic.I
 		} else {
 			err = r.crud.update(ctx, clients, m, updateParams{dryRun: true})
 		}
-		if err != nil && clienterror.IsEntityValidationFailed(err) {
+		// Fail the plan on any HTTP 4xx client error returned by the dry-run
+		// API. These indicate the config the user is trying to apply is
+		// invalid, e.g. a generic 400 "monitor configuration is too large"
+		// (BAD_REQUEST) in addition to the more specific entity-validation
+		// failure (application code 400008). Transient 5xx server errors and
+		// network/transport failures are intentionally not surfaced here so
+		// that a plan is not blocked by unrelated infrastructure issues.
+		if err != nil && clienterror.IsClientError(err) {
 			return fmt.Errorf("dry run validation failed: %w", err)
 		}
 		return nil

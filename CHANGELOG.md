@@ -2,6 +2,15 @@
 
 ## UNRELEASED
 
+Fixed:
+* Dry-run validation during `terraform plan` now fails on any HTTP 4xx client
+  error returned by the API, not only the specific entity-validation failure
+  (application code `400008`). Previously, generic `400 BAD_REQUEST` responses
+  such as `monitor configuration is too large` were silently ignored, allowing
+  invalid configurations to pass `terraform plan`. Transient 5xx server errors
+  and network failures are still ignored so plans are not blocked by unrelated
+  infrastructure issues.
+
 ## v1.37.0
 
 Added:

@@ -163,6 +163,17 @@ func IsNotFound(err error) bool {
 	return StatusCode(err) == http.StatusNotFound
 }
 
+// IsClientError reports whether err represents an HTTP 4xx client error.
+//
+// A 4xx status indicates the request/config the client sent is invalid (e.g. a
+// generic 400 "BAD_REQUEST"), as opposed to a transient 5xx server error or a
+// network/transport failure. This is broader than IsEntityValidationFailed,
+// which only matches the specific application code 400008.
+func IsClientError(err error) bool {
+	code := StatusCode(err)
+	return code >= 400 && code < 500
+}
+
 // TODO: consolidate within Wrap.
 func getAPIErrorCode(err error) (code int32, ok bool) {
 	if p, ok := err.(configV1APIError); ok {
