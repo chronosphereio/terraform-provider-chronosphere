@@ -2,6 +2,17 @@
 
 ## UNRELEASED
 
+Changed:
+* `chronosphere_command_center_group` is now backed by the stable v1 config
+  API instead of the unstable config API. Existing state and configuration
+  carry over unchanged.
+
+Removed:
+* Remove the deprecated `group_slo_reference` block from
+  `chronosphere_command_center_group`. Use `primary_slo_reference` instead;
+  it takes the same nested `slug`. **This is a breaking change**: rename any
+  remaining `group_slo_reference` blocks before upgrading.
+
 ## v1.37.0
 
 Added:

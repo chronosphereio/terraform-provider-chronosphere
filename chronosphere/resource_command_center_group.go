@@ -19,23 +19,28 @@ import (
 	"go.uber.org/atomic"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/sliceutil"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
+
+// CommandCenterGroupFromModel maps an API model to the intschema model.
+func CommandCenterGroupFromModel(m *models.Configv1CommandCenterGroup) (*intschema.CommandCenterGroup, error) {
+	return (commandCenterGroupConverter{}).fromModel(m)
+}
 
 func resourceCommandCenterGroup() *schema.Resource {
 	r := newGenericResource(
 		"command_center_group",
 		commandCenterGroupConverter{},
-		generatedUnstableCommandCenterGroup{},
+		generatedCommandCenterGroup{},
 	)
 	return &schema.Resource{
 		CreateContext: r.CreateContext,
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
-		Description:   "A named group of signals tracked in the command center. " + unstableAPIWarning,
+		Description:   "A named group of signals tracked in the command center.",
 		Schema:        tfschema.CommandCenterGroup,
 		CustomizeDiff: r.ValidateDryRun(&CommandCenterGroupDryRunCount),
 		Importer: &schema.ResourceImporter{
@@ -51,28 +56,22 @@ type commandCenterGroupConverter struct{}
 
 func (commandCenterGroupConverter) toModel(
 	g *intschema.CommandCenterGroup,
-) (*models.ConfigunstableCommandCenterGroup, error) {
-	m := &models.ConfigunstableCommandCenterGroup{
+) (*models.Configv1CommandCenterGroup, error) {
+	m := &models.Configv1CommandCenterGroup{
 		Name:                 g.Name,
 		Slug:                 g.Slug,
-		RelatedSLOReferences: []*models.ConfigunstableSLOReference{},
+		RelatedSLOReferences: []*models.Configv1SLOReference{},
 	}
-	primary := g.PrimarySloReference
-	if primary == nil && g.GroupSloReference != nil {
-		primary = &intschema.CommandCenterGroupPrimarySloReference{
-			Slug: g.GroupSloReference.Slug,
-		}
-	}
-	if primary != nil {
-		m.PrimarySLOReference = &models.ConfigunstableSLOReference{
-			Slug: primary.Slug,
+	if g.PrimarySloReference != nil {
+		m.PrimarySLOReference = &models.Configv1SLOReference{
+			Slug: g.PrimarySloReference.Slug,
 		}
 	}
 	if len(g.RelatedSloReferences) > 0 {
 		m.RelatedSLOReferences = sliceutil.Map(
 			g.RelatedSloReferences,
-			func(r intschema.CommandCenterGroupRelatedSloReferences) *models.ConfigunstableSLOReference {
-				return &models.ConfigunstableSLOReference{Slug: r.Slug}
+			func(r intschema.CommandCenterGroupRelatedSloReferences) *models.Configv1SLOReference {
+				return &models.Configv1SLOReference{Slug: r.Slug}
 			},
 		)
 	}
@@ -80,43 +79,24 @@ func (commandCenterGroupConverter) toModel(
 }
 
 func (commandCenterGroupConverter) fromModel(
-	m *models.ConfigunstableCommandCenterGroup,
+	m *models.Configv1CommandCenterGroup,
 ) (*intschema.CommandCenterGroup, error) {
 	g := &intschema.CommandCenterGroup{
 		Name: m.Name,
 		Slug: m.Slug,
 	}
-	primary := m.PrimarySLOReference
-	if primary == nil {
-		primary = m.GroupSLOReference
-	}
-	if primary != nil {
+	if m.PrimarySLOReference != nil {
 		g.PrimarySloReference = &intschema.CommandCenterGroupPrimarySloReference{
-			Slug: primary.Slug,
+			Slug: m.PrimarySLOReference.Slug,
 		}
 	}
 	if len(m.RelatedSLOReferences) > 0 {
 		g.RelatedSloReferences = sliceutil.Map(
 			m.RelatedSLOReferences,
-			func(r *models.ConfigunstableSLOReference) intschema.CommandCenterGroupRelatedSloReferences {
+			func(r *models.Configv1SLOReference) intschema.CommandCenterGroupRelatedSloReferences {
 				return intschema.CommandCenterGroupRelatedSloReferences{Slug: r.Slug}
 			},
 		)
 	}
 	return g, nil
-}
-
-// The Terraform schema has an equivalent "primary_slo_reference" and a
-// deprecated "group_slo_reference" that are the same field on the server.
-// Take the server value and fold it into whichever block the user has
-// decided to set, avoiding a meaningless diff during "terraform plan".
-func (commandCenterGroupConverter) normalize(config, server *intschema.CommandCenterGroup) {
-	if config.GroupSloReference != nil && config.PrimarySloReference == nil {
-		if server.PrimarySloReference != nil {
-			server.GroupSloReference = &intschema.CommandCenterGroupGroupSloReference{
-				Slug: server.PrimarySloReference.Slug,
-			}
-		}
-		server.PrimarySloReference = nil
-	}
 }

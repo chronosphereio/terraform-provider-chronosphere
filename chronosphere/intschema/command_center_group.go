@@ -16,7 +16,6 @@ var _ tfid.ID // Always use tfid for simplified import generation.
 type CommandCenterGroup struct {
 	Name                 string                                   `intschema:"name"`
 	Slug                 string                                   `intschema:"slug,optional,computed"`
-	GroupSloReference    *CommandCenterGroupGroupSloReference     `intschema:"group_slo_reference,optional,list_encoded_object"`
 	PrimarySloReference  *CommandCenterGroupPrimarySloReference   `intschema:"primary_slo_reference,optional,list_encoded_object"`
 	RelatedSloReferences []CommandCenterGroupRelatedSloReferences `intschema:"related_slo_references,optional"`
 
@@ -62,9 +61,5 @@ type CommandCenterGroupRelatedSloReferences struct {
 }
 
 type CommandCenterGroupPrimarySloReference struct {
-	Slug string `intschema:"slug"`
-}
-
-type CommandCenterGroupGroupSloReference struct {
 	Slug string `intschema:"slug"`
 }
