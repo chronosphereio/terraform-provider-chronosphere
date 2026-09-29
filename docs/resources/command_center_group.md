@@ -3,12 +3,12 @@
 page_title: "chronosphere_command_center_group Resource - chronosphere"
 subcategory: ""
 description: |-
-  A named group of signals tracked in the command center. This resource is backed by Chronosphere's unstable config API and is subject to breaking change without notice.
+  A named group of signals tracked in the command center.
 ---
 
 # chronosphere_command_center_group (Resource)
 
-A named group of signals tracked in the command center. This resource is backed by Chronosphere's unstable config API and is subject to breaking change without notice.
+A named group of signals tracked in the command center.
 
 ## Example Usage
 
@@ -91,7 +91,6 @@ resource "chronosphere_command_center_group" "checkout" {
 
 ### Optional
 
-- `group_slo_reference` (Block List, Max: 1, Deprecated) Deprecated: use `primary_slo_reference` instead. Reference to the primary SLO tracked by this group. (see [below for nested schema](#nestedblock--group_slo_reference))
 - `primary_slo_reference` (Block List, Max: 1) Reference to the primary SLO tracked by this group. (see [below for nested schema](#nestedblock--primary_slo_reference))
 - `related_slo_references` (Block List) Related SLOs tracked by this group, secondary to the primary one. (see [below for nested schema](#nestedblock--related_slo_references))
 - `slug` (String) Stable identifier for the command center group. Generated from `name` if omitted. Immutable after creation.
@@ -99,14 +98,6 @@ resource "chronosphere_command_center_group" "checkout" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-<a id="nestedblock--group_slo_reference"></a>
-### Nested Schema for `group_slo_reference`
-
-Required:
-
-- `slug` (String) Slug of the referenced SLO.
-
 
 <a id="nestedblock--primary_slo_reference"></a>
 ### Nested Schema for `primary_slo_reference`

@@ -436,7 +436,7 @@ var Resources = mustValidate([]Resource{
 	{
 		Name:   "command_center_group",
 		Entity: "CommandCenterGroup",
-		API:    Unstable,
+		API:    V1,
 		Schema: tfschema.CommandCenterGroup,
 	},
 	{
