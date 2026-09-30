@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.38.0
+
 Changed:
 * `chronosphere_command_center_group` is now backed by the stable v1 config
   API instead of the unstable config API. Existing state and configuration
