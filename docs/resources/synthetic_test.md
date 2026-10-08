@@ -96,7 +96,7 @@ resource "chronosphere_synthetic_test" "checkout_availability" {
 - `monitor_config` (Block List, Max: 1) Alerting behaviour derived from the test's pass/fail results. (see [below for nested schema](#nestedblock--monitor_config))
 - `retry_config` (Block List, Max: 1) Retry behaviour applied to a failing run before it is reported as a failure. (see [below for nested schema](#nestedblock--retry_config))
 - `slug` (String) Stable identifier for the synthetic test. Generated from `name` if omitted. Immutable after creation.
-- `status` (String) Whether the test executes on its schedule (`ENABLED`) or is suspended (`PAUSED`).
+- `status` (String) Whether the test executes on its schedule (`ENABLED`) or is suspended (`PAUSED`). Defaults to `ENABLED`.
 - `tcp_test` (Block List, Max: 1) TCP connection configuration. Set when `test_type` is `TCP`. (see [below for nested schema](#nestedblock--tcp_test))
 - `timeout_secs` (Number) Per-run timeout in seconds, between 1 and 60. Defaults to 60.
 - `tls_test` (Block List, Max: 1) TLS handshake configuration. Set when `test_type` is `TLS`. (see [below for nested schema](#nestedblock--tls_test))

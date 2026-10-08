@@ -15,9 +15,11 @@
 package chronosphere
 
 import (
+	"context"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -87,4 +89,47 @@ func TestSyntheticTestNormalizeSecretVersion(t *testing.T) {
 
 	assert.Equal(t, "2", d.State().Attributes[versionPath])
 	assert.Equal(t, "probe", d.State().Attributes[usernamePath])
+}
+
+func syntheticHTTPTestConfig() map[string]any {
+	return map[string]any{
+		"name":          "checkout availability",
+		"collection_id": "web",
+		"test_type":     "HTTP",
+		"locations":     []any{"GCP_US_OREGON"},
+		"interval_secs": 60,
+		"http_test": []any{map[string]any{
+			"url":    "https://example.com/checkout",
+			"method": "GET",
+		}},
+	}
+}
+
+// A config that omits status reads back the ENABLED the server stored; the
+// schema default keeps that from planning a change to null on every run.
+func TestSyntheticTestOmittedStatusPlansClean(t *testing.T) {
+	raw := syntheticHTTPTestConfig()
+	d := schema.TestResourceDataRaw(t, tfschema.SyntheticTest, raw)
+	d.SetId("checkout-availability")
+
+	server := &intschema.SyntheticTest{
+		Name:         "checkout availability",
+		Slug:         "checkout-availability",
+		CollectionId: tfid.Slug("web"),
+		TestType:     "HTTP",
+		Status:       "ENABLED",
+		Locations:    []string{"GCP_US_OREGON"},
+		IntervalSecs: 60,
+		TimeoutSecs:  60,
+		HttpTest: &intschema.SyntheticTestHttpTest{
+			Url:    "https://example.com/checkout",
+			Method: "GET",
+		},
+	}
+	require.False(t, server.ToResourceData(d).HasError())
+
+	r := &schema.Resource{Schema: tfschema.SyntheticTest}
+	diff, err := r.Diff(context.Background(), d.State(), terraform.NewResourceConfigRaw(raw), nil)
+	require.NoError(t, err)
+	assert.True(t, diff == nil || diff.Attributes["status"] == nil, "omitted status should not plan a change")
 }

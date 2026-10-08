@@ -26,7 +26,7 @@ type SyntheticTest struct {
 	Labels        map[string]string           `intschema:"labels,optional"`
 	MonitorConfig *SyntheticTestMonitorConfig `intschema:"monitor_config,optional,list_encoded_object"`
 	RetryConfig   *SyntheticTestRetryConfig   `intschema:"retry_config,optional,list_encoded_object"`
-	Status        string                      `intschema:"status,optional"`
+	Status        string                      `intschema:"status,optional,default:ENABLED"`
 	TcpTest       *SyntheticTestTcpTest       `intschema:"tcp_test,optional,list_encoded_object"`
 	TimeoutSecs   int64                       `intschema:"timeout_secs,optional,computed"`
 	TlsTest       *SyntheticTestTlsTest       `intschema:"tls_test,optional,list_encoded_object"`
