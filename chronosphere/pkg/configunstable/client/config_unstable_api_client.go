@@ -10,7 +10,6 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/command_center_group"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/config_unstable"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/dashboard"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configunstable/client/link_template"
@@ -69,7 +68,6 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigUnst
 
 	cli := new(ConfigUnstableAPI)
 	cli.Transport = transport
-	cli.CommandCenterGroup = command_center_group.New(transport, formats)
 	cli.ConfigUnstable = config_unstable.New(transport, formats)
 	cli.Dashboard = dashboard.New(transport, formats)
 	cli.LinkTemplate = link_template.New(transport, formats)
@@ -128,8 +126,6 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // ConfigUnstableAPI is a client for config unstable API
 type ConfigUnstableAPI struct {
-	CommandCenterGroup command_center_group.ClientService
-
 	ConfigUnstable config_unstable.ClientService
 
 	Dashboard dashboard.ClientService
@@ -164,7 +160,6 @@ type ConfigUnstableAPI struct {
 // SetTransport changes the transport on the client and all its subresources
 func (c *ConfigUnstableAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
-	c.CommandCenterGroup.SetTransport(transport)
 	c.ConfigUnstable.SetTransport(transport)
 	c.Dashboard.SetTransport(transport)
 	c.LinkTemplate.SetTransport(transport)

@@ -48,7 +48,7 @@ type SyncPrometheusChronoConfig struct {
 	MonitorSignalPerSeries bool `json:"monitor_signal_per_series,omitempty"`
 
 	// Customer-specific name of alert rule label used to determine severity.
-	// If omitted, the Chronosphere default of "severity" is used.
+	// If omitted, the Palo Alto Networks default of "severity" is used.
 	SeverityLabelName string `json:"severity_label_name,omitempty"`
 
 	// severity mappings

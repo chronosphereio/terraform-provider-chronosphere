@@ -29,6 +29,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_retention_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/metric_name_active_series_limit"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/metric_name_default_active_series_limit"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notifier"
@@ -1702,6 +1703,85 @@ func (generatedMetricNameActiveSeriesLimit) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.MetricNameActiveSeriesLimit.DeleteMetricNameActiveSeriesLimit(req)
+	return err
+}
+
+type generatedMetricNameDefaultActiveSeriesLimit struct{}
+
+// MetricNameDefaultActiveSeriesLimitID is the static ID of the global MetricNameDefaultActiveSeriesLimit singleton.
+const MetricNameDefaultActiveSeriesLimitID = "metric_name_default_active_series_limit_singleton"
+
+func (generatedMetricNameDefaultActiveSeriesLimit) slugOf(m *configv1models.Configv1MetricNameDefaultActiveSeriesLimit) string {
+	return MetricNameDefaultActiveSeriesLimitID
+}
+
+func (generatedMetricNameDefaultActiveSeriesLimit) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1MetricNameDefaultActiveSeriesLimit,
+	dryRun bool,
+) (string, error) {
+	req := &metric_name_default_active_series_limit.CreateMetricNameDefaultActiveSeriesLimitParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateMetricNameDefaultActiveSeriesLimitRequest{
+			MetricNameDefaultActiveSeriesLimit: m,
+			DryRun:                             dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.MetricNameDefaultActiveSeriesLimit.CreateMetricNameDefaultActiveSeriesLimit(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.MetricNameDefaultActiveSeriesLimit
+	if e == nil {
+		return "", nil
+	}
+	return (generatedMetricNameDefaultActiveSeriesLimit{}).slugOf(e), nil
+}
+
+func (generatedMetricNameDefaultActiveSeriesLimit) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1MetricNameDefaultActiveSeriesLimit, error) {
+	req := &metric_name_default_active_series_limit.ReadMetricNameDefaultActiveSeriesLimitParams{
+		Context: ctx,
+	}
+	resp, err := clients.ConfigV1.MetricNameDefaultActiveSeriesLimit.ReadMetricNameDefaultActiveSeriesLimit(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.MetricNameDefaultActiveSeriesLimit, nil
+}
+
+func (generatedMetricNameDefaultActiveSeriesLimit) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1MetricNameDefaultActiveSeriesLimit,
+	params updateParams,
+) error {
+	req := &metric_name_default_active_series_limit.UpdateMetricNameDefaultActiveSeriesLimitParams{
+		Context: ctx,
+
+		Body: &configv1models.Configv1UpdateMetricNameDefaultActiveSeriesLimitRequest{
+
+			MetricNameDefaultActiveSeriesLimit: m,
+			CreateIfMissing:                    params.createIfMissing,
+			DryRun:                             params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.MetricNameDefaultActiveSeriesLimit.UpdateMetricNameDefaultActiveSeriesLimit(req)
+	return err
+}
+func (generatedMetricNameDefaultActiveSeriesLimit) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &metric_name_default_active_series_limit.DeleteMetricNameDefaultActiveSeriesLimitParams{
+		Context: ctx,
+	}
+	_, err := clients.ConfigV1.MetricNameDefaultActiveSeriesLimit.DeleteMetricNameDefaultActiveSeriesLimit(req)
 	return err
 }
 
