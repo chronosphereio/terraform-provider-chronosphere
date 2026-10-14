@@ -62,8 +62,10 @@ func (metricNameDefaultActiveSeriesLimitConverter) toModel(
 	l *intschema.MetricNameDefaultActiveSeriesLimit,
 ) (*models.Configv1MetricNameDefaultActiveSeriesLimit, error) {
 	return &models.Configv1MetricNameDefaultActiveSeriesLimit{
-		DefaultMaxActiveStandardSeries:  formatOptionalInt64(l.DefaultMaxActiveStandardSeries),
-		DefaultMaxActiveHistogramSeries: formatOptionalInt64(l.DefaultMaxActiveHistogramSeries),
+		// int64 is encoded as a string on the wire. Zero means the managed
+		// default, which the API reads the same whether sent or omitted.
+		DefaultMaxActiveStandardSeries:  strconv.FormatInt(l.DefaultMaxActiveStandardSeries, 10),
+		DefaultMaxActiveHistogramSeries: strconv.FormatInt(l.DefaultMaxActiveHistogramSeries, 10),
 	}, nil
 }
 
@@ -82,13 +84,4 @@ func (metricNameDefaultActiveSeriesLimitConverter) fromModel(
 		DefaultMaxActiveStandardSeries:  standard,
 		DefaultMaxActiveHistogramSeries: histogram,
 	}, nil
-}
-
-// formatOptionalInt64 encodes an int64 for the wire, where it is a string.
-// Zero means "use the managed default", so it is omitted rather than sent.
-func formatOptionalInt64(v int64) string {
-	if v == 0 {
-		return ""
-	}
-	return strconv.FormatInt(v, 10)
 }
