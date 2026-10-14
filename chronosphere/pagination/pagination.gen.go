@@ -28,6 +28,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/log_retention_config"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/mapping_rule"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/metric_name_active_series_limit"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/metric_name_default_active_series_limit"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notifier"
@@ -1309,6 +1310,29 @@ func ListMetricNameActiveSeriesLimitsByFilter(
 		}
 	}
 	return result, nil
+}
+
+func ListMetricNameDefaultActiveSeriesLimit(
+	ctx context.Context,
+	client *configv1.Client,
+	opts ...func(*metric_name_default_active_series_limit.ReadMetricNameDefaultActiveSeriesLimitParams),
+) ([]*configv1models.Configv1MetricNameDefaultActiveSeriesLimit, error) {
+	p := &metric_name_default_active_series_limit.ReadMetricNameDefaultActiveSeriesLimitParams{
+		Context: ctx,
+	}
+	for _, opt := range opts {
+		opt(p)
+	}
+	resp, err := client.MetricNameDefaultActiveSeriesLimit.ReadMetricNameDefaultActiveSeriesLimit(p)
+	if err != nil {
+		if clienterror.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return []*configv1models.Configv1MetricNameDefaultActiveSeriesLimit{
+		resp.Payload.MetricNameDefaultActiveSeriesLimit,
+	}, nil
 }
 
 func ListMonitors(

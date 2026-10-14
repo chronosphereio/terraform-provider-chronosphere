@@ -2,6 +2,13 @@
 
 ## UNRELEASED
 
+Added:
+* Add the `chronosphere_metric_name_default_active_series_limit` singleton
+  resource, which sets the default cap on active standard and histogram time
+  series accepted for each metric name. A
+  `chronosphere_metric_name_active_series_limit` overrides it for its metric
+  name.
+
 Changed:
 * `status` on `chronosphere_synthetic_test` now defaults to `ENABLED`, the value
   the API stores when it is omitted, so a configuration without `status` no
