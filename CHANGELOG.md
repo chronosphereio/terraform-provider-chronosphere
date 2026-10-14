@@ -8,6 +8,8 @@ Added:
   series accepted for each metric name. A
   `chronosphere_metric_name_active_series_limit` overrides it for its metric
   name.
+* `chronosphere_dashboard` can now be owned by a user collection: set
+  `collection_id` to `USER:<slug>`.
 
 Changed:
 * `status` on `chronosphere_synthetic_test` now defaults to `ENABLED`, the value
