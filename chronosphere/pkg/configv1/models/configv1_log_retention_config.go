@@ -16,7 +16,7 @@ import (
 
 // Configv1LogRetentionConfig LogRetentionConfig configures long-term retention policies for log data.
 // Each config specifies a filter to match logs and retention parameters for
-// cold storage (Iceberg). Multiple configs per tenant are supported; when
+// warm tier. Multiple configs per tenant are supported; when
 // configs overlap, the longest retention wins.
 //
 // swagger:model configv1LogRetentionConfig
@@ -36,9 +36,8 @@ type Configv1LogRetentionConfig struct {
 	// The name of the LogRetentionConfig. You can modify this value after the LogRetentionConfig is created.
 	Name string `json:"name,omitempty"`
 
-	// Number of days to retain matching logs in long-term (Iceberg) storage
-	// after they are exported. Once this period elapses, data is expired from
-	// Iceberg by the IcebergDeleter.
+	// Number of days to retain matching logs after they are exported. Once
+	// this period elapses, the data is expired.
 	RetentionDays int64 `json:"retention_days,omitempty"`
 
 	// The unique identifier of the LogRetentionConfig. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the LogRetentionConfig is created.

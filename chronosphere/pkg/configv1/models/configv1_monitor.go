@@ -40,7 +40,7 @@ type Configv1Monitor struct {
 	CreatedAt strfmt.DateTime `json:"created_at,omitempty"`
 
 	// Optional description of the monitor. Markdown is supported when rendered
-	// in the Chronosphere app.
+	// in the Palo Alto Networks app.
 	Description string `json:"description,omitempty"`
 
 	// Graphite query to evaluate for the alert. If set, no other queries can be set.

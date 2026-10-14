@@ -47,7 +47,7 @@ type Configv1ServiceAccount struct {
 	// Read Only: true
 	Token string `json:"token,omitempty"`
 
-	// If set, grants the service account access to all Chronosphere APIs, including
+	// If set, grants the service account access to all Palo Alto Networks APIs, including
 	// resource configuration and metric data within the access controls defined by the
 	// service account's team membership.
 	//
