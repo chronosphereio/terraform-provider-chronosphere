@@ -18,6 +18,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/go-cty/cty"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -25,6 +26,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/shared/pkg/container/set"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfid"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
 func TestSyntheticTestHTTPConversion(t *testing.T) {
@@ -91,6 +93,19 @@ func TestSyntheticTestHTTPConversion(t *testing.T) {
 	out, err := syntheticTestConverter{}.fromModel(m)
 	require.NoError(t, err)
 	assert.Equal(t, in, out)
+}
+
+// The server stores ENABLED when status is omitted, so the provider sends it
+// explicitly rather than leaving the field unset.
+func TestSyntheticTestStatusDefaultsToEnabled(t *testing.T) {
+	d := schema.TestResourceDataRaw(t, tfschema.SyntheticTest, syntheticHTTPTestConfig())
+	in := &intschema.SyntheticTest{}
+	require.NoError(t, in.FromResourceData(d))
+	assert.Equal(t, "ENABLED", in.Status)
+
+	m, err := syntheticTestConverter{}.toModel(in)
+	require.NoError(t, err)
+	assert.Equal(t, models.SyntheticTestTestStatusENABLED, m.Status)
 }
 
 // Credentials are sent on writes but never read back into the schema struct,

@@ -109,7 +109,8 @@ var SyntheticTest = map[string]*schema.Schema{
 	"status": Enum{
 		Value:       enum.SyntheticTestStatus.ToStrings(),
 		Optional:    true,
-		Description: "Whether the test executes on its schedule (`ENABLED`) or is suspended (`PAUSED`).",
+		Default:     "ENABLED",
+		Description: "Whether the test executes on its schedule (`ENABLED`) or is suspended (`PAUSED`). Defaults to `ENABLED`.",
 	}.Schema(),
 	"locations": {
 		Type:        schema.TypeList,

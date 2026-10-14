@@ -2,6 +2,12 @@
 
 ## UNRELEASED
 
+Changed:
+* `status` on `chronosphere_synthetic_test` now defaults to `ENABLED`, the value
+  the API stores when it is omitted, so a configuration without `status` no
+  longer plans a change on every run. Such a configuration now sends `ENABLED`
+  on every apply, so it re-enables a test paused outside Terraform.
+
 ## v1.38.0
 
 Changed:
