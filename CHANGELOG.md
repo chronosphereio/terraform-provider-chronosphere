@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.39.0
+
 Added:
 * Add the `chronosphere_metric_name_default_active_series_limit` singleton
   resource, which sets the default cap on active standard and histogram time
