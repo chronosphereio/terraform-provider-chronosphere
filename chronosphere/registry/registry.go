@@ -434,6 +434,12 @@ var Resources = mustValidate([]Resource{
 		Schema: tfschema.OpsgenieExternalConnection,
 	},
 	{
+		Name:   "cloudflare_external_connection",
+		Entity: "ExternalConnection",
+		API:    V1,
+		Schema: tfschema.CloudflareExternalConnection,
+	},
+	{
 		Name:   "command_center_group",
 		Entity: "CommandCenterGroup",
 		API:    V1,
