@@ -109,6 +109,7 @@ var fieldIsTFID = map[string]bool{
 
 var fieldAddFile = map[string]bool{
 	"dashboard_json": true,
+	"notebook_json":  true,
 }
 
 // Exhaustive list of all set/list fields which identifies whether the field
