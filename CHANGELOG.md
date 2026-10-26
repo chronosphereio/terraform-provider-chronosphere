@@ -9,12 +9,6 @@ Added:
   The API returns the token redacted, so reads keep the configured value and
   plans stay clean; a token changed outside Terraform is not detected.
 
-Fixed:
-* Dry-run validation now swaps in a placeholder only for a value that is
-  unknown at plan time. An empty string set in config, such as an empty
-  `prometheus_expr` on `chronosphere_monitor`, is validated as written instead
-  of being replaced.
-
 ## v1.39.0
 
 Added:

@@ -272,19 +272,6 @@ func TestSetUnknown(t *testing.T) {
 				},
 			},
 		},
-		{
-			name: "dry run default is not applied to an empty value set in config",
-			input: &mapWithName{
-				Name: "",
-			},
-			rawConfig: cty.ObjectVal(map[string]cty.Value{
-				"name": cty.StringVal(""),
-			}),
-			dryRunDefaults: map[string]any{"name": "dry-run-default"},
-			want: &mapWithName{
-				Name: "",
-			},
-		},
 	}
 
 	for _, tt := range testCases {

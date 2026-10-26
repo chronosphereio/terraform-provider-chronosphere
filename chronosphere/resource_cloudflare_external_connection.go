@@ -15,6 +15,8 @@
 package chronosphere
 
 import (
+	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"go.uber.org/atomic"
 
@@ -35,6 +37,12 @@ func resourceCloudflareExternalConnection() *schema.Resource {
 		cloudflareExternalConnectionConverter{},
 		generatedExternalConnection{},
 	)
+	validateDryRun := r.ValidateDryRun(&CloudflareExternalConnectionDryRunCount)
+	validateDryRunWithTokenPlaceholder := r.ValidateDryRunOptions(&CloudflareExternalConnectionDryRunCount, ValidateDryRunOpts[*models.Configv1ExternalConnection]{
+		DryRunDefaults: map[string]any{
+			"api_token": "dry_run_unknown_token",
+		},
+	})
 
 	return &schema.Resource{
 		CreateContext: r.CreateContext,
@@ -43,13 +51,14 @@ func resourceCloudflareExternalConnection() *schema.Resource {
 		DeleteContext: r.DeleteContext,
 		Description:   "Cloudflare API token that a `chronosphere_cloud_integration` with `provider_type = \"cloudflare\"` references through `external_connection_slug` to collect Cloudflare metrics.",
 		Schema:        tfschema.CloudflareExternalConnection,
-		CustomizeDiff: r.ValidateDryRunOptions(&CloudflareExternalConnectionDryRunCount, ValidateDryRunOpts[*models.Configv1ExternalConnection]{
+		CustomizeDiff: func(ctx context.Context, diff *schema.ResourceDiff, meta any) error {
 			// A token produced by another resource in the same apply is unknown at plan
 			// time, and the API rejects a connection without one.
-			DryRunDefaults: map[string]any{
-				"api_token": "dry_run_unknown_token",
-			},
-		}),
+			if !diff.NewValueKnown("api_token") {
+				return validateDryRunWithTokenPlaceholder(ctx, diff, meta)
+			}
+			return validateDryRun(ctx, diff, meta)
+		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},

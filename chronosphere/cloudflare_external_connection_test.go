@@ -156,6 +156,18 @@ resource "chronosphere_cloudflare_external_connection" "cloudflare" {
 	assert.Empty(t, p.plannedChanges(t))
 }
 
+func TestCloudflareExternalConnectionEmptyTokenFailsAtPlan(t *testing.T) {
+	p, api := newCloudflareConnectionProject(t)
+	p.Write(t, "main.tf", cloudflareConnectionConfig("Cloudflare", ""))
+	p.Init(t)
+
+	out := p.failedPlanOutput(t)
+
+	assert.Contains(t, out, "external_connection.cloudflare.api_token: value required")
+	assert.Empty(t, api.takeDryRunTokens())
+	assert.Empty(t, api.takeWrites())
+}
+
 func TestCloudflareExternalConnectionNormalize(t *testing.T) {
 	tests := []struct {
 		name        string
@@ -265,6 +277,17 @@ func (p *Project) stateAttr(t testing.TB, attr string) any {
 	}
 	require.Failf(t, "resource not in state", "%s", cloudflareConnectionAddress)
 	return nil
+}
+
+func (p *Project) failedPlanOutput(t testing.TB) string {
+	cmd := exec.Command("terraform", "plan", "-input=false", "-no-color")
+	cmd.Dir = p.dir
+	cmd.Env = append(os.Environ(), "TF_REATTACH_PROVIDERS="+p.providerCfg)
+	out, err := cmd.CombinedOutput()
+	var exitErr *exec.ExitError
+	require.ErrorAs(t, err, &exitErr, "terraform plan should fail")
+	// Terraform wraps long diagnostics across lines.
+	return strings.Join(strings.Fields(string(out)), " ")
 }
 
 func (p *Project) output(t testing.TB, args ...string) []byte {
