@@ -34,7 +34,7 @@ resource "chronosphere_cloudflare_external_connection" "cloudflare" {
 
 ### Optional
 
-- `slug` (String) Stable identifier for the connection. Generated from `name` if omitted. Immutable after creation.
+- `slug` (String) Stable identifier for the connection. Generated from `name` if omitted. Immutable after creation, so changing it replaces the connection. If a `chronosphere_cloud_integration` uses the connection, the replacement needs `create_before_destroy` and a new `name` in the same apply, because a connection in use cannot be deleted and names are unique.
 
 ### Read-Only
 

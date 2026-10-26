@@ -23,11 +23,14 @@ var CloudflareExternalConnection = map[string]*schema.Schema{
 		Description: "Display name of the external connection.",
 	},
 	"slug": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Computed:    true,
-		ForceNew:    true,
-		Description: "Stable identifier for the connection. Generated from `name` if omitted. Immutable after creation.",
+		Type:     schema.TypeString,
+		Optional: true,
+		Computed: true,
+		ForceNew: true,
+		Description: "Stable identifier for the connection. Generated from `name` if omitted. Immutable after creation, " +
+			"so changing it replaces the connection. If a `chronosphere_cloud_integration` uses the connection, the " +
+			"replacement needs `create_before_destroy` and a new `name` in the same apply, because a connection in " +
+			"use cannot be deleted and names are unique.",
 	},
 	"api_token": {
 		Type:      schema.TypeString,
