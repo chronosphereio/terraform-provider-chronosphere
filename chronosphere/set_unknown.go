@@ -152,8 +152,7 @@ func (p setUnknownParams) setDryRunDefault(v reflect.Value, path []string) {
 		return
 	}
 
-	hasConfig := !p.lookupRaw(path).IsNull()
-	if !hasConfig {
+	if raw := p.lookupRaw(path); raw.IsNull() || raw.IsKnown() {
 		return
 	}
 

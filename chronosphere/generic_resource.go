@@ -232,9 +232,9 @@ type ValidateDryRunOpts[M any] struct {
 	// SetUnknownReferencesSkip is a set of fields to skip when setting unknown references.
 	SetUnknownReferencesSkip []string
 
-	// DryRunDefaults are default values to set during dry-run if the field has a value in config
-	// but not in the "plan" ResourceData. This typically happens due to unknown values.
-	// E.g., interpolating an ID field for a resource that hasn't been created yet.
+	// DryRunDefaults are default values to set during dry-run if the field's config value is
+	// unknown at plan time. E.g., interpolating an ID field for a resource that hasn't been
+	// created yet. A known empty value in config is sent as is.
 	DryRunDefaults map[string]any
 
 	// ModifyAPIModel is used to modify an API model before making the dry-run API call.
