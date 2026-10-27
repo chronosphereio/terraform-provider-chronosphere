@@ -14,7 +14,10 @@
 
 package tfschema
 
-import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+import (
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+)
 
 var CloudflareExternalConnection = map[string]*schema.Schema{
 	"name": {
@@ -32,11 +35,16 @@ var CloudflareExternalConnection = map[string]*schema.Schema{
 			"replacement needs `create_before_destroy` and a new `name` in the same apply, because a connection in " +
 			"use cannot be deleted and names are unique.",
 	},
-	"api_token": {
-		Type:      schema.TypeString,
-		Required:  true,
-		Sensitive: true,
-		Description: "Cloudflare API token used to read analytics. The API never returns the token, so a token " +
-			"changed outside Terraform is not detected, and an imported connection plans one update to set it.",
-	},
+	"api_token_wo":         cloudflareAPITokenSchema(),
+	"api_token_wo_version": SecretVersionSchema("api_token"),
+}
+
+func cloudflareAPITokenSchema() *schema.Schema {
+	s := WriteOnlySecret{
+		Name:        "api_token",
+		Description: "Cloudflare API token used to read analytics.",
+		Required:    true,
+	}.Schema()
+	s.ValidateFunc = validation.StringIsNotEmpty
+	return s
 }

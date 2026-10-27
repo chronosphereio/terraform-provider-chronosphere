@@ -52,6 +52,6 @@ func SecretVersionSchema(secret string) *schema.Schema {
 			"detect a change to a write-only attribute on its own, so bumping this is " +
 			"what turns an edit to `" + secret + "_wo` into a plan; whatever the " +
 			"attribute holds at apply time is then sent. The API does not store the " +
-			"version, so an imported test starts at 0 and its first plan shows a diff here.",
+			"version, so an imported resource starts at 0 and its first plan shows a diff here.",
 	}
 }

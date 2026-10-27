@@ -19,8 +19,9 @@ variable "cloudflare_api_token" {
 }
 
 resource "chronosphere_cloudflare_external_connection" "cloudflare" {
-  name      = "Cloudflare"
-  api_token = var.cloudflare_api_token
+  name                 = "Cloudflare"
+  api_token_wo         = var.cloudflare_api_token
+  api_token_wo_version = 1
 }
 ```
 
@@ -29,11 +30,14 @@ resource "chronosphere_cloudflare_external_connection" "cloudflare" {
 
 ### Required
 
-- `api_token` (String, Sensitive) Cloudflare API token used to read analytics. The API never returns the token, so a token changed outside Terraform is not detected, and an imported connection plans one update to set it.
+> **NOTE**: [Write-only arguments](https://developer.hashicorp.com/terraform/language/resources/ephemeral#write-only-arguments) are supported in Terraform 1.11 and later.
+
+- `api_token_wo` (String, Sensitive, [Write-only](https://developer.hashicorp.com/terraform/language/resources/ephemeral#write-only-arguments)) Cloudflare API token used to read analytics. Write-only: never stored in Terraform state, and never returned by the API. Terraform cannot see it change, so editing it alone produces no plan: bump `api_token_wo_version` to roll the new value out.
 - `name` (String) Display name of the external connection.
 
 ### Optional
 
+- `api_token_wo_version` (Number) Increment this whenever `api_token_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `api_token_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported resource starts at 0 and its first plan shows a diff here.
 - `slug` (String) Stable identifier for the connection. Generated from `name` if omitted. Immutable after creation, so changing it replaces the connection. If a `chronosphere_cloud_integration` uses the connection, the replacement needs `create_before_destroy` and a new `name` in the same apply, because a connection in use cannot be deleted and names are unique.
 
 ### Read-Only

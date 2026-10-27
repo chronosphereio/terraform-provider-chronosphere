@@ -301,7 +301,7 @@ Required:
 
 Optional:
 
-- `token_wo_version` (Number) Increment this whenever `token_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `token_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported test starts at 0 and its first plan shows a diff here.
+- `token_wo_version` (Number) Increment this whenever `token_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `token_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported resource starts at 0 and its first plan shows a diff here.
 
 
 <a id="nestedblock--http_test--authentication--basic_auth"></a>
@@ -316,7 +316,7 @@ Required:
 
 Optional:
 
-- `password_wo_version` (Number) Increment this whenever `password_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `password_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported test starts at 0 and its first plan shows a diff here.
+- `password_wo_version` (Number) Increment this whenever `password_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `password_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported resource starts at 0 and its first plan shows a diff here.
 
 
 <a id="nestedblock--http_test--authentication--client_certificate"></a>
@@ -331,7 +331,7 @@ Required:
 
 Optional:
 
-- `private_key_wo_version` (Number) Increment this whenever `private_key_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `private_key_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported test starts at 0 and its first plan shows a diff here.
+- `private_key_wo_version` (Number) Increment this whenever `private_key_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `private_key_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported resource starts at 0 and its first plan shows a diff here.
 
 
 <a id="nestedblock--http_test--authentication--oauth2_client_credentials"></a>
@@ -346,7 +346,7 @@ Required:
 
 Optional:
 
-- `client_secret_wo_version` (Number) Increment this whenever `client_secret_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `client_secret_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported test starts at 0 and its first plan shows a diff here.
+- `client_secret_wo_version` (Number) Increment this whenever `client_secret_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `client_secret_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported resource starts at 0 and its first plan shows a diff here.
 - `common` (Block List, Max: 1) Token endpoint parameters. (see [below for nested schema](#nestedblock--http_test--authentication--oauth2_client_credentials--common))
 
 <a id="nestedblock--http_test--authentication--oauth2_client_credentials--common"></a>
@@ -381,9 +381,9 @@ Optional:
 
 - `client_id` (String) OAuth 2.0 client identifier. Set when the token endpoint also authenticates the client.
 - `client_secret_wo` (String, Sensitive, [Write-only](https://developer.hashicorp.com/terraform/language/resources/ephemeral#write-only-arguments)) OAuth 2.0 client secret. Set when the token endpoint also authenticates the client. Write-only: never stored in Terraform state, and never returned by the API. Terraform cannot see it change, so editing it alone produces no plan: bump `client_secret_wo_version` to roll the new value out.
-- `client_secret_wo_version` (Number) Increment this whenever `client_secret_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `client_secret_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported test starts at 0 and its first plan shows a diff here.
+- `client_secret_wo_version` (Number) Increment this whenever `client_secret_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `client_secret_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported resource starts at 0 and its first plan shows a diff here.
 - `common` (Block List, Max: 1) Token endpoint parameters. (see [below for nested schema](#nestedblock--http_test--authentication--oauth2_resource_owner_password--common))
-- `password_wo_version` (Number) Increment this whenever `password_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `password_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported test starts at 0 and its first plan shows a diff here.
+- `password_wo_version` (Number) Increment this whenever `password_wo` changes. Terraform cannot detect a change to a write-only attribute on its own, so bumping this is what turns an edit to `password_wo` into a plan; whatever the attribute holds at apply time is then sent. The API does not store the version, so an imported resource starts at 0 and its first plan shows a diff here.
 
 <a id="nestedblock--http_test--authentication--oauth2_resource_owner_password--common"></a>
 ### Nested Schema for `http_test.authentication.oauth2_resource_owner_password.common`

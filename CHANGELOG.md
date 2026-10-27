@@ -6,8 +6,9 @@ Added:
 * Add the `chronosphere_cloudflare_external_connection` resource, which holds
   the Cloudflare API token that a `chronosphere_cloud_integration` with
   `provider_type = "cloudflare"` references through `external_connection_slug`.
-  The API returns the token redacted, so reads keep the configured value and
-  plans stay clean; a token changed outside Terraform is not detected.
+  The token is configured through the write-only `api_token_wo` attribute and
+  requires Terraform 1.11 or later. Increment `api_token_wo_version` when
+  rotating the token.
 
 ## v1.39.0
 

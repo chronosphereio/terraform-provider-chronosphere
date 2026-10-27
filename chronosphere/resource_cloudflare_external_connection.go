@@ -37,11 +37,8 @@ func resourceCloudflareExternalConnection() *schema.Resource {
 		cloudflareExternalConnectionConverter{},
 		generatedExternalConnection{},
 	)
-	validateDryRun := r.ValidateDryRun(&CloudflareExternalConnectionDryRunCount)
-	validateDryRunWithTokenPlaceholder := r.ValidateDryRunOptions(&CloudflareExternalConnectionDryRunCount, ValidateDryRunOpts[*models.Configv1ExternalConnection]{
-		DryRunDefaults: map[string]any{
-			"api_token": "dry_run_unknown_token",
-		},
+	validateDryRun := r.ValidateDryRunOptions(&CloudflareExternalConnectionDryRunCount, ValidateDryRunOpts[*models.Configv1ExternalConnection]{
+		ReturnBadRequestErrors: true,
 	})
 
 	return &schema.Resource{
@@ -52,10 +49,8 @@ func resourceCloudflareExternalConnection() *schema.Resource {
 		Description:   "Cloudflare API token that a `chronosphere_cloud_integration` with `provider_type = \"cloudflare\"` references through `external_connection_slug` to collect Cloudflare metrics.",
 		Schema:        tfschema.CloudflareExternalConnection,
 		CustomizeDiff: func(ctx context.Context, diff *schema.ResourceDiff, meta any) error {
-			// A token produced by another resource in the same apply is unknown at plan
-			// time, and the API rejects a connection without one.
-			if !diff.NewValueKnown("api_token") {
-				return validateDryRunWithTokenPlaceholder(ctx, diff, meta)
+			if !diff.NewValueKnown("api_token_wo") {
+				return nil
 			}
 			return validateDryRun(ctx, diff, meta)
 		},
@@ -77,7 +72,7 @@ func (cloudflareExternalConnectionConverter) toModel(
 		Name: n.Name,
 		Slug: n.Slug,
 		Cloudflare: &models.ExternalConnectionCloudflareConfig{
-			APIToken: n.ApiToken,
+			APIToken: n.ApiTokenWo,
 		},
 	}, nil
 }
@@ -93,12 +88,11 @@ func (cloudflareExternalConnectionConverter) fromModel(
 		}, nil
 	}
 	return &intschema.CloudflareExternalConnection{
-		Name:     m.Name,
-		Slug:     m.Slug,
-		ApiToken: c.APIToken,
+		Name: m.Name,
+		Slug: m.Slug,
 	}, nil
 }
 
 func (cloudflareExternalConnectionConverter) normalize(config, server *intschema.CloudflareExternalConnection) {
-	preserveRedactedSecret(&server.ApiToken, config.ApiToken)
+	server.ApiTokenWoVersion = config.ApiTokenWoVersion
 }
