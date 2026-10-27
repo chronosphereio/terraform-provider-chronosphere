@@ -15,6 +15,7 @@
 package chronosphere
 
 import (
+	"bytes"
 	"context"
 	"testing"
 
@@ -67,4 +68,30 @@ func TestCloudIntegrationOmittedStatePlansClean(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.True(t, diff == nil || diff.Attributes["state"] == nil, "omitted state should not plan a change")
+}
+
+// The Hub exports a form with no state as an API model with an empty state.
+func TestCloudIntegrationExportLeavesOutUnsetState(t *testing.T) {
+	ci, err := CloudIntegrationFromModel(&models.Configv1CloudIntegration{
+		Name:         "gcp metrics",
+		Slug:         "gcp-metrics",
+		ProviderType: "gcp",
+		ProviderConfig: map[string]any{
+			"service_account": map[string]any{"client_email": "sa@example.iam.gserviceaccount.com"},
+		},
+	})
+	require.NoError(t, err)
+	ci.HCLID = "gcp_metrics"
+
+	var hcl bytes.Buffer
+	require.NoError(t, ci.MarshalHCL(&hcl))
+
+	assert.Equal(t, `
+resource "chronosphere_cloud_integration" "gcp_metrics" {
+  name            = "gcp metrics"
+  slug            = "gcp-metrics"
+  provider_config = "{\"service_account\":{\"client_email\":\"sa@example.iam.gserviceaccount.com\"}}"
+  provider_type   = "gcp"
+}
+`, hcl.String())
 }
