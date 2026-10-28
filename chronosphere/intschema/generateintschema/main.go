@@ -64,8 +64,6 @@ var sharedSchemaTypeNames = map[*schema.Schema]string{
 	tfschema.TraceTagFilterSchema:                     "TraceTagFilter",
 	tfschema.ValueMappingsSchema:                      "ValueMappings",
 	tfschema.SLOAdditionalPromQLFilters:               "SLOAdditionalPromQLFilters",
-	tfschema.SyntheticOAuth2CommonSchema:              "SyntheticOAuth2Common",
-	tfschema.SyntheticResponseTimeAssertionSchema:     "SyntheticResponseTimeAssertion",
 	tfschema.SignalGrouping:                           "SignalGrouping",
 	tfschema.PartitionFilterSchema:                    "PartitionFilter",
 	tfschema.LogFieldPathSchema:                       "LogControlConfigFieldPath",
