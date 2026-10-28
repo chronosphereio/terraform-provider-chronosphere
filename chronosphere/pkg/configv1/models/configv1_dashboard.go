@@ -42,6 +42,9 @@ type Configv1Dashboard struct {
 	// The unique identifier of the Dashboard. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the Dashboard is created.
 	Slug string `json:"slug,omitempty"`
 
+	// source system
+	SourceSystem Configv1SourceSystem `json:"source_system,omitempty"`
+
 	// Timestamp of when the Dashboard was last updated. Cannot be set by clients.
 	// Read Only: true
 	// Format: date-time
@@ -57,6 +60,10 @@ func (m *Configv1Dashboard) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCreatedAt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSourceSystem(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -101,6 +108,23 @@ func (m *Configv1Dashboard) validateCreatedAt(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Configv1Dashboard) validateSourceSystem(formats strfmt.Registry) error {
+	if swag.IsZero(m.SourceSystem) { // not required
+		return nil
+	}
+
+	if err := m.SourceSystem.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("source_system")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("source_system")
+		}
+		return err
+	}
+
+	return nil
+}
+
 func (m *Configv1Dashboard) validateUpdatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.UpdatedAt) { // not required
 		return nil
@@ -122,6 +146,10 @@ func (m *Configv1Dashboard) ContextValidate(ctx context.Context, formats strfmt.
 	}
 
 	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSourceSystem(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -154,6 +182,20 @@ func (m *Configv1Dashboard) contextValidateCollection(ctx context.Context, forma
 func (m *Configv1Dashboard) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "created_at", "body", strfmt.DateTime(m.CreatedAt)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Configv1Dashboard) contextValidateSourceSystem(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.SourceSystem.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("source_system")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("source_system")
+		}
 		return err
 	}
 

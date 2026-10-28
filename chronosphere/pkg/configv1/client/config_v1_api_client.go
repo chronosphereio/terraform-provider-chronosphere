@@ -36,6 +36,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/metric_name_default_active_series_limit"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/muting_rule"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notebook"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notifier"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/otel_metrics_ingestion"
@@ -46,7 +47,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_attribute"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/slo"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/synthetic_test"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_behavior"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_behavior_config"
@@ -123,6 +123,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.MetricNameDefaultActiveSeriesLimit = metric_name_default_active_series_limit.New(transport, formats)
 	cli.Monitor = monitor.New(transport, formats)
 	cli.MutingRule = muting_rule.New(transport, formats)
+	cli.Notebook = notebook.New(transport, formats)
 	cli.NotificationPolicy = notification_policy.New(transport, formats)
 	cli.Notifier = notifier.New(transport, formats)
 	cli.OtelMetricsIngestion = otel_metrics_ingestion.New(transport, formats)
@@ -133,7 +134,6 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ConfigV1AP
 	cli.ServiceAccount = service_account.New(transport, formats)
 	cli.ServiceAttribute = service_attribute.New(transport, formats)
 	cli.SLO = slo.New(transport, formats)
-	cli.SyntheticTest = synthetic_test.New(transport, formats)
 	cli.Team = team.New(transport, formats)
 	cli.TraceBehavior = trace_behavior.New(transport, formats)
 	cli.TraceBehaviorConfig = trace_behavior_config.New(transport, formats)
@@ -236,6 +236,8 @@ type ConfigV1API struct {
 
 	MutingRule muting_rule.ClientService
 
+	Notebook notebook.ClientService
+
 	NotificationPolicy notification_policy.ClientService
 
 	Notifier notifier.ClientService
@@ -255,8 +257,6 @@ type ConfigV1API struct {
 	ServiceAttribute service_attribute.ClientService
 
 	SLO slo.ClientService
-
-	SyntheticTest synthetic_test.ClientService
 
 	Team team.ClientService
 
@@ -302,6 +302,7 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.MetricNameDefaultActiveSeriesLimit.SetTransport(transport)
 	c.Monitor.SetTransport(transport)
 	c.MutingRule.SetTransport(transport)
+	c.Notebook.SetTransport(transport)
 	c.NotificationPolicy.SetTransport(transport)
 	c.Notifier.SetTransport(transport)
 	c.OtelMetricsIngestion.SetTransport(transport)
@@ -312,7 +313,6 @@ func (c *ConfigV1API) SetTransport(transport runtime.ClientTransport) {
 	c.ServiceAccount.SetTransport(transport)
 	c.ServiceAttribute.SetTransport(transport)
 	c.SLO.SetTransport(transport)
-	c.SyntheticTest.SetTransport(transport)
 	c.Team.SetTransport(transport)
 	c.TraceBehavior.SetTransport(transport)
 	c.TraceBehaviorConfig.SetTransport(transport)

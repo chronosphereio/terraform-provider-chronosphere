@@ -39,7 +39,6 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_account"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/service_attribute"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/slo"
-	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/synthetic_test"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/team"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_jaeger_remote_sampling_strategy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/trace_metrics_rule"
@@ -1912,75 +1911,6 @@ func ListServiceAttributesByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.ServiceAttributes {
-				result = append(result, v)
-			}
-			if resp.Payload.Page != nil {
-				nextToken = resp.Payload.Page.NextToken
-			}
-		}
-		if nextToken == "" {
-			break
-		}
-	}
-	return result, nil
-}
-
-func ListSyntheticTests(
-	ctx context.Context,
-	client *configv1.Client,
-) ([]*configv1models.Configv1SyntheticTest, error) {
-	return ListSyntheticTestsByFilter(ctx, client, Filter{})
-}
-
-func ListSyntheticTestsBySlugs(
-	ctx context.Context,
-	client *configv1.Client,
-	slugs []string,
-) ([]*configv1models.Configv1SyntheticTest, error) {
-	return ListSyntheticTestsByFilter(ctx, client, Filter{
-		Slugs: slugs,
-	})
-}
-
-func ListSyntheticTestsByNames(
-	ctx context.Context,
-	client *configv1.Client,
-	names []string,
-) ([]*configv1models.Configv1SyntheticTest, error) {
-	return ListSyntheticTestsByFilter(ctx, client, Filter{
-		Names: names,
-	})
-}
-
-func ListSyntheticTestsByFilter(
-	ctx context.Context,
-	client *configv1.Client,
-	f Filter,
-	opts ...func(*synthetic_test.ListSyntheticTestsParams),
-) ([]*configv1models.Configv1SyntheticTest, error) {
-	var (
-		nextToken string
-		result    []*configv1models.Configv1SyntheticTest
-	)
-	for {
-		p := &synthetic_test.ListSyntheticTestsParams{
-			Context:   ctx,
-			PageToken: &nextToken,
-			Slugs:     f.Slugs,
-			Names:     f.Names,
-		}
-		for _, opt := range opts {
-			opt(p)
-		}
-		resp, err := client.SyntheticTest.ListSyntheticTests(p)
-		if err != nil {
-			return nil, err
-		}
-
-		// If payload or page token aren't set, no next page.
-		nextToken = ""
-		if resp.Payload != nil {
-			for _, v := range resp.Payload.SyntheticTests {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
