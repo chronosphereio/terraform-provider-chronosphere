@@ -2,6 +2,12 @@
 
 ## UNRELEASED
 
+Removed:
+* Remove the `chronosphere_synthetic_test` resource. Synthetic tests are no
+  longer part of the public API. Before upgrading, run `terraform state rm`
+  on any `chronosphere_synthetic_test` resources and then remove them from
+  configuration. **This is a breaking change**.
+
 ## v1.39.0
 
 Added:

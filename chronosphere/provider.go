@@ -83,7 +83,6 @@ func Provider() *schema.Provider {
 		"chronosphere_metric_name_active_series_limit":         resourceMetricNameActiveSeriesLimit(),
 		"chronosphere_metric_name_default_active_series_limit": resourceMetricNameDefaultActiveSeriesLimit(),
 		"chronosphere_query_resource_pools":                    resourceQueryResourcePools(),
-		"chronosphere_synthetic_test":                          resourceSyntheticTest(),
 	}
 
 	// Apply common CRUD wrappers to all resources.
