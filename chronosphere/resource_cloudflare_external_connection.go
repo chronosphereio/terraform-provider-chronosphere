@@ -49,7 +49,7 @@ func resourceCloudflareExternalConnection() *schema.Resource {
 		Description:   "Cloudflare API token that a `chronosphere_cloud_integration` with `provider_type = \"cloudflare\"` references through `external_connection_slug` to collect Cloudflare metrics.",
 		Schema:        tfschema.CloudflareExternalConnection,
 		CustomizeDiff: func(ctx context.Context, diff *schema.ResourceDiff, meta any) error {
-			if !diff.NewValueKnown("api_token_wo") {
+			if !diff.NewValueKnown("api_token_wo") || onlyCloudflareTokenChanged(diff) {
 				return nil
 			}
 			return validateDryRun(ctx, diff, meta)
@@ -62,6 +62,13 @@ func resourceCloudflareExternalConnection() *schema.Resource {
 
 // CloudflareExternalConnectionDryRunCount tracks how many times dry run is run during validation for testing.
 var CloudflareExternalConnectionDryRunCount atomic.Int64
+
+func onlyCloudflareTokenChanged(diff *schema.ResourceDiff) bool {
+	// State never holds api_token_wo, so it differs from config on every plan.
+	// A token change is planned through api_token_wo_version instead.
+	keys := diff.GetChangedKeysPrefix("")
+	return len(keys) == 1 && keys[0] == "api_token_wo"
+}
 
 type cloudflareExternalConnectionConverter struct{}
 

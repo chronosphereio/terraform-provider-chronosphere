@@ -148,6 +148,84 @@ func TestCloudflareExternalConnectionTokenVersionPlansUpdate(t *testing.T) {
 	assert.Equal(t, "2", versionDiff.New)
 }
 
+func TestCloudflareExternalConnectionUnchangedSkipsDryRun(t *testing.T) {
+	originalTransport := http.DefaultTransport
+	http.DefaultTransport = roundTripFunc(func(req *http.Request) (*http.Response, error) {
+		t.Errorf("unexpected request %s %s", req.Method, req.URL.Path)
+		return nil, http.ErrNotSupported
+	})
+	t.Cleanup(func() { http.DefaultTransport = originalTransport })
+
+	client, err := configv1.NewClient(transport.ComponentTerraformProvider, "test", "test", "")
+	require.NoError(t, err)
+
+	data := schema.TestResourceDataRaw(t, tfschema.CloudflareExternalConnection, map[string]any{
+		"name":                 "Cloudflare",
+		"slug":                 "cloudflare",
+		"api_token_wo_version": 1,
+	})
+	data.SetId("cloudflare")
+	before := CloudflareExternalConnectionDryRunCount.Load()
+
+	_, err = resourceCloudflareExternalConnection().Diff(
+		context.Background(),
+		data.State(),
+		terraform.NewResourceConfigRaw(map[string]any{
+			"name":                 "Cloudflare",
+			"slug":                 "cloudflare",
+			"api_token_wo":         "cfat_unchanged",
+			"api_token_wo_version": 1,
+		}),
+		apiclients.Clients{ConfigV1: client},
+	)
+
+	require.NoError(t, err)
+	assert.Equal(t, before, CloudflareExternalConnectionDryRunCount.Load())
+}
+
+func TestCloudflareExternalConnectionTokenVersionBumpRunsDryRun(t *testing.T) {
+	var requests []string
+	originalTransport := http.DefaultTransport
+	http.DefaultTransport = roundTripFunc(func(req *http.Request) (*http.Response, error) {
+		requests = append(requests, req.Method+" "+req.URL.Path)
+		return &http.Response{
+			StatusCode: http.StatusOK,
+			Status:     "200 OK",
+			Header:     http.Header{"Content-Type": []string{"application/json"}},
+			Body:       io.NopCloser(strings.NewReader(`{}`)),
+			Request:    req,
+		}, nil
+	})
+	t.Cleanup(func() { http.DefaultTransport = originalTransport })
+
+	client, err := configv1.NewClient(transport.ComponentTerraformProvider, "test", "test", "")
+	require.NoError(t, err)
+
+	data := schema.TestResourceDataRaw(t, tfschema.CloudflareExternalConnection, map[string]any{
+		"name":                 "Cloudflare",
+		"slug":                 "cloudflare",
+		"api_token_wo_version": 1,
+	})
+	data.SetId("cloudflare")
+	before := CloudflareExternalConnectionDryRunCount.Load()
+
+	_, err = resourceCloudflareExternalConnection().Diff(
+		context.Background(),
+		data.State(),
+		terraform.NewResourceConfigRaw(map[string]any{
+			"name":                 "Cloudflare",
+			"slug":                 "cloudflare",
+			"api_token_wo":         "cfat_rotated",
+			"api_token_wo_version": 2,
+		}),
+		apiclients.Clients{ConfigV1: client},
+	)
+
+	require.NoError(t, err)
+	assert.Equal(t, before+1, CloudflareExternalConnectionDryRunCount.Load())
+	assert.Equal(t, []string{"PUT /api/v1/config/external-connections/cloudflare"}, requests)
+}
+
 // Terraform's legacy test API recognizes unknown values through this unexported sentinel.
 const terraformUnknownValue = "74D93920-ED26-11E3-AC10-0800200C9A66"
 
