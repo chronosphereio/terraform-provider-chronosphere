@@ -17,6 +17,7 @@ package chronosphere
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"go.uber.org/atomic"
@@ -239,6 +240,9 @@ type ValidateDryRunOpts[M any] struct {
 
 	// ModifyAPIModel is used to modify an API model before making the dry-run API call.
 	ModifyAPIModel func(M)
+
+	// ReturnBadRequestErrors makes HTTP 400 responses fail the plan.
+	ReturnBadRequestErrors bool
 }
 
 // ValidateDryRunOptions is the same as ValidateDryRun but supports additional options, see ValidateDryRunOpts.
@@ -286,7 +290,8 @@ func (r genericResource[M, SV, S]) ValidateDryRunOptions(dryRunCounter *atomic.I
 		} else {
 			err = r.crud.update(ctx, clients, m, updateParams{dryRun: true})
 		}
-		if err != nil && clienterror.IsEntityValidationFailed(err) {
+		if err != nil && (clienterror.IsEntityValidationFailed(err) ||
+			opts.ReturnBadRequestErrors && clienterror.StatusCode(err) == http.StatusBadRequest) {
 			return fmt.Errorf("dry run validation failed: %w", err)
 		}
 		return nil
