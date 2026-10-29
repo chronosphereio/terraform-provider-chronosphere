@@ -20,7 +20,7 @@ type CloudIntegration struct {
 	ProviderType           string            `intschema:"provider_type"`
 	ExternalConnectionSlug string            `intschema:"external_connection_slug,optional"`
 	MetricLabels           map[string]string `intschema:"metric_labels,optional"`
-	State                  string            `intschema:"state,optional"`
+	State                  string            `intschema:"state,optional,default:ENABLED"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.

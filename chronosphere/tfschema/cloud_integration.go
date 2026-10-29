@@ -46,7 +46,8 @@ var CloudIntegration = map[string]*schema.Schema{
 	"state": Enum{
 		Value:       enum.CloudIntegrationState.ToStrings(),
 		Optional:    true,
-		Description: "Operational state of the integration: ENABLED, DISABLED, or PREVIEW.",
+		Default:     "ENABLED",
+		Description: "Operational state of the integration: ENABLED, DISABLED, or PREVIEW. Defaults to `ENABLED`.",
 	}.Schema(),
 	"external_connection_slug": {
 		Type:        schema.TypeString,

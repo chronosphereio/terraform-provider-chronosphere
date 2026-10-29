@@ -49,7 +49,7 @@ resource "chronosphere_cloud_integration" "example" {
 - `external_connection_slug` (String) Slug of the ExternalConnection used for credentials. Optional depending on the provider.
 - `metric_labels` (Map of String) Labels applied to all metrics emitted from this integration.
 - `slug` (String) Stable identifier for the integration. Generated from `name` if omitted. Immutable after creation.
-- `state` (String) Operational state of the integration: ENABLED, DISABLED, or PREVIEW.
+- `state` (String) Operational state of the integration: ENABLED, DISABLED, or PREVIEW. Defaults to `ENABLED`.
 
 ### Read-Only
 

@@ -2,6 +2,12 @@
 
 ## UNRELEASED
 
+Changed:
+* `state` on `chronosphere_cloud_integration` now defaults to `ENABLED`, the
+  value the API stores when it is omitted, so a configuration without `state`
+  no longer plans a change on every run. An integration whose state was changed
+  outside Terraform plans a change back to `ENABLED`.
+
 Removed:
 * Remove the `chronosphere_synthetic_test` resource. Synthetic tests are no
   longer part of the public API. Before upgrading, run `terraform state rm`

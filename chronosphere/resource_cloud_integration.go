@@ -91,10 +91,17 @@ func (cloudIntegrationConverter) fromModel(
 		providerConfig = string(configJSON)
 	}
 
+	// The API stores ENABLED for an unset state. Left empty, the export would
+	// write `state = ""`, which plans a change on every run.
+	state := m.State
+	if state == "" {
+		state = models.Configv1CloudIntegrationStateSTATEENABLED
+	}
+
 	return &intschema.CloudIntegration{
 		Name:                   m.Name,
 		Slug:                   m.Slug,
-		State:                  enum.CloudIntegrationState.Alias(m.State),
+		State:                  enum.CloudIntegrationState.Alias(state),
 		ExternalConnectionSlug: m.ExternalConnectionSlug,
 		MetricLabels:           m.MetricLabels,
 		ProviderType:           m.ProviderType,
