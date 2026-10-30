@@ -37,9 +37,7 @@ func resourceCloudflareExternalConnection() *schema.Resource {
 		cloudflareExternalConnectionConverter{},
 		generatedExternalConnection{},
 	)
-	validateDryRun := r.ValidateDryRunOptions(&CloudflareExternalConnectionDryRunCount, ValidateDryRunOpts[*models.Configv1ExternalConnection]{
-		ReturnBadRequestErrors: true,
-	})
+	validateDryRun := r.ValidateDryRun(&CloudflareExternalConnectionDryRunCount)
 
 	return &schema.Resource{
 		CreateContext: r.CreateContext,
@@ -49,7 +47,9 @@ func resourceCloudflareExternalConnection() *schema.Resource {
 		Description:   "Cloudflare API token that a `chronosphere_cloud_integration` with `provider_type = \"cloudflare\"` references through `external_connection_slug` to collect Cloudflare metrics.",
 		Schema:        tfschema.CloudflareExternalConnection,
 		CustomizeDiff: func(ctx context.Context, diff *schema.ResourceDiff, meta any) error {
-			if !diff.NewValueKnown("api_token_wo") || onlyCloudflareTokenChanged(diff) {
+			// The API rejects a connection without a token, so a token produced by
+			// another resource in the same apply cannot be validated at plan time.
+			if !diff.NewValueKnown("api_token") {
 				return nil
 			}
 			return validateDryRun(ctx, diff, meta)
@@ -63,13 +63,6 @@ func resourceCloudflareExternalConnection() *schema.Resource {
 // CloudflareExternalConnectionDryRunCount tracks how many times dry run is run during validation for testing.
 var CloudflareExternalConnectionDryRunCount atomic.Int64
 
-func onlyCloudflareTokenChanged(diff *schema.ResourceDiff) bool {
-	// State never holds api_token_wo, so it differs from config on every plan.
-	// A token change is planned through api_token_wo_version instead.
-	keys := diff.GetChangedKeysPrefix("")
-	return len(keys) == 1 && keys[0] == "api_token_wo"
-}
-
 type cloudflareExternalConnectionConverter struct{}
 
 func (cloudflareExternalConnectionConverter) toModel(
@@ -79,7 +72,7 @@ func (cloudflareExternalConnectionConverter) toModel(
 		Name: n.Name,
 		Slug: n.Slug,
 		Cloudflare: &models.ExternalConnectionCloudflareConfig{
-			APIToken: n.ApiTokenWo,
+			APIToken: n.ApiToken,
 		},
 	}, nil
 }
@@ -95,11 +88,12 @@ func (cloudflareExternalConnectionConverter) fromModel(
 		}, nil
 	}
 	return &intschema.CloudflareExternalConnection{
-		Name: m.Name,
-		Slug: m.Slug,
+		Name:     m.Name,
+		Slug:     m.Slug,
+		ApiToken: c.APIToken,
 	}, nil
 }
 
 func (cloudflareExternalConnectionConverter) normalize(config, server *intschema.CloudflareExternalConnection) {
-	server.ApiTokenWoVersion = config.ApiTokenWoVersion
+	server.ApiToken = config.ApiToken
 }
