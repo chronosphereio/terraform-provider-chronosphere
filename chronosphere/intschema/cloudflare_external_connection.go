@@ -14,10 +14,9 @@ import (
 var _ tfid.ID // Always use tfid for simplified import generation.
 
 type CloudflareExternalConnection struct {
-	Name              string `intschema:"name"`
-	Slug              string `intschema:"slug,optional,computed"`
-	ApiTokenWo        string `intschema:"api_token_wo,write_only"`
-	ApiTokenWoVersion int64  `intschema:"api_token_wo_version,optional"`
+	Name     string `intschema:"name"`
+	Slug     string `intschema:"slug,optional,computed"`
+	ApiToken string `intschema:"api_token"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
