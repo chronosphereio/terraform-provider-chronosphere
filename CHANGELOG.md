@@ -7,11 +7,10 @@ Added:
   the Cloudflare API token that a `chronosphere_cloud_integration` with
   `provider_type = "cloudflare"` references through `external_connection_slug`.
 * Add the `chronosphere_notebook` resource, backed by the v1 config API. A
-  notebook is a document of text, queries and panels defined by
-  `notebook_json`, owned by the collection named by `collection_id` (a
-  collection's `id`, or `USER:<slug>` for a user's personal collection). The
-  API rejects edits from the Chronosphere app to a notebook that Terraform
-  manages.
+  notebook gathers panels, resource links, and notes from multiple pages while
+  you troubleshoot. It is defined by `notebook_json` and owned by the
+  collection named by `collection_id` (a collection's `id`, or `USER:<slug>`
+  for a user's personal collection).
 
 Changed:
 * `state` on `chronosphere_cloud_integration` now defaults to `ENABLED`, the

@@ -1,17 +1,3 @@
-// Copyright 2024 Chronosphere Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package chronosphere
 
 import (
@@ -44,7 +30,7 @@ func resourceNotebook() *schema.Resource {
 		ReadContext:   resource.ReadContext,
 		UpdateContext: resource.UpdateContext,
 		DeleteContext: resource.DeleteContext,
-		Description:   "A Chronosphere notebook, a document of text, queries, and panels defined by `notebook_json` and owned by a collection. The API rejects edits from the Chronosphere app to a notebook that Terraform manages.",
+		Description:   "A Chronosphere notebook, which gathers panels, resource links, and notes from multiple pages while you troubleshoot, defined by `notebook_json`.",
 		Schema:        tfschema.Notebook,
 		CustomizeDiff: resource.ValidateDryRunOptions(&NotebookDryRunCount, ValidateDryRunOpts[*models.Configv1Notebook]{
 			// notebook_json is unknown at plan time when it interpolates an attribute of a

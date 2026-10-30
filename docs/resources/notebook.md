@@ -3,12 +3,12 @@
 page_title: "chronosphere_notebook Resource - chronosphere"
 subcategory: ""
 description: |-
-  A Chronosphere notebook, a document of text, queries, and panels defined by notebook_json and owned by a collection. The API rejects edits from the Chronosphere app to a notebook that Terraform manages.
+  A Chronosphere notebook, which gathers panels, resource links, and notes from multiple pages while you troubleshoot, defined by notebook_json.
 ---
 
 # chronosphere_notebook (Resource)
 
-A Chronosphere notebook, a document of text, queries, and panels defined by `notebook_json` and owned by a collection. The API rejects edits from the Chronosphere app to a notebook that Terraform manages.
+A Chronosphere notebook, which gathers panels, resource links, and notes from multiple pages while you troubleshoot, defined by `notebook_json`.
 
 ## Example Usage
 
@@ -53,7 +53,7 @@ resource "chronosphere_notebook" "oncall_runbook" {
 
 - `collection_id` (String) ID of the collection that owns this notebook. A collection's `id`, or `USER:<slug>` for a user's personal collection.
 - `name` (String) Display name of the notebook. Can be changed after creation.
-- `notebook_json` (String) JSON payload describing the notebook's content. Must be a JSON object. Wrap with `jsonencode({...})` in HCL. The provider compares canonical JSON, so key ordering and whitespace do not cause spurious plans.
+- `notebook_json` (String) JSON payload describing the notebook's content. Must be a JSON object. Wrap with `jsonencode({...})` in HCL. The provider normalizes the JSON before diffing, so cosmetic differences (key ordering, whitespace) do not cause spurious plans.
 
 ### Optional
 

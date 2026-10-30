@@ -1,20 +1,8 @@
-// Copyright 2024 Chronosphere Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package tfschema
 
 import (
+	"encoding/json"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	xjson "github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/x/json"
@@ -43,7 +31,7 @@ var Notebook = map[string]*schema.Schema{
 		Required:              true,
 		DiffSuppressFunc:      notebookJSONDiffSuppress,
 		DiffSuppressOnRefresh: true,
-		Description:           "JSON payload describing the notebook's content. Must be a JSON object. Wrap with `jsonencode({...})` in HCL. The provider compares canonical JSON, so key ordering and whitespace do not cause spurious plans.",
+		Description:           "JSON payload describing the notebook's content. Must be a JSON object. Wrap with `jsonencode({...})` in HCL. The provider normalizes the JSON before diffing, so cosmetic differences (key ordering, whitespace) do not cause spurious plans.",
 	},
 	"labels": {
 		Type:        schema.TypeMap,
@@ -53,21 +41,36 @@ var Notebook = map[string]*schema.Schema{
 	},
 }
 
-// notebookJSONDiffSuppress treats two notebook JSON payloads as equal when
-// they encode the same document, whatever their key order or whitespace.
-// Unlike dashboards, the provider knows nothing about a notebook's content,
-// so it drops no fields. See xjson.Canonical for why the SDK's
-// structure.SuppressJsonDiff is not used.
+// notebookJSONDiffSuppress normalizes and then diffs two notebook JSON payloads,
+// as dashboardJSONDiffSuppress does for dashboards. Unlike dashboards, the
+// provider knows nothing about a notebook's content, so it drops no fields.
 func notebookJSONDiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
-	canonicalOld, err := xjson.Canonical(old)
+	normalizedOld, err := normalizedNotebookJSON(old)
 	if err != nil {
 		return false
 	}
 
-	canonicalNew, err := xjson.Canonical(new)
+	normalizedNew, err := normalizedNotebookJSON(new)
 	if err != nil {
 		return false
 	}
 
-	return canonicalOld == canonicalNew
+	return normalizedOld == normalizedNew
+}
+
+// normalizedNotebookJSON re-encodes a notebook JSON object with sorted keys and
+// no insignificant whitespace, so two encodings of the same document compare
+// equal as strings.
+func normalizedNotebookJSON(data string) (string, error) {
+	var notebook map[string]any
+	if err := xjson.Unmarshal([]byte(data), &notebook); err != nil {
+		return "", err
+	}
+
+	normalized, err := json.Marshal(notebook)
+	if err != nil {
+		return "", err
+	}
+
+	return string(normalized), nil
 }
