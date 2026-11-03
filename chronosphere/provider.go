@@ -59,6 +59,7 @@ func Provider() *schema.Provider {
 		"chronosphere_derived_metric":                          resourceDerivedMetric(),
 		"chronosphere_resource_pools_config":                   resourceResourcePoolsConfig(),
 		"chronosphere_dashboard":                               resourceDashboard(),
+		"chronosphere_notebook":                                resourceNotebook(),
 		"chronosphere_trace_metrics_rule":                      resourceTraceMetricsRule(),
 		"chronosphere_trace_jaeger_remote_sampling_strategy":   resourceTraceJRSStrategy(),
 		"chronosphere_trace_tail_sampling_rules":               resourceTraceTailSamplingRules(),

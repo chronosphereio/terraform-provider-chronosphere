@@ -31,6 +31,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/metric_name_active_series_limit"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/metric_name_default_active_series_limit"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notebook"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notifier"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/otel_metrics_ingestion"
@@ -1860,6 +1861,85 @@ func (generatedMonitor) delete(
 		Slug:    slug,
 	}
 	_, err := clients.ConfigV1.Monitor.DeleteMonitor(req)
+	return err
+}
+
+type generatedNotebook struct{}
+
+func (generatedNotebook) slugOf(m *configv1models.Configv1Notebook) string {
+	return m.Slug
+}
+
+func (generatedNotebook) create(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1Notebook,
+	dryRun bool,
+) (string, error) {
+	req := &notebook.CreateNotebookParams{
+		Context: ctx,
+		Body: &configv1models.Configv1CreateNotebookRequest{
+			Notebook: m,
+			DryRun:   dryRun,
+		},
+	}
+	resp, err := clients.ConfigV1.Notebook.CreateNotebook(req)
+	if err != nil {
+		return "", err
+	}
+	e := resp.Payload.Notebook
+	if e == nil {
+		return "", nil
+	}
+	return (generatedNotebook{}).slugOf(e), nil
+}
+
+func (generatedNotebook) read(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) (*configv1models.Configv1Notebook, error) {
+	req := &notebook.ReadNotebookParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	resp, err := clients.ConfigV1.Notebook.ReadNotebook(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.Notebook, nil
+}
+
+func (generatedNotebook) update(
+	ctx context.Context,
+	clients apiclients.Clients,
+	m *configv1models.Configv1Notebook,
+	params updateParams,
+) error {
+	req := &notebook.UpdateNotebookParams{
+		Context: ctx,
+		Slug:    m.Slug,
+
+		Body: &configv1models.ConfigV1UpdateNotebookBody{
+
+			Notebook:        m,
+			CreateIfMissing: params.createIfMissing,
+			DryRun:          params.dryRun,
+		},
+	}
+	_, err := clients.ConfigV1.Notebook.UpdateNotebook(req)
+	return err
+}
+func (generatedNotebook) delete(
+	ctx context.Context,
+	clients apiclients.Clients,
+	slug string,
+) error {
+	req := &notebook.DeleteNotebookParams{
+		Context: ctx,
+		Slug:    slug,
+	}
+	_, err := clients.ConfigV1.Notebook.DeleteNotebook(req)
 	return err
 }
 

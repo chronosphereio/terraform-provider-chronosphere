@@ -458,4 +458,10 @@ var Resources = mustValidate([]Resource{
 		Schema:      tfschema.MetricNameDefaultActiveSeriesLimit,
 		SingletonID: "metric_name_default_active_series_limit_singleton",
 	},
+	{
+		Name:   "notebook",
+		Entity: "Notebook",
+		API:    V1,
+		Schema: tfschema.Notebook,
+	},
 })

@@ -30,6 +30,7 @@ import (
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/metric_name_active_series_limit"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/metric_name_default_active_series_limit"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/monitor"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notebook"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notification_policy"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/notifier"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/client/otel_metrics_ingestion"
@@ -1390,6 +1391,75 @@ func ListMonitorsByFilter(
 		nextToken = ""
 		if resp.Payload != nil {
 			for _, v := range resp.Payload.Monitors {
+				result = append(result, v)
+			}
+			if resp.Payload.Page != nil {
+				nextToken = resp.Payload.Page.NextToken
+			}
+		}
+		if nextToken == "" {
+			break
+		}
+	}
+	return result, nil
+}
+
+func ListNotebooks(
+	ctx context.Context,
+	client *configv1.Client,
+) ([]*configv1models.Configv1Notebook, error) {
+	return ListNotebooksByFilter(ctx, client, Filter{})
+}
+
+func ListNotebooksBySlugs(
+	ctx context.Context,
+	client *configv1.Client,
+	slugs []string,
+) ([]*configv1models.Configv1Notebook, error) {
+	return ListNotebooksByFilter(ctx, client, Filter{
+		Slugs: slugs,
+	})
+}
+
+func ListNotebooksByNames(
+	ctx context.Context,
+	client *configv1.Client,
+	names []string,
+) ([]*configv1models.Configv1Notebook, error) {
+	return ListNotebooksByFilter(ctx, client, Filter{
+		Names: names,
+	})
+}
+
+func ListNotebooksByFilter(
+	ctx context.Context,
+	client *configv1.Client,
+	f Filter,
+	opts ...func(*notebook.ListNotebooksParams),
+) ([]*configv1models.Configv1Notebook, error) {
+	var (
+		nextToken string
+		result    []*configv1models.Configv1Notebook
+	)
+	for {
+		p := &notebook.ListNotebooksParams{
+			Context:   ctx,
+			PageToken: &nextToken,
+			Slugs:     f.Slugs,
+			Names:     f.Names,
+		}
+		for _, opt := range opts {
+			opt(p)
+		}
+		resp, err := client.Notebook.ListNotebooks(p)
+		if err != nil {
+			return nil, err
+		}
+
+		// If payload or page token aren't set, no next page.
+		nextToken = ""
+		if resp.Payload != nil {
+			for _, v := range resp.Payload.Notebooks {
 				result = append(result, v)
 			}
 			if resp.Payload.Page != nil {
