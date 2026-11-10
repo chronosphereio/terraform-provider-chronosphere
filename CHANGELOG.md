@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## v1.40.0
+
 Added:
 * Add the `chronosphere_cloudflare_external_connection` resource, which holds
   the Cloudflare API token that a `chronosphere_cloud_integration` with
