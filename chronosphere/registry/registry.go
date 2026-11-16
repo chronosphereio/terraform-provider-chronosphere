@@ -440,6 +440,12 @@ var Resources = mustValidate([]Resource{
 		Schema: tfschema.CloudflareExternalConnection,
 	},
 	{
+		Name:   "blazemeter_api_monitoring_external_connection",
+		Entity: "ExternalConnection",
+		API:    V1,
+		Schema: tfschema.BlazemeterApiMonitoringExternalConnection,
+	},
+	{
 		Name:   "command_center_group",
 		Entity: "CommandCenterGroup",
 		API:    V1,
