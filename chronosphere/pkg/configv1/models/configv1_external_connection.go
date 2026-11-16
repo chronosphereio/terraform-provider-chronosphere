@@ -19,6 +19,9 @@ import (
 // swagger:model configv1ExternalConnection
 type Configv1ExternalConnection struct {
 
+	// blazemeter api monitoring
+	BlazemeterAPIMonitoring *ExternalConnectionBlazemeterAPIMonitoringConfig `json:"blazemeter_api_monitoring,omitempty"`
+
 	// cloudflare
 	Cloudflare *ExternalConnectionCloudflareConfig `json:"cloudflare,omitempty"`
 
@@ -61,11 +64,18 @@ type Configv1ExternalConnection struct {
 
 	// webhook
 	Webhook *Configv1ExternalConnectionWebhookConfig `json:"webhook,omitempty"`
+
+	// xcor slack app
+	XcorSlackApp *ExternalConnectionXcorSlackAppConfig `json:"xcor_slack_app,omitempty"`
 }
 
 // Validate validates this configv1 external connection
 func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateBlazemeterAPIMonitoring(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateCloudflare(formats); err != nil {
 		res = append(res, err)
@@ -111,9 +121,32 @@ func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateXcorSlackApp(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Configv1ExternalConnection) validateBlazemeterAPIMonitoring(formats strfmt.Registry) error {
+	if swag.IsZero(m.BlazemeterAPIMonitoring) { // not required
+		return nil
+	}
+
+	if m.BlazemeterAPIMonitoring != nil {
+		if err := m.BlazemeterAPIMonitoring.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("blazemeter_api_monitoring")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("blazemeter_api_monitoring")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -312,9 +345,32 @@ func (m *Configv1ExternalConnection) validateWebhook(formats strfmt.Registry) er
 	return nil
 }
 
+func (m *Configv1ExternalConnection) validateXcorSlackApp(formats strfmt.Registry) error {
+	if swag.IsZero(m.XcorSlackApp) { // not required
+		return nil
+	}
+
+	if m.XcorSlackApp != nil {
+		if err := m.XcorSlackApp.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("xcor_slack_app")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("xcor_slack_app")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 // ContextValidate validate this configv1 external connection based on the context it is used
 func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.contextValidateBlazemeterAPIMonitoring(ctx, formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.contextValidateCloudflare(ctx, formats); err != nil {
 		res = append(res, err)
@@ -360,9 +416,29 @@ func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, format
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateXcorSlackApp(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Configv1ExternalConnection) contextValidateBlazemeterAPIMonitoring(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.BlazemeterAPIMonitoring != nil {
+		if err := m.BlazemeterAPIMonitoring.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("blazemeter_api_monitoring")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("blazemeter_api_monitoring")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -520,6 +596,22 @@ func (m *Configv1ExternalConnection) contextValidateWebhook(ctx context.Context,
 				return ve.ValidateName("webhook")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("webhook")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) contextValidateXcorSlackApp(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.XcorSlackApp != nil {
+		if err := m.XcorSlackApp.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("xcor_slack_app")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("xcor_slack_app")
 			}
 			return err
 		}

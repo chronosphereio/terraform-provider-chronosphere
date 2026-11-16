@@ -62,7 +62,11 @@ ListExternalConnectionsParams contains all the parameters to send to the API end
 */
 type ListExternalConnectionsParams struct {
 
-	// ConnectionTypes.
+	/* ConnectionTypes.
+
+	      - XCOR_SLACK_APP: An install of the XCOR Slack app. Read-only: created when an admin
+	installs the app and deleted when it is uninstalled.
+	*/
 	ConnectionTypes []string
 
 	/* Names.
