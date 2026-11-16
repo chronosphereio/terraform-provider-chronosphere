@@ -2,6 +2,13 @@
 
 ## UNRELEASED
 
+Added:
+* Add the `chronosphere_blazemeter_api_monitoring_external_connection`
+  resource, which holds the BlazeMeter API Monitoring access token that a
+  `chronosphere_cloud_integration` with
+  `provider_type = "blazemeter_api_monitoring"` references through
+  `external_connection_slug`.
+
 ## v1.40.0
 
 Added:

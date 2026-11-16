@@ -83,6 +83,9 @@ type Configv1Monitor struct {
 	// The unique identifier of the Monitor. If a `slug` isn't provided, one is generated based on the `name` field. You can't modify this field after the Monitor is created.
 	Slug string `json:"slug,omitempty"`
 
+	// source system
+	SourceSystem Configv1SourceSystem `json:"source_system,omitempty"`
+
 	// Timestamp of when the Monitor was last updated. Cannot be set by clients.
 	// Read Only: true
 	// Format: date-time
@@ -114,6 +117,10 @@ func (m *Configv1Monitor) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSignalGrouping(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSourceSystem(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -234,6 +241,23 @@ func (m *Configv1Monitor) validateSignalGrouping(formats strfmt.Registry) error 
 	return nil
 }
 
+func (m *Configv1Monitor) validateSourceSystem(formats strfmt.Registry) error {
+	if swag.IsZero(m.SourceSystem) { // not required
+		return nil
+	}
+
+	if err := m.SourceSystem.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("source_system")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("source_system")
+		}
+		return err
+	}
+
+	return nil
+}
+
 func (m *Configv1Monitor) validateUpdatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.UpdatedAt) { // not required
 		return nil
@@ -271,6 +295,10 @@ func (m *Configv1Monitor) ContextValidate(ctx context.Context, formats strfmt.Re
 	}
 
 	if err := m.contextValidateSignalGrouping(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSourceSystem(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -368,6 +396,20 @@ func (m *Configv1Monitor) contextValidateSignalGrouping(ctx context.Context, for
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Configv1Monitor) contextValidateSourceSystem(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.SourceSystem.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("source_system")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("source_system")
+		}
+		return err
 	}
 
 	return nil
