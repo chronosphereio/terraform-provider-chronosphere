@@ -10,14 +10,15 @@ Added:
   `external_connection_slug`.
 
 Changed:
-* `token` on `chronosphere_slack_external_connection` is now required. The API
-  has rejected a Slack connection without a token since November 2026, and a
-  connection without one cannot deliver to a notification policy destination.
-  A configuration that omits `token` now fails `terraform validate`, including
-  for an existing connection with no changes. Set `token` to a Slack bot token,
-  and remove an `api_url` that holds an incoming webhook URL: messages are
-  posted to `api_url` with `/chat.postMessage` appended, so a webhook URL there
-  fails every delivery. **This is a breaking change**.
+* `token` on `chronosphere_slack_external_connection` is now required. A Slack
+  connection without a token cannot deliver anything: the API rejects creating
+  or updating one, rejects a notification policy that routes to one, and drops
+  such a destination from an existing policy. A configuration that omits
+  `token` now fails `terraform validate`, including for an existing connection
+  with no changes. Set `token` to a Slack bot token, and remove an `api_url`
+  that holds an incoming webhook URL: messages are posted to `api_url` with
+  `/chat.postMessage` appended, so a webhook URL there fails every delivery.
+  **This is a breaking change**.
 
 Fixed:
 * Correct the `chronosphere_slack_external_connection` documentation, which
