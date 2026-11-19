@@ -3,19 +3,43 @@
 page_title: "chronosphere_slack_external_connection Resource - chronosphere"
 subcategory: ""
 description: |-
-  Workspace-scoped Slack credentials that downstream notifiers can reference. Centralizes webhook URLs and bot tokens so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.
+  Slack bot token that notification policies post with. A chronosphere_notification_policy route's destination slack block references the connection by external_connection_slug and names the channels to post to. For delivery through a Slack incoming webhook, use chronosphere_slack_alert_notifier instead.
 ---
 
 # chronosphere_slack_external_connection (Resource)
 
-Workspace-scoped Slack credentials that downstream notifiers can reference. Centralizes webhook URLs and bot tokens so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.
+Slack bot token that notification policies post with. A `chronosphere_notification_policy` route's `destination` `slack` block references the connection by `external_connection_slug` and names the `channels` to post to. For delivery through a Slack incoming webhook, use `chronosphere_slack_alert_notifier` instead.
 
 ## Example Usage
 
 ```terraform
+variable "slack_bot_token" {
+  type      = string
+  sensitive = true
+}
+
 resource "chronosphere_slack_external_connection" "slack" {
-  name    = "Slack"
-  api_url = "https://hooks.slack.com/services/XXXXX/XXXXX/XXXXX"
+  name  = "Slack"
+  token = var.slack_bot_token # xoxb-..., with the chat:write scope
+}
+
+resource "chronosphere_team" "platform" {
+  name = "Platform"
+}
+
+resource "chronosphere_notification_policy" "platform" {
+  name    = "Platform Policy"
+  team_id = chronosphere_team.platform.id
+
+  route {
+    severity = "warn"
+    destination {
+      slack {
+        external_connection_slug = chronosphere_slack_external_connection.slack.slug
+        channels                 = ["#platform-alerts"]
+      }
+    }
+  }
 }
 ```
 
@@ -25,12 +49,12 @@ resource "chronosphere_slack_external_connection" "slack" {
 ### Required
 
 - `name` (String) Display name of the external connection.
+- `token` (String, Sensitive) Slack bot token, such as `xoxb-...`, used to post messages with `chat.postMessage`. The bot needs the `chat:write` scope and must be a member of each channel it posts to, except a public channel when it also has `chat:write.public`. The API never returns the token, so a token changed outside Terraform is not detected, and an imported connection plans one update to set it.
 
 ### Optional
 
-- `api_url` (String) Slack incoming webhook URL used to deliver messages. Treat as a secret.
+- `api_url` (String) Base URL of the Slack Web API that messages are posted to, with `/chat.postMessage` appended unless the URL already ends with it. Defaults to `https://slack.com/api`; set it only for another Slack host, such as `https://slack-gov.com/api`, or a proxy. This is not an incoming webhook URL: to post through a webhook, use `chronosphere_slack_alert_notifier`.
 - `slug` (String) Stable identifier for the connection. Generated from `name` if omitted. Immutable after creation.
-- `token` (String, Sensitive) Slack bot or app token used to authenticate API calls when posting messages. Treat as a secret.
 
 ### Read-Only
 
