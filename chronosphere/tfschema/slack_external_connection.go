@@ -30,14 +30,20 @@ var SlackExternalConnection = map[string]*schema.Schema{
 		Description: "Stable identifier for the connection. Generated from `name` if omitted. Immutable after creation.",
 	},
 	"api_url": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "Slack incoming webhook URL used to deliver messages. Treat as a secret.",
+		Type:     schema.TypeString,
+		Optional: true,
+		Description: "Base URL of the Slack Web API that messages are posted to, with `/chat.postMessage` appended " +
+			"unless the URL already ends with it. Defaults to `https://slack.com/api`; set it only for another " +
+			"Slack host, such as `https://slack-gov.com/api`, or a proxy. This is not an incoming webhook URL: " +
+			"to post through a webhook, use `chronosphere_slack_alert_notifier`.",
 	},
 	"token": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Sensitive:   true,
-		Description: "Slack bot or app token used to authenticate API calls when posting messages. Treat as a secret.",
+		Type:      schema.TypeString,
+		Required:  true,
+		Sensitive: true,
+		Description: "Slack bot token, such as `xoxb-...`, used to post messages with `chat.postMessage`. The bot " +
+			"needs the `chat:write` scope and must be a member of each channel it posts to, except a public " +
+			"channel when it also has `chat:write.public`. The API never returns the token, so a token changed " +
+			"outside Terraform is not detected, and an imported connection plans one update to set it.",
 	},
 }

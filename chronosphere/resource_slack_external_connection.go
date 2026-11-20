@@ -15,6 +15,8 @@
 package chronosphere
 
 import (
+	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"go.uber.org/atomic"
 
@@ -36,14 +38,25 @@ func resourceSlackExternalConnection() *schema.Resource {
 		generatedExternalConnection{},
 	)
 
+	validateDryRun := r.ValidateDryRun(&SlackExternalConnectionDryRunCount)
+
 	return &schema.Resource{
 		CreateContext: r.CreateContext,
 		ReadContext:   r.ReadContext,
 		UpdateContext: r.UpdateContext,
 		DeleteContext: r.DeleteContext,
-		Description:   "Workspace-scoped Slack credentials that downstream notifiers can reference. Centralizes webhook URLs and bot tokens so they aren't duplicated across notifiers; modern equivalent of the per-notifier credentials.",
-		Schema:        tfschema.SlackExternalConnection,
-		CustomizeDiff: r.ValidateDryRun(&SlackExternalConnectionDryRunCount),
+		Description: "Slack bot token that notification policies post with. A `chronosphere_notification_policy` route's `destination` " +
+			"`slack` block references the connection by `external_connection_slug` and names the `channels` to post to. " +
+			"For delivery through a Slack incoming webhook, use `chronosphere_slack_alert_notifier` instead.",
+		Schema: tfschema.SlackExternalConnection,
+		CustomizeDiff: func(ctx context.Context, diff *schema.ResourceDiff, meta any) error {
+			// The API rejects a connection without a token, so a token produced by
+			// another resource in the same apply cannot be validated at plan time.
+			if !diff.NewValueKnown("token") {
+				return nil
+			}
+			return validateDryRun(ctx, diff, meta)
+		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},

@@ -16,8 +16,8 @@ var _ tfid.ID // Always use tfid for simplified import generation.
 type SlackExternalConnection struct {
 	Name   string `intschema:"name"`
 	Slug   string `intschema:"slug,optional,computed"`
+	Token  string `intschema:"token"`
 	ApiUrl string `intschema:"api_url,optional"`
-	Token  string `intschema:"token,optional"`
 
 	// Internal identifier used in the .state file, i.e. ResourceData.Id().
 	// Cannot be set, else ToResourceData will panic.
