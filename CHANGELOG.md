@@ -2,6 +2,11 @@
 
 ## UNRELEASED
 
+Added:
+* Add the `chronosphere_circleci_external_connection` resource, which holds
+  the CircleCI API token that a `chronosphere_cloud_integration` with
+  `provider_type = "circleci"` references through `external_connection_slug`.
+
 ## v1.41.0
 
 Added:
