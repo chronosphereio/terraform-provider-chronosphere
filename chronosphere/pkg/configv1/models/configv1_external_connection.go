@@ -22,6 +22,9 @@ type Configv1ExternalConnection struct {
 	// blazemeter api monitoring
 	BlazemeterAPIMonitoring *ExternalConnectionBlazemeterAPIMonitoringConfig `json:"blazemeter_api_monitoring,omitempty"`
 
+	// circleci
+	Circleci *ExternalConnectionCircleCiConfig `json:"circleci,omitempty"`
+
 	// cloudflare
 	Cloudflare *ExternalConnectionCloudflareConfig `json:"cloudflare,omitempty"`
 
@@ -74,6 +77,10 @@ func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateBlazemeterAPIMonitoring(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCircleci(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -142,6 +149,25 @@ func (m *Configv1ExternalConnection) validateBlazemeterAPIMonitoring(formats str
 				return ve.ValidateName("blazemeter_api_monitoring")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("blazemeter_api_monitoring")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) validateCircleci(formats strfmt.Registry) error {
+	if swag.IsZero(m.Circleci) { // not required
+		return nil
+	}
+
+	if m.Circleci != nil {
+		if err := m.Circleci.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("circleci")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("circleci")
 			}
 			return err
 		}
@@ -372,6 +398,10 @@ func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, format
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateCircleci(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateCloudflare(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -434,6 +464,22 @@ func (m *Configv1ExternalConnection) contextValidateBlazemeterAPIMonitoring(ctx 
 				return ve.ValidateName("blazemeter_api_monitoring")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("blazemeter_api_monitoring")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) contextValidateCircleci(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Circleci != nil {
+		if err := m.Circleci.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("circleci")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("circleci")
 			}
 			return err
 		}
