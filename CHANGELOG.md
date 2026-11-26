@@ -2,6 +2,19 @@
 
 ## UNRELEASED
 
+Added:
+* Add the `chronosphere_clickhouse_cloud_external_connection` resource, which
+  holds the ClickHouse Cloud API key that a `chronosphere_cloud_integration`
+  with `provider_type = "clickhouse_cloud"` references through
+  `external_connection_slug`.
+
+Fixed:
+* `chronosphere_cloud_integration` no longer runs its plan-time dry run while
+  `external_connection_slug` is unknown, as it is when the connection is
+  created in the same apply. A `clickhouse_cloud` integration needs the slug,
+  so that dry run failed with "`cloud_integration.external_connection_slug`
+  must be set".
+
 ## v1.41.0
 
 Added:

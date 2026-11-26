@@ -15,6 +15,7 @@
 package chronosphere
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -38,6 +39,7 @@ func resourceCloudIntegration() *schema.Resource {
 		cloudIntegrationConverter{},
 		generatedCloudIntegration{},
 	)
+	validateDryRun := r.ValidateDryRun(&CloudIntegrationDryRunCount)
 
 	return &schema.Resource{
 		CreateContext: r.CreateContext,
@@ -46,7 +48,15 @@ func resourceCloudIntegration() *schema.Resource {
 		DeleteContext: r.DeleteContext,
 		Schema:        tfschema.CloudIntegration,
 		Description:   "Ingests metrics from a cloud provider. The provider-specific configuration is an opaque JSON object whose structure is defined by `provider_type`.",
-		CustomizeDiff: r.ValidateDryRun(&CloudIntegrationDryRunCount),
+		CustomizeDiff: func(ctx context.Context, diff *schema.ResourceDiff, meta any) error {
+			// Some provider types reject an integration without a connection, so one
+			// whose connection is created in the same apply cannot be validated at
+			// plan time.
+			if !diff.NewValueKnown("external_connection_slug") {
+				return nil
+			}
+			return validateDryRun(ctx, diff, meta)
+		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},

@@ -82,6 +82,7 @@ func Provider() *schema.Provider {
 		"chronosphere_opsgenie_external_connection":                  resourceOpsgenieExternalConnection(),
 		"chronosphere_cloudflare_external_connection":                resourceCloudflareExternalConnection(),
 		"chronosphere_blazemeter_api_monitoring_external_connection": resourceBlazemeterApiMonitoringExternalConnection(),
+		"chronosphere_clickhouse_cloud_external_connection":          resourceClickhouseCloudExternalConnection(),
 		"chronosphere_command_center_group":                          resourceCommandCenterGroup(),
 		"chronosphere_metric_name_active_series_limit":               resourceMetricNameActiveSeriesLimit(),
 		"chronosphere_metric_name_default_active_series_limit":       resourceMetricNameDefaultActiveSeriesLimit(),

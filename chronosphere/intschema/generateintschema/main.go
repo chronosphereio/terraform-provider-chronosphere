@@ -105,6 +105,7 @@ var fieldIsTFID = map[string]bool{
 	"project_id":  false,
 	"client_id":   false,
 	"tenant_id":   false,
+	"key_id":      false,
 }
 
 var fieldAddFile = map[string]bool{
