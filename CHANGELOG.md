@@ -7,6 +7,13 @@ Added:
   the CircleCI API token that a `chronosphere_cloud_integration` with
   `provider_type = "circleci"` references through `external_connection_slug`.
 
+Fixed:
+* `chronosphere_cloud_integration` no longer runs its plan-time dry run while
+  `external_connection_slug` is unknown, as it is when the connection is
+  created in the same apply. A provider type that requires a connection, such
+  as `circleci`, failed that dry run with
+  "`cloud_integration.external_connection_slug` must be set".
+
 ## v1.41.0
 
 Added:
