@@ -22,6 +22,12 @@ type Configv1ExternalConnection struct {
 	// blazemeter api monitoring
 	BlazemeterAPIMonitoring *ExternalConnectionBlazemeterAPIMonitoringConfig `json:"blazemeter_api_monitoring,omitempty"`
 
+	// circleci
+	Circleci *ExternalConnectionCircleCiConfig `json:"circleci,omitempty"`
+
+	// clickhouse cloud
+	ClickhouseCloud *ExternalConnectionClickHouseCloudConfig `json:"clickhouse_cloud,omitempty"`
+
 	// cloudflare
 	Cloudflare *ExternalConnectionCloudflareConfig `json:"cloudflare,omitempty"`
 
@@ -44,6 +50,9 @@ type Configv1ExternalConnection struct {
 
 	// pagerduty
 	Pagerduty *Configv1ExternalConnectionPagerdutyConfig `json:"pagerduty,omitempty"`
+
+	// salesforce
+	Salesforce *ExternalConnectionSalesforceConfig `json:"salesforce,omitempty"`
 
 	// sendgrid
 	Sendgrid *ExternalConnectionSendgridConfig `json:"sendgrid,omitempty"`
@@ -77,6 +86,14 @@ func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCircleci(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateClickhouseCloud(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCloudflare(formats); err != nil {
 		res = append(res, err)
 	}
@@ -98,6 +115,10 @@ func (m *Configv1ExternalConnection) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePagerduty(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSalesforce(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -142,6 +163,44 @@ func (m *Configv1ExternalConnection) validateBlazemeterAPIMonitoring(formats str
 				return ve.ValidateName("blazemeter_api_monitoring")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("blazemeter_api_monitoring")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) validateCircleci(formats strfmt.Registry) error {
+	if swag.IsZero(m.Circleci) { // not required
+		return nil
+	}
+
+	if m.Circleci != nil {
+		if err := m.Circleci.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("circleci")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("circleci")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) validateClickhouseCloud(formats strfmt.Registry) error {
+	if swag.IsZero(m.ClickhouseCloud) { // not required
+		return nil
+	}
+
+	if m.ClickhouseCloud != nil {
+		if err := m.ClickhouseCloud.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("clickhouse_cloud")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("clickhouse_cloud")
 			}
 			return err
 		}
@@ -249,6 +308,25 @@ func (m *Configv1ExternalConnection) validatePagerduty(formats strfmt.Registry) 
 				return ve.ValidateName("pagerduty")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("pagerduty")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) validateSalesforce(formats strfmt.Registry) error {
+	if swag.IsZero(m.Salesforce) { // not required
+		return nil
+	}
+
+	if m.Salesforce != nil {
+		if err := m.Salesforce.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("salesforce")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("salesforce")
 			}
 			return err
 		}
@@ -372,6 +450,14 @@ func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, format
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateCircleci(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateClickhouseCloud(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateCloudflare(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -393,6 +479,10 @@ func (m *Configv1ExternalConnection) ContextValidate(ctx context.Context, format
 	}
 
 	if err := m.contextValidatePagerduty(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSalesforce(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -434,6 +524,38 @@ func (m *Configv1ExternalConnection) contextValidateBlazemeterAPIMonitoring(ctx 
 				return ve.ValidateName("blazemeter_api_monitoring")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("blazemeter_api_monitoring")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) contextValidateCircleci(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Circleci != nil {
+		if err := m.Circleci.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("circleci")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("circleci")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) contextValidateClickhouseCloud(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.ClickhouseCloud != nil {
+		if err := m.ClickhouseCloud.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("clickhouse_cloud")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("clickhouse_cloud")
 			}
 			return err
 		}
@@ -523,6 +645,22 @@ func (m *Configv1ExternalConnection) contextValidatePagerduty(ctx context.Contex
 				return ve.ValidateName("pagerduty")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("pagerduty")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Configv1ExternalConnection) contextValidateSalesforce(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Salesforce != nil {
+		if err := m.Salesforce.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("salesforce")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("salesforce")
 			}
 			return err
 		}
