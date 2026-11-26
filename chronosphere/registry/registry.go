@@ -446,6 +446,12 @@ var Resources = mustValidate([]Resource{
 		Schema: tfschema.BlazemeterApiMonitoringExternalConnection,
 	},
 	{
+		Name:   "clickhouse_cloud_external_connection",
+		Entity: "ExternalConnection",
+		API:    V1,
+		Schema: tfschema.ClickhouseCloudExternalConnection,
+	},
+	{
 		Name:   "command_center_group",
 		Entity: "CommandCenterGroup",
 		API:    V1,
