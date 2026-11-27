@@ -446,6 +446,12 @@ var Resources = mustValidate([]Resource{
 		Schema: tfschema.BlazemeterApiMonitoringExternalConnection,
 	},
 	{
+		Name:   "circleci_external_connection",
+		Entity: "ExternalConnection",
+		API:    V1,
+		Schema: tfschema.CircleciExternalConnection,
+	},
+	{
 		Name:   "command_center_group",
 		Entity: "CommandCenterGroup",
 		API:    V1,

@@ -17,6 +17,9 @@ package chronosphere
 import (
 	"bytes"
 	"context"
+	"io"
+	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -25,7 +28,10 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/intschema"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/apiclients"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/configv1/models"
+	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/pkg/transport"
 	"github.com/chronosphereio/terraform-provider-chronosphere/chronosphere/tfschema"
 )
 
@@ -94,4 +100,56 @@ resource "chronosphere_cloud_integration" "gcp_metrics" {
   provider_type   = "gcp"
 }
 `, hcl.String())
+}
+
+func clickhouseCloudIntegrationConfig(connectionSlug string) map[string]any {
+	return map[string]any{
+		"name":                     "ClickHouse Cloud",
+		"provider_type":            "clickhouse_cloud",
+		"provider_config":          `{"organization_id":"0c6f2b8e-3d1a-4e7b-9f5c-8a2d4e6b1c73"}`,
+		"external_connection_slug": connectionSlug,
+	}
+}
+
+func TestCloudIntegrationUnknownConnectionSkipsDryRun(t *testing.T) {
+	before := CloudIntegrationDryRunCount.Load()
+
+	_, err := resourceCloudIntegration().Diff(context.Background(), nil,
+		terraform.NewResourceConfigRaw(clickhouseCloudIntegrationConfig(terraformUnknownValue)), nil)
+
+	require.NoError(t, err)
+	assert.Equal(t, before, CloudIntegrationDryRunCount.Load())
+}
+
+func TestCloudIntegrationKnownConnectionRunsDryRun(t *testing.T) {
+	var bodies []string
+	originalTransport := http.DefaultTransport
+	http.DefaultTransport = roundTripFunc(func(req *http.Request) (*http.Response, error) {
+		b, err := io.ReadAll(req.Body)
+		assert.NoError(t, err)
+		bodies = append(bodies, string(b))
+		return &http.Response{
+			StatusCode: http.StatusOK,
+			Status:     "200 OK",
+			Header:     http.Header{"Content-Type": []string{"application/json"}},
+			Body:       io.NopCloser(strings.NewReader(`{}`)),
+			Request:    req,
+		}, nil
+	})
+	t.Cleanup(func() { http.DefaultTransport = originalTransport })
+	client, err := configv1.NewClient(transport.ComponentTerraformProvider, "test", "test", "")
+	require.NoError(t, err)
+	before := CloudIntegrationDryRunCount.Load()
+
+	_, err = resourceCloudIntegration().Diff(context.Background(), nil,
+		terraform.NewResourceConfigRaw(clickhouseCloudIntegrationConfig("clickhouse-cloud")),
+		apiclients.Clients{ConfigV1: client})
+
+	require.NoError(t, err)
+	assert.Greater(t, CloudIntegrationDryRunCount.Load(), before)
+	require.NotEmpty(t, bodies)
+	for _, b := range bodies {
+		assert.Contains(t, b, `"external_connection_slug":"clickhouse-cloud"`)
+		assert.Contains(t, b, `"dry_run":true`)
+	}
 }

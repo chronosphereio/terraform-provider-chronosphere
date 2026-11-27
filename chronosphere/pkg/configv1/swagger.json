@@ -1062,6 +1062,15 @@
       },
       "type": "object"
     },
+    "ExternalConnectionCircleCiConfig": {
+      "properties": {
+        "api_token": {
+          "description": "A CircleCI personal API token, or an OAuth token at Read level.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "ExternalConnectionCloudflareConfig": {
       "properties": {
         "api_token": {
@@ -4747,6 +4756,9 @@
         },
         "blazemeter_api_monitoring": {
           "$ref": "#/definitions/ExternalConnectionBlazemeterApiMonitoringConfig"
+        },
+        "circleci": {
+          "$ref": "#/definitions/ExternalConnectionCircleCiConfig"
         }
       },
       "type": "object"
@@ -11684,7 +11696,7 @@
           },
           {
             "collectionFormat": "multi",
-            "description": " - XCOR_SLACK_APP: An install of the XCOR Slack app. Read-only: created when an admin\ninstalls the app and deleted when it is uninstalled.",
+            "description": "- BLAZEMETER_API_MONITORING: A BlazeMeter API Monitoring (formerly Runscope) access token.",
             "in": "query",
             "items": {
               "enum": [
@@ -11697,7 +11709,9 @@
                 "MONGODB_ATLAS",
                 "SENDGRID",
                 "DATADOG",
-                "XCOR_SLACK_APP"
+                "BLAZEMETER_API_MONITORING",
+                "XCOR_SLACK_APP",
+                "CIRCLECI"
               ],
               "type": "string"
             },
